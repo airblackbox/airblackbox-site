@@ -480,8 +480,17 @@ result = store.verify_chain()
             </div>
         </div>
         <div class="timeline-item">
-            <h4>Docker Compose (coming soon)</h4>
-            <p>Full observability stack: Gateway + Audit Store + Jaeger tracing in one command.</p>
+            <h4>Docker Compose full stack</h4>
+            <p>Gateway + Dashboard + Jaeger tracing in one command:</p>
+            <div class="terminal" style="margin-top: 12px;">
+                <div class="terminal-body" style="padding: 14px 20px;">
+<span class="prompt">$</span> <span class="cmd">git clone https://github.com/airblackbox/air-gate</span>
+<span class="prompt">$</span> <span class="cmd">cd air-gate && docker compose up</span>
+<span class="output">Gate API       → http://localhost:8000</span>
+<span class="output">Dashboard      → http://localhost:3000</span>
+<span class="output">Jaeger Tracing → http://localhost:16686</span>
+                </div>
+            </div>
         </div>
     </div>
 
