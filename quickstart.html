@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quickstart — AIR Blackbox | EU AI Act Compliance in 5 Minutes</title>
+    <meta name="description" content="Go from pip install to tamper-evident audit trails in under 5 minutes. EU AI Act compliance infrastructure for AI agents.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0b;
+            --bg-card: #111113;
+            --bg-card-hover: #18181b;
+            --border: #27272a;
+            --text: #fafafa;
+            --text-muted: #a1a1aa;
+            --text-dim: #71717a;
+            --accent: #f97316;
+            --accent-hover: #fb923c;
+            --accent-glow: rgba(249, 115, 22, 0.15);
+            --green: #22c55e;
+            --red: #ef4444;
+            --yellow: #eab308;
+            --blue: #3b82f6;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Nav */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            background: rgba(10, 10, 11, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 24px;
+        }
+        .nav-logo { font-weight: 800; font-size: 18px; color: var(--text); text-decoration: none; }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; align-items: center; gap: 32px; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
+        .nav-links a.active { color: var(--accent); }
+        .nav-cta { background: var(--accent) !important; color: var(--bg) !important; padding: 8px 20px !important; border-radius: 8px; font-weight: 600 !important; }
+        .nav-cta:hover { background: var(--accent-hover) !important; }
+
+        /* Hero */
+        .hero { padding: 140px 24px 60px; text-align: center; max-width: 800px; margin: 0 auto; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(249, 115, 22, 0.1); border: 1px solid rgba(249, 115, 22, 0.2);
+            padding: 8px 20px; border-radius: 100px; font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 32px;
+        }
+        .hero h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 900; line-height: 1.15; margin-bottom: 20px; }
+        .hero h1 .highlight { color: var(--accent); }
+        .hero p { font-size: 18px; color: var(--text-muted); max-width: 600px; margin: 0 auto 40px; line-height: 1.7; }
+
+        /* Content */
+        .content { max-width: 800px; margin: 0 auto; padding: 0 24px 80px; }
+
+        /* Steps */
+        .step { margin-bottom: 64px; }
+        .step-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+        .step-num {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--accent-glow); border: 1px solid rgba(249, 115, 22, 0.3);
+            color: var(--accent); font-weight: 700; font-size: 16px;
+            display: inline-flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .step-title { font-size: 24px; font-weight: 700; }
+        .step-desc { color: var(--text-muted); font-size: 16px; margin-bottom: 20px; line-height: 1.7; }
+
+        /* Terminal */
+        .terminal {
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .terminal-bar {
+            background: #161b22;
+            padding: 10px 16px;
+            display: flex; align-items: center; gap: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .terminal-dot.red { background: #ff5f57; }
+        .terminal-dot.yellow { background: #febc2e; }
+        .terminal-dot.green { background: #28c840; }
+        .terminal-title { color: var(--text-dim); font-size: 12px; margin-left: 8px; font-family: 'JetBrains Mono', monospace; }
+        .terminal-body {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+        .terminal-body .prompt { color: var(--green); }
+        .terminal-body .cmd { color: var(--text); font-weight: 500; }
+        .terminal-body .output { color: var(--text-dim); }
+        .terminal-body .success { color: var(--green); }
+        .terminal-body .warn { color: var(--yellow); }
+        .terminal-body .err { color: var(--red); }
+        .terminal-body .accent { color: var(--accent); }
+        .terminal-body .blue { color: var(--blue); }
+        .terminal-body .bold { font-weight: 700; color: var(--text); }
+
+        /* Copy button */
+        .copy-wrap { position: relative; }
+        .copy-btn {
+            position: absolute; top: 12px; right: 12px;
+            background: rgba(255,255,255,0.08); border: 1px solid var(--border);
+            color: var(--text-muted); padding: 6px 14px; border-radius: 6px;
+            font-size: 12px; font-family: 'Inter', sans-serif; font-weight: 500;
+            cursor: pointer; transition: all 0.2s; z-index: 10;
+        }
+        .copy-btn:hover { background: rgba(255,255,255,0.15); color: var(--text); }
+
+        /* Code inline */
+        code {
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.15);
+            padding: 2px 8px; border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em; color: var(--accent);
+        }
+
+        /* Info box */
+        .info-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 10px 10px 0;
+            padding: 20px 24px;
+            margin: 24px 0;
+        }
+        .info-box .info-label {
+            font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--accent); font-weight: 700; margin-bottom: 8px;
+        }
+        .info-box p { color: var(--text-muted); font-size: 14px; line-height: 1.7; }
+
+        /* Article coverage */
+        .coverage-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .coverage-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .coverage-check { color: var(--green); font-size: 18px; flex-shrink: 0; }
+        .coverage-label { font-size: 13px; font-weight: 600; }
+        .coverage-sub { font-size: 12px; color: var(--text-dim); }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 64px 0;
+        }
+
+        /* CTA */
+        .cta {
+            text-align: center;
+            padding: 60px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin: 40px 0;
+        }
+        .cta h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+        .cta p { color: var(--text-muted); margin-bottom: 28px; font-size: 16px; }
+        .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: var(--bg); padding: 14px 28px; border-radius: 10px; font-weight: 700; font-size: 15px; text-decoration: none; transition: background 0.2s; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--text); padding: 14px 28px; border-radius: 10px; border: 1px solid var(--border); font-weight: 600; font-size: 15px; text-decoration: none; transition: all 0.2s; }
+        .btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--text-dim); }
+
+        /* Footer */
+        footer {
+            max-width: 800px; margin: 0 auto;
+            padding: 40px 24px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+        }
+        footer a { color: var(--text-muted); text-decoration: none; }
+        footer a:hover { color: var(--accent); }
+
+        /* Timeline */
+        .timeline { position: relative; padding-left: 32px; }
+        .timeline::before {
+            content: '';
+            position: absolute; left: 7px; top: 8px; bottom: 8px;
+            width: 2px; background: var(--border);
+        }
+        .timeline-item { position: relative; margin-bottom: 24px; }
+        .timeline-item::before {
+            content: '';
+            position: absolute; left: -28px; top: 8px;
+            width: 12px; height: 12px; border-radius: 50%;
+            background: var(--accent); border: 2px solid var(--bg);
+        }
+        .timeline-item h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+        .timeline-item p { font-size: 14px; color: var(--text-muted); }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .coverage-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .hero { padding: 120px 20px 40px; }
+            .content { padding: 0 20px 60px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="/" class="nav-logo">AIR <span>Blackbox</span></a>
+        <div class="nav-links">
+            <a href="/">Scanner</a>
+            <a href="/gate.html">Gate</a>
+            <a href="/vaultmind/">VaultMind</a>
+            <a href="/quickstart" class="active">Quickstart</a>
+            <a href="https://github.com/airblackbox" target="_blank">GitHub</a>
+            <a href="https://pypi.org/project/air-blackbox/" target="_blank" class="nav-cta">pip install</a>
+        </div>
+    </div>
+</nav>
+
+<div class="hero">
+    <div class="hero-badge">5 minutes to your first audit trail</div>
+    <h1>From <span class="highlight">pip install</span> to tamper-evident audit logs</h1>
+    <p>Add EU AI Act compliance infrastructure to your AI agent with zero configuration. SQLite storage, HMAC-SHA256 signing, policy enforcement — all out of the box.</p>
+</div>
+
+<div class="content">
+
+    <!-- Step 1: Install -->
+    <div class="step">
+        <div class="step-header">
+            <div class="step-num">1</div>
+            <div class="step-title">Install AIR Blackbox</div>
+        </div>
+        <p class="step-desc">One package. No dependencies beyond Pydantic. Works on Python 3.10+.</p>
+
+        <div class="terminal copy-wrap">
+            <button class="copy-btn" onclick="copyCmd(this, 'pip install air-blackbox')">Copy</button>
+            <div class="terminal-bar">
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
+                <span class="terminal-title">Terminal</span>
+            </div>
+            <div class="terminal-body">
+<span class="prompt">$</span> <span class="cmd">pip install air-blackbox</span>
+<span class="output">Collecting air-blackbox
+  Downloading air_blackbox-0.2.0-py3-none-any.whl
+Installing collected packages: air-blackbox</span>
+<span class="success">Successfully installed air-blackbox-0.2.0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2: Run Demo -->
+    <div class="step">
+        <div class="step-header">
+            <div class="step-num">2</div>
+            <div class="step-title">Run the demo</div>
+        </div>
+        <p class="step-desc">See the full agent action lifecycle: policy checks, human approval gates, blocked actions, and cryptographic chain verification. No server needed.</p>
+
+        <div class="terminal copy-wrap">
+            <button class="copy-btn" onclick="copyCmd(this, 'air-blackbox demo')">Copy</button>
+            <div class="terminal-bar">
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
+                <span class="terminal-title">Terminal</span>
+            </div>
+            <div class="terminal-body">
+<span class="prompt">$</span> <span class="cmd">air-blackbox demo</span>
+
+<span class="accent bold">    AIR BLACKBOX  —  The AI Action Firewall</span>
+
+<span class="blue">[1/7]</span> <span class="bold">Agent searches for candidates</span>
+<span class="output">      Agent: recruiting-agent-001</span>
+<span class="output">      Action: search → linkedin_search</span>
+<span class="success">      Decision: AUTO-ALLOWED ✓</span>
+
+<span class="blue">[2/7]</span> <span class="bold">Agent wants to send outreach email</span>
+<span class="warn">      Decision: PENDING APPROVAL ⏳</span>
+
+<span class="blue">[3/7]</span> <span class="bold">Human approves the email</span>
+<span class="success">      Decision: APPROVED by jason@airblackbox.ai ✓</span>
+<span class="success">      Human-in-the-loop oversight: Article 14 ✓</span>
+
+<span class="blue">[4/7]</span> <span class="bold">Agent tries to delete records</span>
+<span class="err">      Decision: BLOCKED ✗</span>
+<span class="err">      AI agents cannot delete data — ever</span>
+
+<span class="blue">[5/7]</span> <span class="bold">Simulating 5 more approved emails</span>
+<span class="success">      ✓ Email #1: Alex Chen (Netflix)</span>
+<span class="success">      ✓ Email #2: Maria Garcia (Airbnb)</span>
+<span class="success">      ✓ Email #3: James Wilson (Databricks)</span>
+
+<span class="blue">[6/7]</span> <span class="bold">Verifying HMAC-SHA256 audit chain</span>
+<span class="success bold">      Chain integrity: VALID</span>
+<span class="success">      8 events verified. Zero tampering detected.</span>
+
+<span class="blue">[7/7]</span> <span class="bold">Audit summary</span>
+<span class="output">      Total events: 8 | Approved: 6 | Blocked: 1</span>
+<span class="output">      EU AI Act: Art.9 ✓ Art.12 ✓ Art.14 ✓ Art.15 ✓</span>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="info-label">What just happened</div>
+            <p>Your AI agent ran 8 actions through AIR Blackbox. Every action was policy-checked, signed with HMAC-SHA256, and chained into a tamper-evident audit trail stored in a local SQLite database. No external services, no API keys, no configuration files.</p>
+        </div>
+    </div>
+
+    <!-- Step 3: Add to your agent -->
+    <div class="step">
+        <div class="step-header">
+            <div class="step-num">3</div>
+            <div class="step-title">Add to your own agent</div>
+        </div>
+        <p class="step-desc">Drop AIR Blackbox into your existing code. Record actions, enforce policies, and verify audit chains programmatically.</p>
+
+        <div class="terminal">
+            <div class="terminal-bar">
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
+                <span class="terminal-title">your_agent.py</span>
+            </div>
+            <div class="terminal-body">
+<span class="blue">from</span> gate.events <span class="blue">import</span> EventStore, GateEvent
+<span class="blue">from</span> gate.policy <span class="blue">import</span> PolicyEngine, PolicyRule
+
+<span class="output"># Initialize — SQLite storage, zero config</span>
+store = EventStore(
+    signing_key=<span class="accent">"your-secret-key"</span>,
+    storage_path=<span class="accent">"audit.db"</span>
+)
+
+policy = PolicyEngine(rules=[
+    PolicyRule(
+        name=<span class="accent">"approve-emails"</span>,
+        action_type=<span class="accent">"email"</span>,
+        decision=<span class="accent">"require_approval"</span>,
+    ),
+    PolicyRule(
+        name=<span class="accent">"block-deletes"</span>,
+        action_type=<span class="accent">"db_delete"</span>,
+        decision=<span class="accent">"block"</span>,
+    ),
+])
+
+<span class="output"># Before your agent takes any action:</span>
+decision = policy.evaluate(
+    agent_id=<span class="accent">"my-agent"</span>,
+    action_type=<span class="accent">"email"</span>,
+    tool_name=<span class="accent">"send_email"</span>,
+)
+
+<span class="output"># Record the event (signed + chained automatically)</span>
+event = GateEvent(
+    agent_id=<span class="accent">"my-agent"</span>,
+    action_type=<span class="accent">"email"</span>,
+    tool_name=<span class="accent">"send_email"</span>,
+    payload={<span class="accent">"to"</span>: <span class="accent">"jane@example.com"</span>},
+    result=decision[<span class="accent">"decision"</span>],
+)
+store.record(event)
+
+<span class="output"># Verify the chain anytime</span>
+result = store.verify_chain()
+<span class="blue">print</span>(f<span class="accent">"Chain valid: {result['valid']}"</span>)
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- What you get -->
+    <h2 style="font-size: 28px; font-weight: 800; margin-bottom: 12px; text-align: center;">What you get out of the box</h2>
+    <p style="color: var(--text-muted); text-align: center; margin-bottom: 32px; font-size: 16px;">Every feature maps directly to an EU AI Act article requirement.</p>
+
+    <div class="coverage-grid">
+        <div class="coverage-item">
+            <span class="coverage-check">&#10003;</span>
+            <div>
+                <div class="coverage-label">Policy Engine</div>
+                <div class="coverage-sub">Article 9 — Risk Management</div>
+            </div>
+        </div>
+        <div class="coverage-item">
+            <span class="coverage-check">&#10003;</span>
+            <div>
+                <div class="coverage-label">Data Validation</div>
+                <div class="coverage-sub">Article 10 — Data Governance</div>
+            </div>
+        </div>
+        <div class="coverage-item">
+            <span class="coverage-check">&#10003;</span>
+            <div>
+                <div class="coverage-label">HMAC Audit Chains</div>
+                <div class="coverage-sub">Article 12 — Record-Keeping</div>
+            </div>
+        </div>
+        <div class="coverage-item">
+            <span class="coverage-check">&#10003;</span>
+            <div>
+                <div class="coverage-label">Approval Gates</div>
+                <div class="coverage-sub">Article 14 — Human Oversight</div>
+            </div>
+        </div>
+        <div class="coverage-item">
+            <span class="coverage-check">&#10003;</span>
+            <div>
+                <div class="coverage-label">Action Blocking</div>
+                <div class="coverage-sub">Article 15 — Robustness</div>
+            </div>
+        </div>
+        <div class="coverage-item">
+            <span class="coverage-check">&#10003;</span>
+            <div>
+                <div class="coverage-label">PII Detection</div>
+                <div class="coverage-sub">GDPR + Article 10</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Next steps -->
+    <h2 style="font-size: 28px; font-weight: 800; margin-bottom: 24px;">Next steps</h2>
+
+    <div class="timeline">
+        <div class="timeline-item">
+            <h4>Start the full server</h4>
+            <p>For production use with REST API, Slack approvals, and compliance reports:</p>
+            <div class="terminal" style="margin-top: 12px;">
+                <div class="terminal-body" style="padding: 14px 20px;">
+<span class="prompt">$</span> <span class="cmd">pip install air-blackbox[server]</span>
+<span class="prompt">$</span> <span class="cmd">uvicorn gate.proxy:app --reload</span>
+                </div>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <h4>Scan your existing code</h4>
+            <p>Check your Python AI project for EU AI Act compliance patterns:</p>
+            <div class="terminal" style="margin-top: 12px;">
+                <div class="terminal-body" style="padding: 14px 20px;">
+<span class="prompt">$</span> <span class="cmd">pip install air-blackbox-mcp</span>
+<span class="prompt">$</span> <span class="cmd">air-blackbox-mcp scan .</span>
+                </div>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <h4>Docker Compose (coming soon)</h4>
+            <p>Full observability stack: Gateway + Audit Store + Jaeger tracing in one command.</p>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta">
+        <h2>The EU AI Act deadline is August 2, 2026</h2>
+        <p>Start building compliance infrastructure today. It takes 5 minutes.</p>
+        <div class="cta-buttons">
+            <a href="https://pypi.org/project/air-blackbox/" target="_blank" class="btn-primary">Install from PyPI</a>
+            <a href="https://github.com/airblackbox/air-gate" target="_blank" class="btn-secondary">View on GitHub</a>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>AIR Blackbox &mdash; Open-source EU AI Act compliance infrastructure &mdash; <a href="https://github.com/airblackbox">GitHub</a> &middot; <a href="https://pypi.org/project/air-blackbox/">PyPI</a></p>
+</footer>
+
+<script>
+function copyCmd(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!';
+        btn.style.color = '#22c55e';
+        setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.style.color = '';
+        }, 2000);
+    });
+}
+</script>
+
+</body>
+</html>

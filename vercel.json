@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/annotator", "destination": "/annotator.html" },
+    { "source": "/demo", "destination": "/demo/index.html" },
+    { "source": "/vaultmind", "destination": "/vaultmind/index.html" },
+    { "source": "/quickstart", "destination": "/quickstart.html" }
+  ]
+}
