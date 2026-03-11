@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIR Blackbox — Annotation Tool</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+  :root {
+    --bg: #0d0d0d; --surface: #141414; --border: #252525;
+    --accent: #00ff88; --accent-dim: #00ff8822; --warn: #ff6b35;
+    --text: #e8e8e8; --muted: #666; --yes: #00ff88; --no: #ff4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 100; }
+  .topbar-left { display: flex; align-items: center; gap: 16px; }
+  .logo { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--accent); letter-spacing: 0.05em; }
+  .home-link { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); text-decoration: none; border: 1px solid var(--border); padding: 4px 10px; border-radius: 3px; transition: all 0.15s; }
+  .home-link:hover { color: var(--accent); border-color: var(--accent); }
+  .progress-bar-wrap { width: 200px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--accent); transition: width 0.3s ease; border-radius: 2px; }
+  .progress-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); }
+  .main { display: grid; grid-template-columns: 1fr 380px; height: calc(100vh - 53px); }
+  .code-panel { border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+  .file-header { padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-shrink: 0; }
+  .file-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .file-name { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text); }
+  .badge { font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 2px 8px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .badge-high { background: #ff6b3522; color: #ff6b35; border: 1px solid #ff6b3544; }
+  .badge-medium { background: #ffcc0022; color: #ffcc00; border: 1px solid #ffcc0044; }
+  .badge-low { background: #44444422; color: #888; border: 1px solid #44444444; }
+  .badge-fw { background: #00ff8811; color: var(--accent); border: 1px solid #00ff8833; }
+  .gh-link { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted); text-decoration: none; border: 1px solid var(--border); padding: 4px 10px; border-radius: 3px; white-space: nowrap; transition: all 0.15s; }
+  .gh-link:hover { color: var(--accent); border-color: var(--accent); }
+  .code-body { flex: 1; overflow-y: auto; padding: 20px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; color: #ccc; }
+  .code-body pre { white-space: pre-wrap; word-break: break-word; }
+  .loading-msg { color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+  .error-msg { color: var(--warn); font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+  .ann-panel { display: flex; flex-direction: column; overflow-y: auto; background: var(--surface); }
+  .ann-section { padding: 20px; border-bottom: 1px solid var(--border); }
+  .ann-section-title { font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 14px; }
+  .article-row { margin-bottom: 14px; padding: 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); transition: border-color 0.15s; }
+  .article-row.answered { border-color: #333; }
+  .article-row-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .article-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--accent); font-weight: 600; }
+  .scanner-badge { font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 1px 6px; border-radius: 2px; }
+  .scanner-1 { background: #00ff8811; color: var(--accent); }
+  .scanner-0 { background: #44444422; color: var(--muted); }
+  .article-desc { font-size: 11px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+  .btn-group { display: flex; gap: 6px; }
+  .btn-judge { flex: 1; padding: 7px 0; border: 1px solid var(--border); border-radius: 4px; background: transparent; color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px; cursor: pointer; transition: all 0.15s; font-weight: 600; }
+  .btn-judge:hover { border-color: #555; color: var(--text); }
+  .btn-judge.active-yes { background: #00ff8818; border-color: var(--yes); color: var(--yes); }
+  .btn-judge.active-no { background: #ff444418; border-color: var(--no); color: var(--no); }
+  .nav-section { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+  .btn-nav { width: 100%; padding: 11px; border: 1px solid var(--border); border-radius: 5px; background: transparent; color: var(--text); font-family: 'IBM Plex Mono', monospace; font-size: 12px; cursor: pointer; transition: all 0.15s; text-align: center; }
+  .btn-nav:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-nav.primary { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 600; }
+  .btn-nav.primary:hover { background: #00dd77; }
+  .scanner-row { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); padding: 4px 0; }
+  .scanner-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot-pass { background: var(--accent); }
+  .dot-fail { background: #444; }
+  .export-area { padding: 20px; border-top: 1px solid var(--border); }
+  .export-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 10px; }
+  .export-stats { font-size: 12px; color: var(--muted); margin-bottom: 10px; font-family: 'IBM Plex Mono', monospace; }
+  .export-stats span { color: var(--accent); }
+  .jump-row { display: flex; gap: 6px; align-items: center; }
+  .jump-input { flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 7px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; border-radius: 4px; outline: none; }
+  .jump-input:focus { border-color: var(--accent); }
+  .btn-jump { padding: 7px 14px; background: transparent; border: 1px solid var(--border); color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px; border-radius: 4px; cursor: pointer; transition: all 0.15s; }
+  .btn-jump:hover { border-color: var(--accent); color: var(--accent); }
+  .kbd-hints { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 8px; }
+  .kbd-hint { font-size: 10px; color: #555; font-family: 'IBM Plex Mono', monospace; }
+  .kbd-hint kbd { background: #1e1e1e; border: 1px solid #333; padding: 1px 5px; border-radius: 3px; font-family: inherit; color: #888; }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #555; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a class="home-link" href="/">← airblackbox.ai</a>
+    <div class="logo">EU AI ACT // ANNOTATION TOOL</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-label" id="progressLabel">0 / 200</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="code-panel">
+    <div class="file-header">
+      <div class="file-meta">
+        <span class="file-name" id="fileName">—</span>
+        <span class="badge badge-fw" id="fwBadge">—</span>
+        <span class="badge" id="bucketBadge">—</span>
+      </div>
+      <a class="gh-link" id="ghLink" href="#" target="_blank">↗ GitHub</a>
+    </div>
+    <div class="code-body" id="codeBody"><span class="loading-msg">Loading...</span></div>
+  </div>
+
+  <div class="ann-panel">
+    <div class="ann-section">
+      <div class="ann-section-title">Scanner Results</div>
+      <div id="scannerLegend"></div>
+    </div>
+    <div class="ann-section">
+      <div class="ann-section-title">Your Judgment — Does this file implement?</div>
+      <div id="articleRows"></div>
+    </div>
+    <div class="nav-section">
+      <div class="jump-row">
+        <input class="jump-input" id="jumpInput" type="number" min="1" max="200" placeholder="row #">
+        <button class="btn-jump" onclick="jumpTo()">GO</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-nav" style="flex:1" onclick="prevRow()">← PREV</button>
+        <button class="btn-nav primary" style="flex:2" onclick="nextRow()">NEXT →</button>
+      </div>
+      <button class="btn-nav" onclick="skipRow()">SKIP (unsure)</button>
+    </div>
+    <div class="export-area">
+      <div class="export-label">Export Progress</div>
+      <div class="export-stats" id="exportStats">Annotated: <span>0</span> / 200</div>
+      <button class="btn-nav" onclick="downloadCSV()">⬇ Download CSV</button>
+      <div style="margin-top:8px">
+        <button class="btn-nav" onclick="loadSavedState()" style="font-size:10px;padding:8px">↺ Restore from CSV</button>
+      </div>
+    </div>
+    <div class="kbd-hints">
+      <span class="kbd-hint"><kbd>1-6</kbd> toggle YES per article</span>
+      <span class="kbd-hint"><kbd>→</kbd> next</span>
+      <span class="kbd-hint"><kbd>←</kbd> prev</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const ARTICLES = [
+  { key: 'art9',  label: 'Art. 9',  name: 'Risk Management',         desc: 'Risk classification, scoring, access control gated on risk level, risk audit/logging.' },
+  { key: 'art10', label: 'Art. 10', name: 'Data Governance',         desc: 'PII detection/masking, data provenance tracking, input validation for sensitive data types.' },
+  { key: 'art11', label: 'Art. 11', name: 'Technical Documentation', desc: 'Structured docstrings with purpose/limitations, model cards, capability disclosures. NOT one-liners.' },
+  { key: 'art12', label: 'Art. 12', name: 'Record-Keeping',          desc: 'Structured audit logging with timestamps, tamper-evident mechanisms. NOT debug prints.' },
+  { key: 'art14', label: 'Art. 14', name: 'Human Oversight',         desc: 'Human review gates, approval queues, override mechanisms. NOT generic input() calls.' },
+  { key: 'art15', label: 'Art. 15', name: 'Robustness',              desc: 'Adversarial input defense, structured error recovery with fallback. NOT bare except:pass.' },
+];
+
+let rows = [], annotations = {}, currentIdx = 0;
+
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/1G_aJ4M6nJ9ARsimkCTMuNfgMCEwHqfIqBNfxPSjfnSo/export?format=csv&cachebust=' + Date.now();
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',');
+  return lines.slice(1).map(line => {
+    const vals = line.split(',');
+    const obj = {};
+    headers.forEach((h, i) => obj[h.trim()] = (vals[i] || '').trim());
+    return obj;
+  });
+}
+
+async function init() {
+  try {
+    const resp = await fetch(CSV_URL);
+    const text = await resp.text();
+    rows = parseCSV(text);
+    const saved = localStorage.getItem('air_annotations_v2');
+    if (saved) annotations = JSON.parse(saved);
+    updateProgress();
+    loadRow(0);
+  } catch(e) {
+    document.getElementById('codeBody').innerHTML = `<span class="error-msg">Failed to load sheet: ${e.message}</span>`;
+  }
+}
+
+function loadRow(idx) {
+  currentIdx = idx;
+  const row = rows[idx];
+  if (!row) return;
+  document.getElementById('fileName').textContent = `${row.repo_name} / ${row.file_path}`;
+  document.getElementById('fwBadge').textContent = row.framework;
+  const bb = document.getElementById('bucketBadge');
+  bb.textContent = row.score_bucket;
+  bb.className = `badge badge-${row.score_bucket}`;
+  document.getElementById('ghLink').href = `https://${row.github_url}`;
+
+  const leg = document.getElementById('scannerLegend');
+  leg.innerHTML = ARTICLES.map(a => {
+    const pass = row[`scanner_${a.key}`] === '1';
+    return `<div class="scanner-row">
+      <div class="scanner-dot ${pass ? 'dot-pass' : 'dot-fail'}"></div>
+      <span style="color:${pass ? 'var(--accent)' : '#555'}">${a.label}</span>
+      <span style="margin-left:4px">${a.name}</span>
+      <span style="margin-left:auto;font-size:10px">${pass ? 'PASS' : '—'}</span>
+    </div>`;
+  }).join('');
+
+  const ann = annotations[row.row_id] || {};
+  document.getElementById('articleRows').innerHTML = ARTICLES.map(a => {
+    const val = ann[a.key];
+    return `<div class="article-row ${val !== undefined ? 'answered' : ''}" id="arow-${a.key}">
+      <div class="article-row-top">
+        <span class="article-label">${a.label} — ${a.name}</span>
+        <span class="scanner-badge scanner-${row[`scanner_${a.key}`]}">${row[`scanner_${a.key}`] === '1' ? 'scanner=YES' : 'scanner=NO'}</span>
+      </div>
+      <div class="article-desc">${a.desc}</div>
+      <div class="btn-group">
+        <button class="btn-judge ${val === 1 ? 'active-yes' : ''}" onclick="setJudge('${row.row_id}','${a.key}',1)">✓ YES</button>
+        <button class="btn-judge ${val === 0 ? 'active-no' : ''}" onclick="setJudge('${row.row_id}','${a.key}',0)">✗ NO</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  fetchCode(row);
+  updateProgress();
+  document.getElementById('jumpInput').value = idx + 1;
+}
+
+function fetchCode(row) {
+  const cb = document.getElementById('codeBody');
+  cb.innerHTML = `<span class="loading-msg">Fetching from GitHub...</span>`;
+  const parts = row.github_url.replace('github.com/', '').split('/');
+  const [owner, repo] = parts;
+  const urls = [
+    `https://raw.githubusercontent.com/${owner}/${repo}/main/${row.file_path}`,
+    `https://raw.githubusercontent.com/${owner}/${repo}/master/${row.file_path}`,
+  ];
+  (async () => {
+    for (const url of urls) {
+      try {
+        const resp = await fetch(url);
+        if (resp.ok) {
+          const text = await resp.text();
+          const escaped = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+          cb.innerHTML = `<pre>${escaped}</pre>`;
+          return;
+        }
+      } catch(e) {}
+    }
+    cb.innerHTML = `<span class="error-msg">Could not auto-fetch. <a href="https://${row.github_url}" target="_blank" style="color:var(--accent)">Open on GitHub ↗</a><br>File: <code style="color:#aaa">${row.file_path}</code></span>`;
+  })();
+}
+
+function setJudge(rowId, artKey, val) {
+  if (!annotations[rowId]) annotations[rowId] = {};
+  annotations[rowId][artKey] = val;
+  save();
+  const arow = document.getElementById(`arow-${artKey}`);
+  if (arow) {
+    arow.className = 'article-row answered';
+    arow.querySelectorAll('.btn-judge').forEach((btn, i) => {
+      btn.className = 'btn-judge' + (i === 0 && val === 1 ? ' active-yes' : i === 1 && val === 0 ? ' active-no' : '');
+    });
+  }
+  updateProgress();
+}
+
+function skipRow() {
+  const row = rows[currentIdx];
+  if (!annotations[row.row_id]) annotations[row.row_id] = {};
+  annotations[row.row_id]._skip = true;
+  save();
+  nextRow();
+}
+
+function nextRow() { if (currentIdx < rows.length - 1) loadRow(currentIdx + 1); }
+function prevRow() { if (currentIdx > 0) loadRow(currentIdx - 1); }
+function jumpTo() {
+  const n = parseInt(document.getElementById('jumpInput').value);
+  if (n >= 1 && n <= rows.length) loadRow(n - 1);
+}
+
+function isComplete(rowId) {
+  const ann = annotations[rowId] || {};
+  if (ann._skip) return true;
+  return ARTICLES.every(a => ann[a.key] !== undefined);
+}
+
+function updateProgress() {
+  const done = rows.filter(r => isComplete(r.row_id)).length;
+  const pct = rows.length ? (done / rows.length * 100).toFixed(1) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${done} / ${rows.length}`;
+  document.getElementById('exportStats').innerHTML = `Annotated: <span>${done}</span> / 200`;
+}
+
+function save() { localStorage.setItem('air_annotations_v2', JSON.stringify(annotations)); }
+
+function downloadCSV() {
+  const headers = ['row_id','repo_name','file_path','score_bucket','framework','github_url',
+    'scanner_art9','scanner_art10','scanner_art11','scanner_art12','scanner_art14','scanner_art15',
+    'my_art9','my_art10','my_art11','my_art12','my_art14','my_art15','notes'];
+  const csvRows = [headers.join(',')];
+  rows.forEach(r => {
+    const ann = annotations[r.row_id] || {};
+    csvRows.push([
+      r.row_id, r.repo_name, r.file_path, r.score_bucket, r.framework, r.github_url,
+      r.scanner_art9, r.scanner_art10, r.scanner_art11, r.scanner_art12, r.scanner_art14, r.scanner_art15,
+      ann.art9 !== undefined ? ann.art9 : '',
+      ann.art10 !== undefined ? ann.art10 : '',
+      ann.art11 !== undefined ? ann.art11 : '',
+      ann.art12 !== undefined ? ann.art12 : '',
+      ann.art14 !== undefined ? ann.art14 : '',
+      ann.art15 !== undefined ? ann.art15 : '',
+      ann._skip ? 'SKIP' : '',
+    ].join(','));
+  });
+  const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `air_annotations_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+function loadSavedState() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = '.csv';
+  input.onchange = async (e) => {
+    const text = await e.target.files[0].text();
+    parseCSV(text).forEach(r => {
+      if (!r.row_id) return;
+      annotations[r.row_id] = {
+        art9:  r.my_art9  !== '' ? parseInt(r.my_art9)  : undefined,
+        art10: r.my_art10 !== '' ? parseInt(r.my_art10) : undefined,
+        art11: r.my_art11 !== '' ? parseInt(r.my_art11) : undefined,
+        art12: r.my_art12 !== '' ? parseInt(r.my_art12) : undefined,
+        art14: r.my_art14 !== '' ? parseInt(r.my_art14) : undefined,
+        art15: r.my_art15 !== '' ? parseInt(r.my_art15) : undefined,
+        _skip: r.notes === 'SKIP',
+      };
+    });
+    save(); updateProgress(); loadRow(currentIdx);
+    alert('Restored!');
+  };
+  input.click();
+}
+
+document.addEventListener('keydown', e => {
+  if (['1','2','3','4','5','6'].includes(e.key) && !e.target.matches('input')) {
+    const row = rows[currentIdx];
+    if (row) setJudge(row.row_id, ARTICLES[parseInt(e.key)-1].key, 1);
+  }
+  if (e.key === 'ArrowRight' && !e.target.matches('input')) nextRow();
+  if (e.key === 'ArrowLeft' && !e.target.matches('input')) prevRow();
+});
+
+init();
+</script>
+</body>
+</html>

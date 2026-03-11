@@ -3,1145 +3,356 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIR Blackbox - EU AI Act Compliance Scanner for Python AI Agents</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>AIR Blackbox — AI Governance Control Plane</title>
+    <meta name="description" content="EU AI Act compliance, AI-BOM, shadow AI detection, and tamper-proof audit trails. pip install air-blackbox">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1a1f3a 100%);
-            color: #e2e8f0;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Header & Navigation */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            background: rgba(15, 23, 42, 0.95);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        nav {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #3b82f6, #60a5fa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        nav a {
-            color: #94a3b8;
-            text-decoration: none;
-            margin-left: 2rem;
-            transition: color 0.3s ease;
-            font-weight: 500;
-        }
-
-        nav a:hover {
-            color: #3b82f6;
-        }
-
-        /* Hero Section */
-        .hero {
-            margin-top: 80px;
-            padding: 6rem 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -50%;
-            left: -5%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(239, 68, 68, 0.05) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-
-        .hero-content {
-            max-width: 900px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #fff, #cbd5e1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: fadeInUp 0.8s ease;
-        }
-
-        .hero-stat {
-            color: #ef4444;
-            font-size: 3.5rem;
-            font-weight: 800;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: #cbd5e1;
-            margin-bottom: 2rem;
-            animation: fadeInUp 0.8s ease 0.1s backwards;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-            animation: fadeInUp 0.8s ease 0.2s backwards;
-        }
-
-        .copy-box {
-            background: #1e293b;
-            border: 1px solid #3b82f6;
-            border-radius: 0.5rem;
-            padding: 1rem 1.5rem;
-            font-family: 'Courier New', monospace;
-            color: #3b82f6;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            flex: 1;
-            min-width: 280px;
-            max-width: 400px;
-        }
-
-        .copy-box:hover {
-            background: #3b82f6;
-            color: #0f172a;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background: #3b82f6;
-            color: #0f172a;
-        }
-
-        .btn-primary:hover {
-            background: #60a5fa;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: #3b82f6;
-            border: 2px solid #3b82f6;
-        }
-
-        .btn-secondary:hover {
-            background: #3b82f6;
-            color: #0f172a;
-        }
-
-        /* Social Proof Bar */
-        .social-proof {
-            background: rgba(59, 130, 246, 0.05);
-            border-top: 1px solid rgba(59, 130, 246, 0.1);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .proof-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
-
-        .proof-item {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .proof-label {
-            font-size: 0.875rem;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.5rem;
-        }
-
-        .proof-stat {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #3b82f6;
-        }
-
-        /* Article Failure Rates */
-        .section {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-        }
-
-        .section h2 {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .section-subtitle {
-            text-align: center;
-            color: #94a3b8;
-            margin-bottom: 3rem;
-            font-size: 1.05rem;
-        }
-
-        .article-rates {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .rate-item {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(59, 130, 246, 0.1);
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-        }
-
-        .rate-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.75rem;
-            font-weight: 600;
-        }
-
-        .rate-label-text {
-            color: #cbd5e1;
-        }
-
-        .rate-percentage {
-            color: #ef4444;
-            font-weight: 700;
-        }
-
-        .bar-container {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 0.25rem;
-            height: 8px;
-            overflow: hidden;
-        }
-
-        .bar {
-            height: 100%;
-            background: linear-gradient(90deg, #ef4444, #f87171);
-            border-radius: 0.25rem;
-            width: 0;
-            animation: barFill 1s ease-out forwards;
-        }
-
-        .bar:nth-child(1) { animation-delay: 0.1s; }
-        .bar:nth-child(2) { animation-delay: 0.2s; }
-        .bar:nth-child(3) { animation-delay: 0.3s; }
-        .bar:nth-child(4) { animation-delay: 0.4s; }
-        .bar:nth-child(5) { animation-delay: 0.5s; }
-        .bar:nth-child(6) { animation-delay: 0.6s; }
-
-        @keyframes barFill {
-            from {
-                width: 0;
-                opacity: 0;
-            }
-            to {
-                width: var(--fill);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Score Distribution */
-        .distribution {
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            gap: 1rem;
-            margin: 3rem 0;
-            min-height: 300px;
-            padding: 2rem;
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .score-column {
-            flex: 1;
-            min-width: 50px;
-            max-width: 80px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-            min-height: 250px;
-        }
-
-        .score-bar {
-            width: 100%;
-            background: linear-gradient(180deg, #3b82f6, #60a5fa);
-            border-radius: 0.25rem 0.25rem 0 0;
-            transition: all 0.5s ease;
-            opacity: 0;
-            animation: barGrowUp 1s ease-out forwards;
-        }
-
-        .score-bar:hover {
-            background: linear-gradient(180deg, #60a5fa, #93c5fd);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-        }
-
-        .score-label {
-            margin-top: 1rem;
-            font-weight: 600;
-            color: #cbd5e1;
-            font-size: 0.875rem;
-        }
-
-        .score-value {
-            color: #3b82f6;
-            font-weight: 700;
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-        }
-
-        @keyframes barGrowUp {
-            from {
-                height: 0;
-                opacity: 0;
-            }
-            to {
-                height: var(--height);
-                opacity: 1;
-            }
-        }
-
-        /* Project Results Table */
-        .table-container {
-            overflow-x: auto;
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 0.5rem;
-            border: 1px solid rgba(59, 130, 246, 0.1);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-        }
-
-        th {
-            background: rgba(59, 130, 246, 0.1);
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            color: #cbd5e1;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
-        }
-
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.05);
-        }
-
-        tr:hover {
-            background: rgba(59, 130, 246, 0.05);
-        }
-
-        .score-cell {
-            font-weight: 700;
-            color: #3b82f6;
-            font-family: 'Courier New', monospace;
-        }
-
-        /* How It Works */
-        .how-it-works {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-
-        .step {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 0.5rem;
-            padding: 2rem;
-            position: relative;
-        }
-
-        .step-number {
-            width: 40px;
-            height: 40px;
-            background: #3b82f6;
-            color: #0f172a;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-        }
-
-        .step h3 {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            color: #e2e8f0;
-        }
-
-        .step p {
-            color: #cbd5e1;
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-        }
-
-        .code-block {
-            background: #0f172a;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 0.375rem;
-            padding: 1rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-            color: #60a5fa;
-            overflow-x: auto;
-            line-height: 1.5;
-        }
-
-        /* Terminal Demo */
-        .terminal {
-            background: #0f172a;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            font-family: 'Courier New', monospace;
-            color: #60a5fa;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            margin: 2rem 0;
-            overflow-x: auto;
-            box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.1);
-        }
-
-        .terminal-line {
-            margin-bottom: 0.5rem;
-        }
-
-        .terminal-prompt {
-            color: #3b82f6;
-            font-weight: 600;
-        }
-
-        .terminal-output {
-            color: #cbd5e1;
-        }
-
-        .terminal-success {
-            color: #10b981;
-            font-weight: 600;
-        }
-
-        .terminal-warning {
-            color: #f59e0b;
-        }
-
-        .terminal-error {
-            color: #ef4444;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(239, 68, 68, 0.05));
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 0.75rem;
-            padding: 3rem 2rem;
-            text-align: center;
-            margin: 4rem 0;
-        }
-
-        .cta-section h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .cta-section p {
-            font-size: 1.1rem;
-            color: #cbd5e1;
-            margin-bottom: 2rem;
-        }
-
-        .cta-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* Footer */
-        footer {
-            background: rgba(15, 23, 42, 0.8);
-            border-top: 1px solid rgba(59, 130, 246, 0.1);
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #e2e8f0;
-        }
-
-        .footer-section a {
-            display: block;
-            color: #94a3b8;
-            text-decoration: none;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-section a:hover {
-            color: #3b82f6;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(59, 130, 246, 0.1);
-            color: #64748b;
-            font-size: 0.85rem;
-        }
-
-        /* Responsive */
+        :root {
+            --bg-deep: #080b14;
+            --bg-card: #0d1117;
+            --bg-elevated: #161b22;
+            --border: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-dim: #484f58;
+            --accent: #58a6ff;
+            --accent-glow: rgba(88, 166, 255, 0.15);
+            --green: #3fb950;
+            --red: #f85149;
+            --yellow: #d29922;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Sora', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--sans); background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code, .mono { font-family: var(--mono); }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        /* NAV */
+        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(8,11,20,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text-primary); }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text-primary); text-decoration: none; }
+        .nav-links .btn-sm { background: var(--accent); color: var(--bg-deep); padding: 0.4rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.8rem; }
+        .nav-links .btn-sm:hover { opacity: 0.9; }
+        /* HERO */
+        .hero { padding: 10rem 0 5rem; text-align: center; position: relative; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(88,166,255,0.06) 0%, transparent 70%); pointer-events: none; }
+        .hero h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 1.2rem; }
+        .hero h1 .highlight { background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero .subtitle { color: var(--text-secondary); font-size: 1.15rem; max-width: 640px; margin: 0 auto 2rem; line-height: 1.8; }
+        .hero .install { font-family: var(--mono); background: var(--bg-card); border: 1px solid var(--border); padding: 0.8rem 1.5rem; border-radius: 8px; font-size: 1rem; display: inline-block; margin-bottom: 1.5rem; color: var(--green); cursor: pointer; transition: border-color 0.2s; }
+        .hero .install:hover { border-color: var(--accent); }
+        .hero .install::before { content: '$ '; color: var(--text-dim); }
+        .deadline { display: inline-block; background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); color: var(--red); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 2rem; letter-spacing: 0.5px; }
+        .hero-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .hero-links a { padding: 0.7rem 1.5rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
+        .btn-primary { background: var(--accent); color: var(--bg-deep); }
+        .btn-primary:hover { opacity: 0.85; text-decoration: none; }
+        .btn-secondary { border: 1px solid var(--border); color: var(--text-primary); }
+        .btn-secondary:hover { border-color: var(--accent); text-decoration: none; }
+        /* COMMANDS */
+        section { padding: 5rem 0; }
+        .section-label { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; }
+        .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; letter-spacing: -1px; margin-bottom: 1rem; }
+        .section-desc { color: var(--text-secondary); max-width: 600px; margin-bottom: 3rem; }
+        .commands-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+        .cmd-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.8rem; transition: border-color 0.3s, transform 0.2s; }
+        .cmd-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .cmd-name { font-family: var(--mono); font-size: 1rem; font-weight: 600; color: var(--green); margin-bottom: 0.6rem; }
+        .cmd-desc { color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6; }
+        .cmd-tag { display: inline-block; font-family: var(--mono); font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; margin-top: 0.8rem; }
+        .tag-auto { background: rgba(63,185,80,0.12); color: var(--green); }
+        .tag-hybrid { background: rgba(210,153,34,0.12); color: var(--yellow); }
+        .tag-new { background: rgba(88,166,255,0.12); color: var(--accent); }
+        /* TERMINAL DEMO */
+        .terminal { background: #0d1117; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin: 2rem 0; font-family: var(--mono); font-size: 0.82rem; line-height: 1.8; max-width: 700px; }
+        .terminal-bar { background: var(--bg-elevated); padding: 0.6rem 1rem; display: flex; gap: 6px; align-items: center; border-bottom: 1px solid var(--border); }
+        .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .terminal-body { padding: 1.2rem 1.5rem; overflow-x: auto; }
+        .t-prompt { color: var(--accent); }
+        .t-cmd { color: var(--text-primary); }
+        .t-comment { color: var(--text-dim); }
+        .t-pass { color: var(--green); }
+        .t-fail { color: var(--red); }
+        .t-warn { color: var(--yellow); }
+        .t-dim { color: var(--text-dim); }
+
+        /* COMPLIANCE TABLE */
+        .compliance-table { width: 100%; border-collapse: collapse; margin: 2rem 0; }
+        .compliance-table th { text-align: left; font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); }
+        .compliance-table td { padding: 0.9rem 1rem; border-bottom: 1px solid rgba(33,38,45,0.5); font-size: 0.88rem; }
+        .compliance-table tr:hover { background: rgba(88,166,255,0.03); }
+        /* COMPARISON */
+        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .compare-col { padding: 2rem; }
+        .compare-col:first-child { background: var(--bg-elevated); border-right: 1px solid var(--border); }
+        .compare-col:last-child { background: var(--bg-card); }
+        .compare-col h3 { font-size: 0.95rem; margin-bottom: 1.2rem; }
+        .compare-item { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.8rem; font-size: 0.85rem; color: var(--text-secondary); }
+
+        /* TRUST LAYERS */
+        .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .trust-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; text-align: center; }
+        .trust-card .fw { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; }
+        .trust-card .status { font-family: var(--mono); font-size: 0.75rem; }
+        .status-full { color: var(--green); }
+        .status-scaffold { color: var(--text-dim); }
+
+        /* FOOTER */
+        footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 3rem; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; }
+        .footer-col h4 { font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; }
+        .footer-col a { display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem; }
+        .footer-bottom { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.8rem; }
+
+        /* RESPONSIVE */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-
-            .hero-stat {
-                font-size: 2.2rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-
-            nav {
-                padding: 1rem;
-            }
-
-            nav a {
-                margin-left: 1rem;
-                font-size: 0.9rem;
-            }
-
-            .section {
-                padding: 3rem 1rem;
-            }
-
-            .section h2 {
-                font-size: 1.5rem;
-            }
-
-            .hero-actions {
-                flex-direction: column;
-            }
-
-            .copy-box {
-                max-width: 100%;
-            }
-
-            .proof-content {
-                gap: 1rem;
-            }
-
-            .proof-item {
-                min-width: 150px;
-            }
-
-            .cta-actions {
-                flex-direction: column;
-            }
-
-            .cta-section {
-                padding: 2rem 1rem;
-            }
-
-            .cta-section h2 {
-                font-size: 1.5rem;
-            }
-
-            table {
-                font-size: 0.8rem;
-            }
-
-            th, td {
-                padding: 0.75rem 0.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero {
-                padding: 4rem 1rem;
-                margin-top: 70px;
-            }
-
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-
-            .hero-stat {
-                font-size: 1.8rem;
-            }
-
-            .section {
-                padding: 2rem 1rem;
-            }
-
-            .article-rates {
-                grid-template-columns: 1fr;
-            }
-
-            .distribution {
-                min-height: 250px;
-            }
-
-            .score-column {
-                min-height: 200px;
-            }
+            .compare-grid { grid-template-columns: 1fr; }
+            .compare-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .nav-links { gap: 0.8rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <nav>
-            <div class="logo">AIR Blackbox</div>
-            <div>
-                <a href="#how-it-works">Docs</a>
-                <a href="https://github.com/airblackbox/air-blackbox-mcp" target="_blank">GitHub</a>
-                <a href="https://pypi.org/project/air-blackbox-mcp/" target="_blank">PyPI</a>
+            <div class="logo">AIR <span>Blackbox</span></div>
+            <div class="nav-links">
+                <a href="#commands">Commands</a>
+                <a href="#compliance">Compliance</a>
+                <a href="#compare">Why AIR</a>
+                <a href="https://github.com/airblackbox/gateway">GitHub</a>
+                <a href="https://pypi.org/project/air-blackbox/" class="btn-sm">PyPI</a>
             </div>
         </nav>
     </header>
 
-    <!-- Hero Section -->
+    <!-- HERO -->
     <section class="hero">
-        <div class="hero-content">
-            <h1>
-                <span class="hero-stat">98%</span> of AI Agent Code Fails EU AI Act Compliance
-            </h1>
-            <p>We scanned 240,797 files across 436 major open-source AI projects. Here's what we found.</p>
-
-            <div class="hero-actions">
-                <div class="copy-box" onclick="copyToClipboard(this)">
-                    pip install air-blackbox-mcp
-                </div>
-                <a href="https://github.com/airblackbox/air-blackbox-mcp" target="_blank" class="btn btn-secondary">View on GitHub</a>
+        <div class="container">
+            <div class="deadline">⚠ 144 DAYS TO EU AI ACT HIGH-RISK DEADLINE</div>
+            <h1>AI governance<br><span class="highlight">control plane</span></h1>
+            <p class="subtitle">EU AI Act compliance, AI-BOM generation, shadow AI detection, runtime validation, and tamper-proof audit trails. Five commands. One install. 90% automated.</p>
+            <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox').then(()=>this.textContent='Copied!').catch(()=>{})">pip install air-blackbox</div>
+            <div class="hero-links">
+                <a href="https://github.com/airblackbox/gateway" class="btn-primary">GitHub →</a>
+                <a href="#demo" class="btn-secondary">See Demo</a>
             </div>
         </div>
     </section>
-
-    <!-- Social Proof Bar -->
-    <section class="social-proof">
-        <div class="proof-content">
-            <div class="proof-item">
-                <div class="proof-label">Files Scanned</div>
-                <div class="proof-stat">240,797</div>
-            </div>
-            <div class="proof-item">
-                <div class="proof-label">Projects Analyzed</div>
-                <div class="proof-stat">436</div>
-            </div>
-            <div class="proof-item">
-                <div class="proof-label">Major Open-Source</div>
-                <div class="proof-stat">AI Projects</div>
-            </div>
-            <div class="proof-item">
-                <div class="proof-label">EU AI Act Deadline</div>
-                <div class="proof-stat">August 2026</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Article Failure Rates -->
-    <section class="section">
-        <h2>Why They're Failing</h2>
-        <p class="section-subtitle">Percentage of files failing each EU AI Act article across 240,797 scanned files</p>
-
-        <div class="article-rates">
-            <div class="rate-item">
-                <div class="rate-label">
-                    <span class="rate-label-text">Article 9: Risk Management</span>
-                    <span class="rate-percentage">98.5% fail</span>
+    <!-- COMMANDS -->
+    <section id="commands">
+        <div class="container">
+            <div class="section-label">Five Commands</div>
+            <h2 class="section-title">One product. Complete governance.</h2>
+            <p class="section-desc">Every command reads from the same audit chain. Install once, run anywhere.</p>
+            <div class="commands-grid">
+                <div class="cmd-card">
+                    <div class="cmd-name">comply</div>
+                    <div class="cmd-desc">20 EU AI Act checks across Articles 9-15. Per-article pass/warn/fail with fix hints. 90% auto-detected from gateway traffic.</div>
+                    <span class="cmd-tag tag-auto">90% AUTO</span>
                 </div>
-                <div class="bar-container">
-                    <div class="bar" style="--fill: 98.5%"></div>
+                <div class="cmd-card">
+                    <div class="cmd-name">discover</div>
+                    <div class="cmd-desc">AI Bill of Materials (CycloneDX 1.6) from observed traffic. Shadow AI detection against approved model registry. Tool &amp; provider inventory.</div>
+                    <span class="cmd-tag tag-auto">AUTO</span>
                 </div>
-            </div>
-
-            <div class="rate-item">
-                <div class="rate-label">
-                    <span class="rate-label-text">Article 10: Data & Governance</span>
-                    <span class="rate-percentage">86.1% fail</span>
+                <div class="cmd-card">
+                    <div class="cmd-name">replay</div>
+                    <div class="cmd-desc">Full incident reconstruction from HMAC-SHA256 audit chain. Verify chain integrity. Filter by time, model, status. Detail view per run.</div>
+                    <span class="cmd-tag tag-auto">AUTO</span>
                 </div>
-                <div class="bar-container">
-                    <div class="bar" style="--fill: 86.1%"></div>
+                <div class="cmd-card">
+                    <div class="cmd-name">export</div>
+                    <div class="cmd-desc">Signed evidence bundle: compliance scan + AI-BOM + audit trail + HMAC attestation. One JSON file for your auditor or insurer.</div>
+                    <span class="cmd-tag tag-auto">AUTO</span>
                 </div>
-            </div>
-
-            <div class="rate-item">
-                <div class="rate-label">
-                    <span class="rate-label-text">Article 11: Technical Documentation</span>
-                    <span class="rate-percentage">50.2% fail</span>
-                </div>
-                <div class="bar-container">
-                    <div class="bar" style="--fill: 50.2%"></div>
-                </div>
-            </div>
-
-            <div class="rate-item">
-                <div class="rate-label">
-                    <span class="rate-label-text">Article 12: Record-Keeping</span>
-                    <span class="rate-percentage">84.8% fail</span>
-                </div>
-                <div class="bar-container">
-                    <div class="bar" style="--fill: 84.8%"></div>
-                </div>
-            </div>
-
-            <div class="rate-item">
-                <div class="rate-label">
-                    <span class="rate-label-text">Article 14: Human Oversight</span>
-                    <span class="rate-percentage">99.2% fail</span>
-                </div>
-                <div class="bar-container">
-                    <div class="bar" style="--fill: 99.2%"></div>
-                </div>
-            </div>
-
-            <div class="rate-item">
-                <div class="rate-label">
-                    <span class="rate-label-text">Article 15: Accuracy, Robustness & Cybersecurity</span>
-                    <span class="rate-percentage">52.4% fail</span>
-                </div>
-                <div class="bar-container">
-                    <div class="bar" style="--fill: 52.4%"></div>
+                <div class="cmd-card">
+                    <div class="cmd-name">validate</div>
+                    <div class="cmd-desc">Pre-execution runtime certification. Checks tool calls against allowlists, schemas, content policies, PII rules, and hallucination guards before execution.</div>
+                    <span class="cmd-tag tag-new">NEW — Art. 15</span>
                 </div>
             </div>
         </div>
     </section>
+    <!-- DEMO -->
+    <section id="demo">
+        <div class="container">
+            <div class="section-label">30-Second Demo</div>
+            <h2 class="section-title">No Docker. No config. No API keys.</h2>
+            <div class="terminal">
+                <div class="terminal-bar">
+                    <div class="terminal-dot" style="background:#f85149"></div>
+                    <div class="terminal-dot" style="background:#d29922"></div>
+                    <div class="terminal-dot" style="background:#3fb950"></div>
+                </div>
+                <div class="terminal-body">
+<span class="t-prompt">$</span> <span class="t-cmd">pip install air-blackbox</span>
+<span class="t-prompt">$</span> <span class="t-cmd">air-blackbox demo</span>
+<span class="t-dim">  Generating 10 sample AI agent records...</span>
+<span class="t-dim">  Created: RISK_ASSESSMENT.md, DATA_GOVERNANCE.md</span>
 
-    <!-- Score Distribution -->
-    <section class="section">
-        <h2>Compliance Score Distribution</h2>
-        <p class="section-subtitle">Only 18 files (0.007%) achieve perfect compliance across all 6 articles</p>
+<span class="t-prompt">$</span> <span class="t-cmd">air-blackbox comply -v</span>
 
-        <div class="distribution">
-            <div class="score-column">
-                <div class="score-bar" style="--height: 280px"></div>
-                <div class="score-label">0/6</div>
-                <div class="score-value">53,836 (22.4%)</div>
-            </div>
-            <div class="score-column">
-                <div class="score-bar" style="--height: 400px"></div>
-                <div class="score-label">1/6</div>
-                <div class="score-value">93,964 (39.0%)</div>
-            </div>
-            <div class="score-column">
-                <div class="score-bar" style="--height: 340px"></div>
-                <div class="score-label">2/6</div>
-                <div class="score-value">67,214 (27.9%)</div>
-            </div>
-            <div class="score-column">
-                <div class="score-bar" style="--height: 120px"></div>
-                <div class="score-label">3/6</div>
-                <div class="score-value">21,493 (8.9%)</div>
-            </div>
-            <div class="score-column">
-                <div class="score-bar" style="--height: 40px"></div>
-                <div class="score-label">4/6</div>
-                <div class="score-value">3,972 (1.6%)</div>
-            </div>
-            <div class="score-column">
-                <div class="score-bar" style="--height: 8px"></div>
-                <div class="score-label">5/6</div>
-                <div class="score-value">300 (0.1%)</div>
-            </div>
-            <div class="score-column">
-                <div class="score-bar" style="--height: 2px"></div>
-                <div class="score-label">6/6</div>
-                <div class="score-value">18 (0.007%)</div>
+<span class="t-pass">  ✅ Art. 12 — Record-Keeping         4/4 checks AUTO</span>
+<span class="t-pass">  ✅ Art. 15 — Robustness             3/4 checks AUTO</span>
+<span class="t-warn">  ⚠  Art. 11 — Technical Docs        3/4 checks HYBRID</span>
+<span class="t-warn">  ⚠  Art. 10 — Data Governance       2/4 checks HYBRID</span>
+<span class="t-fail">  ❌ Art. 14 — Human Oversight        1/2 checks MANUAL</span>
+<span class="t-fail">  ❌ Art. 9  — Risk Management        1/2 checks MANUAL</span>
+
+<span class="t-dim">  14 passing · 4 warnings · 2 failing · 90% automated</span>
+                </div>
             </div>
         </div>
     </section>
-
-    <!-- Project Results Table -->
-    <section class="section">
-        <h2>Top Projects from 436 Scanned</h2>
-        <p class="section-subtitle">Average compliance scores by repository</p>
-
-        <div class="table-container">
-            <table>
+    <!-- COMPLIANCE TABLE -->
+    <section id="compliance">
+        <div class="container">
+            <div class="section-label">EU AI Act Coverage</div>
+            <h2 class="section-title">20 checks. 6 articles. 90% automated.</h2>
+            <table class="compliance-table">
                 <thead>
-                    <tr>
-                        <th>Project</th>
-                        <th>GitHub Stars</th>
-                        <th>Files Scanned</th>
-                        <th>Avg Score</th>
-                    </tr>
+                    <tr><th>Article</th><th>What It Covers</th><th>Detection</th></tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><strong>TensorFlow</strong></td>
-                        <td>180K</td>
-                        <td>3,114</td>
-                        <td class="score-cell">1.6/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>AutoGPT</strong></td>
-                        <td>172K</td>
-                        <td>858</td>
-                        <td class="score-cell">1.4/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Transformers</strong></td>
-                        <td>145K</td>
-                        <td>3,571</td>
-                        <td class="score-cell">2.0/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Stable Diffusion WebUI</strong></td>
-                        <td>145K</td>
-                        <td>211</td>
-                        <td class="score-cell">0.7/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>LangChain</strong></td>
-                        <td>95K</td>
-                        <td>2,263</td>
-                        <td class="score-cell">0.9/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>PyTorch</strong></td>
-                        <td>87K</td>
-                        <td>4,150</td>
-                        <td class="score-cell">1.0/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Whisper</strong></td>
-                        <td>76K</td>
-                        <td>20</td>
-                        <td class="score-cell">0.9/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>FastAPI</strong></td>
-                        <td>70K</td>
-                        <td>937</td>
-                        <td class="score-cell">0.7/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>ComfyUI</strong></td>
-                        <td>68K</td>
-                        <td>506</td>
-                        <td class="score-cell">0.9/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Keras</strong></td>
-                        <td>63K</td>
-                        <td>941</td>
-                        <td class="score-cell">0.8/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>scikit-learn</strong></td>
-                        <td>60K</td>
-                        <td>933</td>
-                        <td class="score-cell">1.8/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Dify</strong></td>
-                        <td>55K</td>
-                        <td>2,256</td>
-                        <td class="score-cell">0.9/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>PrivateGPT</strong></td>
-                        <td>54K</td>
-                        <td>74</td>
-                        <td class="score-cell">0.8/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Segment Anything</strong></td>
-                        <td>49K</td>
-                        <td>28</td>
-                        <td class="score-cell">0.8/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>MetaGPT</strong></td>
-                        <td>48K</td>
-                        <td>383</td>
-                        <td class="score-cell">1.3/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>OpenHands</strong></td>
-                        <td>45K</td>
-                        <td>407</td>
-                        <td class="score-cell">1.2/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>vLLM</strong></td>
-                        <td>43K</td>
-                        <td>2,073</td>
-                        <td class="score-cell">1.3/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>LlamaIndex</strong></td>
-                        <td>38K</td>
-                        <td>3,190</td>
-                        <td class="score-cell">0.8/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Microsoft AutoGen</strong></td>
-                        <td>38K</td>
-                        <td>1,261</td>
-                        <td class="score-cell">1.1/6</td>
-                    </tr>
-                    <tr>
-                        <td><strong>DeepSpeed</strong></td>
-                        <td>36K</td>
-                        <td>792</td>
-                        <td class="score-cell">1.5/6</td>
-                    </tr>
+                    <tr><td><strong>Art. 9</strong> — Risk Management</td><td>Risk assessment docs, active mitigations</td><td><span class="cmd-tag tag-hybrid">HYBRID</span></td></tr>
+                    <tr><td><strong>Art. 10</strong> — Data Governance</td><td>PII in prompts, data vault, governance docs</td><td><span class="cmd-tag tag-auto">AUTO</span> + <span class="cmd-tag tag-hybrid">HYBRID</span></td></tr>
+                    <tr><td><strong>Art. 11</strong> — Technical Docs</td><td>AI-BOM inventory, model cards, doc currency</td><td><span class="cmd-tag tag-auto">AUTO</span> + <span class="cmd-tag tag-hybrid">HYBRID</span></td></tr>
+                    <tr><td><strong>Art. 12</strong> — Record-Keeping</td><td>HMAC audit chain, traceability, retention</td><td><span class="cmd-tag tag-auto">100% AUTO</span></td></tr>
+                    <tr><td><strong>Art. 14</strong> — Human Oversight</td><td>Kill switch, approval gates, operator docs</td><td><span class="cmd-tag tag-auto">AUTO</span> + MANUAL</td></tr>
+                    <tr><td><strong>Art. 15</strong> — Robustness</td><td>Injection detection, runtime validation, access control</td><td><span class="cmd-tag tag-auto">AUTO</span> + MANUAL</td></tr>
                 </tbody>
             </table>
         </div>
     </section>
-
-    <!-- How It Works -->
-    <section class="section" id="how-it-works">
-        <h2>How It Works</h2>
-        <p class="section-subtitle">Get your compliance score in minutes</p>
-
-        <div class="how-it-works">
-            <div class="step">
-                <div class="step-number">1</div>
-                <h3>Install</h3>
-                <p>Add AIR Blackbox to your project with a single pip command.</p>
-                <div class="code-block">pip install air-blackbox-mcp</div>
-            </div>
-
-            <div class="step">
-                <div class="step-number">2</div>
-                <h3>Scan</h3>
-                <p>Run the scanner against your Python AI agent codebase to detect compliance gaps.</p>
-                <div class="code-block">from air_blackbox_mcp.scanner import scan_code<br>result = scan_code(open("your_agent.py").read())<br>print(result["compliance_score"])</div>
-            </div>
-
-            <div class="step">
-                <div class="step-number">3</div>
-                <h3>Fix</h3>
-                <p>Get remediation guidance and trust layer code for each failing article.</p>
-                <div class="code-block">from air_blackbox_mcp import add_trust_layer<br>fixed_code = add_trust_layer(code, framework="langchain")</div>
+    <!-- TRUST LAYERS -->
+    <section id="trust">
+        <div class="container">
+            <div class="section-label">Framework Support</div>
+            <h2 class="section-title">Drop-in trust layers for every major framework.</h2>
+            <p class="section-desc">Non-blocking callbacks that observe and log — never control or block. If logging fails, your agent keeps running.</p>
+            <div class="trust-grid">
+                <div class="trust-card"><div class="fw">LangChain / LangGraph</div><div class="status status-full">✅ Full</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[langchain]"</code></div>
+                <div class="trust-card"><div class="fw">OpenAI SDK</div><div class="status status-full">✅ Full</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[openai]"</code></div>
+                <div class="trust-card"><div class="fw">Google ADK</div><div class="status status-scaffold">🔧 Scaffold</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[adk]"</code></div>
+                <div class="trust-card"><div class="fw">CrewAI</div><div class="status status-scaffold">🔧 Scaffold</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[crewai]"</code></div>
+                <div class="trust-card"><div class="fw">AutoGen</div><div class="status status-scaffold">🔧 Scaffold</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[autogen]"</code></div>
             </div>
         </div>
     </section>
-
-    <!-- Terminal Demo -->
-    <section class="section">
-        <h2>See It In Action</h2>
-        <p class="section-subtitle">Example scan output on a typical AI agent project</p>
-
-        <div class="terminal">
-            <div class="terminal-line"><span class="terminal-prompt">$</span> air-scan --path ./agents</div>
-            <div class="terminal-line"></div>
-            <div class="terminal-line"><span class="terminal-output">╭─────────────────────────────────────────────────────────╮</span></div>
-            <div class="terminal-line"><span class="terminal-output">│ AIR Blackbox - EU AI Act Compliance Scanner              │</span></div>
-            <div class="terminal-line"><span class="terminal-output">│ v2.1.0 | air-blackbox.ai                                │</span></div>
-            <div class="terminal-line"><span class="terminal-output">╰─────────────────────────────────────────────────────────╯</span></div>
-            <div class="terminal-line"></div>
-            <div class="terminal-line"><span class="terminal-output">Scanning: /agents (156 Python files)</span></div>
-            <div class="terminal-line"><span class="terminal-output">Framework detected: LangChain</span></div>
-            <div class="terminal-line"><span class="terminal-output">Articles to check: 9, 10, 11, 12, 14, 15</span></div>
-            <div class="terminal-line"></div>
-            <div class="terminal-line"><span class="terminal-output">▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 95% [156/156 files scanned]</span></div>
-            <div class="terminal-line"></div>
-            <div class="terminal-line"><span class="terminal-success">✓ Scan complete</span></div>
-            <div class="terminal-line"></div>
-            <div class="terminal-line"><span class="terminal-output">OVERALL COMPLIANCE SCORE: 2.2 / 6.0</span></div>
-            <div class="terminal-line"></div>
-            <div class="terminal-line"><span class="terminal-warning">Article 9  (Risk Management)     │ ✗ FAIL │ 1/6 checks passed</span></div>
-            <div class="terminal-line"><span class="terminal-warning">Article 10 (Data & Governance)   │ ✗ FAIL │ 0/6 checks passed</span></div>
-            <div class="terminal-line"><span class="terminal-warning">Article 11 (Testing & Docs)     │ ✗ FAIL │ 2/6 checks passed</span></div>
-            <div class="terminal-line"><span class="terminal-warning">Article 12 (Record-Keeping)     │ ✗ FAIL │ 1/6 checks passed</span></div>
-            <div class="terminal-line"><span class="terminal-error">Article 14 (Human Oversight)    │ ✗ FAIL │ 0/6 checks passed</span></div>
-            <div class="terminal-line"><span class="terminal-warning">Article 15 (Transparency)       │ ✗ FAIL │ 2/6 checks passed</span></div>
-            <div class="terminal-line"></div>
-            <div class="terminal-line"><span class="terminal-output">Run 'air-fix --article 9' for remediation guidance</span></div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="section">
-        <div class="cta-section">
-            <h2>August 2026 is coming.</h2>
-            <p>Start scanning your AI agents today. Compliance won't build itself.</p>
-
-            <div class="cta-actions">
-                <div class="copy-box" onclick="copyToClipboard(this)" style="flex: 0; min-width: auto; max-width: 100%;">
-                    pip install air-blackbox-mcp
+    <!-- COMPARISON -->
+    <section id="compare">
+        <div class="container">
+            <div class="section-label">Why AIR Blackbox</div>
+            <h2 class="section-title">Observability tools answer "how is it performing?"<br>AIR answers "what exactly happened, and can we prove it?"</h2>
+            <div class="compare-grid" style="margin-top:2rem">
+                <div class="compare-col">
+                    <h3 style="color:var(--text-dim)">Langfuse / Helicone / Datadog</h3>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> Data lives in their cloud</div>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> Raw PII exposed in traces</div>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No tamper-evident chain</div>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No compliance mapping</div>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No AI-BOM generation</div>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No shadow AI detection</div>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No pre-execution validation</div>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No evidence export</div>
                 </div>
-                <a href="https://github.com/airblackbox/air-blackbox-mcp" target="_blank" class="btn btn-secondary">View Full Report</a>
-                <a href="https://github.com/airblackbox/air-blackbox-mcp" target="_blank" class="btn btn-primary">Get Started</a>
+                <div class="compare-col">
+                    <h3 style="color:var(--accent)">AIR Blackbox</h3>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> Your vault (S3/MinIO/local)</div>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> Vault references only</div>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> HMAC-SHA256 audit chain</div>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> 20 checks, Art. 9-15</div>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> CycloneDX 1.6 AI-BOM</div>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> Approved model registry</div>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> Runtime validation engine</div>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> Signed evidence bundles</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- COMPARISON -->
+    <section id="compare">
+        <div class="container">
+            <div class="section-label">Why AIR Blackbox</div>
+            <h2 class="section-title">They answer "how is it performing?"<br>AIR answers "what happened, and can we prove it?"</h2>
+            <div class="compare-grid" style="margin-top:2rem">
+                <div class="compare-col">
+                    <h3 style="color:var(--text-dim)">Observability Tools</h3>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> Data in their cloud</div>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> Raw PII in traces</div>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No tamper-evident chain</div>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No compliance checks</div>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No AI-BOM</div>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No shadow AI detection</div>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No runtime validation</div>
+                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No evidence export</div>
+                </div>
+                <div class="compare-col">
+                    <h3 style="color:var(--accent)">AIR Blackbox</h3>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> Your vault (S3/MinIO/local)</div>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> Vault references only</div>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> HMAC-SHA256 chain</div>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> 20 checks, Art. 9-15</div>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> CycloneDX 1.6 AI-BOM</div>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> Approved model registry</div>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> 5-rule validation engine</div>
+                    <div class="compare-item"><span style="color:var(--green)">✓</span> Signed evidence bundles</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- CTA -->
+    <section style="text-align:center; padding:5rem 0">
+        <div class="container">
+            <h2 class="section-title">August 2, 2026 is coming.</h2>
+            <p style="color:var(--text-secondary); margin-bottom:2rem">Penalties up to €35M or 7% of global turnover. Start scanning today.</p>
+            <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox')">pip install air-blackbox</div>
+            <div class="hero-links" style="margin-top:1.5rem">
+                <a href="https://github.com/airblackbox/gateway" class="btn-primary">View on GitHub →</a>
+                <a href="https://pypi.org/project/air-blackbox/" class="btn-secondary">PyPI Package</a>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- FOOTER -->
     <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Resources</h3>
-                <a href="https://github.com/airblackbox/air-blackbox-mcp" target="_blank">GitHub Repository</a>
-                <a href="https://pypi.org/project/air-blackbox-mcp/" target="_blank">PyPI Package</a>
-                <a href="https://huggingface.co/spaces/airblackbox/air-blackbox-scanner" target="_blank">HuggingFace Demo</a>
-                <a href="https://github.com/airblackbox/air-blackbox-mcp/blob/main/benchmarks/REAL_WORLD_COMPLIANCE_REPORT.md" target="_blank">Full Scan Report</a>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom:0.8rem">AIR <span style="color:var(--accent)">Blackbox</span></div>
+                    <p style="color:var(--text-dim); font-size:0.85rem;">AI governance control plane.<br>Open source. Apache 2.0.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <a href="https://github.com/airblackbox/gateway">Gateway Repo</a>
+                    <a href="https://pypi.org/project/air-blackbox/">PyPI Package</a>
+                    <a href="https://github.com/airblackbox/gateway/blob/main/docs/quickstart.html">Quickstart</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Ecosystem</h4>
+                    <a href="https://github.com/airblackbox/VaultMind">VaultMind</a>
+                    <a href="https://github.com/airblackbox/air-blackbox-mcp">MCP Server</a>
+                    <a href="https://github.com/airblackbox">GitHub Org</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Community</h4>
+                    <a href="https://github.com/airblackbox/gateway/discussions">Discussions</a>
+                    <a href="https://github.com/airblackbox/gateway/issues">Issues</a>
+                    <a href="https://github.com/airblackbox/gateway/blob/main/CONTRIBUTING.md">Contribute</a>
+                </div>
             </div>
-            <div class="footer-section">
-                <h3>Documentation</h3>
-                <a href="#" target="_blank">Getting Started</a>
-                <a href="#" target="_blank">API Reference</a>
-                <a href="#" target="_blank">CLI Guide</a>
-                <a href="#" target="_blank">FAQ</a>
-            </div>
-            <div class="footer-section">
-                <h3>Legal</h3>
-                <a href="#" target="_blank">EU AI Act Overview</a>
-                <a href="#" target="_blank">Compliance Guide</a>
-                <a href="#" target="_blank">License (Apache 2.0)</a>
-                <a href="#" target="_blank">Privacy Policy</a>
-            </div>
-            <div class="footer-section">
-                <h3>Community</h3>
-                <a href="https://github.com/airblackbox/air-blackbox-mcp" target="_blank">Contribute</a>
-                <a href="https://github.com/airblackbox/air-blackbox-mcp" target="_blank">Issues</a>
-                <a href="https://github.com/airblackbox/air-blackbox-mcp" target="_blank">Discussions</a>
-                <a href="#" target="_blank">Contact</a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 AIR Blackbox. Open-source EU AI Act compliance scanner for Python AI agents. Made with care for developers building responsibly.</p>
+            <div class="footer-bottom">© 2026 AIR Blackbox. Open-source AI governance. Built on OpenTelemetry.</div>
         </div>
     </footer>
-
-    <script>
-        function copyToClipboard(element) {
-            const text = element.textContent.trim();
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = element.textContent;
-                element.textContent = '✓ Copied!';
-                element.style.color = '#10b981';
-                setTimeout(() => {
-                    element.textContent = originalText;
-                    element.style.color = '#3b82f6';
-                }, 2000);
-            });
-        }
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-    </script>
 </body>
 </html>
