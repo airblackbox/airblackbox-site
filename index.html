@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIR Blackbox — AI Governance Control Plane</title>
-    <meta name="description" content="EU AI Act compliance, AI-BOM, shadow AI detection, and tamper-proof audit trails. pip install air-blackbox">
+    <meta name="description" content="EU AI Act compliance, AI-BOM, shadow AI detection, runtime validation, and tamper-proof audit trails. pip install air-blackbox">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -30,8 +30,6 @@
         a:hover { text-decoration: underline; }
         code, .mono { font-family: var(--mono); }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
-
-        /* NAV */
         header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(8,11,20,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
         nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text-primary); }
@@ -40,8 +38,6 @@
         .nav-links a { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
         .nav-links a:hover { color: var(--text-primary); text-decoration: none; }
         .nav-links .btn-sm { background: var(--accent); color: var(--bg-deep); padding: 0.4rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.8rem; }
-        .nav-links .btn-sm:hover { opacity: 0.9; }
-        /* HERO */
         .hero { padding: 10rem 0 5rem; text-align: center; position: relative; }
         .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(88,166,255,0.06) 0%, transparent 70%); pointer-events: none; }
         .hero h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 1.2rem; }
@@ -57,7 +53,6 @@
         .btn-primary:hover { opacity: 0.85; text-decoration: none; }
         .btn-secondary { border: 1px solid var(--border); color: var(--text-primary); }
         .btn-secondary:hover { border-color: var(--accent); text-decoration: none; }
-        /* COMMANDS */
         section { padding: 5rem 0; }
         .section-label { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; }
         .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; letter-spacing: -1px; margin-bottom: 1rem; }
@@ -71,130 +66,59 @@
         .tag-auto { background: rgba(63,185,80,0.12); color: var(--green); }
         .tag-hybrid { background: rgba(210,153,34,0.12); color: var(--yellow); }
         .tag-new { background: rgba(88,166,255,0.12); color: var(--accent); }
-        /* TERMINAL DEMO */
         .terminal { background: #0d1117; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin: 2rem 0; font-family: var(--mono); font-size: 0.82rem; line-height: 1.8; max-width: 700px; }
         .terminal-bar { background: var(--bg-elevated); padding: 0.6rem 1rem; display: flex; gap: 6px; align-items: center; border-bottom: 1px solid var(--border); }
         .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
         .terminal-body { padding: 1.2rem 1.5rem; overflow-x: auto; }
-        .t-prompt { color: var(--accent); }
-        .t-cmd { color: var(--text-primary); }
-        .t-comment { color: var(--text-dim); }
-        .t-pass { color: var(--green); }
-        .t-fail { color: var(--red); }
-        .t-warn { color: var(--yellow); }
-        .t-dim { color: var(--text-dim); }
-
-        /* COMPLIANCE TABLE */
+        .t-prompt { color: var(--accent); } .t-cmd { color: var(--text-primary); } .t-comment { color: var(--text-dim); }
+        .t-pass { color: var(--green); } .t-fail { color: var(--red); } .t-warn { color: var(--yellow); } .t-dim { color: var(--text-dim); }
         .compliance-table { width: 100%; border-collapse: collapse; margin: 2rem 0; }
         .compliance-table th { text-align: left; font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); }
         .compliance-table td { padding: 0.9rem 1rem; border-bottom: 1px solid rgba(33,38,45,0.5); font-size: 0.88rem; }
         .compliance-table tr:hover { background: rgba(88,166,255,0.03); }
-        /* COMPARISON */
         .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-        .compare-col { padding: 2rem; }
-        .compare-col:first-child { background: var(--bg-elevated); border-right: 1px solid var(--border); }
-        .compare-col:last-child { background: var(--bg-card); }
+        .compare-col { padding: 2rem; } .compare-col:first-child { background: var(--bg-elevated); border-right: 1px solid var(--border); } .compare-col:last-child { background: var(--bg-card); }
         .compare-col h3 { font-size: 0.95rem; margin-bottom: 1.2rem; }
         .compare-item { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.8rem; font-size: 0.85rem; color: var(--text-secondary); }
-
-        /* TRUST LAYERS */
         .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
         .trust-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; text-align: center; }
         .trust-card .fw { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; }
         .trust-card .status { font-family: var(--mono); font-size: 0.75rem; }
-        .status-full { color: var(--green); }
-        .status-scaffold { color: var(--text-dim); }
-
-        /* FOOTER */
+        .status-full { color: var(--green); } .status-scaffold { color: var(--text-dim); }
         footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 3rem; }
         .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; }
         .footer-col h4 { font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; }
         .footer-col a { display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem; }
         .footer-bottom { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.8rem; }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .compare-grid { grid-template-columns: 1fr; }
-            .compare-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
-            .footer-grid { grid-template-columns: 1fr 1fr; }
-            .nav-links { gap: 0.8rem; }
-        }
+        @media (max-width: 768px) { .compare-grid { grid-template-columns: 1fr; } .compare-col:first-child { border-right: none; border-bottom: 1px solid var(--border); } .footer-grid { grid-template-columns: 1fr 1fr; } .nav-links { gap: 0.8rem; } }
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">AIR <span>Blackbox</span></div>
-            <div class="nav-links">
-                <a href="#commands">Commands</a>
-                <a href="#compliance">Compliance</a>
-                <a href="#compare">Why AIR</a>
-                <a href="https://github.com/airblackbox/gateway">GitHub</a>
-                <a href="https://pypi.org/project/air-blackbox/" class="btn-sm">PyPI</a>
-            </div>
-        </nav>
-    </header>
-
-    <!-- HERO -->
-    <section class="hero">
-        <div class="container">
-            <div class="deadline">⚠ 144 DAYS TO EU AI ACT HIGH-RISK DEADLINE</div>
-            <h1>AI governance<br><span class="highlight">control plane</span></h1>
-            <p class="subtitle">EU AI Act compliance, AI-BOM generation, shadow AI detection, runtime validation, and tamper-proof audit trails. Five commands. One install. 90% automated.</p>
-            <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox').then(()=>this.textContent='Copied!').catch(()=>{})">pip install air-blackbox</div>
-            <div class="hero-links">
-                <a href="https://github.com/airblackbox/gateway" class="btn-primary">GitHub →</a>
-                <a href="#demo" class="btn-secondary">See Demo</a>
-            </div>
+    <header><nav><div class="logo">AIR <span>Blackbox</span></div><div class="nav-links"><a href="#commands">Commands</a><a href="#compliance">Compliance</a><a href="#compare">Why AIR</a><a href="https://github.com/airblackbox/gateway">GitHub</a><a href="https://pypi.org/project/air-blackbox/" class="btn-sm">PyPI</a></div></nav></header>
+    <section class="hero"><div class="container">
+        <div class="deadline" id="countdown"></div>
+        <script>(function(){var d=document.getElementById('countdown');var days=Math.ceil((new Date('2026-08-02')-new Date())/(1000*60*60*24));d.textContent='\u26A0 '+days+' DAYS TO EU AI ACT HIGH-RISK DEADLINE';})()</script>
+        <h1>AI governance<br><span class="highlight">control plane</span></h1>
+        <p class="subtitle">EU AI Act compliance, AI-BOM generation, shadow AI detection, runtime validation, and tamper-proof audit trails. Five commands. One install. 90% automated.</p>
+        <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox').then(()=>this.textContent='Copied!')">pip install air-blackbox</div>
+        <div class="hero-links"><a href="https://github.com/airblackbox/gateway" class="btn-primary">GitHub →</a><a href="#demo" class="btn-secondary">See Demo</a></div>
+    </div></section>
+    <section id="commands"><div class="container">
+        <div class="section-label">Five Commands</div>
+        <h2 class="section-title">One product. Complete governance.</h2>
+        <p class="section-desc">Every command reads from the same audit chain. Install once, run anywhere.</p>
+        <div class="commands-grid">
+            <div class="cmd-card"><div class="cmd-name">comply</div><div class="cmd-desc">20 EU AI Act checks across Articles 9-15. Per-article pass/warn/fail with fix hints. 90% auto-detected from gateway traffic.</div><span class="cmd-tag tag-auto">90% AUTO</span></div>
+            <div class="cmd-card"><div class="cmd-name">discover</div><div class="cmd-desc">AI Bill of Materials (CycloneDX 1.6) from observed traffic. Shadow AI detection against approved model registry. Tool &amp; provider inventory.</div><span class="cmd-tag tag-auto">AUTO</span></div>
+            <div class="cmd-card"><div class="cmd-name">replay</div><div class="cmd-desc">Full incident reconstruction from HMAC-SHA256 audit chain. Verify chain integrity. Filter by time, model, status.</div><span class="cmd-tag tag-auto">AUTO</span></div>
+            <div class="cmd-card"><div class="cmd-name">export</div><div class="cmd-desc">Signed evidence bundle: compliance scan + AI-BOM + audit trail + HMAC attestation. One JSON file for your auditor or insurer.</div><span class="cmd-tag tag-auto">AUTO</span></div>
+            <div class="cmd-card"><div class="cmd-name">validate</div><div class="cmd-desc">Pre-execution runtime certification. Checks tool calls against allowlists, schemas, content policies, PII rules, and hallucination guards before execution.</div><span class="cmd-tag tag-new">NEW — Art. 15</span></div>
         </div>
-    </section>
-    <!-- COMMANDS -->
-    <section id="commands">
-        <div class="container">
-            <div class="section-label">Five Commands</div>
-            <h2 class="section-title">One product. Complete governance.</h2>
-            <p class="section-desc">Every command reads from the same audit chain. Install once, run anywhere.</p>
-            <div class="commands-grid">
-                <div class="cmd-card">
-                    <div class="cmd-name">comply</div>
-                    <div class="cmd-desc">20 EU AI Act checks across Articles 9-15. Per-article pass/warn/fail with fix hints. 90% auto-detected from gateway traffic.</div>
-                    <span class="cmd-tag tag-auto">90% AUTO</span>
-                </div>
-                <div class="cmd-card">
-                    <div class="cmd-name">discover</div>
-                    <div class="cmd-desc">AI Bill of Materials (CycloneDX 1.6) from observed traffic. Shadow AI detection against approved model registry. Tool &amp; provider inventory.</div>
-                    <span class="cmd-tag tag-auto">AUTO</span>
-                </div>
-                <div class="cmd-card">
-                    <div class="cmd-name">replay</div>
-                    <div class="cmd-desc">Full incident reconstruction from HMAC-SHA256 audit chain. Verify chain integrity. Filter by time, model, status. Detail view per run.</div>
-                    <span class="cmd-tag tag-auto">AUTO</span>
-                </div>
-                <div class="cmd-card">
-                    <div class="cmd-name">export</div>
-                    <div class="cmd-desc">Signed evidence bundle: compliance scan + AI-BOM + audit trail + HMAC attestation. One JSON file for your auditor or insurer.</div>
-                    <span class="cmd-tag tag-auto">AUTO</span>
-                </div>
-                <div class="cmd-card">
-                    <div class="cmd-name">validate</div>
-                    <div class="cmd-desc">Pre-execution runtime certification. Checks tool calls against allowlists, schemas, content policies, PII rules, and hallucination guards before execution.</div>
-                    <span class="cmd-tag tag-new">NEW — Art. 15</span>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- DEMO -->
-    <section id="demo">
-        <div class="container">
-            <div class="section-label">30-Second Demo</div>
-            <h2 class="section-title">No Docker. No config. No API keys.</h2>
-            <div class="terminal">
-                <div class="terminal-bar">
-                    <div class="terminal-dot" style="background:#f85149"></div>
-                    <div class="terminal-dot" style="background:#d29922"></div>
-                    <div class="terminal-dot" style="background:#3fb950"></div>
-                </div>
-                <div class="terminal-body">
+    </div></section>
+    <section id="demo"><div class="container">
+        <div class="section-label">30-Second Demo</div>
+        <h2 class="section-title">No Docker. No config. No API keys.</h2>
+        <div class="terminal"><div class="terminal-bar"><div class="terminal-dot" style="background:#f85149"></div><div class="terminal-dot" style="background:#d29922"></div><div class="terminal-dot" style="background:#3fb950"></div></div><div class="terminal-body">
 <span class="t-prompt">$</span> <span class="t-cmd">pip install air-blackbox</span>
 <span class="t-prompt">$</span> <span class="t-cmd">air-blackbox demo</span>
 <span class="t-dim">  Generating 10 sample AI agent records...</span>
@@ -210,149 +134,96 @@
 <span class="t-fail">  ❌ Art. 9  — Risk Management        1/2 checks MANUAL</span>
 
 <span class="t-dim">  14 passing · 4 warnings · 2 failing · 90% automated</span>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- COMPLIANCE TABLE -->
-    <section id="compliance">
-        <div class="container">
-            <div class="section-label">EU AI Act Coverage</div>
-            <h2 class="section-title">20 checks. 6 articles. 90% automated.</h2>
-            <table class="compliance-table">
-                <thead>
-                    <tr><th>Article</th><th>What It Covers</th><th>Detection</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>Art. 9</strong> — Risk Management</td><td>Risk assessment docs, active mitigations</td><td><span class="cmd-tag tag-hybrid">HYBRID</span></td></tr>
-                    <tr><td><strong>Art. 10</strong> — Data Governance</td><td>PII in prompts, data vault, governance docs</td><td><span class="cmd-tag tag-auto">AUTO</span> + <span class="cmd-tag tag-hybrid">HYBRID</span></td></tr>
-                    <tr><td><strong>Art. 11</strong> — Technical Docs</td><td>AI-BOM inventory, model cards, doc currency</td><td><span class="cmd-tag tag-auto">AUTO</span> + <span class="cmd-tag tag-hybrid">HYBRID</span></td></tr>
-                    <tr><td><strong>Art. 12</strong> — Record-Keeping</td><td>HMAC audit chain, traceability, retention</td><td><span class="cmd-tag tag-auto">100% AUTO</span></td></tr>
-                    <tr><td><strong>Art. 14</strong> — Human Oversight</td><td>Kill switch, approval gates, operator docs</td><td><span class="cmd-tag tag-auto">AUTO</span> + MANUAL</td></tr>
-                    <tr><td><strong>Art. 15</strong> — Robustness</td><td>Injection detection, runtime validation, access control</td><td><span class="cmd-tag tag-auto">AUTO</span> + MANUAL</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-    <!-- TRUST LAYERS -->
-    <section id="trust">
-        <div class="container">
-            <div class="section-label">Framework Support</div>
-            <h2 class="section-title">Drop-in trust layers for every major framework.</h2>
-            <p class="section-desc">Non-blocking callbacks that observe and log — never control or block. If logging fails, your agent keeps running.</p>
-            <div class="trust-grid">
-                <div class="trust-card"><div class="fw">LangChain / LangGraph</div><div class="status status-full">✅ Full</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[langchain]"</code></div>
-                <div class="trust-card"><div class="fw">OpenAI SDK</div><div class="status status-full">✅ Full</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[openai]"</code></div>
-                <div class="trust-card"><div class="fw">Google ADK</div><div class="status status-scaffold">🔧 Scaffold</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[adk]"</code></div>
-                <div class="trust-card"><div class="fw">CrewAI</div><div class="status status-scaffold">🔧 Scaffold</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[crewai]"</code></div>
-                <div class="trust-card"><div class="fw">AutoGen</div><div class="status status-scaffold">🔧 Scaffold</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[autogen]"</code></div>
-            </div>
-        </div>
-    </section>
-    <!-- COMPARISON -->
-    <section id="compare">
-        <div class="container">
-            <div class="section-label">Why AIR Blackbox</div>
-            <h2 class="section-title">Observability tools answer "how is it performing?"<br>AIR answers "what exactly happened, and can we prove it?"</h2>
-            <div class="compare-grid" style="margin-top:2rem">
-                <div class="compare-col">
-                    <h3 style="color:var(--text-dim)">Langfuse / Helicone / Datadog</h3>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> Data lives in their cloud</div>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> Raw PII exposed in traces</div>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No tamper-evident chain</div>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No compliance mapping</div>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No AI-BOM generation</div>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No shadow AI detection</div>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No pre-execution validation</div>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No evidence export</div>
-                </div>
-                <div class="compare-col">
-                    <h3 style="color:var(--accent)">AIR Blackbox</h3>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> Your vault (S3/MinIO/local)</div>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> Vault references only</div>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> HMAC-SHA256 audit chain</div>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> 20 checks, Art. 9-15</div>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> CycloneDX 1.6 AI-BOM</div>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> Approved model registry</div>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> Runtime validation engine</div>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> Signed evidence bundles</div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- COMPARISON -->
-    <section id="compare">
-        <div class="container">
-            <div class="section-label">Why AIR Blackbox</div>
-            <h2 class="section-title">They answer "how is it performing?"<br>AIR answers "what happened, and can we prove it?"</h2>
-            <div class="compare-grid" style="margin-top:2rem">
-                <div class="compare-col">
-                    <h3 style="color:var(--text-dim)">Observability Tools</h3>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> Data in their cloud</div>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> Raw PII in traces</div>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No tamper-evident chain</div>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No compliance checks</div>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No AI-BOM</div>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No shadow AI detection</div>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No runtime validation</div>
-                    <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No evidence export</div>
-                </div>
-                <div class="compare-col">
-                    <h3 style="color:var(--accent)">AIR Blackbox</h3>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> Your vault (S3/MinIO/local)</div>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> Vault references only</div>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> HMAC-SHA256 chain</div>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> 20 checks, Art. 9-15</div>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> CycloneDX 1.6 AI-BOM</div>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> Approved model registry</div>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> 5-rule validation engine</div>
-                    <div class="compare-item"><span style="color:var(--green)">✓</span> Signed evidence bundles</div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- CTA -->
-    <section style="text-align:center; padding:5rem 0">
-        <div class="container">
-            <h2 class="section-title">August 2, 2026 is coming.</h2>
-            <p style="color:var(--text-secondary); margin-bottom:2rem">Penalties up to €35M or 7% of global turnover. Start scanning today.</p>
-            <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox')">pip install air-blackbox</div>
-            <div class="hero-links" style="margin-top:1.5rem">
-                <a href="https://github.com/airblackbox/gateway" class="btn-primary">View on GitHub →</a>
-                <a href="https://pypi.org/project/air-blackbox/" class="btn-secondary">PyPI Package</a>
-            </div>
-        </div>
-    </section>
+        </div></div>
+    </div></section>
+    <section id="validate-demo" style="padding-top:0"><div class="container">
+        <div class="section-label">Runtime Validation — NEW</div>
+        <h2 class="section-title">Prove what was checked before execution.</h2>
+        <p class="section-desc">Auditors ask: "how do you ensure outputs meet defined specifications?" The validate engine answers — before any tool call fires.</p>
+        <div class="terminal"><div class="terminal-bar"><div class="terminal-dot" style="background:#f85149"></div><div class="terminal-dot" style="background:#d29922"></div><div class="terminal-dot" style="background:#3fb950"></div></div><div class="terminal-body">
+<span class="t-prompt">$</span> <span class="t-cmd">air-blackbox validate --tool=db_query \</span>
+<span class="t-cmd">    --args='{"query":"DROP TABLE users"}' \</span>
+<span class="t-cmd">    --allowlist=web_search,calculator</span>
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <div class="logo" style="margin-bottom:0.8rem">AIR <span style="color:var(--accent)">Blackbox</span></div>
-                    <p style="color:var(--text-dim); font-size:0.85rem;">AI governance control plane.<br>Open source. Apache 2.0.</p>
-                </div>
-                <div class="footer-col">
-                    <h4>Product</h4>
-                    <a href="https://github.com/airblackbox/gateway">Gateway Repo</a>
-                    <a href="https://pypi.org/project/air-blackbox/">PyPI Package</a>
-                    <a href="https://github.com/airblackbox/gateway/blob/main/docs/quickstart.html">Quickstart</a>
-                </div>
-                <div class="footer-col">
-                    <h4>Ecosystem</h4>
-                    <a href="https://github.com/airblackbox/VaultMind">VaultMind</a>
-                    <a href="https://github.com/airblackbox/air-blackbox-mcp">MCP Server</a>
-                    <a href="https://github.com/airblackbox">GitHub Org</a>
-                </div>
-                <div class="footer-col">
-                    <h4>Community</h4>
-                    <a href="https://github.com/airblackbox/gateway/discussions">Discussions</a>
-                    <a href="https://github.com/airblackbox/gateway/issues">Issues</a>
-                    <a href="https://github.com/airblackbox/gateway/blob/main/CONTRIBUTING.md">Contribute</a>
-                </div>
-            </div>
-            <div class="footer-bottom">© 2026 AIR Blackbox. Open-source AI governance. Built on OpenTelemetry.</div>
+<span class="t-fail">  ❌ content_policy    BLOCK   Dangerous pattern detected</span>
+<span class="t-fail">  ❌ tool_allowlist    BLOCK   'db_query' NOT on approved list</span>
+<span class="t-pass">  ✅ pii_output_check  INFO    No PII detected in output</span>
+<span class="t-pass">  ✅ hallucination     INFO    No indicators detected</span>
+
+<span class="t-fail">  ❌ BLOCKED — action failed validation (0ms)</span>
+<span class="t-dim">  Validation record: 8fb1e1f5.air.json</span>
+        </div></div>
+        <p style="color:var(--text-secondary);font-size:0.88rem;margin-top:1rem">Every validation produces a signed <code>.air.json</code> record. Your evidence bundle now proves <strong>both</strong>: what was validated before execution (Article 15) and what happened during execution (Article 12).</p>
+    </div></section>
+    <section id="compliance"><div class="container">
+        <div class="section-label">EU AI Act Coverage</div>
+        <h2 class="section-title">20 checks. 6 articles. 90% automated.</h2>
+        <table class="compliance-table"><thead><tr><th>Article</th><th>What It Covers</th><th>Detection</th></tr></thead><tbody>
+            <tr><td><strong>Art. 9</strong> — Risk Management</td><td>Risk assessment docs, active mitigations</td><td><span class="cmd-tag tag-hybrid">HYBRID</span></td></tr>
+            <tr><td><strong>Art. 10</strong> — Data Governance</td><td>PII in prompts, data vault, governance docs</td><td><span class="cmd-tag tag-auto">AUTO</span> + <span class="cmd-tag tag-hybrid">HYBRID</span></td></tr>
+            <tr><td><strong>Art. 11</strong> — Technical Docs</td><td>AI-BOM inventory, model cards, doc currency</td><td><span class="cmd-tag tag-auto">AUTO</span> + <span class="cmd-tag tag-hybrid">HYBRID</span></td></tr>
+            <tr><td><strong>Art. 12</strong> — Record-Keeping</td><td>HMAC audit chain, traceability, retention</td><td><span class="cmd-tag tag-auto">100% AUTO</span></td></tr>
+            <tr><td><strong>Art. 14</strong> — Human Oversight</td><td>Kill switch, approval gates, operator docs</td><td><span class="cmd-tag tag-auto">AUTO</span> + MANUAL</td></tr>
+            <tr><td><strong>Art. 15</strong> — Robustness</td><td>Injection detection, <strong>runtime validation</strong>, access control</td><td><span class="cmd-tag tag-auto">AUTO</span> + MANUAL</td></tr>
+        </tbody></table>
+    </div></section>
+    <section id="trust"><div class="container">
+        <div class="section-label">Framework Support</div>
+        <h2 class="section-title">Drop-in trust layers for every major framework.</h2>
+        <p class="section-desc">Non-blocking callbacks that observe and log — never control or block. If logging fails, your agent keeps running.</p>
+        <div class="trust-grid">
+            <div class="trust-card"><div class="fw">LangChain / LangGraph</div><div class="status status-full">✅ Full</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[langchain]"</code></div>
+            <div class="trust-card"><div class="fw">OpenAI SDK</div><div class="status status-full">✅ Full</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[openai]"</code></div>
+            <div class="trust-card"><div class="fw">Google ADK</div><div class="status status-scaffold">🔧 Scaffold</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[adk]"</code></div>
+            <div class="trust-card"><div class="fw">CrewAI</div><div class="status status-scaffold">🔧 Scaffold</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[crewai]"</code></div>
+            <div class="trust-card"><div class="fw">AutoGen</div><div class="status status-scaffold">🔧 Scaffold</div><code style="font-size:0.7rem;color:var(--text-dim)">pip install "air-blackbox[autogen]"</code></div>
         </div>
-    </footer>
+    </div></section>
+    <section id="compare"><div class="container">
+        <div class="section-label">Why AIR Blackbox</div>
+        <h2 class="section-title">Observability tools answer "how is it performing?"<br>AIR answers "what exactly happened, and can we prove it?"</h2>
+        <div class="compare-grid" style="margin-top:2rem">
+            <div class="compare-col">
+                <h3 style="color:var(--text-dim)">Langfuse / Helicone / Datadog</h3>
+                <div class="compare-item"><span style="color:var(--text-dim)">✗</span> Data lives in their cloud</div>
+                <div class="compare-item"><span style="color:var(--text-dim)">✗</span> Raw PII exposed in traces</div>
+                <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No tamper-evident chain</div>
+                <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No compliance mapping</div>
+                <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No AI-BOM generation</div>
+                <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No shadow AI detection</div>
+                <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No pre-execution validation</div>
+                <div class="compare-item"><span style="color:var(--text-dim)">✗</span> No evidence export</div>
+            </div>
+            <div class="compare-col">
+                <h3 style="color:var(--accent)">AIR Blackbox</h3>
+                <div class="compare-item"><span style="color:var(--green)">✓</span> Your vault (S3/MinIO/local)</div>
+                <div class="compare-item"><span style="color:var(--green)">✓</span> Vault references only</div>
+                <div class="compare-item"><span style="color:var(--green)">✓</span> HMAC-SHA256 audit chain</div>
+                <div class="compare-item"><span style="color:var(--green)">✓</span> 20 checks, Art. 9-15</div>
+                <div class="compare-item"><span style="color:var(--green)">✓</span> CycloneDX 1.6 AI-BOM</div>
+                <div class="compare-item"><span style="color:var(--green)">✓</span> Approved model registry</div>
+                <div class="compare-item"><span style="color:var(--green)">✓</span> Runtime validation engine</div>
+                <div class="compare-item"><span style="color:var(--green)">✓</span> Signed evidence bundles</div>
+            </div>
+        </div>
+    </div></section>
+    <section style="text-align:center; padding:5rem 0"><div class="container">
+        <h2 class="section-title">August 2, 2026 is coming.</h2>
+        <p style="color:var(--text-secondary); margin-bottom:2rem">Penalties up to €35M or 7% of global turnover. Start scanning today.</p>
+        <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox')">pip install air-blackbox</div>
+        <div class="hero-links" style="margin-top:1.5rem">
+            <a href="https://github.com/airblackbox/gateway" class="btn-primary">View on GitHub →</a>
+            <a href="https://pypi.org/project/air-blackbox/" class="btn-secondary">PyPI Package</a>
+        </div>
+    </div></section>
+    <footer><div class="container">
+        <div class="footer-grid">
+            <div class="footer-col"><div class="logo" style="margin-bottom:0.8rem">AIR <span style="color:var(--accent)">Blackbox</span></div><p style="color:var(--text-dim); font-size:0.85rem;">AI governance control plane.<br>Open source. Apache 2.0.</p></div>
+            <div class="footer-col"><h4>Product</h4><a href="https://github.com/airblackbox/gateway">Gateway Repo</a><a href="https://pypi.org/project/air-blackbox/">PyPI Package</a><a href="https://github.com/airblackbox/gateway/blob/main/docs/quickstart.html">Quickstart</a></div>
+            <div class="footer-col"><h4>Ecosystem</h4><a href="https://github.com/airblackbox/VaultMind">VaultMind</a><a href="https://github.com/airblackbox/air-blackbox-mcp">MCP Server</a><a href="https://github.com/airblackbox">GitHub Org</a></div>
+            <div class="footer-col"><h4>Community</h4><a href="https://github.com/airblackbox/gateway/discussions">Discussions</a><a href="https://github.com/airblackbox/gateway/issues">Issues</a><a href="https://github.com/airblackbox/gateway/blob/main/CONTRIBUTING.md">Contribute</a></div>
+        </div>
+        <div class="footer-bottom">© 2026 AIR Blackbox. Open-source AI governance. Built on OpenTelemetry.</div>
+    </div></footer>
 </body>
 </html>
