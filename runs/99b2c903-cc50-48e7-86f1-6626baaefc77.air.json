@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "run_id": "99b2c903-cc50-48e7-86f1-6626baaefc77",
+  "trace_id": "5cbe206e846348bb",
+  "timestamp": "2026-03-11T12:41:48.686752Z",
+  "model": "claude-3-5-sonnet",
+  "provider": "anthropic",
+  "request_vault_ref": "vault://air-runs/99b2c903-cc50-48e7-86f1-6626baaefc77/request.json",
+  "response_vault_ref": "vault://air-runs/99b2c903-cc50-48e7-86f1-6626baaefc77/response.json",
+  "request_checksum": "sha256:70163b85606c",
+  "response_checksum": "sha256:b5c9608be915",
+  "tokens": {
+    "prompt": 150,
+    "completion": 400,
+    "total": 550
+  },
+  "duration_ms": 1800,
+  "status": "success",
+  "tool_calls": [
+    "code_interpreter"
+  ]
+}

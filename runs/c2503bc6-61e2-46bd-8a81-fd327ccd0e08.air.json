@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0",
+  "run_id": "c2503bc6-61e2-46bd-8a81-fd327ccd0e08",
+  "trace_id": "e1687ebdcef84810",
+  "timestamp": "2026-03-11T16:41:48.686752Z",
+  "model": "gpt-4o-mini",
+  "provider": "openai",
+  "request_vault_ref": "vault://air-runs/c2503bc6-61e2-46bd-8a81-fd327ccd0e08/request.json",
+  "response_vault_ref": "vault://air-runs/c2503bc6-61e2-46bd-8a81-fd327ccd0e08/response.json",
+  "request_checksum": "sha256:fd2c3bc8fdd9",
+  "response_checksum": "sha256:08c132ccf3a1",
+  "tokens": {
+    "prompt": 55,
+    "completion": 0,
+    "total": 55
+  },
+  "duration_ms": 30000,
+  "status": "timeout"
+}

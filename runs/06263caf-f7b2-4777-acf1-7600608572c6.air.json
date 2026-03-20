@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "run_id": "06263caf-f7b2-4777-acf1-7600608572c6",
+  "trace_id": "fbc15c29ab8e4a53",
+  "timestamp": "2026-03-11T17:41:48.686752Z",
+  "model": "gpt-4o",
+  "provider": "openai",
+  "request_vault_ref": "vault://air-runs/06263caf-f7b2-4777-acf1-7600608572c6/request.json",
+  "response_vault_ref": "vault://air-runs/06263caf-f7b2-4777-acf1-7600608572c6/response.json",
+  "request_checksum": "sha256:1003f67f3fa5",
+  "response_checksum": "sha256:473790c69413",
+  "tokens": {
+    "prompt": 180,
+    "completion": 420,
+    "total": 600
+  },
+  "duration_ms": 2600,
+  "status": "success",
+  "tool_calls": [
+    "db_query"
+  ]
+}
