@@ -260,6 +260,65 @@
             </div>
         </div>
     </div></section>
+    <section id="deploy"><div class="container">
+        <div class="section-label">Deployment</div>
+        <h2 class="section-title">How it gets into your infrastructure.</h2>
+        <p class="section-desc">Free runs on your laptop. Pro and Enterprise run on dedicated servers — yours or ours.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-top:2rem">
+            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem">
+                <div style="font-family:var(--mono);font-size:0.75rem;color:var(--green);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem">Free — Your Laptop</div>
+                <div class="terminal" style="margin:0;max-width:100%"><div class="terminal-bar"><div class="terminal-dot" style="background:#f85149"></div><div class="terminal-dot" style="background:#d29922"></div><div class="terminal-dot" style="background:#3fb950"></div></div><div class="terminal-body" style="font-size:0.78rem">
+<span class="t-prompt">$</span> <span class="t-cmd">pip install air-blackbox</span>
+<span class="t-prompt">$</span> <span class="t-cmd">air-blackbox comply --scan .</span>
+<span class="t-dim">  39 checks across 6 EU AI Act articles</span>
+<span class="t-prompt">$</span> <span class="t-cmd">air-blackbox export --format pdf</span>
+<span class="t-pass">  ✅ Report saved</span>
+                </div></div>
+                <p style="color:var(--text-secondary);font-size:0.82rem;margin-top:1rem;line-height:1.7">One pip install. Runs locally with Ollama. Anonymized scan metadata helps improve the compliance model for everyone.</p>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem">
+                <div style="font-family:var(--mono);font-size:0.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem">Pro — We Manage It</div>
+                <div class="terminal" style="margin:0;max-width:100%"><div class="terminal-bar"><div class="terminal-dot" style="background:#f85149"></div><div class="terminal-dot" style="background:#d29922"></div><div class="terminal-dot" style="background:#3fb950"></div></div><div class="terminal-body" style="font-size:0.78rem">
+<span class="t-comment"># We deploy a VPS for your team</span>
+<span class="t-prompt">$</span> <span class="t-cmd">export AIR_GATEWAY=https://your-co.airblackbox.ai</span>
+<span class="t-prompt">$</span> <span class="t-cmd">air-blackbox comply --scan .</span>
+<span class="t-dim">  Fine-tuned model · Private telemetry</span>
+<span class="t-pass">  ✅ Jaeger dashboard: your-co.airblackbox.ai:16686</span>
+                </div></div>
+                <p style="color:var(--text-secondary);font-size:0.82rem;margin-top:1rem;line-height:1.7">We set up a dedicated VPS with the fine-tuned compliance model, Jaeger traces, and benchmarking dashboard. Your team just points the CLI at it. We handle updates.</p>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem">
+                <div style="font-family:var(--mono);font-size:0.75rem;color:var(--yellow);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem">Enterprise — Your Infrastructure</div>
+                <div class="terminal" style="margin:0;max-width:100%"><div class="terminal-bar"><div class="terminal-dot" style="background:#f85149"></div><div class="terminal-dot" style="background:#d29922"></div><div class="terminal-dot" style="background:#3fb950"></div></div><div class="terminal-body" style="font-size:0.78rem">
+<span class="t-comment"># Your DevOps runs one script</span>
+<span class="t-prompt">$</span> <span class="t-cmd">bash deploy-enterprise.sh</span>
+<span class="t-dim">  → Ollama + model baked in (no download)</span>
+<span class="t-dim">  → Gateway + collector + Jaeger + MinIO</span>
+<span class="t-dim">  → All ports bound to 127.0.0.1</span>
+<span class="t-pass">  ✅ Air-gapped. Zero external connections.</span>
+                </div></div>
+                <p style="color:var(--text-secondary);font-size:0.82rem;margin-top:1rem;line-height:1.7">Everything ships inside Docker — including the fine-tuned LLM. Deploy on-prem, in your VPC, or on an air-gapped server. No code or data ever leaves your network.</p>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)">
+            <div style="text-align:center">
+                <div style="font-size:1.8rem;font-weight:800;color:var(--accent)">5</div>
+                <div style="color:var(--text-secondary);font-size:0.82rem">Docker containers<br><span style="color:var(--text-dim)">gateway · ollama · collector · jaeger · minio</span></div>
+            </div>
+            <div style="text-align:center">
+                <div style="font-size:1.8rem;font-weight:800;color:var(--green)">&lt;5min</div>
+                <div style="color:var(--text-secondary);font-size:0.82rem">deploy time<br><span style="color:var(--text-dim)">one script, fresh Ubuntu VPS</span></div>
+            </div>
+            <div style="text-align:center">
+                <div style="font-size:1.8rem;font-weight:800;color:var(--yellow)">0</div>
+                <div style="color:var(--text-secondary);font-size:0.82rem">external connections<br><span style="color:var(--text-dim)">enterprise air-gapped mode</span></div>
+            </div>
+            <div style="text-align:center">
+                <div style="font-size:1.8rem;font-weight:800;color:var(--red)">39</div>
+                <div style="color:var(--text-secondary);font-size:0.82rem">compliance checks<br><span style="color:var(--text-dim)">same engine at every tier</span></div>
+            </div>
+        </div>
+    </div></section>
     <section style="text-align:center; padding:5rem 0"><div class="container">
         <h2 class="section-title">August 2, 2026 is coming.</h2>
         <p style="color:var(--text-secondary); margin-bottom:2rem">Penalties up to €35M or 7% of global turnover. Start scanning today.</p>
