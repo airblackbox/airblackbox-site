@@ -94,7 +94,7 @@
     </style>
 </head>
 <body>
-    <header><nav><div class="logo">AIR <span>Blackbox</span></div><div class="nav-links"><a href="#commands">Commands</a><a href="#compliance">Compliance</a><a href="#compare">Why AIR</a><a href="https://scan.airblackbox.ai" style="color:var(--green);font-weight:600">Scan Now</a><a href="https://github.com/airblackbox/gateway">GitHub</a><a href="https://pypi.org/project/air-blackbox/" class="btn-sm">PyPI</a></div></nav></header>
+    <header><nav><div class="logo">AIR <span>Blackbox</span></div><div class="nav-links"><a href="#commands">Commands</a><a href="#compliance">Compliance</a><a href="#compare">Why AIR</a><a href="#pricing">Pricing</a><a href="https://scan.airblackbox.ai" style="color:var(--green);font-weight:600">Scan Now</a><a href="https://github.com/airblackbox/gateway">GitHub</a><a href="https://pypi.org/project/air-blackbox/" class="btn-sm">PyPI</a></div></nav></header>
     <section class="hero"><div class="container">
         <div class="deadline" id="countdown"></div>
         <script>(function(){var d=document.getElementById('countdown');var days=Math.ceil((new Date('2026-08-02')-new Date())/(1000*60*60*24));d.textContent='\u26A0 '+days+' DAYS TO EU AI ACT HIGH-RISK DEADLINE';})()</script>
@@ -204,6 +204,59 @@
                 <div class="compare-item"><span style="color:var(--green)">✓</span> Approved model registry</div>
                 <div class="compare-item"><span style="color:var(--green)">✓</span> Runtime validation engine</div>
                 <div class="compare-item"><span style="color:var(--green)">✓</span> Signed evidence bundles</div>
+            </div>
+        </div>
+    </div></section>
+    <section id="pricing"><div class="container">
+        <div class="section-label">Pricing</div>
+        <h2 class="section-title">Open source core. Scale when you're ready.</h2>
+        <p class="section-desc">Same compliance engine at every tier. Enterprise gets air-gapped isolation — zero data leaves your network.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem">
+            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative">
+                <div style="font-family:var(--mono);font-size:0.75rem;color:var(--green);text-transform:uppercase;letter-spacing:2px;margin-bottom:0.5rem">Free</div>
+                <div style="font-size:2.2rem;font-weight:800;margin-bottom:0.3rem">$0</div>
+                <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:1.5rem">forever</div>
+                <div style="border-top:1px solid var(--border);padding-top:1.2rem;font-size:0.85rem;color:var(--text-secondary);line-height:2.2">
+                    <div><span style="color:var(--green)">✓</span> CLI scanner — 39 compliance checks</div>
+                    <div><span style="color:var(--green)">✓</span> AI-powered deep scan (local Ollama)</div>
+                    <div><span style="color:var(--green)">✓</span> PDF compliance reports</div>
+                    <div><span style="color:var(--green)">✓</span> AI-BOM generation (CycloneDX)</div>
+                    <div><span style="color:var(--green)">✓</span> HMAC-SHA256 audit chain</div>
+                    <div><span style="color:var(--green)">✓</span> All framework trust layers</div>
+                    <div style="color:var(--text-dim)"><span>↗</span> Anonymized telemetry improves model</div>
+                </div>
+                <a href="https://pypi.org/project/air-blackbox/" style="display:block;text-align:center;margin-top:1.5rem;padding:0.7rem;border:1px solid var(--border);border-radius:8px;font-weight:600;font-size:0.85rem;color:var(--text-primary);text-decoration:none">pip install air-blackbox</a>
+            </div>
+            <div style="background:var(--bg-card);border:2px solid var(--accent);border-radius:12px;padding:2rem;position:relative">
+                <div style="position:absolute;top:-10px;right:1.5rem;background:var(--accent);color:var(--bg-deep);font-size:0.7rem;font-weight:700;padding:0.2rem 0.8rem;border-radius:10px;text-transform:uppercase">Popular</div>
+                <div style="font-family:var(--mono);font-size:0.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:0.5rem">Pro</div>
+                <div style="font-size:2.2rem;font-weight:800;margin-bottom:0.3rem">$299<span style="font-size:1rem;font-weight:400;color:var(--text-dim)">/mo</span></div>
+                <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:1.5rem">hosted VPS — we manage it</div>
+                <div style="border-top:1px solid var(--border);padding-top:1.2rem;font-size:0.85rem;color:var(--text-secondary);line-height:2.2">
+                    <div><span style="color:var(--green)">✓</span> Everything in Free</div>
+                    <div><span style="color:var(--accent)">★</span> Managed VPS deployment</div>
+                    <div><span style="color:var(--accent)">★</span> Fine-tuned compliance model</div>
+                    <div><span style="color:var(--accent)">★</span> Private telemetry (your data stays)</div>
+                    <div><span style="color:var(--accent)">★</span> Benchmarking dashboard</div>
+                    <div><span style="color:var(--accent)">★</span> Priority model updates</div>
+                    <div><span style="color:var(--accent)">★</span> Jaeger trace dashboard</div>
+                </div>
+                <a href="mailto:jason.j.shotwell@gmail.com?subject=AIR%20Blackbox%20Pro" style="display:block;text-align:center;margin-top:1.5rem;padding:0.7rem;background:var(--accent);border-radius:8px;font-weight:600;font-size:0.85rem;color:var(--bg-deep);text-decoration:none">Get Started →</a>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative">
+                <div style="font-family:var(--mono);font-size:0.75rem;color:var(--yellow);text-transform:uppercase;letter-spacing:2px;margin-bottom:0.5rem">Enterprise</div>
+                <div style="font-size:2.2rem;font-weight:800;margin-bottom:0.3rem">$2,500<span style="font-size:1rem;font-weight:400;color:var(--text-dim)">/mo</span></div>
+                <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:1.5rem">air-gapped — your infrastructure</div>
+                <div style="border-top:1px solid var(--border);padding-top:1.2rem;font-size:0.85rem;color:var(--text-secondary);line-height:2.2">
+                    <div><span style="color:var(--green)">✓</span> Everything in Pro</div>
+                    <div><span style="color:var(--yellow)">🔒</span> Air-gapped VPS — zero data leaves</div>
+                    <div><span style="color:var(--yellow)">🔒</span> On-prem / private cloud deploy</div>
+                    <div><span style="color:var(--yellow)">🔒</span> Model baked into Docker image</div>
+                    <div><span style="color:var(--yellow)">🔒</span> SOC 2 + ISO 27001 mapping</div>
+                    <div><span style="color:var(--yellow)">🔒</span> Dedicated support + SLA</div>
+                    <div><span style="color:var(--yellow)">🔒</span> Custom compliance frameworks</div>
+                </div>
+                <a href="mailto:jason.j.shotwell@gmail.com?subject=AIR%20Blackbox%20Enterprise" style="display:block;text-align:center;margin-top:1.5rem;padding:0.7rem;border:1px solid var(--yellow);border-radius:8px;font-weight:600;font-size:0.85rem;color:var(--yellow);text-decoration:none">Contact Sales →</a>
             </div>
         </div>
     </div></section>
