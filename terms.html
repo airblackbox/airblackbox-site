@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service — AIR Blackbox</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #080b14;
+            --bg-card: #0d1117;
+            --bg-elevated: #161b22;
+            --border: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-dim: #484f58;
+            --accent: #58a6ff;
+            --green: #3fb950;
+            --red: #f85149;
+            --yellow: #d29922;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Sora', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--sans); background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code { font-family: var(--mono); background: var(--bg-elevated); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.88rem; }
+        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(8,11,20,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text-primary); }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 2rem; }
+        .content { padding: 8rem 0 5rem; }
+        .content h1 { font-size: 2rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 0.5rem; }
+        .content .updated { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 3rem; }
+        .content h2 { font-size: 1.2rem; font-weight: 700; margin-top: 2.5rem; margin-bottom: 1rem; color: var(--accent); }
+        .content p { color: var(--text-secondary); margin-bottom: 1.2rem; font-size: 0.92rem; }
+        .content ul { color: var(--text-secondary); font-size: 0.92rem; margin-bottom: 1.2rem; padding-left: 1.5rem; }
+        .content li { margin-bottom: 0.5rem; }
+        .disclaimer-box { background: var(--bg-card); border: 1px solid var(--yellow); border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0; }
+        .disclaimer-box h3 { color: var(--yellow); font-size: 0.95rem; margin-bottom: 0.8rem; }
+        .disclaimer-box p { color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 0; }
+        footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 3rem; }
+        .footer-bottom { color: var(--text-dim); font-size: 0.8rem; text-align: center; }
+    </style>
+</head>
+<body>
+    <header><nav>
+        <a href="/" style="text-decoration:none"><div class="logo">AIR <span>Blackbox</span></div></a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="https://github.com/airblackbox/gateway">GitHub</a>
+            <a href="https://pypi.org/project/air-blackbox/">PyPI</a>
+        </div>
+    </nav></header>
+
+    <div class="content"><div class="container">
+        <h1>Terms of Service</h1>
+        <p class="updated">Last updated: March 24, 2026</p>
+
+        <div class="disclaimer-box">
+            <h3>Important: AIR Blackbox Does Not Certify Compliance</h3>
+            <p>AIR Blackbox is a gap analysis tool. It identifies potential areas where your AI systems may not align with EU AI Act requirements. It does not certify, guarantee, or attest to compliance with the EU AI Act, ISO 42001, SOC 2, ISO 27001, or any other regulatory framework. Only authorized notified bodies and qualified legal professionals can make compliance determinations. You are solely responsible for achieving and maintaining regulatory compliance.</p>
+        </div>
+
+        <h2>1. Acceptance of Terms</h2>
+        <p>By accessing or using AIR Blackbox software, services, or website ("Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the Service. These Terms apply to all users, including users of the free open-source CLI tool, Pro subscribers, and Enterprise customers.</p>
+
+        <h2>2. Description of Service</h2>
+        <p>AIR Blackbox is an open-source gap analysis scanner for Python AI agent code. The Service includes:</p>
+        <ul>
+            <li><strong>Free Tier:</strong> Open-source CLI scanner (Apache 2.0 license), trust layer integrations, and related PyPI packages that run locally on your machine.</li>
+            <li><strong>Pro Tier:</strong> A managed Virtual Private Server (VPS) hosting the AIR gateway, fine-tuned compliance model, Jaeger trace dashboard, and benchmarking tools. Billed monthly via Stripe.</li>
+            <li><strong>Enterprise Tier:</strong> Custom air-gapped deployment on your infrastructure with dedicated support. Pricing and terms negotiated per engagement.</li>
+        </ul>
+        <p>The Service scans source code, configuration files, and runtime telemetry to identify potential gaps against EU AI Act Articles 9, 10, 11, 12, 14, and 15. Scan results are informational and do not constitute legal advice, regulatory certification, or a guarantee of compliance.</p>
+
+        <h2>3. No Compliance Certification</h2>
+        <p>AIR Blackbox identifies potential compliance gaps based on automated static and runtime analysis. The Service:</p>
+        <ul>
+            <li>Does NOT certify that your AI systems comply with the EU AI Act or any other regulation</li>
+            <li>Does NOT replace the need for qualified legal counsel</li>
+            <li>Does NOT replace assessment by EU AI Act notified bodies</li>
+            <li>Does NOT guarantee that addressing identified gaps will result in compliance</li>
+            <li>Does NOT provide legal, regulatory, or professional compliance advice</li>
+        </ul>
+        <p>Scan results, gap analysis reports, evidence packages, and any other outputs are provided "as-is" for informational purposes only. You should not rely solely on AIR Blackbox outputs to determine your regulatory obligations or compliance status.</p>
+
+        <h2>4. Your Responsibilities</h2>
+        <p>You are responsible for:</p>
+        <ul>
+            <li>Determining the applicability of EU AI Act requirements to your AI systems</li>
+            <li>Engaging qualified legal professionals and notified bodies for formal compliance assessment</li>
+            <li>Implementing remediation measures for any gaps identified by the Service</li>
+            <li>Validating that remediation measures are sufficient and appropriate</li>
+            <li>Maintaining ongoing compliance as regulations and your systems evolve</li>
+            <li>Securing your own API keys, credentials, and access to Pro/Enterprise infrastructure</li>
+        </ul>
+
+        <h2>5. Pro Subscription Terms</h2>
+        <p>Pro subscriptions are billed monthly at the rate displayed at time of purchase. Payments are processed by Stripe. You may cancel at any time; cancellation takes effect at the end of the current billing period. No refunds are provided for partial months.</p>
+        <p>Your Pro VPS instance is provisioned for your use only. You may not resell, sublicense, or share access to your Pro infrastructure with third parties without written permission.</p>
+        <p>We reserve the right to modify Pro pricing with 30 days' written notice. Existing subscribers will be honored at their current rate for a minimum of 90 days following any price change.</p>
+
+        <h2>6. Enterprise Terms</h2>
+        <p>Enterprise deployments are governed by a separate Master Service Agreement (MSA) negotiated between the parties. These Terms apply to Enterprise customers except where the MSA explicitly overrides them.</p>
+
+        <h2>7. Data Handling</h2>
+        <p><strong>Free Tier:</strong> The CLI scanner runs entirely on your local machine. Your source code is never transmitted to our servers. Anonymized scan metadata (check pass/fail counts, framework detection, no code content) may be transmitted to improve the compliance model unless you opt out via the <code>--no-telemetry</code> flag.</p>
+        <p><strong>Pro Tier:</strong> Your scan data is processed on a dedicated VPS. Telemetry is private to your instance. We do not access your VPS data except for maintenance purposes with your prior consent.</p>
+        <p><strong>Enterprise Tier:</strong> Air-gapped deployments operate entirely within your infrastructure. Zero data is transmitted externally. We have no access to your systems unless you explicitly grant it for support purposes.</p>
+
+        <h2>8. Open Source License</h2>
+        <p>The AIR Blackbox CLI scanner and trust layer packages are licensed under the Apache License 2.0. Your use of the open-source components is governed by that license. These Terms apply additionally to your use of the website, Pro/Enterprise services, and any non-open-source components.</p>
+
+        <h2>9. Limitation of Liability</h2>
+        <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, AIR BLACKBOX AND ITS OPERATORS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO:</p>
+        <ul>
+            <li>Regulatory fines, penalties, or sanctions imposed on you or your organization</li>
+            <li>Costs of compliance remediation or legal proceedings</li>
+            <li>Loss of business, revenue, or profits arising from reliance on scan results</li>
+            <li>Damages arising from gaps, errors, or omissions in scan results</li>
+            <li>Damages arising from service interruptions or data loss on Pro/Enterprise infrastructure</li>
+        </ul>
+        <p>Our total aggregate liability for any claims arising from the Service shall not exceed the total amount you paid for the Service in the twelve (12) months preceding the claim. For free tier users, our total liability shall not exceed $0.</p>
+        <p>This limitation applies regardless of the legal theory (contract, tort, strict liability, or otherwise) and even if we have been advised of the possibility of such damages.</p>
+
+        <h2>10. Disclaimer of Warranties</h2>
+        <p>THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, OR ACCURACY OF SCAN RESULTS.</p>
+        <p>We do not warrant that:</p>
+        <ul>
+            <li>Scan results will be complete, accurate, or free from errors</li>
+            <li>The Service will identify all compliance gaps in your systems</li>
+            <li>Addressing identified gaps will result in regulatory compliance</li>
+            <li>The Service will be available without interruption</li>
+            <li>The Service reflects the most current regulatory interpretations or guidance</li>
+        </ul>
+
+        <h2>11. Indemnification</h2>
+        <p>You agree to indemnify and hold harmless AIR Blackbox and its operators from any claims, damages, losses, or expenses (including reasonable legal fees) arising from: (a) your use of the Service; (b) your reliance on scan results for compliance decisions; (c) your violation of these Terms; or (d) regulatory actions taken against you or your organization.</p>
+
+        <h2>12. Modifications to Terms</h2>
+        <p>We may update these Terms from time to time. Material changes will be communicated via the website or email (for Pro/Enterprise customers) at least 30 days before they take effect. Your continued use of the Service after changes take effect constitutes acceptance of the updated Terms.</p>
+
+        <h2>13. Termination</h2>
+        <p>We may suspend or terminate your access to the Service if you violate these Terms. For Pro subscribers, we will provide reasonable notice (minimum 7 days) except in cases of fraud, abuse, or legal requirement. Upon termination, your right to access Pro/Enterprise infrastructure ends immediately. Open-source components remain available under the Apache 2.0 license.</p>
+
+        <h2>14. Governing Law</h2>
+        <p>These Terms are governed by the laws of the State of Georgia, United States, without regard to conflict of law principles. Any disputes arising from these Terms or the Service shall be resolved in the state or federal courts located in Georgia.</p>
+
+        <h2>15. Contact</h2>
+        <p>Questions about these Terms? Contact us at <a href="mailto:jason.j.shotwell@gmail.com">jason.j.shotwell@gmail.com</a>.</p>
+
+    </div></div>
+
+    <footer><div class="container">
+        <div class="footer-bottom">&copy; 2026 AIR Blackbox. Open-source AI governance. Built on OpenTelemetry.</div>
+    </div></footer>
+</body>
+</html>
