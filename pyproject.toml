@@ -1,0 +1,6 @@
+[project]
+name = "airblackbox-site"
+version = "0.1.0"
+description = "AIR Blackbox website and webhook handler"
+requires-python = ">=3.12"
+dependencies = []
