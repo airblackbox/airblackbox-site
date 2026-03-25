@@ -121,6 +121,8 @@ def handle_checkout(event):
             })
 
         # Step 5: Send welcome email
+        print(f"[WEBHOOK] Sending welcome email to: {customer_email}")
+        print(f"[WEBHOOK] RESEND_API_KEY set: {bool(RESEND_API_KEY)}")
         send_welcome_email(customer_email, slug, subdomain, gateway_key, droplet_ip)
 
         return {
@@ -432,9 +434,14 @@ air-blackbox comply --scan . -v</pre>
 
     try:
         with urllib.request.urlopen(req) as resp:
-            return json.loads(resp.read())
-    except Exception:
-        pass  # Don't fail provisioning if email fails
+            result = json.loads(resp.read())
+            print(f"[RESEND] Email sent to {to_email}: {result}")
+            return result
+    except urllib.error.HTTPError as e:
+        error_body = e.read().decode() if e.fp else "no body"
+        print(f"[RESEND] ERROR {e.code}: {error_body}")
+    except Exception as e:
+        print(f"[RESEND] ERROR: {e}")
 
 
 # ── Utilities ────────────────────────────────────────────────────
