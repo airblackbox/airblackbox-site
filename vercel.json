@@ -6,5 +6,11 @@
     { "source": "/quickstart", "destination": "/quickstart.html" },
     { "source": "/blog", "destination": "/blog/index.html" },
     { "source": "/blog/oauth-ai-agents-delegation-scan", "destination": "/blog/oauth-ai-agents-delegation-scan.html" }
-  ]
+  ],
+  "functions": {
+    "api/webhook.py": {
+      "runtime": "python3.12",
+      "maxDuration": 120
+    }
+  }
 }
