@@ -1,0 +1,1 @@
+# No external dependencies — webhook uses Python stdlib only

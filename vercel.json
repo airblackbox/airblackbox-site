@@ -9,7 +9,6 @@
   ],
   "functions": {
     "api/webhook.py": {
-      "runtime": "python3.12",
       "maxDuration": 120
     }
   }

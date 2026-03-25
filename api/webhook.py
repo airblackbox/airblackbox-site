@@ -6,12 +6,15 @@ Handles: checkout.session.completed → provision VPS
 Deployed as a Vercel serverless function at /api/webhook
 """
 
+from http.server import BaseHTTPRequestHandler
 import hashlib
 import hmac
 import json
 import os
+import re
 import secrets
 import time
+import urllib.parse
 import urllib.request
 import urllib.error
 
@@ -30,33 +33,46 @@ DO_IMAGE = "ubuntu-22-04-x64"
 DOMAIN = "airblackbox.ai"
 
 
-def handler(request):
+class handler(BaseHTTPRequestHandler):
     """Vercel serverless function entry point."""
-    # Only accept POST
-    if request.method != "POST":
-        return {"statusCode": 405, "body": "Method not allowed"}
 
-    # Read body
-    body = request.body.read() if hasattr(request.body, 'read') else request.body
-    if isinstance(body, str):
-        body = body.encode("utf-8")
+    def do_POST(self):
+        # Read body
+        content_length = int(self.headers.get("Content-Length", 0))
+        body = self.rfile.read(content_length)
 
-    # ── Verify Stripe signature ──────────────────────────────────
-    sig_header = request.headers.get("stripe-signature", "")
-    if not verify_stripe_signature(body, sig_header, STRIPE_WEBHOOK_SECRET):
-        return {"statusCode": 400, "body": "Invalid signature"}
+        # Verify Stripe signature
+        sig_header = self.headers.get("stripe-signature", "")
+        if not verify_stripe_signature(body, sig_header, STRIPE_WEBHOOK_SECRET):
+            self.send_response(400)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": "Invalid signature"}).encode())
+            return
 
-    # Parse event
-    event = json.loads(body)
-    event_type = event.get("type", "")
+        # Parse event
+        event = json.loads(body)
+        event_type = event.get("type", "")
 
-    # ── Route events ─────────────────────────────────────────────
-    if event_type == "checkout.session.completed":
-        return handle_checkout(event)
-    elif event_type == "customer.subscription.deleted":
-        return handle_cancellation(event)
-    else:
-        return {"statusCode": 200, "body": f"Ignored event: {event_type}"}
+        # Route events
+        if event_type == "checkout.session.completed":
+            result = handle_checkout(event)
+        elif event_type == "customer.subscription.deleted":
+            result = handle_cancellation(event)
+        else:
+            result = {"status": "ignored", "event": event_type}
+
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps(result).encode())
+
+    def do_GET(self):
+        """Health check endpoint."""
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps({"status": "ok", "service": "air-blackbox-webhook"}).encode())
 
 
 def handle_checkout(event):
@@ -70,7 +86,7 @@ def handle_checkout(event):
     custom_fields = session.get("custom_fields", [])
     company_name = ""
     for field in custom_fields:
-        if field.get("key") == "company_name" or field.get("label", {}).get("custom") == "Company Name":
+        if field.get("key") == "company_name" or "company" in str(field.get("label", {})).lower():
             company_name = field.get("text", {}).get("value", "")
             break
 
@@ -108,21 +124,21 @@ def handle_checkout(event):
         send_welcome_email(customer_email, slug, subdomain, gateway_key, droplet_ip)
 
         return {
-            "statusCode": 200,
-            "body": json.dumps({
-                "status": "provisioning",
-                "subdomain": subdomain,
-                "droplet_id": droplet_id,
-            })
+            "status": "provisioning",
+            "subdomain": subdomain,
+            "droplet_id": droplet_id,
         }
 
     except Exception as e:
         # Update metadata to show failure
         if customer_id:
-            update_stripe_customer(customer_id, {
-                "provision_status": f"failed: {str(e)[:100]}",
-            })
-        return {"statusCode": 500, "body": f"Provisioning error: {e}"}
+            try:
+                update_stripe_customer(customer_id, {
+                    "provision_status": f"failed: {str(e)[:100]}",
+                })
+            except Exception:
+                pass
+        return {"status": "error", "message": str(e)}
 
 
 def handle_cancellation(event):
@@ -151,10 +167,10 @@ def handle_cancellation(event):
                 "terminated_at": str(int(time.time())),
             })
 
-        return {"statusCode": 200, "body": "VPS terminated"}
+        return {"status": "terminated", "droplet_id": droplet_id}
 
     except Exception as e:
-        return {"statusCode": 500, "body": f"Teardown error: {e}"}
+        return {"status": "error", "message": str(e)}
 
 
 # ── Stripe helpers ───────────────────────────────────────────────
@@ -165,7 +181,12 @@ def verify_stripe_signature(payload, sig_header, secret):
         return False
 
     # Parse signature header
-    pairs = dict(item.split("=", 1) for item in sig_header.split(",") if "=" in item)
+    pairs = {}
+    for item in sig_header.split(","):
+        if "=" in item:
+            k, v = item.split("=", 1)
+            pairs[k.strip()] = v.strip()
+
     timestamp = pairs.get("t", "")
     signature = pairs.get("v1", "")
 
@@ -173,7 +194,10 @@ def verify_stripe_signature(payload, sig_header, secret):
         return False
 
     # Check timestamp isn't too old (5 min tolerance)
-    if abs(time.time() - int(timestamp)) > 300:
+    try:
+        if abs(time.time() - int(timestamp)) > 300:
+            return False
+    except ValueError:
         return False
 
     # Compute expected signature
@@ -210,7 +234,7 @@ def urlencode_nested(data, prefix=""):
         if isinstance(value, dict):
             parts.append(urlencode_nested(value, full_key))
         else:
-            parts.append(f"{urllib.parse.quote(full_key)}={urllib.parse.quote(str(value))}")
+            parts.append(f"{urllib.parse.quote(str(full_key), safe='')}={urllib.parse.quote(str(value), safe='')}")
     return "&".join(parts)
 
 
@@ -251,7 +275,6 @@ def do_request(method, path, data=None):
 
 def create_droplet(slug, gateway_key):
     """Create a DigitalOcean droplet with the Pro deploy script."""
-    # Cloud-init script that provisions the AIR Blackbox Pro stack
     user_data = f"""#!/bin/bash
 set -e
 
@@ -269,20 +292,15 @@ export MINIO_ROOT_PASSWORD=$(openssl rand -hex 16)
 export GATEWAY_KEY={gateway_key}
 
 # Write .env file
-cat > .env << ENVEOF
+cat > .env << 'ENVEOF'
 TRUST_SIGNING_KEY=$TRUST_SIGNING_KEY
 MINIO_ROOT_USER=$MINIO_ROOT_USER
 MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD
 GATEWAY_KEY=$GATEWAY_KEY
 ENVEOF
 
-# Start the Pro stack (gateway + collector + jaeger + minio)
+# Start the Pro stack
 docker compose up -d
-
-# Signal that provisioning is complete
-curl -s -X POST "https://airblackbox.ai/api/provision-complete" \\
-  -H "Content-Type: application/json" \\
-  -d '{{"slug": "{slug}", "status": "ready"}}' || true
 """
 
     result = do_request("POST", "droplets", {
@@ -340,7 +358,7 @@ def cf_request(method, path, data=None):
 
 
 def create_dns_record(slug, ip):
-    """Create A record: slug.airblackbox.ai → IP."""
+    """Create A record: slug.airblackbox.ai -> IP."""
     cf_request("POST", f"zones/{CLOUDFLARE_ZONE_ID}/dns_records", {
         "type": "A",
         "name": f"{slug}.{DOMAIN}",
@@ -352,7 +370,6 @@ def create_dns_record(slug, ip):
 
 def delete_dns_record(slug):
     """Delete DNS record for slug.airblackbox.ai."""
-    # Find the record ID first
     result = cf_request("GET",
         f"zones/{CLOUDFLARE_ZONE_ID}/dns_records?name={slug}.{DOMAIN}&type=A")
     records = result.get("result", [])
@@ -388,8 +405,7 @@ export AIR_GATEWAY=https://{subdomain}
 air-blackbox comply --scan . -v</pre>
         </div>
 
-        <p style="color: #8b949e;">Your VPS includes the fine-tuned compliance model, Jaeger trace dashboard, and private telemetry. No data leaves your server.</p>
-
+        <p style="color: #8b949e;">Your VPS includes the fine-tuned gap analysis model, Jaeger trace dashboard, and private telemetry. No data leaves your server.</p>
         <p style="color: #8b949e;">Questions? Reply to this email or reach us at <a href="mailto:jason.j.shotwell@gmail.com" style="color: #58a6ff;">jason.j.shotwell@gmail.com</a></p>
 
         <hr style="border: 1px solid #21262d; margin: 2rem 0;">
@@ -400,7 +416,7 @@ air-blackbox comply --scan . -v</pre>
     data = json.dumps({
         "from": "AIR Blackbox <noreply@airblackbox.ai>",
         "to": [to_email],
-        "subject": f"Your AIR Blackbox Pro is ready — {subdomain}",
+        "subject": f"Your AIR Blackbox Pro is ready - {subdomain}",
         "html": html_body,
     }).encode()
 
@@ -425,7 +441,6 @@ air-blackbox comply --scan . -v</pre>
 
 def slugify(text):
     """Convert company name to URL-safe slug."""
-    import re
     text = text.lower().strip()
     text = re.sub(r'[^\w\s-]', '', text)
     text = re.sub(r'[\s_]+', '-', text)
