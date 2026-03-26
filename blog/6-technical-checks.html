@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 6 Technical Checks Your AI System Needs Before August 2, 2026 | AIR Blackbox</title>
+<meta name="description" content="We scanned LangChain, CrewAI, AutoGen, OpenAI SDK, and RAG pipelines for EU AI Act compliance. None scored higher than 1/6. Here's what each article requires in your codebase and how to fix it.">
+<meta name="keywords" content="EU AI Act compliance, AI agent technical checks, Article 9 risk management, Article 12 record keeping, LangChain compliance, Python AI governance">
+<meta property="og:title" content="The 6 Technical Checks Your AI System Needs Before August 2, 2026">
+<meta property="og:description" content="We scanned 5 Python AI frameworks for EU AI Act compliance. None scored higher than 1/6. Here's what each article requires in code.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://airblackbox.ai/blog/6-technical-checks">
+<link rel="canonical" href="https://airblackbox.ai/blog/6-technical-checks">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; color: #1a1a1a; background: #fff; }
+  .container { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
+  nav { padding: 16px 20px; border-bottom: 1px solid #e5e5e5; display: flex; justify-content: space-between; align-items: center; max-width: 720px; margin: 0 auto; }
+  nav a { color: #1a1a1a; text-decoration: none; font-weight: 600; }
+  nav .links a { color: #666; font-weight: 400; margin-left: 20px; font-size: 14px; }
+  nav .links a:hover { color: #1a1a1a; }
+  h1 { font-size: 2.2em; line-height: 1.2; margin-bottom: 16px; letter-spacing: -0.02em; }
+  h2 { font-size: 1.4em; margin-top: 48px; margin-bottom: 16px; }
+</style>
+<style>
+  h3 { font-size: 1.1em; margin-top: 32px; margin-bottom: 12px; }
+  p { margin-bottom: 20px; color: #333; }
+  .meta { color: #888; font-size: 14px; margin-bottom: 40px; }
+  code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+  pre { background: #1a1a1a; color: #e5e5e5; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e5e5; }
+  th { font-weight: 600; background: #f8f8f8; }
+  blockquote { border-left: 3px solid #1a1a1a; padding-left: 16px; margin: 24px 0; font-style: italic; color: #555; }
+  .cta { background: #1a1a1a; color: #fff; padding: 24px; border-radius: 8px; margin: 40px 0; text-align: center; }
+  .cta code { background: #333; color: #fff; }
+  .cta a { color: #4da6ff; }
+  footer { border-top: 1px solid #e5e5e5; padding-top: 20px; margin-top: 60px; color: #888; font-size: 13px; }
+  footer a { color: #888; }
+  .severity-critical { color: #dc2626; font-weight: 600; }
+  .severity-high { color: #ea580c; font-weight: 600; }
+  .severity-medium { color: #ca8a04; font-weight: 600; }
+  .fail { color: #dc2626; }
+  .pass { color: #16a34a; }
+  .check-section { border-top: 1px solid #e5e5e5; padding-top: 32px; margin-top: 48px; }
+  .comment { color: #6a9955; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="/">AIR Blackbox</a>
+  <span class="links">
+    <a href="/blog/">Blog</a>
+    <a href="https://github.com/airblackbox/gateway">GitHub</a>
+    <a href="https://pypi.org/project/air-blackbox/">PyPI</a>
+  </span>
+</nav>
+
+<div class="container">
+
+<h1>The 6 Technical Checks Your AI System Needs Before August 2, 2026</h1>
+<p class="meta">March 26, 2026 · Jason Shotwell · 8 min read</p>
+
+<p>The EU AI Act enforcement deadline is August 2, 2026. If you're shipping Python AI agents — using LangChain, CrewAI, AutoGen, OpenAI, or any RAG pipeline — your code needs to pass 6 specific technical checks mapped to Articles 9, 10, 11, 12, 14, and 15 of the regulation.</p>
+
+<p>Most teams haven't started. We scanned typical agent code from 5 popular frameworks and found that <strong>none scored higher than 1/6</strong> out of the box — and most scored 0/6. Here's what each check actually requires in your codebase, and how to fix it.</p>
+
+<div class="check-section">
+<h2>Check 1: Risk Management System (Article 9)</h2>
+
+<p><strong>What the regulation says:</strong> Your AI system must identify and analyze known and foreseeable risks, with measures proportionate to the risk level.</p>
+
+<p><strong>What that means in code:</strong> Every tool call your agent makes needs a risk classification. When your LangChain agent calls a web search tool, that's LOW risk. When it executes arbitrary code or accesses a database with customer PII, that's HIGH or CRITICAL.</p>
+
+<p><strong>What we found:</strong> No risk classification detected in any framework. Agents can invoke any tool without risk assessment. Severity: <span class="severity-high">HIGH</span></p>
+
+<p><strong>The fix:</strong></p>
+<pre><code><span class="comment"># Before: agent calls tools with no risk awareness</span>
+executor = AgentExecutor(agent=agent, tools=tools)
+
+<span class="comment"># After: ConsentGate classifies tool calls by risk level</span>
+from air_langchain_trust import AIRTrustLayer
+trust = AIRTrustLayer(consent_gate=True)
+executor = trust.wrap(AgentExecutor(agent=agent, tools=tools))</code></pre>
+
+<p>Risk classifications (LOW / MEDIUM / HIGH / CRITICAL) get logged automatically. A regulator can see exactly which actions your agent took and what risk level was assigned to each.</p>
+</div>
+
+<div class="check-section">
+<h2>Check 2: Data and Data Governance (Article 10)</h2>
+
+<p><strong>What the regulation says:</strong> You need data governance and management practices, including data minimization. Sensitive data must be handled appropriately.</p>
+
+<p><strong>What that means in code:</strong> PII, API keys, credentials, and other sensitive data should not flow directly to the LLM in plaintext. You need tokenization or redaction before the model sees it.</p>
+
+<p><strong>What we found:</strong> No data governance controls in any of the 5 frameworks. A user's email address, SSN, or API key typed into a prompt goes straight to the model. Severity: <span class="severity-high">HIGH</span></p>
+
+<p><strong>The fix:</strong></p>
+<pre><code><span class="comment"># DataVault tokenizes sensitive data before LLM processing</span>
+from air_langchain_trust import AIRTrustLayer
+trust = AIRTrustLayer(data_vault=True)
+<span class="comment"># PII is replaced with tokens like [PII_EMAIL_1] before reaching the model</span>
+<span class="comment"># Original values are restored in the response</span></code></pre>
+
+<p>This is especially important for RAG pipelines that ingest company documents — those documents often contain PII, financial data, and internal credentials.</p>
+</div>
+
+<div class="check-section">
+<h2>Check 3: Technical Documentation (Article 11)</h2>
+
+<p><strong>What the regulation says:</strong> You must maintain a general description of the AI system, kept up to date, covering its intended purpose, design specifications, and how it works.</p>
+
+<p><strong>What that means in code:</strong> Your agent's operations need structured logging — not just <code>print()</code> statements or unstructured log files, but a documentation system that captures what the agent does, what tools it uses, and how it processes data.</p>
+
+<p><strong>What we found:</strong> No structured documentation in any framework. Agent operations are invisible. Severity: <span class="severity-medium">MEDIUM</span></p>
+
+<p><strong>The fix:</strong></p>
+<pre><code><span class="comment"># AuditLedger automatically documents all agent operations</span>
+from air_langchain_trust import AIRTrustLayer
+trust = AIRTrustLayer(audit_ledger=True)
+<span class="comment"># Every agent action is recorded with timestamps, inputs, outputs,</span>
+<span class="comment"># and tool invocations in a structured, queryable format</span></code></pre>
+</div>
+
+<div class="check-section">
+<h2>Check 4: Record-Keeping (Article 12) — <span class="severity-critical">CRITICAL</span></h2>
+
+<p><strong>What the regulation says:</strong> Your AI system must automatically record events ("logs") with enough detail for regulatory verification. This is the article with the sharpest teeth.</p>
+
+<p><strong>What that means in code:</strong> You need tamper-evident logging. A regulator needs to be able to verify that your logs haven't been altered after the fact. Regular log files don't cut it — they're trivially editable.</p>
+
+<p><strong>What we found:</strong> This was flagged as <span class="severity-critical">CRITICAL</span> severity across all 5 frameworks. No automatic record-keeping. Agent decisions and tool invocations are not recorded in any auditable format.</p>
+
+<p><strong>The fix:</strong></p>
+<pre><code><span class="comment"># HMAC-SHA256 audit chains — tamper-evident logging</span>
+from air_langchain_trust import AIRTrustLayer
+trust = AIRTrustLayer(audit_chain=True)
+<span class="comment"># Each log entry is cryptographically chained to the previous one</span>
+<span class="comment"># If anyone modifies a past entry, the chain breaks</span>
+<span class="comment"># Regulators can verify the entire chain with one command</span></code></pre>
+
+<p>This is the check that most teams don't even know they need. "We have CloudWatch logs" is not going to satisfy Article 12 when the auditor asks you to prove those logs haven't been modified.</p>
+</div>
+
+<div class="check-section">
+<h2>Check 5: Human Oversight (Article 14)</h2>
+
+<p><strong>What the regulation says:</strong> AI systems must be designed so they can be effectively overseen by natural persons. Humans must be able to intervene, override, or stop the system.</p>
+
+<p><strong>What that means in code:</strong> Your agent needs a human-in-the-loop mechanism for sensitive actions. Not every action — that would be impractical. But high-risk tool calls (database writes, sending emails, executing code) should require human approval.</p>
+
+<p><strong>What we found:</strong> 4 out of 5 frameworks had no human oversight mechanism. The OpenAI SDK scored 1/6 partially because it doesn't have autonomous tool execution by default — but that's a technicality, not a compliance layer. Severity: <span class="severity-high">HIGH</span></p>
+
+<p><strong>The fix:</strong></p>
+<pre><code><span class="comment"># ConsentGate for human-in-the-loop on sensitive actions</span>
+from air_langchain_trust import AIRTrustLayer
+trust = AIRTrustLayer(consent_gate=True)
+<span class="comment"># HIGH and CRITICAL risk actions pause and wait for human approval</span>
+<span class="comment"># LOW and MEDIUM actions proceed automatically but are still logged</span></code></pre>
+</div>
+
+<div class="check-section">
+<h2>Check 6: Accuracy, Robustness &amp; Cybersecurity (Article 15)</h2>
+
+<p><strong>What the regulation says:</strong> Your AI system must be resilient against unauthorized third-party attempts to alter its use or behavior. It must achieve appropriate levels of accuracy and robustness.</p>
+
+<p><strong>What that means in code:</strong> Prompt injection defense. If a user (or a document your RAG pipeline ingests) can trick your agent into ignoring its instructions, executing unauthorized commands, or leaking system prompts — you fail Article 15.</p>
+
+<p><strong>What we found:</strong> No cybersecurity defenses in any framework. Every agent we scanned is vulnerable to prompt injection attacks. Severity: <span class="severity-high">HIGH</span></p>
+
+<p><strong>The fix:</strong></p>
+<pre><code><span class="comment"># InjectionDetector for multi-layer prompt injection defense</span>
+from air_langchain_trust import AIRTrustLayer
+trust = AIRTrustLayer(injection_detector=True)
+<span class="comment"># Scans user inputs and retrieved documents for injection patterns</span>
+<span class="comment"># Blocks or flags suspicious inputs before they reach the agent</span></code></pre>
+</div>
+
+<h2>The Scan Results: 5 Frameworks, All Failing</h2>
+
+<p>Here's what AIR Blackbox found when we scanned typical agent code from each major framework:</p>
+
+<table>
+<tr><th>Framework</th><th>Score</th><th>Art. 9</th><th>Art. 10</th><th>Art. 11</th><th>Art. 12</th><th>Art. 14</th><th>Art. 15</th></tr>
+<tr><td>LangChain</td><td><strong>0/6</strong></td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td></tr>
+<tr><td>CrewAI</td><td><strong>0/6</strong></td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td></tr>
+<tr><td>AutoGen</td><td><strong>0/6</strong></td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td></tr>
+<tr><td>OpenAI SDK</td><td><strong>1/6</strong></td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="pass">PASS</td><td class="fail">FAIL</td></tr>
+<tr><td>RAG (LangChain)</td><td><strong>0/6</strong></td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td></tr>
+</table>
+
+<p>This isn't a knock on these frameworks — they're excellent tools for building AI agents. But they were built before the EU AI Act existed, and compliance isn't their job. That's what AIR Blackbox is for.</p>
+
+<h2>Scan Your Own Code</h2>
+
+<p>Run it in 10 seconds:</p>
+
+<pre><code>pip install air-compliance-checker
+air-compliance scan your_agent.py</code></pre>
+
+<p>Or add trust layers for your specific framework:</p>
+
+<pre><code>pip install air-langchain-trust    # LangChain
+pip install air-crewai-trust       # CrewAI
+pip install air-autogen-trust      # AutoGen
+pip install air-openai-trust       # OpenAI SDK
+pip install air-rag-trust          # RAG pipelines</code></pre>
+
+<p>Everything runs locally. Your code never leaves your machine. Apache 2.0 open source.</p>
+
+<div class="cta">
+  <p><strong>129 days until the EU AI Act deadline.</strong></p>
+  <p>The scan takes 10 seconds. The fines start at &euro;15M or 3% of global annual turnover.</p>
+  <p><code>pip install air-compliance-checker</code></p>
+  <p><a href="https://github.com/air-blackbox">GitHub</a> · <a href="https://airblackbox.ai/demo">Demo</a> · <a href="https://pypi.org/project/air-compliance-checker/">PyPI</a></p>
+</div>
+
+<footer>
+  <p>AIR Blackbox — The flight recorder for AI agents. Open source. Apache 2.0.</p>
+  <p><a href="/">Home</a> · <a href="/blog/">Blog</a> · <a href="https://github.com/airblackbox/gateway">GitHub</a></p>
+</footer>
+
+</div>
+</body>
+</html>
