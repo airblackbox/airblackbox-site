@@ -82,6 +82,24 @@ def handle_checkout(event):
     customer_email = session.get("customer_details", {}).get("email", "")
     subscription_id = session.get("subscription", "")
 
+    # Idempotency: check if already provisioned by reading Stripe customer metadata
+    if customer_id and STRIPE_SECRET_KEY:
+        try:
+            existing = get_stripe_customer(customer_id)
+            existing_meta = existing.get("metadata", {})
+            if existing_meta.get("provision_status") in ("provisioning", "active"):
+                print(f"[WEBHOOK] Already provisioned for {customer_id}, re-sending email only")
+                send_welcome_email(
+                    customer_email,
+                    existing_meta.get("company_slug", ""),
+                    existing_meta.get("subdomain", ""),
+                    existing_meta.get("gateway_key", ""),
+                    existing_meta.get("vps_ip", ""),
+                )
+                return {"status": "already_provisioned", "subdomain": existing_meta.get("subdomain")}
+        except Exception as e:
+            print(f"[WEBHOOK] Idempotency check failed: {e}")
+
     # Get company name from custom fields
     custom_fields = session.get("custom_fields", [])
     company_name = ""
@@ -96,21 +114,31 @@ def handle_checkout(event):
     gateway_key = f"gw_{secrets.token_hex(16)}"
 
     try:
+        # Step 0: Mark as provisioning BEFORE creating resources (prevents duplicates on retry)
+        if customer_id and STRIPE_SECRET_KEY:
+            update_stripe_customer(customer_id, {
+                "provision_status": "provisioning",
+                "company_slug": slug,
+                "provisioned_at": str(int(time.time())),
+            })
+
         # Step 1: Create DigitalOcean droplet
+        print(f"[WEBHOOK] Creating droplet for {slug}")
         droplet_id, droplet_ip = create_droplet(slug, gateway_key)
+        print(f"[WEBHOOK] Droplet created: {droplet_id} at {droplet_ip}")
 
         # Step 2: Create DNS record (slug.airblackbox.ai)
+        print(f"[WEBHOOK] Creating DNS record: {slug}.{DOMAIN}")
         create_dns_record(slug, droplet_ip)
 
-        # Step 3: Update Stripe customer metadata
+        # Step 3: Update Stripe customer metadata with full provisioning details
         update_stripe_customer(customer_id, {
             "company_slug": slug,
             "subdomain": subdomain,
             "vps_ip": droplet_ip,
             "droplet_id": str(droplet_id),
             "gateway_key": gateway_key,
-            "provision_status": "provisioning",
-            "provisioned_at": str(int(time.time())),
+            "provision_status": "active",
         })
 
         # Step 4: Update Stripe subscription metadata
