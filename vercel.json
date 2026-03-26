@@ -1,11 +1,33 @@
 {
   "rewrites": [
-    { "source": "/annotator", "destination": "/annotator.html" },
-    { "source": "/demo", "destination": "/demo/index.html" },
-    { "source": "/vaultmind", "destination": "/vaultmind/index.html" },
-    { "source": "/quickstart", "destination": "/quickstart.html" },
-    { "source": "/blog", "destination": "/blog/index.html" },
-    { "source": "/blog/oauth-ai-agents-delegation-scan", "destination": "/blog/oauth-ai-agents-delegation-scan.html" }
+    {
+      "source": "/annotator",
+      "destination": "/annotator.html"
+    },
+    {
+      "source": "/demo",
+      "destination": "/demo/index.html"
+    },
+    {
+      "source": "/vaultmind",
+      "destination": "/vaultmind/index.html"
+    },
+    {
+      "source": "/quickstart",
+      "destination": "/quickstart.html"
+    },
+    {
+      "source": "/blog",
+      "destination": "/blog/index.html"
+    },
+    {
+      "source": "/blog/oauth-ai-agents-delegation-scan",
+      "destination": "/blog/oauth-ai-agents-delegation-scan.html"
+    },
+    {
+      "source": "/blog/6-technical-checks",
+      "destination": "/blog/6-technical-checks.html"
+    }
   ],
   "functions": {
     "api/webhook.py": {
