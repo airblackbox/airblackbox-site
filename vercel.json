@@ -79,6 +79,26 @@
     {
       "source": "/blog/6-technical-checks",
       "destination": "/blog/6-technical-checks.html"
+    },
+    {
+      "source": "/blog/eu-ai-act-compliance-checklist",
+      "destination": "/blog/eu-ai-act-compliance-checklist.html"
+    },
+    {
+      "source": "/blog/eu-ai-act-august-2026-deadline",
+      "destination": "/blog/eu-ai-act-august-2026-deadline.html"
+    },
+    {
+      "source": "/blog/eu-ai-act-articles-9-15-technical-requirements",
+      "destination": "/blog/eu-ai-act-articles-9-15-technical-requirements.html"
+    },
+    {
+      "source": "/blog/langchain-eu-ai-act-compliance",
+      "destination": "/blog/langchain-eu-ai-act-compliance.html"
+    },
+    {
+      "source": "/blog/gdpr-eu-ai-act-dual-compliance",
+      "destination": "/blog/gdpr-eu-ai-act-dual-compliance.html"
     }
   ],
   "functions": {

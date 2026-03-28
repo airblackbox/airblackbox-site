@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EU AI Act enforcement begins August 2, 2026. Learn what high-risk AI system requirements mean for engineering teams and how to achieve compliance by the deadline.">
+    <meta name="keywords" content="EU AI Act deadline, EU AI Act 2026, AI Act August 2026 deadline, EU AI Act timeline, when does the EU AI Act take effect, AI Act enforcement date, AI compliance, high-risk AI systems">
+    <meta name="canonical" content="https://airblackbox.ai/blog/eu-ai-act-august-2026-deadline">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="EU AI Act August 2026 Deadline: What Developers Actually Need to Do">
+    <meta property="og:description" content="Complete guide to EU AI Act enforcement date. Learn the timeline, technical requirements, and 5-month action plan for compliance.">
+    <meta property="og:image" content="https://airblackbox.ai/og-image.png">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://airblackbox.ai/blog/eu-ai-act-august-2026-deadline">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="EU AI Act August 2026 Deadline: What Developers Actually Need to Do">
+    <meta name="twitter:description" content="Complete guide to EU AI Act enforcement date. Learn the timeline, technical requirements, and 5-month action plan for compliance.">
+    <meta name="twitter:image" content="https://airblackbox.ai/og-image.png">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "EU AI Act August 2026 Deadline: What Developers Actually Need to Do",
+        "description": "Complete guide to EU AI Act enforcement date, timeline, technical requirements, and compliance action plan for engineering teams.",
+        "image": "https://airblackbox.ai/og-image.png",
+        "author": {
+            "@type": "Organization",
+            "name": "AIR Blackbox",
+            "url": "https://airblackbox.ai"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "AIR Blackbox",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://airblackbox.ai/logo.png"
+            }
+        },
+        "datePublished": "2026-03-28",
+        "dateModified": "2026-03-28",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://airblackbox.ai/blog/eu-ai-act-august-2026-deadline"
+        }
+    }
+    </script>
+
+    <title>EU AI Act August 2026 Deadline: What Developers Actually Need to Do</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #080b14;
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+
+        code, pre {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        a {
+            color: #58a6ff;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: #79c0ff;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: #0d1117;
+            border-bottom: 1px solid #30363d;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+
+        nav .logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #58a6ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav .links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        nav a {
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        nav a:not(.logo):hover {
+            color: #79c0ff;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            color: #e6edf3;
+        }
+
+        header .subtitle {
+            font-size: 18px;
+            color: #8b949e;
+            margin-bottom: 30px;
+        }
+
+        header .meta {
+            font-size: 14px;
+            color: #6e7681;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* Main content */
+        main {
+            padding: 60px 20px;
+        }
+
+        article {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-size: 32px;
+            color: #e6edf3;
+            margin-bottom: 20px;
+            margin-top: 40px;
+            border-bottom: 2px solid #58a6ff;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 24px;
+            color: #e6edf3;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            font-size: 18px;
+            color: #c9d1d9;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: #c9d1d9;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: #c9d1d9;
+        }
+
+        /* Timeline */
+        .timeline {
+            background-color: #0d1117;
+            border-left: 3px solid #58a6ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .timeline-item {
+            margin-bottom: 20px;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-date {
+            color: #58a6ff;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .timeline-content {
+            margin-top: 5px;
+            color: #c9d1d9;
+        }
+
+        /* Boxes */
+        .highlight-box {
+            background-color: #0d1117;
+            border-left: 4px solid #58a6ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .important-box {
+            background-color: rgba(88, 166, 255, 0.05);
+            border: 1px solid #58a6ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .callout {
+            background-color: #0d1117;
+            border-left: 4px solid #79c0ff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        /* Code blocks */
+        pre {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        code {
+            color: #79c0ff;
+        }
+
+        pre code {
+            color: #c9d1d9;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #0d1117;
+            color: #e6edf3;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #58a6ff;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #30363d;
+            color: #c9d1d9;
+        }
+
+        tr:hover {
+            background-color: rgba(88, 166, 255, 0.05);
+        }
+
+        /* FAQ */
+        .faq-item {
+            margin-bottom: 20px;
+        }
+
+        .faq-question {
+            background-color: #0d1117;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #e6edf3;
+            border-left: 4px solid #58a6ff;
+            transition: background-color 0.2s;
+        }
+
+        .faq-question:hover {
+            background-color: #161b22;
+        }
+
+        .faq-answer {
+            padding: 16px;
+            background-color: rgba(13, 17, 23, 0.5);
+            display: none;
+            color: #c9d1d9;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        /* Myth vs Reality */
+        .myth-reality {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .myth-reality {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .myth-box, .reality-box {
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .myth-box {
+            background-color: rgba(248, 81, 73, 0.1);
+            border-left: 4px solid #f85149;
+        }
+
+        .myth-box h4 {
+            color: #f85149;
+        }
+
+        .reality-box {
+            background-color: rgba(88, 166, 255, 0.1);
+            border-left: 4px solid #58a6ff;
+        }
+
+        .reality-box h4 {
+            color: #58a6ff;
+        }
+
+        /* Action Plan */
+        .action-month {
+            background-color: #0d1117;
+            padding: 20px;
+            margin: 16px 0;
+            border-radius: 8px;
+            border-left: 4px solid #58a6ff;
+        }
+
+        .action-month h4 {
+            color: #58a6ff;
+            margin-top: 0;
+        }
+
+        .action-month ul {
+            margin-left: 20px;
+        }
+
+        .action-month li {
+            margin-bottom: 8px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0d1117;
+            border-top: 1px solid #30363d;
+            padding: 40px 20px;
+            text-align: center;
+            color: #6e7681;
+            font-size: 14px;
+        }
+
+        footer .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        footer .links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            list-style: none;
+        }
+
+        footer a {
+            color: #58a6ff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 32px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            h3 {
+                font-size: 20px;
+            }
+
+            nav .links {
+                gap: 15px;
+                font-size: 12px;
+            }
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #58a6ff;
+            color: #080b14;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+            z-index: 99;
+        }
+
+        .back-to-top.show {
+            display: flex;
+        }
+
+        .back-to-top:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">AIR Blackbox</a>
+            <ul class="links">
+                <li><a href="/quickstart">Docs</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/demo">Demo</a></li>
+                <li><a href="https://github.com/airbj/air-blackbox" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1>EU AI Act August 2026 Deadline: What Developers Actually Need to Do</h1>
+            <p class="subtitle">A practical guide to enforcement date, timeline, technical requirements, and your 5-month action plan</p>
+            <div class="meta">
+                <span>Published: March 28, 2026</span>
+                <span>Reading time: 12 minutes</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <article>
+            <!-- Introduction -->
+            <section id="introduction">
+                <h2>Introduction: August 2, 2026 is When It Gets Real</h2>
+
+                <p>August 2, 2026 is not an abstract deadline in a regulatory document. It is the date when the European Union's AI Act enforcement mechanism activates for high-risk AI systems. On that date, competent authorities across EU member states will have the power to conduct market surveillance, issue enforcement orders, and impose fines of up to 35 million EUR or 7% of annual global revenue, whichever is higher.</p>
+
+                <p>For engineering teams that deploy AI systems in Europe or have European users, this is the moment when compliance stops being optional. If your AI system falls into the high-risk category under Articles 6 and Annex III of the regulation, you must have implemented technical controls, documentation, risk management processes, and audit trails by this date.</p>
+
+                <p>This guide is written for developers and technical teams who have read enough regulatory summaries and need to understand what enforcement actually means. We break down the timeline, explain the technical requirements in terms that map to code and infrastructure, and give you a realistic action plan for the next five months.</p>
+
+                <div class="important-box">
+                    <strong>Why August 2, 2026 matters:</strong> This is when Articles 9 through 15 of the EU AI Act become enforceable. These articles define the concrete technical, organizational, and governance requirements for high-risk AI systems. Non-compliance exposes you to regulatory action, not just reputational risk.
+                </div>
+            </section>
+
+            <!-- Timeline Breakdown -->
+            <section id="timeline">
+                <h2>The Complete EU AI Act Timeline</h2>
+
+                <p>The EU AI Act did not activate all at once. Understanding the phased enforcement schedule is critical because different compliance obligations bind at different times. Here is what has already happened and what is coming:</p>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">February 2, 2025</div>
+                        <div class="timeline-content">
+                            <strong>Prohibited AI Practices Take Effect</strong>
+                            <p style="margin-top: 5px;">Articles 5 and 5a became enforceable. Specific AI practices are now forbidden in the EU: real-time biometric identification in public spaces without narrow exceptions, social credit systems, manipulation, subliminal techniques targeting children, and certain uses of emotion recognition. Violations trigger immediate enforcement action.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">August 2, 2025</div>
+                        <div class="timeline-content">
+                            <strong>GPAI Model Obligations Begin</strong>
+                            <p style="margin-top: 5px;">Providers of general-purpose AI models (including large language models) must meet transparency and documentation requirements. You must provide technical documentation, declare how your model responds to requests for prohibited use cases, and monitor for misuse. This applies regardless of whether your GPAI model is used for high-risk applications.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">August 2, 2026</div>
+                        <div class="timeline-content">
+                            <strong>High-Risk AI System Requirements Become Enforceable (Articles 9-15)</strong>
+                            <p style="margin-top: 5px;">This is the enforcement date covered in this guide. All high-risk AI systems must comply with technical and organizational requirements: risk assessment, logging, human oversight, transparency, testing, documentation, and continuous monitoring. Market surveillance authorities gain full enforcement power. Competent national authorities can fine non-compliant providers up to 35 million EUR or 7% of global revenue.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">August 2, 2027</div>
+                        <div class="timeline-content">
+                            <strong>Annex I Products with High-Risk AI Components</strong>
+                            <p style="margin-top: 5px;">For AI systems embedded in regulated products listed in Annex I (medical devices, machinery, vehicles, etc.), full compliance must be demonstrated. Notified bodies conduct conformity assessments. This extends enforcement into verticals with existing product safety regulation.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p style="margin-top: 30px;">Your focus for the next five months is August 2, 2026. If your AI system is classified as high-risk, you must demonstrate compliance with Articles 9 through 15 by that date. If you are still in the assessment phase, you are already behind schedule.</p>
+            </section>
+            <!-- What Enforcement Means -->
+            <section id="enforcement">
+                <h2>What "Enforcement" Actually Means</h2>
+
+                <h3>Market Surveillance and Compliance Audits</h3>
+
+                <p>Enforcement is not a one-time certification process. After August 2, 2026, EU member states are required to establish market surveillance authorities with the power to conduct unannounced audits of AI systems in deployment. These authorities can issue binding orders, suspend systems from the market, and impose fines.</p>
+
+                <p>What does a compliance audit look like? An authority can demand:</p>
+
+                <ul>
+                    <li>Complete technical documentation of your AI system, including training data sources, validation results, and performance metrics</li>
+                    <li>Evidence of risk assessment and mitigation measures for identified harms</li>
+                    <li>Audit logs proving that the system was monitored during deployment</li>
+                    <li>Proof that human oversight processes were actually followed</li>
+                    <li>Test results demonstrating the system meets documented performance and safety specifications</li>
+                    <li>Records of incident reporting and remediation</li>
+                </ul>
+
+                <p>Authorities will focus first on high-risk systems in critical sectors: criminal justice, employment, education, border control, and law enforcement. But enforcement will expand to other high-risk applications once the baseline capacity is established.</p>
+
+                <h3>Financial Penalties</h3>
+
+                <p>The EU AI Act provides two tiers of fines for high-risk AI system violations:</p>
+
+                <div class="highlight-box">
+                    <strong>Tier 1 (Articles 6-15):</strong> Up to 35 million EUR or up to 7% of annual global revenue for the preceding fiscal year, whichever is higher. This applies to violations of the core technical and organizational requirements.<br><br>
+                    <strong>Tier 2 (Other articles, including documentation and transparency):</strong> Up to 15 million EUR or up to 3% of annual global revenue, whichever is higher.
+                </div>
+
+                <p>For context, 7% of global revenue is significant. A company with 1 billion EUR in annual revenue faces fines up to 70 million EUR for high-risk AI compliance violations. Authorities will pursue multiple violations simultaneously (missing documentation, inadequate testing, no logging, absent human oversight), compounding the financial exposure.</p>
+
+                <h3>Practical Enforcement Mechanisms</h3>
+
+                <p>Beyond fines, authorities have these tools:</p>
+
+                <ul>
+                    <li><strong>Suspension Orders:</strong> Authorities can order a high-risk AI system removed from the market immediately if it poses an imminent risk to public safety or fundamental rights.</li>
+                    <li><strong>Corrective Action Orders:</strong> Authorities can mandate specific remediation steps (re-training, bias mitigation, enhanced monitoring) within a defined timeline.</li>
+                    <li><strong>Mandatory Incident Reporting:</strong> Providers must report serious incidents or malfunctions that cause harm or breach fundamental rights within 15 days. Failure to report incurs separate penalties.</li>
+                    <li><strong>Public Disclosure:</strong> Serious non-compliance is published in the EU transparency database, affecting customer trust and procurement eligibility.</li>
+                </ul>
+            </section>
+
+            <!-- Technical Requirements -->
+            <section id="technical-requirements">
+                <h2>The Technical Requirements That Matter (Articles 9-15)</h2>
+
+                <p>The EU AI Act does not specify implementation details. Instead, it defines outcomes that you must achieve. Here is a developer's translation of the core technical articles:</p>
+
+                <h3>Article 9: Risk Assessment and Management</h3>
+
+                <p><strong>Requirement:</strong> You must document how your AI system could cause harm and what controls you have implemented to mitigate identified risks.</p>
+
+                <p><strong>What this means in practice:</strong></p>
+
+                <ul>
+                    <li>Identify foreseeable misuse scenarios for your system</li>
+                    <li>Map harms to each scenario (bias against protected groups, incorrect decisions, data breaches)</li>
+                    <li>Document technical controls that reduce risk (fairness testing, explainability features, access controls)</li>
+                    <li>Maintain a living risk register updated when new threats emerge</li>
+                    <li>Demonstrate that residual risks are acceptable given the system's benefits</li>
+                </ul>
+
+                <h3>Article 10: Data Governance</h3>
+
+                <p><strong>Requirement:</strong> Training, validation, and test data must meet quality requirements and be documented.</p>
+
+                <p><strong>What this means in practice:</strong></p>
+
+                <ul>
+                    <li>Document the source, size, and composition of training data</li>
+                    <li>Conduct bias audits on training data to identify underrepresented groups</li>
+                    <li>Maintain separate test data that is representative of real-world conditions</li>
+                    <li>Record any known data quality issues and their mitigation</li>
+                    <li>Prove that data collection complied with privacy regulations</li>
+                </ul>
+
+                <h3>Article 11: Record Keeping and Logging</h3>
+
+                <p><strong>Requirement:</strong> You must automatically record how your AI system is used and how it performs in production.</p>
+
+                <p><strong>What this means in practice:</strong></p>
+
+                <ul>
+                    <li>Log every prediction or decision made by the system and its confidence level</li>
+                    <li>Record inputs and outputs for high-stakes decisions (e.g., hiring, credit, criminal sentencing)</li>
+                    <li>Track performance metrics (accuracy, fairness, drift) over time</li>
+                    <li>Log any interventions by human overseers</li>
+                    <li>Maintain logs for the operational lifetime of the system (typically 3-7 years depending on sector)</li>
+                    <li>Ensure logs cannot be tampered with or deleted</li>
+                </ul>
+
+                <p>Logging is not optional post-deployment monitoring. It is a core compliance requirement that must be architected into your system before it goes live.</p>
+
+                <h3>Article 12: Transparency and Documentation</h3>
+
+                <p><strong>Requirement:</strong> You must document how your system works and communicate this to users.</p>
+
+                <p><strong>What this means in practice:</strong></p>
+
+                <ul>
+                    <li>Create technical documentation explaining the system's logic, capabilities, and limitations</li>
+                    <li>Provide a summary for non-technical users explaining how decisions are made</li>
+                    <li>Document the system's known failure modes and performance gaps</li>
+                    <li>If decisions affect individuals, notify them that an AI system is being used</li>
+                    <li>Provide information on how to appeal or contest an automated decision</li>
+                </ul>
+
+                <h3>Article 13: Human Oversight</h3>
+
+                <p><strong>Requirement:</strong> High-risk AI systems must be designed for meaningful human oversight.</p>
+
+                <p><strong>What this means in practice:</strong></p>
+
+                <ul>
+                    <li>Humans must understand the AI system's decision well enough to override it</li>
+                    <li>System design must make it practical for humans to intervene before harm occurs</li>
+                    <li>For autonomous systems, identify checkpoints where humans review decisions</li>
+                    <li>Train human overseers to recognize when the AI is performing poorly</li>
+                    <li>Document actual override decisions and outcomes to refine future interventions</li>
+                </ul>
+
+                <h3>Article 14: Accuracy, Robustness, and Cybersecurity</h3>
+
+                <p><strong>Requirement:</strong> Your system must be accurate, resilient to attacks, and perform well on edge cases.</p>
+
+                <p><strong>What this means in practice:</strong></p>
+
+                <ul>
+                    <li>Benchmark accuracy and fairness on representative test sets</li>
+                    <li>Test the system against adversarial inputs and out-of-distribution data</li>
+                    <li>Document performance degradation as conditions drift from training data</li>
+                    <li>Implement access controls and encryption for model files and training data</li>
+                    <li>Conduct vulnerability assessments and patching procedures</li>
+                    <li>Define acceptable performance thresholds and alert procedures when metrics degrade</li>
+                </ul>
+
+                <h3>Article 15: Incident Reporting</h3>
+
+                <p><strong>Requirement:</strong> Serious incidents must be reported to authorities within 15 days.</p>
+
+                <p><strong>What this means in practice:</strong></p>
+
+                <ul>
+                    <li>Define what constitutes a "serious incident" (system failure causing physical harm, fundamental rights violation, data breach)</li>
+                    <li>Establish internal escalation procedures to flag incidents quickly</li>
+                    <li>Maintain incident logs with descriptions, severity, and actions taken</li>
+                    <li>Prepare incident reports that clearly explain what happened and why</li>
+                    <li>Report incidents to the relevant competent authority within 15 days</li>
+                </ul>
+
+                <div class="callout">
+                    <strong>Important:</strong> Articles 9-15 are not independent requirements. They form an integrated system. Logging supports human oversight. Risk assessment justifies your choice of data. Documentation enables transparency. Failures to address any one article undermine the entire compliance framework.
+                </div>
+            </section>
+
+            <!-- 5-Month Action Plan -->
+            <section id="action-plan">
+                <h2>Your 5-Month Action Plan: March to August 2026</h2>
+
+                <p>You have approximately 5 months until August 2, 2026. If you are starting compliance work now, this timeline is tight but achievable if you prioritize ruthlessly. Here is a month-by-month roadmap:</p>
+
+                <div class="action-month">
+                    <h4>Month 1: Audit and Classify Your AI Systems (March 2026)</h4>
+                    <p><strong>Goal:</strong> Understand what you actually have and what is in scope.</p>
+                    <ul>
+                        <li>Inventory all AI systems your organization operates: models in production, systems in development, third-party AI services you rely on</li>
+                        <li>For each system, determine if it is high-risk under Article 6 and Annex III. Use the <a href="/blog/eu-ai-act-compliance-checklist">EU AI Act compliance checklist</a> as a reference</li>
+                        <li>Categorize systems by risk level and timeline: critical (must comply by August), important (monitor closely), lower-priority (evaluate risk classification)</li>
+                        <li>Run <a href="/quickstart">AIR Blackbox scanner</a> on your codebase to identify gaps in your current setup against Article 9-15 requirements. This gives you a baseline</li>
+                        <li>Create a risk register documenting each high-risk system, its category, and identified compliance gaps</li>
+                    </ul>
+                </div>
+
+                <div class="action-month">
+                    <h4>Month 2: Implement Logging and Audit Trails (April 2026)</h4>
+                    <p><strong>Goal:</strong> Establish the infrastructure for compliance evidence.</p>
+                    <ul>
+                        <li>Instrument your AI systems to log predictions, inputs (or hashed inputs for privacy), confidence scores, and outcomes</li>
+                        <li>Implement immutable audit logs using append-only storage or timestamped event logs</li>
+                        <li>Set up monitoring dashboards for key performance metrics: accuracy, fairness (disparity ratios), error rates, latency</li>
+                        <li>Configure alerts for performance drift and anomalous behavior</li>
+                        <li>Ensure logs are retained for the required period (typically 3-7 years depending on application)</li>
+                        <li>Test log retention and retrieval under realistic conditions</li>
+                    </ul>
+                </div>
+
+                <div class="action-month">
+                    <h4>Month 3: Risk Management and Documentation (May 2026)</h4>
+                    <p><strong>Goal:</strong> Document system design and governance.</p>
+                    <ul>
+                        <li>Conduct formal risk assessments using structured templates. Identify harms, map to foreseeable misuse, assign severity and probability</li>
+                        <li>Document mitigation measures for each identified risk (technical controls, operational procedures, human oversight)</li>
+                        <li>Create technical documentation: system architecture, data sources, model training procedure, validation approach, known limitations</li>
+                        <li>Document data governance: training data composition, bias audit results, validation data characteristics, data quality issues</li>
+                        <li>Define thresholds for human override (performance metrics, confidence levels, decision types) and document the review process</li>
+                        <li>Create user-facing documentation explaining how the system works, its limitations, and how to appeal decisions</li>
+                    </ul>
+                </div>
+
+                <div class="action-month">
+                    <h4>Month 4: Human Oversight and Testing (June 2026)</h4>
+                    <p><strong>Goal:</strong> Validate system reliability and oversight effectiveness.</p>
+                    <ul>
+                        <li>Design human oversight workflows: who reviews what decisions, under what conditions, with what authority</li>
+                        <li>Implement tools that enable humans to understand and challenge AI decisions (explainability tools, confidence reporting)</li>
+                        <li>Train human overseers on the system's behavior and how to recognize failure modes</li>
+                        <li>Conduct automated testing: accuracy benchmarks on held-out test sets, fairness metrics (equalized false positive rates, demographic parity), robustness testing (adversarial inputs, distribution shift)</li>
+                        <li>Perform red-team exercises simulating misuse scenarios and verifying that safeguards hold</li>
+                        <li>Test the incident reporting process end-to-end</li>
+                    </ul>
+                </div>
+
+                <div class="action-month">
+                    <h4>Month 5: Validation and Evidence Packaging (July 2026)</h4>
+                    <p><strong>Goal:</strong> Prepare for regulatory inspection.</p>
+                    <ul>
+                        <li>Conduct a final gap analysis against Articles 9-15 using AIR Blackbox or equivalent tooling</li>
+                        <li>Verify all documentation is complete, up-to-date, and accurately reflects the system in production</li>
+                        <li>Package evidence for regulatory inspection: risk assessment, technical documentation, test results, audit logs from 30 days of production, incident reports, training records for human overseers</li>
+                        <li>Assign accountability: who is responsible for each compliance area, who handles incidents, who manages updates</li>
+                        <li>Establish an ongoing compliance program: quarterly risk review, monthly metric review, continuous monitoring for drift and performance degradation</li>
+                        <li>Create an incident response playbook and test it</li>
+                    </ul>
+                </div>
+
+                <div class="important-box">
+                    <strong>Critical Path Item:</strong> Logging infrastructure is your bottleneck. If you do not have production logging in place by the end of April, you will not be able to gather compliance evidence for August. Start logging work immediately in Month 1 and execute it in Month 2. Everything else depends on this.
+                </div>
+            </section>
+
+            <!-- How AIR Blackbox Helps -->
+            <section id="air-blackbox">
+                <h2>How AIR Blackbox Fits Into Your Compliance Program</h2>
+
+                <p>Compliance is technical work. AIR Blackbox provides three specific tools that address the core challenges:</p>
+
+                <h3>1. Scanner for Gap Analysis</h3>
+
+                <p>The <a href="/quickstart">AIR Blackbox scanner</a> analyzes your agent code and identifies which Articles 9-15 requirements your current implementation addresses and which are missing.</p>
+
+                <p>Run it on your AI systems now to get a baseline:</p>
+
+                <pre><code>pip install air-blackbox
+python3 -m air_blackbox.scan /path/to/your/agent/code</code></pre>
+
+                <p>The scanner produces a report showing:</p>
+
+                <ul>
+                    <li>Data governance (Article 10) readiness: Are you tracking training data sources?</li>
+                    <li>Logging (Article 11) coverage: What events are you logging? What is missing?</li>
+                    <li>Documentation (Article 12) completeness: Do you have system descriptions?</li>
+                    <li>Risk management (Article 9) evidence: Have you documented foreseeable harms?</li>
+                    <li>Human oversight (Article 13) integration: How can operators understand and override decisions?</li>
+                    <li>Testing (Article 14) validation: Have you tested accuracy and robustness?</li>
+                </ul>
+
+                <h3>2. Trust Layers for Technical Compliance</h3>
+
+                <p>AIR Blackbox trust layers are code modules that add compliance infrastructure to your existing AI systems without requiring full retraining or architecture changes.</p>
+
+                <p>For example, the logging trust layer automatically captures predictions and rationale:</p>
+
+                <pre><code>from air_blackbox import LoggingTrustLayer
+from your_model import YourAIModel
+
+model = YourAIModel()
+compliant_model = LoggingTrustLayer(model, log_path="/var/log/ai-decisions.log")
+
+# Every prediction is now logged with timestamp, input, output, confidence
+decision = compliant_model.predict(user_data)</code></pre>
+
+                <p>Trust layers available for common frameworks address:</p>
+
+                <ul>
+                    <li><strong>Logging:</strong> Automatic event capture for Article 11 compliance</li>
+                    <li><strong>Fairness Monitoring:</strong> Continuous tracking of bias metrics for Article 14</li>
+                    <li><strong>Documentation Generation:</strong> Auto-generate technical docs from code for Article 12</li>
+                    <li><strong>Risk Assessment:</strong> Structured templates for Article 9 documentation</li>
+                    <li><strong>Human Oversight Integration:</strong> APIs for flagging decisions that require review (Article 13)</li>
+                </ul>
+
+                <h3>3. Evidence Bundles for Regulatory Submission</h3>
+
+                <p>When authorities audit your system, you need organized evidence. AIR Blackbox <a href="/guides">compliance guides</a> help you structure required documentation.</p>
+
+                <p>The typical evidence package includes:</p>
+
+                <ul>
+                    <li>Risk assessment document (Article 9)</li>
+                    <li>Data governance report (Article 10)</li>
+                    <li>Audit log samples from 30 days of production (Article 11)</li>
+                    <li>Technical documentation (Article 12)</li>
+                    <li>Human oversight process description (Article 13)</li>
+                    <li>Test results and performance benchmarks (Article 14)</li>
+                    <li>Incident report template and examples (Article 15)</li>
+                </ul>
+
+                <p>AIR Blackbox provides templates and tooling to assemble this evidence systematically. See <a href="/compliance-mapping">compliance mapping</a> for structured guidance.</p>
+
+                <div class="highlight-box">
+                    <strong>Recommended approach:</strong> Start with the scanner in Month 1. Use the gap analysis to prioritize trust layer implementation in Months 2-3. Use the compliance guides to structure documentation in Months 3-5. Package evidence using the evidence bundle templates for regulatory submission.
+                </div>
+            </section>
+
+            <!-- Common Misconceptions -->
+            <section id="misconceptions">
+                <h2>Common Misconceptions About the EU AI Act Deadline</h2>
+
+                <p>Teams often misunderstand what August 2, 2026 requires. Here are the most dangerous misconceptions:</p>
+
+                <div class="myth-reality">
+                    <div class="myth-box">
+                        <h4>Myth: If my system is not explicitly marketed in the EU, the AI Act does not apply</h4>
+                    </div>
+                    <div class="reality-box">
+                        <h4>Reality: If your system is used by EU residents or processes EU personal data, you are in scope</h4>
+                        <p>Enforcement is based on effects within EU territory, not where you are incorporated. If your AI system is used by customers in Germany, France, or other EU member states, you must comply.</p>
+                    </div>
+                </div>
+
+                <div class="myth-reality">
+                    <div class="myth-box">
+                        <h4>Myth: Certification by a third party means I am compliant</h4>
+                    </div>
+                    <div class="reality-box">
+                        <h4>Reality: Third-party audits are evidence, but enforcement responsibility is yours</h4>
+                        <p>The EU AI Act does not require mandatory third-party certification for most high-risk systems (except those in Annex I). You are responsible for compliance. Audits help, but regulators conduct their own inspections.</p>
+                    </div>
+                </div>
+
+                <div class="myth-reality">
+                    <div class="myth-box">
+                        <h4>Myth: Once I have documentation, I am done</h4>
+                    </div>
+                    <div class="reality-box">
+                        <h4>Reality: Compliance is ongoing. Monitoring and updates are required</h4>
+                        <p>Documentation reflects the system as designed, but production systems change. You must continuously monitor performance, update documentation, and report serious incidents. Compliance is not a one-time checkpoint.</p>
+                    </div>
+                </div>
+
+                <div class="myth-reality">
+                    <div class="myth-box">
+                        <h4>Myth: I do not need to worry about Article 11 logging if my system is accurate</h4>
+                    </div>
+                    <div class="reality-box">
+                        <h4>Reality: Logging is a standalone requirement, independent of accuracy</h4>
+                        <p>Even a perfectly accurate system must maintain audit logs. Logging is how regulators verify that human oversight actually occurred, that the system performed as documented, and that incidents were detected. Accuracy alone does not satisfy Article 11.</p>
+                    </div>
+                </div>
+
+                <div class="myth-reality">
+                    <div class="myth-box">
+                        <h4>Myth: Using a third-party AI service exempts me from compliance</h4>
+                    </div>
+                    <div class="reality-box">
+                        <h4>Reality: You remain liable for compliance even when using third-party models</h4>
+                        <p>If you deploy a third-party LLM or other AI in a high-risk application, you must ensure the overall system complies with Articles 9-15. You must conduct your own risk assessment, implement logging, ensure human oversight, and report incidents. Third-party documentation is a starting point, not a substitute.</p>
+                    </div>
+                </div>
+
+                <div class="myth-reality">
+                    <div class="myth-box">
+                        <h4>Myth: My system is not high-risk because no explicit rule labels it</h4>
+                    </div>
+                    <div class="reality-box">
+                        <h4>Reality: Article 6 and Annex III define high-risk categories broadly; regulators interpret them</h4>
+                        <p>High-risk categories include systems that can cause material harm to fundamental rights or safety. If your system evaluates creditworthiness, makes hiring decisions, assesses criminal risk, or controls critical infrastructure, it is likely high-risk. Do not assume low-risk without conducting a formal risk assessment.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ -->
+            <section id="faq">
+                <h2>Frequently Asked Questions</h2>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        Q: What happens if my high-risk AI system is not compliant on August 2, 2026?
+                    </div>
+                    <div class="faq-answer">
+                        <p>Technically, you are not immediately fined. However, you are in violation of EU law. Competent authorities will likely identify non-compliance through market surveillance or reports. Enforcement typically follows a sequence: initial inquiry, correction orders (fix within 30-90 days), penalties if you do not comply. For serious violations, authorities can order the system removed from the market. The longer you remain non-compliant, the higher the penalties and reputational damage.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        Q: If I have a General-Purpose AI model, do I need to comply with Articles 9-15?
+                    </div>
+                    <div class="faq-answer">
+                        <p>Not if you only distribute the model. GPAI providers must comply with Article 4 (transparency) and Article 4a (monitoring) starting August 2, 2025, but not the full Articles 9-15. However, if you build a high-risk application using a GPAI model, you must ensure the complete system complies with Articles 9-15. The responsibility for system-level compliance falls on the deployer, not the model provider.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        Q: What if I use a third-party API (like a cloud AI service) in my high-risk application?
+                    </div>
+                    <div class="faq-answer">
+                        <p>You remain responsible for compliance. The API is one component of your system. You must conduct risk assessment on the entire system (including the API), ensure logging of decisions, maintain documentation, implement human oversight, and report incidents. The API provider's documentation helps, but it does not transfer compliance responsibility to them. Audit the API provider's transparency and documentation as part of your due diligence.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        Q: Does compliance with GDPR cover EU AI Act requirements?
+                    </div>
+                    <div class="faq-answer">
+                        <p>GDPR and the AI Act are complementary but distinct. GDPR protects personal data; the AI Act protects against AI-specific harms (bias, accuracy failures, autonomy risks). You must comply with both. GDPR requires data protection impact assessments and privacy safeguards. The AI Act requires risk management, testing, and monitoring. Some controls overlap (e.g., audit logs serve both regulations), but GDPR compliance alone does not satisfy the AI Act.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        Q: How do I determine if my AI system is high-risk?
+                    </div>
+                    <div class="faq-answer">
+                        <p>Start with Article 6 and Annex III of the EU AI Act. High-risk systems include those in areas listed in Annex III (biometrics, law enforcement, employment, education, credit, asylum, migration, border control, critical infrastructure). Article 6 also allows regulators to classify systems outside Annex III as high-risk if they present substantial harm to safety or fundamental rights. If you are uncertain, assume high-risk and conduct a formal risk assessment. Being over-compliant is safer than discovering non-compliance during an audit.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        Q: What is the difference between August 2, 2026 and August 2, 2027 deadlines?
+                    </div>
+                    <div class="faq-answer">
+                        <p>August 2, 2026 is when Articles 9-15 (technical and organizational requirements) become enforceable for all high-risk AI systems. August 2, 2027 extends this to high-risk AI systems embedded in regulated products (medical devices, machinery, vehicles) listed in Annex I. If your system is not part of an Annex I product, your deadline is August 2, 2026. If it is embedded in a regulated product, you have until August 2, 2027, but you should still meet the 2026 deadline for the technical components.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Call to Action -->
+            <section id="next-steps" style="background-color: rgba(88, 166, 255, 0.05); padding: 40px; border-radius: 8px; margin-top: 40px;">
+                <h2 style="border: none; margin-top: 0;">Next Steps: Start Your Compliance Work Today</h2>
+
+                <p>August 2, 2026 is five months away. Waiting until summer to start compliance work puts you at serious risk. Here is what to do immediately:</p>
+
+                <ol>
+                    <li><strong>Run the scanner:</strong> Visit <a href="/quickstart">quickstart</a> and scan your AI systems for compliance gaps. This takes 30 minutes and gives you concrete data on what needs to be fixed.</li>
+                    <li><strong>Review your high-risk systems:</strong> Use <a href="/blog/eu-ai-act-compliance-checklist">the EU AI Act compliance checklist</a> to identify which systems are in scope for August 2, 2026.</li>
+                    <li><strong>Start logging:</strong> Logging is your critical path. Begin instrumenting systems in Month 1. You cannot gather compliance evidence without logs.</li>
+                    <li><strong>Study the regulation:</strong> Read Articles 9-15 of the EU AI Act yourself. This guide is a starting point, but you need to understand the requirements in detail.</li>
+                    <li><strong>Assign accountability:</strong> Designate an owner for compliance. Make it someone's job, not a side project.</li>
+                </ol>
+
+                <p style="margin-top: 30px;"><strong>Learn more:</strong> Check out <a href="/guides">our compliance guides</a> for detailed technical walkthroughs of each article.</p>
+            </section>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div>
+                <p>&copy; 2026 AIR Blackbox. All rights reserved.</p>
+            </div>
+            <ul class="links">
+                <li><a href="https://github.com/airbj/air-blackbox" target="_blank">GitHub</a></li>
+                <li><a href="https://pypi.org/project/air-blackbox/" target="_blank">PyPI</a></li>
+                <li><a href="/terms">Terms of Service</a></li>
+                <li><a href="/privacy">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <div class="back-to-top" onclick="scrollToTop()"></div>
+
+    <script>
+        // Back to top functionality
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.addEventListener('scroll', function() {
+            const button = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                button.classList.add('show');
+            } else {
+                button.classList.remove('show');
+            }
+        });
+
+        // FAQ toggle functionality
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            answer.classList.toggle('active');
+
+            // Optional: close other open FAQs
+            document.querySelectorAll('.faq-answer.active').forEach(function(item) {
+                if (item !== answer) {
+                    item.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

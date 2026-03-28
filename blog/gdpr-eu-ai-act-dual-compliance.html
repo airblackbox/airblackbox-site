@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDPR and the EU AI Act: Dual Compliance Guide for AI Systems</title>
+    <meta name="description" content="Master GDPR and EU AI Act compliance for AI systems. Learn where they overlap, where they differ, and how to build dual-compliant systems with practical code examples.">
+    <meta name="keywords" content="GDPR AI Act compliance, GDPR and EU AI Act, AI GDPR compliance, dual compliance AI, AI system GDPR, data protection AI Act">
+    <meta name="author" content="AIR Blackbox">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://airblackbox.ai/blog/gdpr-eu-ai-act-dual-compliance">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="GDPR and the EU AI Act: Dual Compliance Guide for AI Systems">
+    <meta property="og:description" content="Master GDPR and EU AI Act compliance for AI systems. Learn where they overlap, where they differ, and how to build dual-compliant systems with practical code examples.">
+    <meta property="og:url" content="https://airblackbox.ai/blog/gdpr-eu-ai-act-dual-compliance">
+    <meta property="og:site_name" content="AIR Blackbox">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GDPR and the EU AI Act: Dual Compliance Guide for AI Systems">
+    <meta name="twitter:description" content="Master GDPR and EU AI Act compliance for AI systems. Learn where they overlap, where they differ, and how to build dual-compliant systems with practical code examples.">
+    <meta name="twitter:site" content="@airblackbox">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "GDPR and the EU AI Act: Dual Compliance Guide for AI Systems",
+        "description": "Master GDPR and EU AI Act compliance for AI systems. Learn where they overlap, where they differ, and how to build dual-compliant systems with practical code examples.",
+        "image": "https://airblackbox.ai/og-image.png",
+        "datePublished": "2026-03-28",
+        "dateModified": "2026-03-28",
+        "author": {
+            "@type": "Organization",
+            "name": "AIR Blackbox",
+            "url": "https://airblackbox.ai"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "AIR Blackbox",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://airblackbox.ai/logo.png"
+            }
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://airblackbox.ai/blog/gdpr-eu-ai-act-dual-compliance"
+        }
+    }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #080b14;
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+
+        code, pre {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        /* Navigation */
+        nav {
+            background: #0d1117;
+            border-bottom: 1px solid #30363d;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #58a6ff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav .logo:hover {
+            color: #79c0ff;
+        }
+
+        nav .links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        nav a {
+            color: #c9d1d9;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #58a6ff;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        article {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        article h1 {
+            font-size: 2.5rem;
+            color: #c9d1d9;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .article-meta {
+            color: #8b949e;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #30363d;
+        }
+
+        article h2 {
+            font-size: 1.8rem;
+            color: #58a6ff;
+            margin: 2.5rem 0 1rem 0;
+            padding-top: 1rem;
+        }
+
+        article h3 {
+            font-size: 1.3rem;
+            color: #79c0ff;
+            margin: 1.8rem 0 0.8rem 0;
+        }
+
+        article h4 {
+            font-size: 1.1rem;
+            color: #c9d1d9;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+
+        article p {
+            margin-bottom: 1rem;
+            color: #c9d1d9;
+        }
+
+        article ul, article ol {
+            margin: 1.5rem 0 1.5rem 2rem;
+            color: #c9d1d9;
+        }
+
+        article li {
+            margin-bottom: 0.8rem;
+        }
+
+        article a {
+            color: #58a6ff;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        article a:hover {
+            border-bottom-color: #58a6ff;
+            color: #79c0ff;
+        }
+
+        /* Code Blocks */
+        pre {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            color: #c9d1d9;
+        }
+
+        code {
+            color: #79c0ff;
+        }
+
+        pre code {
+            color: #c9d1d9;
+        }
+
+        /* Inline Code */
+        p code, li code {
+            background: #161b22;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            color: #79c0ff;
+        }
+
+        /* Highlights and Callouts */
+        .highlight {
+            background: #1c2128;
+            border-left: 4px solid #58a6ff;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .highlight h4 {
+            color: #58a6ff;
+            margin-top: 0;
+        }
+
+        .highlight p {
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight:last-child p {
+            margin-bottom: 0;
+        }
+
+        /* Compliance Checklist */
+        .checklist {
+            background: #1c2128;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .checklist h3 {
+            margin-top: 0;
+            color: #58a6ff;
+        }
+
+        .checklist-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .checklist-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .checklist-check {
+            color: #58a6ff;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .checklist-text {
+            color: #c9d1d9;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: #1c2128;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .toc h3 {
+            color: #58a6ff;
+            margin-top: 0;
+        }
+
+        .toc ul {
+            margin: 1rem 0 0 1.5rem;
+        }
+
+        .toc li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* FAQ Styling */
+        .faq-item {
+            background: #1c2128;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: #161b22;
+            padding: 1.2rem;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #58a6ff;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .faq-question:hover {
+            background: #0d1117;
+        }
+
+        .faq-toggle {
+            color: #58a6ff;
+            font-size: 1.2rem;
+        }
+
+        .faq-answer {
+            padding: 1.2rem;
+            color: #c9d1d9;
+            display: none;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        .faq-answer a {
+            color: #58a6ff;
+        }
+
+        /* Footer */
+        footer {
+            background: #0d1117;
+            border-top: 1px solid #30363d;
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #58a6ff;
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #30363d;
+        }
+
+        th {
+            background: #1c2128;
+            font-weight: 700;
+            color: #58a6ff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            nav .links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            article {
+                padding: 1.5rem;
+            }
+
+            article h1 {
+                font-size: 1.8rem;
+            }
+
+            article h2 {
+                font-size: 1.4rem;
+            }
+
+            main {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="/" class="logo">AIR Blackbox</a>
+        <ul class="links">
+            <li><a href="/quickstart">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/demo">Demo</a></li>
+            <li><a href="https://github.com/air-blackbox/air-blackbox">GitHub</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <article>
+            <h1>GDPR and the EU AI Act: Dual Compliance Guide for AI Systems</h1>
+
+            <div class="article-meta">
+                <span>Published: March 28, 2026</span> | <span>Updated: March 28, 2026</span>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc">
+                <h3>Table of Contents</h3>
+                <ul>
+                    <li><a href="#introduction">Introduction</a></li>
+                    <li><a href="#where-they-overlap">Where GDPR and the AI Act Overlap</a></li>
+                    <li><a href="#where-they-differ">Where They Differ</a></li>
+                    <li><a href="#8-gdpr-checks">The 8 GDPR Checks for AI Systems</a></li>
+                    <li><a href="#building-dual-compliant">Building a Dual-Compliant System</a></li>
+                    <li><a href="#common-pitfalls">Common Pitfalls</a></li>
+                    <li><a href="#practical-checklist">Practical Checklist for Dual Compliance</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </div>
+
+            <!-- Introduction -->
+            <h2 id="introduction">Introduction</h2>
+
+            <p>If you deploy artificial intelligence in the European Union, you operate under two regulatory frameworks that often overlap, occasionally contradict, and always demand careful orchestration: the General Data Protection Regulation (GDPR) and the recently enforced EU AI Act.</p>
+
+            <p>The mistake most teams make is treating these as separate compliance exercises. They are not. GDPR and the EU AI Act create a single, integrated compliance requirement that touches every part of your AI system, from data collection through model deployment and beyond.</p>
+
+            <p>This guide covers both frameworks comprehensively: where they overlap significantly, where they diverge entirely, and how to architect AI systems that satisfy both without doubling compliance work.</p>
+
+            <p>By the end of this guide, you will understand the technical requirements of each framework, how to map them to your codebase, and how to use tools like the AIR Blackbox GDPR scanner to verify compliance automatically.</p>
+
+            <!-- Where They Overlap -->
+            <h2 id="where-they-overlap">Where GDPR and the AI Act Overlap</h2>
+
+            <h3>Data Processing Requirements</h3>
+
+            <p>GDPR Article 6 requires a lawful basis for processing personal data. The EU AI Act Article 10 requires documentation of training data and validation data sources for high-risk AI systems. These requirements are not the same, but they intersect:</p>
+
+            <ul>
+                <li>If you train an AI model on EU resident data, GDPR Article 6 determines whether that processing is lawful.</li>
+                <li>If that model is high-risk under the AI Act, Article 10 requires you to document the data, maintain records, and prove you followed data governance standards.</li>
+                <li>Both frameworks require you to establish the source of data, the purpose of processing, and the retention schedule.</li>
+            </ul>
+
+            <p>The overlap means a single dataset must satisfy GDPR lawfulness AND AI Act documentation requirements. Compliance with only one is insufficient.</p>
+
+            <h3>Automated Decision-Making</h3>
+
+            <p>GDPR Article 22 restricts automated decision-making that produces legal or similarly significant effects. The EU AI Act Article 14 requires additional human oversight for high-risk AI systems that make consequential decisions.</p>
+
+            <p>These overlap when your AI system makes decisions about individuals:</p>
+
+            <ul>
+                <li>Credit decisions, hiring recommendations, loan approvals, insurance assessments, benefit eligibility: all trigger both GDPR Article 22 and AI Act Article 14.</li>
+                <li>GDPR Article 22 requires human review capability and the right to opt out of automated decisions.</li>
+                <li>AI Act Article 14 requires human oversight, monitoring for errors, and documented procedures for handling failures.</li>
+                <li>Satisfying one does not satisfy the other. Both are independently required.</li>
+            </ul>
+
+            <h3>Documentation Obligations</h3>
+
+            <p>Both frameworks demand extensive documentation:</p>
+
+            <ul>
+                <li>GDPR: Processing activities, lawful basis, recipients, retention periods, and data subject rights mechanisms.</li>
+                <li>AI Act: Training data sources, validation procedures, risk assessments, performance metrics, and monitoring systems.</li>
+            </ul>
+
+            <p>The overlap creates a single documentation burden that must address both frameworks. A GDPR Data Protection Impact Assessment (DPIA) and an AI Act risk assessment are related but distinct documents.</p>
+
+            <h3>Data Subject Rights in AI Context</h3>
+
+            <p>GDPR gives individuals the right to access their data (Article 15), the right to rectification (Article 16), and the right to erasure (Article 17). The AI Act requires that systems using personal data respect these rights.</p>
+
+            <p>This creates overlapping requirements: your AI system must be able to</p>
+
+            <ul>
+                <li>Identify which data belongs to which individual</li>
+                <li>Retrieve that data on request</li>
+                <li>Update or correct data when requested</li>
+                <li>Remove data when requested (subject to AI Act requirements for maintaining training documentation)</li>
+            </ul>
+
+            <!-- Where They Differ -->
+            <h2 id="where-they-differ">Where They Differ</h2>
+
+            <h3>Focus and Scope</h3>
+
+            <p>GDPR focuses on personal data protection. Its concern is how organizations collect, process, store, and use information about individuals. GDPR applies to any processing of personal data of EU residents, regardless of whether AI is involved.</p>
+
+            <p>The EU AI Act focuses on system-level safety and transparency. Its concern is whether the AI system itself is capable of causing harm, and whether users understand its capabilities and limitations. The AI Act does not apply to systems that don't use personal data, but applies broadly to high-risk AI systems regardless of data protection measures.</p>
+
+            <h3>Risk Assessment Framework</h3>
+
+            <p>Under GDPR, you perform a Data Protection Impact Assessment (DPIA) when processing presents high risk to individuals' rights. The DPIA focuses on confidentiality, integrity, and availability of personal data.</p>
+
+            <p>Under the AI Act, you perform an AI system risk assessment focused on whether the system could cause harm. Categories include:</p>
+
+            <ul>
+                <li>Prohibited AI (completely banned, e.g. social credit scoring)</li>
+                <li>High-risk AI (detailed requirements, e.g. hiring tools, credit decisions, biometric identification)</li>
+                <li>Limited-risk AI (transparency requirements only)</li>
+                <li>Minimal-risk AI (no specific requirements)</li>
+            </ul>
+
+            <p>A system with minimal personal data protection risk under GDPR could be high-risk under the AI Act if it makes consequential decisions. A system with significant data protection risk could be minimal-risk if it causes no direct harm to individuals.</p>
+
+            <h3>Enforcement Mechanisms</h3>
+
+            <p>GDPR is enforced by data protection authorities (like CNIL in France, ICO in UK, BfDI in Germany). They issue fines up to EUR 20 million or 4% of global revenue for violations. They focus on data protection investigation and complaint handling.</p>
+
+            <p>The AI Act is enforced by national competent authorities designated by each Member State, with coordination by the European AI Office. Penalties escalate from administrative fines to prohibition of the system entirely. The enforcement approach is still developing, but authorities are appointed with specific AI Act expertise.</p>
+
+            <p>This means a system can face simultaneous enforcement from two different regulators with different standards and penalties.</p>
+
+            <h3>Legal Basis vs. Risk Classification</h3>
+
+            <p>GDPR requires you to establish a lawful basis (consent, contract, legal obligation, vital interests, public task, or legitimate interests) for each processing activity. Without a lawful basis, you cannot process data at all, regardless of safeguards.</p>
+
+            <p>The AI Act does not require a lawful basis for using data. Instead, it requires you to classify your system's risk level and implement safeguards appropriate to that risk. You can use data without consent if the system presents only minimal risk, but the data protection standards still apply via GDPR.</p>
+
+            <!-- 8 GDPR Checks -->
+            <h2 id="8-gdpr-checks">The 8 GDPR Checks for AI Systems</h2>
+
+            <p>Compliance officers and engineers often ask: what are the concrete GDPR requirements I need to verify in my AI system? Here are the 8 core checks that apply to any AI system processing personal data:</p>
+
+            <h3>1. Consent Mechanisms for AI Processing</h3>
+
+            <p>If you rely on consent as your lawful basis for training, you must obtain affirmative, informed consent before processing data for AI. This is more stringent than passive consent or pre-checked boxes. Users must understand that their data will be used for model training.</p>
+
+            <p>Use the AIR Blackbox GDPR scanner to verify:</p>
+
+            <pre><code>from air_compliance import GDPRScanner
+
+scanner = GDPRScanner()
+findings = scanner.check_consent_mechanisms(
+    code_path="./src",
+    focus_on=["training_data_loading", "preprocessing"]
+)
+
+for finding in findings:
+    if finding.severity == "HIGH":
+        print(f"Consent gap: {finding.description}")
+        print(f"Location: {finding.file}:{finding.line}")</code></pre>
+
+            <h3>2. Data Minimization in Training Data</h3>
+
+            <p>GDPR Article 5 requires data minimization: you must collect and use only the data necessary to achieve your stated purpose. For AI systems, this means:</p>
+
+            <ul>
+                <li>Only include features in training data that are necessary for model performance</li>
+                <li>Remove unnecessary PII before training</li>
+                <li>Exclude protected characteristics (race, religion, health) unless explicitly required and justified</li>
+            </ul>
+
+            <p>Check data minimization in your pipeline:</p>
+
+            <pre><code>findings = scanner.check_data_minimization(
+    data_path="./training_data",
+    model_purpose="credit_decision"
+)
+
+if findings:
+    print("Data minimization issues found:")
+    for f in findings:
+        print(f"  - {f.feature_name}: not required for {f.model_purpose}")
+        print(f"    Recommendation: remove or justify")</code></pre>
+
+            <h3>3. Right to Explanation for AI Decisions</h3>
+
+            <p>GDPR Article 22 and the AI Act both require explainability. When an AI system makes a decision about someone, they have the right to understand why. This is not always a full mathematical explanation, but must be meaningful to a non-technical person.</p>
+
+            <p>Verify your system provides explanations:</p>
+
+            <pre><code>findings = scanner.check_explainability(
+    model_path="./models/credit_decision.pkl",
+    decision_type="consequential"
+)
+
+for finding in findings:
+    if finding.requires_explanation:
+        print(f"Decision '{finding.decision_type}' requires explanation")
+        print(f"Current explanation capability: {finding.explanation_method}")
+        if not finding.is_user_understandable:
+            print("  WARNING: Explanation is not user-understandable")</code></pre>
+
+            <h3>4. Data Retention Policies</h3>
+
+            <p>GDPR Article 5 requires storage limitation: you must delete personal data when it is no longer necessary. For AI systems, this means:</p>
+
+            <ul>
+                <li>Define retention periods for training data</li>
+                <li>Delete data when retention period expires</li>
+                <li>Handle requests to delete data from individuals (right to erasure)</li>
+                <li>Account for the tension between right to erasure and the need to maintain model training records for AI Act compliance</li>
+            </ul>
+
+            <p>Check retention policies:</p>
+
+            <pre><code>findings = scanner.check_retention_policies(
+    database_schema="./schema.sql",
+    policies_file="./compliance/retention_policy.json"
+)
+
+for dataset in findings.datasets:
+    print(f"Dataset: {dataset.name}")
+    print(f"  Retention period: {dataset.retention_period}")
+    print(f"  Auto-deletion enabled: {dataset.auto_delete_enabled}")
+    if not dataset.retention_period:
+        print("  ERROR: No retention period defined")</code></pre>
+
+            <h3>5. Cross-Border Transfer Compliance</h3>
+
+            <p>If your training data comes from EU residents but your model runs on servers outside the EU (US, Asia), you must implement Standard Contractual Clauses (SCCs) or other transfer mechanisms. This is separate from encryption or pseudonymization.</p>
+
+            <p>Verify transfer mechanisms:</p>
+
+            <pre><code>findings = scanner.check_cross_border_transfers(
+    data_flow="./architecture/data_flows.yml",
+    regions=["EU", "US", "APAC"]
+)
+
+for transfer in findings.transfers:
+    if transfer.involves_personal_data and transfer.crosses_border:
+        print(f"Transfer: {transfer.source} -> {transfer.destination}")
+        print(f"  Legal basis: {transfer.legal_basis}")
+        if transfer.legal_basis not in ["SCC", "BCR", "DEPA"]:
+            print("  ERROR: Transfer mechanism not recognized")</code></pre>
+
+            <h3>6. Data Protection Impact Assessment (DPIA)</h3>
+
+            <p>For any high-risk processing (which includes most AI systems), GDPR Article 35 requires a Data Protection Impact Assessment before deployment. The DPIA must document:</p>
+
+            <ul>
+                <li>Purpose and necessity of processing</li>
+                <li>Categories of data</li>
+                <li>Risk to rights and freedoms</li>
+                <li>Safeguards and mitigations</li>
+                <li>Legal basis</li>
+            </ul>
+
+            <p>Link your DPIA to your codebase:</p>
+
+            <pre><code>findings = scanner.check_dpia_completeness(
+    dpia_path="./compliance/dpia_credit_model.md",
+    code_path="./src",
+    verify_mapping=True
+)
+
+print("DPIA Coverage Report:")
+print(f"  Documented risks: {findings.documented_risks}")
+print(f"  Risks found in code: {findings.actual_risks}")
+print(f"  Missing documentation: {findings.gap}")
+if findings.gap:
+    print("  ACTION REQUIRED: Update DPIA for newly identified risks")</code></pre>
+
+            <h3>7. PII Detection and Handling</h3>
+
+            <p>You must identify what constitutes personally identifiable information (PII) in your training data and ensure it is handled appropriately. Direct identifiers (name, email, SSN) must be removed or pseudonymized. Quasi-identifiers (age, location, occupation) require careful handling.</p>
+
+            <p>Automatically scan for PII:</p>
+
+            <pre><code>findings = scanner.check_pii_exposure(
+    data_path="./training_data.csv",
+    column_config="./compliance/pii_config.json"
+)
+
+print(f"PII Detection Results:")
+print(f"  Columns with direct identifiers: {findings.direct_identifiers}")
+print(f"  Columns with quasi-identifiers: {findings.quasi_identifiers}")
+print(f"  Unencrypted PII found: {len(findings.unencrypted_pii)} instances")
+
+if findings.unencrypted_pii:
+    print("\n  Unencrypted PII locations:")
+    for pii in findings.unencrypted_pii[:5]:
+        print(f"    - {pii.column} at row {pii.row}")</code></pre>
+
+            <h3>8. Purpose Limitation</h3>
+
+            <p>GDPR Article 5 restricts you to using data for the purpose stated at collection. You cannot collect data for "improving services" and then use it for "targeted advertising" without additional consent. For AI systems, this means:</p>
+
+            <ul>
+                <li>Document the stated purpose (credit assessment, hiring recommendation, fraud detection)</li>
+                <li>Verify that your model only uses data for that purpose</li>
+                <li>Do not repurpose the model without obtaining new consent or establishing a new lawful basis</li>
+            </ul>
+
+            <p>Check purpose limitation:</p>
+
+            <pre><code>findings = scanner.check_purpose_limitation(
+    stated_purpose="credit_decision",
+    model_path="./models/credit_model.pkl",
+    usage_logs="./logs/model_usage.json"
+)
+
+if findings.purpose_violations:
+    print("Purpose limitation violations found:")
+    for violation in findings.purpose_violations:
+        print(f"  - Model used for {violation.actual_purpose}")
+        print(f"    Stated purpose: {violation.stated_purpose}")
+        print(f"    Instances: {violation.count}")</code></pre>
+
+            <!-- Building Dual-Compliant Systems -->
+            <h2 id="building-dual-compliant">Building a Dual-Compliant System</h2>
+
+            <h3>Architecture Principles</h3>
+
+            <p>A dual-compliant AI system requires intentional architecture. Here are the core principles:</p>
+
+            <ol>
+                <li><strong>Data governance at the source</strong>: Handle compliance at the point of data ingestion, not at the model. Tag data with provenance, lawful basis, retention schedule, and allowed purposes.</li>
+                <li><strong>Explainability by design</strong>: Build models with interpretability as a first-class requirement, not a post-hoc addition.</li>
+                <li><strong>Audit trail for both frameworks</strong>: Log every data access, model prediction, and decision override with timestamps and reasons. Both GDPR and the AI Act require proof of your processes.</li>
+                <li><strong>Separation of concerns</strong>: Keep data access, model inference, and decision-making as separate, auditable components.</li>
+            </ol>
+
+            <h3>Example: Building a Credit Scoring System</h3>
+
+            <p>Credit decisions are high-risk under both frameworks. Let us walk through the structure:</p>
+
+            <pre><code>from dataclasses import dataclass
+from enum import Enum
+from datetime import datetime, timedelta
+import json
+
+class DataLawfulBasis(Enum):
+    CONSENT = "user_consent"
+    LEGITIMATE_INTEREST = "legitimate_interest"
+    LEGAL_OBLIGATION = "legal_obligation"
+    CONTRACT = "contract"
+
+@dataclass
+class TrainingDataRecord:
+    """Metadata for training data, supporting both GDPR and AI Act requirements"""
+    data_id: str
+    source: str
+    lawful_basis: DataLawfulBasis
+    consent_date: datetime
+    retention_until: datetime
+    purposes: list[str]
+    contains_sensitive_data: bool
+    de_identified: bool
+
+    def is_still_valid(self):
+        """Check if data can still be used under GDPR Article 5"""
+        return datetime.now() < self.retention_until
+
+    def allowed_for_purpose(self, requested_purpose: str):
+        """Check GDPR Article 5 purpose limitation"""
+        return requested_purpose in self.purposes
+
+class CreditScoringModel:
+    """High-risk AI system under both GDPR and EU AI Act"""
+
+    def __init__(self):
+        self.training_data_records = {}
+        self.decisions_log = []
+        self.feature_importance = None
+
+    def load_training_data(self, data_record: TrainingDataRecord):
+        """GDPR: Verify lawful basis before loading"""
+        if not data_record.is_still_valid():
+            raise ValueError(f"Data {data_record.data_id} retention period expired")
+
+        if not data_record.allowed_for_purpose("credit_scoring"):
+            raise ValueError(f"Data {data_record.data_id} not authorized for credit scoring")
+
+        self.training_data_records[data_record.data_id] = data_record
+        return True
+
+    def make_decision(self, applicant_data: dict) -> dict:
+        """
+        AI Act Article 14: High-risk decision with human oversight required.
+        GDPR Article 22: Right to explanation required.
+        """
+        # Inference
+        score = self._compute_score(applicant_data)
+
+        # Explainability (Article 22, AI Act)
+        explanation = self._generate_explanation(applicant_data, score)
+
+        # Decision with override capability (both frameworks)
+        decision = {
+            "applicant_id": applicant_data.get("id"),
+            "score": score,
+            "decision": "approve" if score > 0.7 else "deny",
+            "explanation": explanation,
+            "requires_human_review": score > 0.6 and score < 0.7,
+            "timestamp": datetime.now().isoformat(),
+            "decision_basis": "AI system recommendation"
+        }
+
+        # Log for audit trail (both frameworks require this)
+        self.decisions_log.append(decision)
+        return decision
+
+    def _compute_score(self, applicant_data: dict) -> float:
+        """Model inference, privacy-preserving"""
+        # Features used should reflect data minimization
+        features = ["income", "debt_ratio", "employment_history"]
+
+        # Only use necessary features (GDPR Article 5)
+        filtered = {k: v for k, v in applicant_data.items() if k in features}
+
+        # Score calculation (placeholder)
+        return sum(filtered.values()) / len(features) if filtered else 0.5
+
+    def _generate_explanation(self, data: dict, score: float) -> dict:
+        """
+        GDPR Article 22: Meaningful explanation to the individual
+        AI Act Article 14: Transparency and human oversight
+        """
+        return {
+            "decision": "Your credit score was calculated based on your income, debt ratio, and employment history.",
+            "primary_factors": ["income (40% weight)", "debt_ratio (35% weight)", "employment_history (25% weight)"],
+            "score": score,
+            "right_to_human_review": "You have the right to request human review of this decision.",
+            "right_to_rectify": "If any information is inaccurate, you can request correction.",
+            "contact": "compliance@creditbureau.example"
+        }
+
+    def handle_data_subject_request(self, request_type: str, applicant_id: str):
+        """
+        GDPR Article 15-17: Data subject rights in AI context
+        """
+        if request_type == "access":
+            # Article 15: Right to access
+            return {"data": self._get_applicant_data(applicant_id)}
+
+        elif request_type == "rectify":
+            # Article 16: Right to rectification
+            return {"status": "pending_human_review"}
+
+        elif request_type == "erasure":
+            # Article 17: Right to erasure
+            # Tension: AI Act requires maintaining training data records
+            # Resolution: Delete PII but retain de-identified records
+            self._delete_applicant_data(applicant_id)
+            return {"status": "data_deleted_but_records_retained"}
+
+    def audit_trail(self):
+        """Both frameworks require audit trail for enforcement"""
+        return {
+            "total_decisions": len(self.decisions_log),
+            "human_overrides": sum(1 for d in self.decisions_log if d.get("overridden")),
+            "avg_score": sum(d["score"] for d in self.decisions_log) / len(self.decisions_log) if self.decisions_log else 0,
+            "decisions": self.decisions_log
+        }
+
+# Usage
+model = CreditScoringModel()
+
+# Load training data with GDPR compliance metadata
+training_record = TrainingDataRecord(
+    data_id="training_batch_2026_q1",
+    source="historical_approvals",
+    lawful_basis=DataLawfulBasis.LEGITIMATE_INTEREST,
+    consent_date=datetime(2026, 1, 1),
+    retention_until=datetime(2029, 1, 1),
+    purposes=["credit_scoring", "fraud_detection"],
+    contains_sensitive_data=False,
+    de_identified=False
+)
+
+model.load_training_data(training_record)
+
+# Make a decision with full audit trail
+applicant = {
+    "id": "APP_12345",
+    "income": 75000,
+    "debt_ratio": 0.3,
+    "employment_history": 8
+}
+
+decision = model.make_decision(applicant)
+print(json.dumps(decision, indent=2))</code></pre>
+
+            <p>This example demonstrates:</p>
+
+            <ul>
+                <li><strong>GDPR compliance</strong>: Lawful basis tracking, retention limits, purpose limitation, data subject rights</li>
+                <li><strong>AI Act compliance</strong>: Explainability, human oversight, audit trail, documentation</li>
+                <li><strong>Code-level verification</strong>: Tools like AIR Blackbox can scan this code and verify each framework requirement</li>
+            </ul>
+
+            <h3>Generating Evidence Bundles</h3>
+
+            <p>Regulators expect evidence. The AIR Blackbox suite generates compliance evidence bundles automatically:</p>
+
+            <pre><code>from air_compliance import ComplianceReporter
+
+reporter = ComplianceReporter(
+    code_path="./src",
+    dpia_path="./compliance/dpia.md",
+    evidence_path="./compliance_evidence"
+)
+
+# Generate GDPR-specific evidence
+gdpr_bundle = reporter.generate_gdpr_bundle(
+    focus_on=[
+        "lawful_basis_verification",
+        "data_minimization",
+        "retention_policies",
+        "dpia_completeness"
+    ]
+)
+
+# Generate AI Act-specific evidence
+ai_act_bundle = reporter.generate_ai_act_bundle(
+    system_name="credit_scoring_model",
+    risk_level="high_risk",
+    focus_on=[
+        "training_data_documentation",
+        "human_oversight",
+        "transparency_measures",
+        "performance_monitoring"
+    ]
+)
+
+print("Compliance Evidence Generated:")
+print(f"  GDPR Bundle: {gdpr_bundle.file_path}")
+print(f"  AI Act Bundle: {ai_act_bundle.file_path}")
+print(f"  Combined Report: {reporter.combined_report_path}")</code></pre>
+
+            <!-- Common Pitfalls -->
+            <h2 id="common-pitfalls">Common Pitfalls</h2>
+
+            <h3>Pitfall 1: Assuming GDPR Compliance Means AI Act Compliance</h3>
+
+            <p>This is the most frequent error. Teams achieve GDPR compliance with solid data handling practices, then assume they are done with the AI Act. This is false.</p>
+
+            <p>A system can be GDPR-compliant but AI Act non-compliant if it:</p>
+
+            <ul>
+                <li>Lacks explainability for high-risk decisions</li>
+                <li>Does not implement human oversight</li>
+                <li>Fails to document training data quality and performance monitoring</li>
+                <li>Cannot detect and log errors or failures</li>
+            </ul>
+
+            <p>Conversely, a system can be AI Act-compliant but GDPR non-compliant if it:</p>
+
+            <ul>
+                <li>Lacks a lawful basis for data processing</li>
+                <li>Collects data beyond what is necessary (data minimization violation)</li>
+                <li>Fails to implement data subject rights mechanisms</li>
+            </ul>
+
+            <h3>Pitfall 2: Ignoring Consent Requirements for AI-Specific Processing</h3>
+
+            <p>Organizations often have consent for general "service improvement" but lack consent for "AI model training." These are distinct under GDPR. Training data on an individual's transaction history for fraud detection requires separate consent from using that data for marketing personalization.</p>
+
+            <p>Audit your consent form. Verify it explicitly mentions AI and machine learning. If not, do not use that data for model training without obtaining new consent.</p>
+
+            <h3>Pitfall 3: Failing to Document AI-Specific Data Governance</h3>
+
+            <p>The AI Act requires detailed documentation of training data, validation data, test data, and the performance of the system on different demographic groups. Many organizations skip this or keep it in unstructured notes.</p>
+
+            <p>Use a standardized format. The AIR Blackbox framework includes a data governance template:</p>
+
+            <pre><code># Data Governance for [System Name]
+
+## Training Data
+- Source: [where the data comes from]
+- Volume: [number of records]
+- Time Period: [date range]
+- Quality Checks: [validation rules applied]
+- Bias Assessment: [demographic parity, equalized odds, etc.]
+
+## Retention
+- Retention Period: [how long it is kept]
+- Deletion Schedule: [when and how data is removed]
+- Audit Trail: [who accessed it and when]
+
+## Data Subject Rights
+- Access Process: [how individuals can request their data]
+- Rectification: [process for corrections]
+- Erasure: [process for deletion, with AI Act considerations]</code></pre>
+
+            <!-- Practical Checklist -->
+            <h2 id="practical-checklist">Practical Checklist for Dual Compliance</h2>
+
+            <div class="checklist">
+                <h3>Pre-Deployment Checklist</h3>
+
+                <div class="checklist-item">
+                    <div class="checklist-check">[ ]</div>
+                    <div class="checklist-text"><strong>Lawful basis identified</strong>: You have documented the GDPR lawful basis (consent, contract, legal obligation, vital interest, public task, or legitimate interest) for processing all data in your AI system.</div>
+                </div>
+
+                <div class="checklist-item">
+                    <div class="checklist-check">[ ]</div>
+                    <div class="checklist-text"><strong>Data minimization verified</strong>: You have reviewed training data and confirmed you are using only the minimum data necessary for the stated model purpose. Unnecessary PII and protected characteristics have been removed.</div>
+                </div>
+
+                <div class="checklist-item">
+                    <div class="checklist-check">[ ]</div>
+                    <div class="checklist-text"><strong>Risk level classified</strong>: You have classified your system under the AI Act (prohibited, high-risk, limited-risk, or minimal-risk) and verified you are not building any prohibited systems.</div>
+                </div>
+
+                <div class="checklist-item">
+                    <div class="checklist-check">[ ]</div>
+                    <div class="checklist-text"><strong>DPIA completed</strong>: You have completed a Data Protection Impact Assessment documenting risks, safeguards, and legal basis. If risks are high, you have consulted with your data protection authority.</div>
+                </div>
+
+                <div class="checklist-item">
+                    <div class="checklist-check">[ ]</div>
+                    <div class="checklist-text"><strong>Explainability implemented</strong>: If your system makes consequential decisions, you have implemented explainability that is understandable to a non-technical user. Test it with actual users.</div>
+                </div>
+
+                <div class="checklist-item">
+                    <div class="checklist-check">[ ]</div>
+                    <div class="checklist-text"><strong>Data subject rights enabled</strong>: You have implemented mechanisms for individuals to access their data (Article 15), request corrections (Article 16), and request deletion (Article 17) when applicable.</div>
+                </div>
+
+                <div class="checklist-item">
+                    <div class="checklist-check">[ ]</div>
+                    <div class="checklist-text"><strong>Human oversight designed</strong>: If high-risk under the AI Act, you have designed human oversight workflows. Humans can review, override, or audit AI decisions. This is documented in your training procedures.</div>
+                </div>
+
+                <div class="checklist-item">
+                    <div class="checklist-check">[ ]</div>
+                    <div class="checklist-text"><strong>Training data documented</strong>: You have documented sources, volumes, quality metrics, and any issues with your training data. This is required for AI Act enforcement.</div>
+                </div>
+
+                <div class="checklist-item">
+                    <div class="checklist-check">[ ]</div>
+                    <div class="checklist-text"><strong>Consent or legal basis obtained</strong>: If using the data requires consent, you have obtained it in writing. The consent form explicitly mentions AI training. If using legitimate interest, you have documented the balancing test.</div>
+                </div>
+
+                <div class="checklist-item">
+                    <div class="checklist-check">[ ]</div>
+                    <div class="checklist-text"><strong>Retention schedule defined</strong>: You have defined how long training data will be kept and have automated deletion in place. You have reconciled GDPR right to erasure with AI Act requirements to maintain records.</div>
+                </div>
+
+                <div class="checklist-item">
+                    <div class="checklist-check">[ ]</div>
+                    <div class="checklist-text"><strong>Cross-border transfers documented</strong>: If data moves outside the EU, you have documented Standard Contractual Clauses, Binding Corporate Rules, or other transfer mechanisms.</div>
+                </div>
+
+                <div class="checklist-item">
+                    <div class="checklist-check">[ ]</div>
+                    <div class="checklist-text"><strong>Monitoring system designed</strong>: You have designed how you will monitor the system post-deployment for performance degradation, bias, errors, and other issues. This is required for both frameworks.</div>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <h4>Automated Compliance Verification</h4>
+                <p>Do not rely on checklists alone. Use the AIR Blackbox GDPR and AI Act scanners to automatically verify code against these requirements. Combine human judgment with machine verification to reduce false negatives and false positives.</p>
+            </div>
+
+            <!-- FAQ -->
+            <h2 id="faq">FAQ</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Can I use GDPR-compliant systems for the EU AI Act?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>No. GDPR and the EU AI Act are separate frameworks with different requirements. A system can be GDPR-compliant but lack the explainability, human oversight, and documentation required by the AI Act. You must verify both frameworks independently, then ensure they work together.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What happens if I violate both GDPR and the AI Act?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>You face enforcement from multiple authorities with stacked penalties. GDPR penalties go up to EUR 20 million or 4% of global revenue. AI Act penalties can include fines up to EUR 30 million or 6% of revenue, plus the system can be banned entirely. Both authorities can act independently, so penalties stack.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Does the AI Act apply if I do not use personal data?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes. The AI Act applies to high-risk AI systems regardless of whether they use personal data. The AI Act categorizes risk based on the system's capability to cause harm, not on data use. An AI system that makes hiring recommendations is high-risk under the AI Act even if it uses only anonymous aggregated data.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Can consent satisfy both frameworks?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Consent can be a lawful basis under GDPR for data processing, but the AI Act does not recognize consent as a framework requirement. Consent is relevant to GDPR (if your lawful basis is consent) but does not replace AI Act requirements like explainability and human oversight. You need both.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What is the difference between a DPIA and an AI Act risk assessment?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>A Data Protection Impact Assessment (DPIA) under GDPR focuses on risks to personal data: confidentiality, integrity, availability, and individuals' rights. An AI Act risk assessment focuses on system-level risks: can the system cause harm? These overlap but are distinct. A high-risk AI system might have low DPIA risk if it uses minimal personal data, and vice versa. You need both documents.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How long do I need to keep training data?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>GDPR requires deletion when data is no longer necessary. The AI Act requires documentation of training data for the system lifetime. The tension is real: you must keep enough records to prove the system was trained responsibly, but delete the raw personal data when the retention period expires. Solution: delete personal data but retain de-identified records, statistics, and quality metrics that prove training data quality.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Do I need to explain every AI decision to every user?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Not every decision, but every consequential one. Under GDPR Article 22, if a decision produces legal or similarly significant effects, the individual has the right to explanation. Under the AI Act, high-risk systems require transparency. This applies to credit decisions, hiring recommendations, insurance assessments, benefit eligibility, and similar high-stakes decisions. For low-stakes decisions (product recommendations, low-risk fraud flags), explainability is best practice but not always legally required.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What tools can help me verify dual compliance?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>The AIR Blackbox suite includes scanners for both GDPR and EU AI Act compliance. The GDPR scanner checks lawful basis, data minimization, retention, explainability, and data subject rights. The AI Act scanner checks documentation, risk classification, human oversight, and transparency. Together, they provide evidence bundles for enforcement. See <a href="/quickstart">our quickstart guide</a> and <a href="/blog/eu-ai-act-compliance-checklist">the full checklist</a> for integration patterns.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Who is responsible for compliance, the company or the engineer?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Both. The organization is legally responsible for GDPR and AI Act compliance. But compliance is a shared responsibility: compliance officers own the governance and documentation, engineers own the implementation and verification, and leadership owns accountability. Effective teams use tools like AIR Blackbox to distribute the burden and create shared visibility into compliance status.</p>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <h2>Next Steps</h2>
+
+            <p>You now understand the dual compliance requirement and have code examples for implementation. The next steps are:</p>
+
+            <ol>
+                <li><strong>Classify your system</strong>: Is it high-risk under the AI Act? Does it process personal data? This determines your compliance obligations.</li>
+                <li><strong>Run the AIR Blackbox scanners</strong>: Use the GDPR and AI Act scanners on your codebase to identify gaps. See <a href="/quickstart">our quickstart guide</a>.</li>
+                <li><strong>Document your architecture</strong>: Write a DPIA and an AI Act risk assessment. Link them to your code. Use <a href="/compliance-mapping">our compliance mapping tool</a> to show where requirements are implemented.</li>
+                <li><strong>Build human oversight workflows</strong>: Design how humans will review and override AI decisions. Document this in your training procedures.</li>
+                <li><strong>Set up continuous monitoring</strong>: Track system performance, errors, and feedback from users. Both frameworks require ongoing monitoring.</li>
+            </ol>
+
+            <div class="highlight">
+                <h4>Learn More</h4>
+                <p>Explore our related resources:</p>
+                <ul>
+                    <li><a href="/blog/eu-ai-act-compliance-checklist">EU AI Act Compliance Checklist</a>: A detailed checklist for each article of the AI Act.</li>
+                    <li><a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Technical Requirements for Articles 9-15</a>: Deep dive into specific AI Act articles with code examples.</li>
+                    <li><a href="/blog/6-technical-checks">6 Technical Checks for AI Compliance</a>: Practical verification strategies for both frameworks.</li>
+                    <li><a href="/compliance-mapping">Compliance Mapping Tool</a>: Automatically map your code to regulatory requirements.</li>
+                </ul>
+            </div>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Copyright 2026 AIR Blackbox. All rights reserved.</p>
+        <p>
+            <a href="https://github.com/air-blackbox/air-blackbox">GitHub</a>
+            <a href="https://pypi.org/project/air-blackbox/">PyPI</a>
+            <a href="/terms">Terms</a>
+        </p>
+    </footer>
+
+    <script>
+        // FAQ Toggle Functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const toggle = this.querySelector('.faq-toggle');
+
+                answer.classList.toggle('active');
+                toggle.textContent = answer.classList.contains('active') ? '−' : '+';
+            });
+        });
+    </script>
