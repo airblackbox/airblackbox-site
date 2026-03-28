@@ -1,4 +1,36 @@
 {
+  "redirects": [
+    {
+      "source": "/blog/6-checks-agents",
+      "destination": "/blog/6-technical-checks",
+      "statusCode": 301
+    },
+    {
+      "source": "/compliance-mapping.html",
+      "destination": "/compliance-mapping",
+      "statusCode": 301
+    },
+    {
+      "source": "/spec.html",
+      "destination": "/spec",
+      "statusCode": 301
+    },
+    {
+      "source": "/guides.html",
+      "destination": "/guides",
+      "statusCode": 301
+    },
+    {
+      "source": "/gate.html",
+      "destination": "/gate",
+      "statusCode": 301
+    },
+    {
+      "source": "/terms.html",
+      "destination": "/terms",
+      "statusCode": 301
+    }
+  ],
   "rewrites": [
     {
       "source": "/annotator",
@@ -15,6 +47,26 @@
     {
       "source": "/quickstart",
       "destination": "/quickstart.html"
+    },
+    {
+      "source": "/compliance-mapping",
+      "destination": "/compliance-mapping.html"
+    },
+    {
+      "source": "/guides",
+      "destination": "/guides.html"
+    },
+    {
+      "source": "/gate",
+      "destination": "/gate.html"
+    },
+    {
+      "source": "/spec",
+      "destination": "/spec.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms.html"
     },
     {
       "source": "/blog",

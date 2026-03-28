@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /runs/
+Disallow: /vaultmind/
+Disallow: /api/
+Disallow: /index_backup.html
 
 Sitemap: https://airblackbox.ai/sitemap.xml
