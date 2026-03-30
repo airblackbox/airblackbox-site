@@ -101,6 +101,10 @@
       "destination": "/blog/gdpr-eu-ai-act-dual-compliance.html"
     },
     {
+      "source": "/blog/eu-ai-act-compliance-tools-compared",
+      "destination": "/blog/eu-ai-act-compliance-tools-compared.html"
+    },
+    {
       "source": "/security.txt",
       "destination": "/.well-known/security.txt"
     }
