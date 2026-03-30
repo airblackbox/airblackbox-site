@@ -12,16 +12,16 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --bg: #0a0a0b;
-            --bg-card: #111113;
+            --bg: #080b14;
+            --bg-card: #0d1117;
             --bg-card-hover: #18181b;
-            --border: #27272a;
-            --text: #fafafa;
-            --text-muted: #a1a1aa;
-            --text-dim: #71717a;
-            --accent: #f97316;
-            --accent-hover: #fb923c;
-            --accent-glow: rgba(249, 115, 22, 0.15);
+            --border: #21262d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --text-dim: #484f58;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --accent-glow: rgba(88, 166, 255, 0.15);
             --green: #22c55e;
             --red: #ef4444;
             --yellow: #eab308;
@@ -38,7 +38,7 @@
         /* Nav */
         nav {
             position: fixed; top: 0; width: 100%; z-index: 100;
-            background: rgba(10, 10, 11, 0.85);
+            background: rgba(8, 11, 20, 0.92);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
         }
@@ -60,7 +60,7 @@
         .hero { padding: 140px 24px 60px; text-align: center; max-width: 800px; margin: 0 auto; }
         .hero-badge {
             display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(249, 115, 22, 0.1); border: 1px solid rgba(249, 115, 22, 0.2);
+            background: rgba(88, 166, 255, 0.1); border: 1px solid rgba(88, 166, 255, 0.2);
             padding: 8px 20px; border-radius: 100px; font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 32px;
         }
         .hero h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 900; line-height: 1.15; margin-bottom: 20px; }
@@ -75,7 +75,7 @@
         .step-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
         .step-num {
             width: 40px; height: 40px; border-radius: 50%;
-            background: var(--accent-glow); border: 1px solid rgba(249, 115, 22, 0.3);
+            background: var(--accent-glow); border: 1px solid rgba(88, 166, 255, 0.3);
             color: var(--accent); font-weight: 700; font-size: 16px;
             display: inline-flex; align-items: center; justify-content: center;
             flex-shrink: 0;
@@ -240,13 +240,11 @@
     <div class="nav-inner">
         <a href="/" class="nav-logo">AIR <span>Blackbox</span></a>
         <div class="nav-links">
-            <a href="/">Scanner</a>
-            <a href="/gate.html">Gate</a>
-            <a href="/vaultmind/">VaultMind</a>
-            <a href="/quickstart" class="active">Quickstart</a>
-            <a href="/guides.html">Guides</a>
-            <a href="https://github.com/airblackbox" target="_blank">GitHub</a>
-            <a href="https://pypi.org/project/air-blackbox/" target="_blank" class="nav-cta">pip install</a>
+            <a href="/">Home</a>
+            <a href="/compliance-mapping">Docs</a>
+            <a href="/blog/">Blog</a>
+            <a href="https://github.com/airblackbox/gateway" target="_blank">GitHub</a>
+            <a href="https://pypi.org/project/air-blackbox/" class="nav-cta">PyPI</a>
         </div>
     </div>
 </nav>

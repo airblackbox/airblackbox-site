@@ -17,16 +17,16 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg: #0a0a0b;
-            --bg-card: #111113;
+            --bg: #080b14;
+            --bg-card: #0d1117;
             --bg-card-hover: #18181b;
             --border: #27272a;
             --text: #fafafa;
             --text-muted: #a1a1aa;
             --text-dim: #71717a;
-            --accent: #f97316;
-            --accent-hover: #fb923c;
-            --accent-glow: rgba(249, 115, 22, 0.15);
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --accent-glow: rgba(88, 166, 255, 0.15);
             --green: #22c55e;
             --red: #ef4444;
             --yellow: #eab308;
@@ -47,7 +47,7 @@
             top: 0;
             width: 100%;
             z-index: 100;
-            background: rgba(10, 10, 11, 0.85);
+            background: rgba(8, 11, 20, 0.85);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
             padding: 0 24px;
@@ -179,8 +179,8 @@
             margin-bottom: 32px;
         }
         .schema-item {
-            background: rgba(249, 115, 22, 0.02);
-            border: 1px solid rgba(249, 115, 22, 0.1);
+            background: rgba(88, 166, 255, 0.02);
+            border: 1px solid rgba(88, 166, 255, 0.1);
             border-radius: 8px;
             padding: 16px;
         }
@@ -214,7 +214,7 @@
             margin-bottom: 32px;
         }
         .spec-table thead {
-            background: rgba(249, 115, 22, 0.05);
+            background: rgba(88, 166, 255, 0.05);
             border-bottom: 1px solid var(--border);
         }
         .spec-table th {
@@ -243,7 +243,7 @@
             border-bottom: none;
         }
         .spec-table tbody tr:hover {
-            background: rgba(249, 115, 22, 0.02);
+            background: rgba(88, 166, 255, 0.02);
         }
         .table-action { color: var(--accent); font-weight: 600; }
         .table-article { color: var(--accent); font-weight: 700; }
@@ -313,7 +313,7 @@
         /* Badges */
         .badge-required {
             display: inline-block;
-            background: rgba(249, 115, 22, 0.15);
+            background: rgba(88, 166, 255, 0.15);
             color: var(--accent);
             padding: 4px 12px;
             border-radius: 4px;
@@ -396,11 +396,10 @@
         <a href="/" class="nav-logo">AIR <span>Blackbox</span></a>
         <div class="nav-links">
             <a href="/">Home</a>
-            <a href="/vaultmind/">VaultMind</a>
-            <a href="/compliance-mapping.html">Compliance</a>
-            <a href="/spec.html">Spec</a>
-            <a href="https://github.com/airblackbox" target="_blank">GitHub</a>
-            <a href="#" class="nav-cta">Get Started</a>
+            <a href="/compliance-mapping">Docs</a>
+            <a href="/blog/">Blog</a>
+            <a href="https://github.com/airblackbox/gateway" target="_blank">GitHub</a>
+            <a href="https://pypi.org/project/air-blackbox/" class="nav-cta">PyPI</a>
         </div>
     </div>
 </nav>
