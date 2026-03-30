@@ -99,6 +99,10 @@
     {
       "source": "/blog/gdpr-eu-ai-act-dual-compliance",
       "destination": "/blog/gdpr-eu-ai-act-dual-compliance.html"
+    },
+    {
+      "source": "/security.txt",
+      "destination": "/.well-known/security.txt"
     }
   ],
   "headers": [
