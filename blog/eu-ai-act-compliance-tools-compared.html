@@ -54,7 +54,7 @@
       "name": "What is the best open-source EU AI Act compliance scanner?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "AIR Blackbox offers the broadest open-source EU AI Act compliance scanning ecosystem with 7 PyPI packages, trust layers for LangChain, CrewAI, AutoGen, OpenAI SDK, and RAG pipelines, a fine-tuned local LLM, and HMAC-SHA256 tamper-evident audit chains. Alternatives include Systima Comply (TypeScript/npm) and ArkForge MCP Scanner (MCP protocol)."
+        "text": "AIR Blackbox offers the broadest open-source EU AI Act compliance scanning ecosystem with 10 PyPI packages, trust layers for LangChain, CrewAI, Anthropic Claude Agent SDK, Google ADK, and RAG pipelines, plus an MCP server and Python SDK. Includes a fine-tuned local LLM and HMAC-SHA256 tamper-evident audit chains. Alternatives include Systima Comply (TypeScript/npm) and ArkForge MCP Scanner (MCP protocol)."
       }
     },
     {
@@ -70,7 +70,7 @@
       "name": "Can I use an EU AI Act compliance scanner with LangChain, CrewAI, or AutoGen?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "AIR Blackbox provides dedicated trust layer packages for LangChain (air-langchain-trust), CrewAI (air-crewai-trust), AutoGen (air-autogen-trust), OpenAI SDK (air-openai-trust), and RAG pipelines (air-rag-trust). Each is a single pip install that adds compliance scanning and audit logging directly into your agent framework."
+        "text": "AIR Blackbox provides dedicated trust layer packages for LangChain (air-langchain-trust), CrewAI (air-crewai-trust), Anthropic Claude Agent SDK (air-anthropic-trust), Google ADK (air-adk-trust), and RAG pipelines (air-rag-trust). Each is a single pip install that adds compliance scanning and audit logging directly into your agent framework."
       }
     },
     {
@@ -155,7 +155,7 @@
 <li><a href="#arkforge">ArkForge MCP Scanner: MCP Protocol Approach</a></li>
 <li><a href="#others">EuConform, COMPL-AI, and ARQNXS</a></li>
 <li><a href="#enterprise">When Open-Source Is Not Enough: Enterprise Alternatives</a></li>
-<li><a href="#frameworks">Framework-Specific Compliance: LangChain, CrewAI, AutoGen</a></li>
+<li><a href="#frameworks">Framework-Specific Compliance: LangChain, CrewAI, Anthropic, Google ADK</a></li>
 <li><a href="#choosing">How to Choose the Right Tool for Your Stack</a></li>
 <li><a href="#getting-started">Getting Started in 30 Seconds</a></li>
 </ol>
@@ -218,7 +218,7 @@
 </tr>
 <tr>
 <td><strong>Framework trust layers</strong></td>
-<td class="check">&#10003; 5 frameworks</td>
+<td class="check">&#10003; 5 frameworks + MCP</td>
 <td class="cross">&#10007;</td>
 <td class="cross">&#10007;</td>
 <td class="cross">&#10007;</td>
@@ -238,7 +238,7 @@
 <td class="cross">&#10007;</td>
 </tr>
 <tr>
-<td><strong>AutoGen support</strong></td>
+<td><strong>Anthropic SDK support</strong></td>
 <td class="check">&#10003; Dedicated package</td>
 <td class="partial">~ Generic scan</td>
 <td class="cross">&#10007;</td>
@@ -281,7 +281,7 @@
 </tr>
 <tr>
 <td><strong>PyPI packages</strong></td>
-<td>7</td>
+<td>9</td>
 <td>0 (npm only)</td>
 <td>0</td>
 <td>1</td>
@@ -298,7 +298,7 @@
 
 <h2 id="air-blackbox">AIR Blackbox: The Full Compliance Ecosystem</h2>
 
-<p>AIR Blackbox is the broadest open-source EU AI Act compliance project available. Rather than a single scanner, it is an ecosystem of 7 PyPI packages that each handle a different aspect of compliance. The core <code>air-compliance-checker</code> package provides the CLI scanner. Five additional packages provide drop-in trust layers for specific frameworks: <code>air-langchain-trust</code>, <code>air-crewai-trust</code>, <code>air-autogen-trust</code>, <code>air-openai-trust</code>, and <code>air-rag-trust</code>. A seventh package handles the cryptographic audit chain.</p>
+<p>AIR Blackbox is the broadest open-source EU AI Act compliance project available. Rather than a single scanner, it is an ecosystem of 10 PyPI packages that each handle a different aspect of compliance. The core <code>air-blackbox</code> package provides the governance control plane. <code>air-compliance</code> provides the CLI scanner. Five packages provide drop-in trust layers for specific frameworks: <code>air-langchain-trust</code>, <code>air-crewai-trust</code>, <code>air-anthropic-trust</code> (Anthropic Claude Agent SDK), <code>air-adk-trust</code> (Google ADK), and <code>air-rag-trust</code>. An MCP server (<code>air-blackbox-mcp</code>) enables scanning from Claude Desktop and Cursor. And <code>air-blackbox-sdk</code> provides a Python SDK for recording, replaying, and governing AI decisions programmatically.</p>
 
 <p>The scanner checks your codebase against all six technical requirement articles in the EU AI Act. Each check maps directly to a specific article: risk management systems (Article 9), training data governance (Article 10), technical documentation generation (Article 11), automatic event logging (Article 12), human oversight mechanisms (Article 14), and accuracy and robustness testing (Article 15). Results come back as pass/fail with specific line references and remediation suggestions.</p>
 
@@ -308,7 +308,7 @@
 
 <div class="cta-box">
 <h3>Try AIR Blackbox in 30 Seconds</h3>
-<pre><code>pip install air-compliance-checker
+<pre><code>pip install air-compliance
 air-compliance scan .</code></pre>
 <p style="margin-bottom:0;">That is it. Your first compliance scan runs immediately. No configuration, no API keys, no account creation. <a href="https://github.com/airblackbox/gateway">View the source on GitHub</a> or <a href="https://airblackbox.ai/quickstart">read the quickstart guide</a>.</p>
 </div>
@@ -347,7 +347,7 @@ air-compliance scan .</code></pre>
 
 <p>The key question is where compliance scanning fits in your stack. If your team needs code-level, framework-aware compliance checking that runs in CI/CD and produces audit-ready evidence, open-source scanners like AIR Blackbox handle that. If your organization needs portfolio-level governance with executive dashboards and managed compliance programs, enterprise platforms handle that. Many teams will eventually use both: open-source scanning in the development pipeline feeding evidence into an enterprise governance platform.</p>
 
-<h2 id="frameworks">Framework-Specific Compliance: LangChain, CrewAI, AutoGen</h2>
+<h2 id="frameworks">Framework-Specific Compliance: LangChain, CrewAI, Anthropic, Google ADK</h2>
 
 <p>The most common question developers ask when evaluating compliance tools is whether the scanner understands their specific AI framework. A generic scanner can check for the presence of logging or documentation. A framework-aware scanner understands how LangChain callbacks work, how CrewAI agents delegate tasks, and how AutoGen's conversation patterns create compliance gaps that generic analysis misses.</p>
 
@@ -356,8 +356,8 @@ air-compliance scan .</code></pre>
 <ul>
 <li><strong>LangChain</strong> (<code>air-langchain-trust</code>): Integrates through LangChain's callback system to intercept chain runs, tool calls, and LLM invocations. Adds automatic audit logging at every execution step. Checks agent delegation patterns against Article 14 human oversight requirements.</li>
 <li><strong>CrewAI</strong> (<code>air-crewai-trust</code>): Wraps crew task execution with compliance checks. Validates that multi-agent workflows have proper oversight mechanisms when agents delegate to other agents. Flags unsupervised decision chains.</li>
-<li><strong>AutoGen</strong> (<code>air-autogen-trust</code>): Monitors AutoGen's conversational agent patterns. Ensures that autonomous multi-turn agent conversations have human-in-the-loop checkpoints as required by Article 14.</li>
-<li><strong>OpenAI SDK</strong> (<code>air-openai-trust</code>): Wraps OpenAI API calls with compliance logging, rate monitoring, and output validation. Captures every API interaction as part of the audit chain.</li>
+<li><strong>Anthropic Claude Agent SDK</strong> (<code>air-anthropic-trust</code>): Wraps Anthropic Claude agent interactions with compliance logging, data tokenization, consent gates, and injection detection. Captures every agent action as part of the audit chain.</li>
+<li><strong>Google ADK</strong> (<code>air-adk-trust</code>): Integrates with Google's Agent Development Kit, adding EU AI Act compliance with Gate policy enforcement for agent workflows built on Google's infrastructure.</li>
 <li><strong>RAG Pipelines</strong> (<code>air-rag-trust</code>): Scans retrieval-augmented generation pipelines for data governance (Article 10) compliance, including source attribution, relevance scoring, and hallucination detection.</li>
 </ul>
 
@@ -367,7 +367,7 @@ air-compliance scan .</code></pre>
 
 <p>The decision comes down to three questions.</p>
 
-<p><strong>What language and frameworks do you use?</strong> If you are building Python AI systems with LangChain, CrewAI, AutoGen, or RAG pipelines, AIR Blackbox is the only scanner with framework-aware trust layers. If you are in the TypeScript/Node.js ecosystem, Systima Comply is the strongest choice. If you live inside an MCP client, ArkForge integrates natively.</p>
+<p><strong>What language and frameworks do you use?</strong> If you are building Python AI systems with LangChain, CrewAI, Anthropic Claude, Google ADK, or RAG pipelines, AIR Blackbox is the only scanner with framework-aware trust layers. If you are in the TypeScript/Node.js ecosystem, Systima Comply is the strongest choice. If you live inside an MCP client, ArkForge integrates natively.</p>
 
 <p><strong>Do you need code scanning or risk assessment?</strong> If you need to scan actual code and CI/CD integration, AIR Blackbox and Systima are the primary options. If you need initial risk classification and assessment, EuConform and ARQNXS serve that purpose. If you need model evaluation benchmarks, COMPL-AI is the right tool.</p>
 
@@ -378,13 +378,16 @@ air-compliance scan .</code></pre>
 <p>If you made it this far, the fastest way to evaluate is to run a scan on your own codebase. No registration, no API keys, no configuration:</p>
 
 <pre><code># Install the core scanner
-pip install air-compliance-checker
+pip install air-compliance
 
 # Scan your project
 air-compliance scan .
 
 # Add a framework trust layer (example: LangChain)
-pip install air-langchain-trust</code></pre>
+pip install air-langchain-trust
+
+# Or install the full governance control plane
+pip install air-blackbox</code></pre>
 
 <p>The scan takes about 10 seconds and checks your code against all six EU AI Act technical requirement articles. You get a pass/fail result for each article with specific line references for any gaps found.</p>
 

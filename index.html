@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIR Blackbox — EU AI Act Compliance Scanner for Python AI Agents</title>
-    <meta name="description" content="Open-source EU AI Act compliance scanner for Python AI agents. 39 checks across Articles 9-15 plus GDPR and bias/fairness scanning. Trust layers for 7 frameworks. Prompt injection detection, ISO 42001 + NIST AI RMF crosswalk, A2A compliance protocol, evidence bundles, pre-commit hooks. HMAC-SHA256 audit chains. Runs locally. pip install air-blackbox.">
+    <meta name="description" content="Open-source EU AI Act compliance scanner for Python AI agents. 39 checks across Articles 9-15 plus GDPR and bias/fairness scanning. 10 PyPI packages including trust layers for 7 frameworks. Prompt injection detection, ISO 42001 + NIST AI RMF crosswalk, A2A compliance protocol, evidence bundles, pre-commit hooks. HMAC-SHA256 audit chains. Runs locally. pip install air-blackbox.">
     <meta name="keywords" content="EU AI Act compliance, AI agent audit trail, tamper-evident logging, AI compliance scanner, Python AI governance, LangChain compliance, CrewAI compliance, AutoGen compliance, OpenAI SDK compliance, Claude Agent SDK, Google ADK, Haystack compliance, AI risk management, Article 9, Article 10, Article 11, Article 12, Article 14, Article 15, HMAC audit chain, AI agent security, prompt injection detection, PII detection, open source AI compliance, AI Act August 2026, air-blackbox, pip install air-blackbox, AI bill of materials, AIBOM, AI observability, MCP server compliance, GDPR AI compliance, AI bias detection, AI fairness scanner, ISO 42001, NIST AI RMF, agent-to-agent compliance, A2A protocol, evidence bundle, pre-commit AI compliance, standards crosswalk">
     <meta property="og:title" content="AIR Blackbox — EU AI Act Compliance Scanner for Python AI Agents">
-    <meta property="og:description" content="Open-source compliance scanner for AI agents. 7 framework trust layers. Prompt injection detection, GDPR scanning, bias checks, ISO 42001 + NIST crosswalk, A2A protocol. Runs locally.">
+    <meta property="og:description" content="Open-source compliance scanner for AI agents. 10 PyPI packages, 7 framework trust layers. Prompt injection detection, GDPR scanning, bias checks, ISO 42001 + NIST crosswalk, A2A protocol. Runs locally.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://airblackbox.ai">
     <meta property="og:image" content="https://airblackbox.ai/og-image.svg">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="AIR Blackbox — EU AI Act Compliance Scanner for Python AI Agents">
-    <meta name="twitter:description" content="Open-source compliance scanner for AI agents. 7 framework trust layers. Prompt injection detection, GDPR scanning, ISO 42001 + NIST crosswalk. Runs locally.">
+    <meta name="twitter:description" content="Open-source compliance scanner for AI agents. 10 PyPI packages, 7 framework trust layers. Prompt injection detection, GDPR scanning, ISO 42001 + NIST crosswalk. Runs locally.">
     <link rel="canonical" href="https://airblackbox.ai">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <script type="application/ld+json">
@@ -119,7 +119,7 @@
           "name": "What frameworks does AIR Blackbox support?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "AIR Blackbox has trust layer integrations for 7 frameworks: LangChain, CrewAI, AutoGen, OpenAI Agents SDK, Google ADK, Haystack, and Claude Agent SDK. The compliance scanner works on any Python AI code regardless of framework. There's also an MCP server for Claude Desktop and Cursor integration."
+            "text": "AIR Blackbox has trust layer integrations for 7 frameworks: LangChain, CrewAI, AutoGen, OpenAI Agents SDK, Google ADK, Haystack, and Claude Agent SDK — plus standalone SDK trust layers for OpenAI and Anthropic. 10 PyPI packages total. The compliance scanner works on any Python AI code regardless of framework. There's also an MCP server for Claude Desktop and Cursor integration."
           }
         },
         {
@@ -135,7 +135,7 @@
           "name": "Is AIR Blackbox free?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The core scanner and all 8 PyPI packages are 100% free and open source under the Apache 2.0 license. For teams that need managed infrastructure, we offer a Pro tier ($299/mo managed VPS) and an Enterprise tier (custom pricing, air-gapped deployment) with the same gap analysis engine plus dedicated infrastructure, fine-tuned models, and support."
+            "text": "The core scanner and all 10 PyPI packages are 100% free and open source under the Apache 2.0 license. For teams that need managed infrastructure, we offer a Pro tier ($299/mo managed VPS) and an Enterprise tier (custom pricing, air-gapped deployment) with the same gap analysis engine plus dedicated infrastructure, fine-tuned models, and support."
           }
         },
         {
@@ -343,6 +343,7 @@
             <a href="#features">Features</a>
             <a href="/compliance-mapping">Docs</a>
             <a href="/blog/">Blog</a>
+            <a href="/ci-cd">CI/CD</a>
             <a href="#pricing">Pricing</a>
             <a href="https://github.com/airblackbox/gateway">GitHub</a>
             <a href="https://pypi.org/project/air-blackbox/" class="btn-sm">PyPI</a>
@@ -620,7 +621,7 @@ client = OpenAI(
                 <div class="label">EU AI Act articles covered<br>(9, 10, 11, 12, 14, 15)</div>
             </div>
             <div class="stat">
-                <div class="num" style="color:var(--yellow)">8</div>
+                <div class="num" style="color:var(--yellow)">10</div>
                 <div class="label">PyPI packages<br>in the ecosystem</div>
             </div>
             <div class="stat">
@@ -663,13 +664,13 @@ client = OpenAI(
 
         <!-- Social proof stats -->
         <div style="display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap;margin:2rem 0;padding:1.2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
-            <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--accent)" id="dl-counter">7,000</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">PyPI Downloads</div></div>
+            <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--accent)" id="dl-counter">14,294</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">PyPI Downloads</div></div>
             <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--green)">39</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">Gap Analysis Checks</div></div>
             <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--yellow)">6</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">EU AI Act Articles</div></div>
-            <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--text-primary)">7</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">Framework Trust Layers</div></div>
+            <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--text-primary)">10</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">PyPI Packages</div></div>
             <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--red)" id="days-left">131</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">Days to Deadline</div></div>
         </div>
-        <script>(function(){var el=document.querySelector('#dl-counter');if(!el)return;var d=Math.ceil((new Date()-new Date('2026-03-25'))/(1000*60*60*24));el.textContent=(7000+d*30).toLocaleString();var dd=document.querySelector('#days-left');if(dd){var days=Math.ceil((new Date('2026-08-02')-new Date())/(1000*60*60*24));dd.textContent=days;}})()</script>
+        <script>(function(){var el=document.querySelector('#dl-counter');if(!el)return;var d=Math.ceil((new Date()-new Date('2026-03-25'))/(1000*60*60*24));el.textContent=(14294+d*30).toLocaleString();var dd=document.querySelector('#days-left');if(dd){var days=Math.ceil((new Date('2026-08-02')-new Date())/(1000*60*60*24));dd.textContent=days;}})()</script>
 
         <!-- Pricing cards -->
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem">
@@ -813,7 +814,7 @@ client = OpenAI(
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What frameworks does AIR Blackbox support?</div>
-                <div class="faq-a">AIR Blackbox has trust layer integrations for 7 frameworks: LangChain, CrewAI, AutoGen, OpenAI Agents SDK, Google ADK, Haystack, and Claude Agent SDK. The compliance scanner works on any Python AI code regardless of framework. There's also an MCP server for Claude Desktop and Cursor integration.</div>
+                <div class="faq-a">AIR Blackbox has trust layer integrations for 7 frameworks: LangChain, CrewAI, AutoGen, OpenAI Agents SDK, Google ADK, Haystack, and Claude Agent SDK — plus standalone SDK trust layers for OpenAI and Anthropic. 10 PyPI packages total. The compliance scanner works on any Python AI code regardless of framework. There's also an MCP server for Claude Desktop and Cursor integration.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does it compare to Credo AI, Holistic AI, or OneTrust?</div>
@@ -821,7 +822,7 @@ client = OpenAI(
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is AIR Blackbox free?</div>
-                <div class="faq-a">The core scanner and all 8 PyPI packages are 100% free and open source under the Apache 2.0 license. For teams that need managed infrastructure, we offer a Pro tier ($299/mo managed VPS) and an Enterprise tier (custom pricing, air-gapped deployment) with the same gap analysis engine plus dedicated infrastructure, fine-tuned models, and support.</div>
+                <div class="faq-a">The core scanner and all 10 PyPI packages are 100% free and open source under the Apache 2.0 license. For teams that need managed infrastructure, we offer a Pro tier ($299/mo managed VPS) and an Enterprise tier (custom pricing, air-gapped deployment) with the same gap analysis engine plus dedicated infrastructure, fine-tuned models, and support.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What is the HMAC-SHA256 audit chain?</div>
@@ -833,7 +834,7 @@ client = OpenAI(
     <!-- CTA -->
     <section style="text-align:center; padding:5rem 0"><div class="container">
         <h2 class="section-title">EU AI Act deadline is August 2026.</h2>
-        <p style="color:var(--text-secondary); margin-bottom:2rem">39 gap analysis checks. 6 articles. 7 frameworks. GDPR + bias scanning. One pip install. Find out where your Python AI agents stand today.</p>
+        <p style="color:var(--text-secondary); margin-bottom:2rem">39 gap analysis checks. 6 articles. 10 PyPI packages. GDPR + bias scanning. One pip install. Find out where your Python AI agents stand today.</p>
         <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox').then(()=>this.textContent='Copied!')" style="font-family:var(--mono);background:var(--bg-card);border:1px solid var(--border);padding:0.8rem 1.5rem;border-radius:8px;font-size:1rem;display:inline-block;margin-bottom:1.5rem;color:var(--green);cursor:pointer">pip install air-blackbox</div>
         <div class="hero-links" style="margin-top:1.5rem">
             <a href="https://github.com/airblackbox/gateway" class="btn-primary">Star on GitHub</a>

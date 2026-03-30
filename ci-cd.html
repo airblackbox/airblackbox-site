@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CI/CD Integration — AIR Blackbox EU AI Act Compliance Scanner</title>
+    <meta name="description" content="Add EU AI Act compliance scanning to your CI/CD pipeline in 2 minutes. GitHub Actions workflow, pre-commit hooks, and GitLab CI configs. Catch compliance gaps before they reach production.">
+    <meta name="keywords" content="EU AI Act CI/CD, compliance scanner GitHub Actions, AI compliance pre-commit hook, automated compliance checking, air-compliance CI pipeline, EU AI Act automation, Python AI compliance pipeline, DevOps AI governance">
+    <meta property="og:title" content="CI/CD Integration — AIR Blackbox Compliance Scanner">
+    <meta property="og:description" content="Add EU AI Act compliance scanning to your CI/CD pipeline in 2 minutes. GitHub Actions, pre-commit hooks, GitLab CI.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://airblackbox.ai/ci-cd">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CI/CD Integration — AIR Blackbox Compliance Scanner">
+    <meta name="twitter:description" content="EU AI Act compliance scanning in your pipeline. GitHub Actions, pre-commit, GitLab CI. 2 minutes to set up.">
+    <link rel="canonical" href="https://airblackbox.ai/ci-cd">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "CI/CD Integration for EU AI Act Compliance Scanning",
+      "description": "How to add automated EU AI Act compliance scanning to GitHub Actions, pre-commit hooks, and GitLab CI pipelines.",
+      "author": {"@type": "Organization", "name": "AIR Blackbox"},
+      "datePublished": "2026-03-30",
+      "url": "https://airblackbox.ai/ci-cd"
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #080b14;
+            --bg-card: #0d1117;
+            --bg-elevated: #161b22;
+            --border: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-dim: #484f58;
+            --accent: #58a6ff;
+            --accent-glow: rgba(88, 166, 255, 0.15);
+            --green: #3fb950;
+            --red: #f85149;
+            --yellow: #d29922;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Sora', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--sans); background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code, .mono { font-family: var(--mono); }
+        .container { max-width: 820px; margin: 0 auto; padding: 0 2rem; }
+
+        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(8,11,20,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text-primary); }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text-primary); text-decoration: none; }
+        .nav-links .btn-sm { background: var(--accent); color: var(--bg-deep); padding: 0.4rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.8rem; }
+
+        .page-hero { padding: 8rem 0 3rem; text-align: center; }
+        .page-hero h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -1px; margin-bottom: 1rem; }
+        .page-hero .highlight { background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .page-hero p { color: var(--text-secondary); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+
+        .content { padding: 2rem 0 5rem; }
+        .content h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; margin: 3rem 0 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+        .content h2:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+        .content h3 { font-size: 1.1rem; font-weight: 600; margin: 2rem 0 0.8rem; }
+        .content p { color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.95rem; }
+        .content ul, .content ol { color: var(--text-secondary); margin: 0 0 1.5rem 1.5rem; font-size: 0.95rem; }
+        .content li { margin-bottom: 0.5rem; }
+
+        .code-block { position: relative; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; margin: 1.2rem 0 1.8rem; overflow: hidden; }
+        .code-header { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 1rem; background: var(--bg-elevated); border-bottom: 1px solid var(--border); }
+        .code-filename { font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim); }
+        .copy-btn { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); background: none; border: 1px solid var(--border); border-radius: 4px; padding: 0.2rem 0.6rem; cursor: pointer; transition: all 0.2s; }
+        .copy-btn:hover { background: var(--accent); color: var(--bg-deep); }
+        .code-block pre { padding: 1.2rem; overflow-x: auto; margin: 0; }
+        .code-block code { font-family: var(--mono); font-size: 0.82rem; line-height: 1.7; color: var(--text-primary); }
+
+        .benefit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin: 2rem 0; }
+        .benefit-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+        .benefit-card .icon { font-size: 1.4rem; margin-bottom: 0.6rem; }
+        .benefit-card h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .benefit-card p { color: var(--text-secondary); font-size: 0.82rem; margin: 0; }
+
+        .cta-box { background: var(--bg-card); border: 1px solid var(--accent); border-radius: 12px; padding: 2.5rem; text-align: center; margin: 3rem 0; }
+        .cta-box h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.8rem; }
+        .cta-box p { color: var(--text-secondary); margin-bottom: 1.2rem; }
+        .cta-install { font-family: var(--mono); background: var(--bg-elevated); border: 1px solid var(--border); padding: 0.8rem 1.5rem; border-radius: 8px; font-size: 0.95rem; display: inline-block; color: var(--green); cursor: pointer; }
+        .cta-install:hover { border-color: var(--accent); }
+
+        .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem 2rem; margin: 2rem 0; }
+        .toc h4 { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 0.8rem; }
+        .toc a { display: block; color: var(--text-secondary); font-size: 0.9rem; padding: 0.3rem 0; }
+        .toc a:hover { color: var(--accent); text-decoration: none; }
+
+        footer { border-top: 1px solid var(--border); padding: 3rem 0; text-align: center; }
+        footer a { color: var(--text-dim); font-size: 0.8rem; margin: 0 0.5rem; }
+        footer p { color: var(--text-dim); font-size: 0.75rem; margin-top: 0.5rem; }
+
+        .badge { display: inline-block; font-family: var(--mono); font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600; }
+        .badge-green { background: rgba(63,185,80,0.15); color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+        .badge-yellow { background: rgba(210,153,34,0.15); color: var(--yellow); border: 1px solid rgba(210,153,34,0.3); }
+        .badge-blue { background: rgba(88,166,255,0.15); color: var(--accent); border: 1px solid rgba(88,166,255,0.3); }
+
+        @media (max-width: 640px) {
+            .benefit-grid { grid-template-columns: 1fr; }
+            .nav-links { gap: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <a href="/" class="logo">AIR<span>.</span>Blackbox</a>
+        <div class="nav-links">
+            <a href="/#features">Features</a>
+            <a href="/blog/">Blog</a>
+            <a href="/demo">Demo</a>
+            <a href="https://github.com/airblackbox/gateway" class="btn-sm">GitHub</a>
+        </div>
+    </nav>
+</header>
+
+<section class="page-hero">
+    <h1>Add Compliance Scanning to <span class="highlight">Your Pipeline</span></h1>
+    <p>Catch EU AI Act compliance gaps before they reach production. GitHub Actions, pre-commit hooks, or GitLab CI — set up in 2 minutes.</p>
+</section>
+
+<section class="content"><div class="container">
+
+    <div class="toc">
+        <h4>On This Page</h4>
+        <a href="#github-actions">1. GitHub Actions</a>
+        <a href="#pre-commit">2. Pre-Commit Hook</a>
+        <a href="#gitlab-ci">3. GitLab CI</a>
+        <a href="#options">4. Configuration Options</a>
+        <a href="#what-gets-checked">5. What Gets Checked</a>
+    </div>
+
+    <div class="benefit-grid">
+        <div class="benefit-card">
+            <div class="icon">🔄</div>
+            <h4>Every Push</h4>
+            <p>Compliance scans run automatically on every push and PR — no manual steps.</p>
+        </div>
+        <div class="benefit-card">
+            <div class="icon">🚫</div>
+            <h4>Block Violations</h4>
+            <p>Fail the build when HIGH-severity gaps are detected. Catch issues before merge.</p>
+        </div>
+        <div class="benefit-card">
+            <div class="icon">📋</div>
+            <h4>Audit Trail</h4>
+            <p>Every scan generates <code>.air.json</code> records with HMAC-SHA256 chain hashes.</p>
+        </div>
+        <div class="benefit-card">
+            <div class="icon">⚡</div>
+            <h4>Fast</h4>
+            <p>Scans complete in under 30 seconds. Runs locally — no code leaves your environment.</p>
+        </div>
+    </div>
+
+    <!-- GitHub Actions -->
+    <h2 id="github-actions">GitHub Actions <span class="badge badge-green">Recommended</span></h2>
+
+    <p>Drop this file into your repo and every push + PR gets a compliance scan automatically.</p>
+
+    <div class="code-block">
+        <div class="code-header">
+            <span class="code-filename">.github/workflows/compliance.yml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code>name: EU AI Act Compliance
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  compliance-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install AIR Compliance Scanner
+        run: pip install air-compliance
+
+      - name: Run compliance scan
+        run: air-compliance scan . --format json --output compliance-report.json
+
+      - name: Check for HIGH severity gaps
+        run: |
+          HIGH_COUNT=$(python3 -c "
+          import json
+          with open('compliance-report.json') as f:
+              report = json.load(f)
+          highs = [g for g in report.get('gaps', []) if g.get('severity') == 'HIGH']
+          print(len(highs))
+          ")
+          echo "HIGH severity gaps found: $HIGH_COUNT"
+          if [ "$HIGH_COUNT" -gt 0 ]; then
+            echo "::error::Found $HIGH_COUNT HIGH severity compliance gaps"
+            exit 1
+          fi
+
+      - name: Upload compliance report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compliance-report
+          path: compliance-report.json</code></pre>
+    </div>
+
+    <h3>What This Does</h3>
+    <p>On every push to <code>main</code> or <code>develop</code> (and every PR into <code>main</code>), this workflow installs the scanner, runs 39 gap analysis checks against your Python AI code, and fails the build if any HIGH-severity issues are found. The full report is uploaded as a build artifact you can download anytime.</p>
+
+    <h3>PR Status Check (Optional)</h3>
+    <p>To require compliance scans to pass before merging, go to your repo's Settings → Branches → Branch protection rules → Require status checks, and add <strong>"EU AI Act Compliance"</strong> as a required check.</p>
+
+    <!-- Pre-Commit Hook -->
+    <h2 id="pre-commit">Pre-Commit Hook</h2>
+
+    <p>Scan before the code even leaves your machine. Uses the <a href="https://pre-commit.com">pre-commit</a> framework.</p>
+
+    <div class="code-block">
+        <div class="code-header">
+            <span class="code-filename">.pre-commit-config.yaml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code>repos:
+  - repo: local
+    hooks:
+      - id: air-compliance
+        name: EU AI Act Compliance Scan
+        entry: air-compliance scan
+        language: system
+        types: [python]
+        pass_filenames: true
+        always_run: false</code></pre>
+    </div>
+
+    <h3>Setup</h3>
+
+    <div class="code-block">
+        <div class="code-header">
+            <span class="code-filename">Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code># Install pre-commit and the scanner
+pip install pre-commit air-compliance
+
+# Install the hooks into your repo
+pre-commit install
+
+# Test it manually
+pre-commit run air-compliance --all-files</code></pre>
+    </div>
+
+    <p>Now every <code>git commit</code> that touches Python files will run the compliance scan first. If HIGH-severity gaps are found, the commit is blocked until you fix them.</p>
+
+    <!-- GitLab CI -->
+    <h2 id="gitlab-ci">GitLab CI</h2>
+
+    <div class="code-block">
+        <div class="code-header">
+            <span class="code-filename">.gitlab-ci.yml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code>compliance-scan:
+  stage: test
+  image: python:3.11-slim
+  script:
+    - pip install air-compliance
+    - air-compliance scan . --format json --output compliance-report.json
+    - |
+      HIGH_COUNT=$(python3 -c "
+      import json
+      with open('compliance-report.json') as f:
+          report = json.load(f)
+      highs = [g for g in report.get('gaps', []) if g.get('severity') == 'HIGH']
+      print(len(highs))
+      ")
+      echo "HIGH severity gaps: $HIGH_COUNT"
+      if [ "$HIGH_COUNT" -gt 0 ]; then
+        echo "FAILED: $HIGH_COUNT HIGH severity compliance gaps"
+        exit 1
+      fi
+  artifacts:
+    paths:
+      - compliance-report.json
+    when: always
+  only:
+    - main
+    - merge_requests</code></pre>
+    </div>
+
+    <!-- Configuration -->
+    <h2 id="options">Configuration Options</h2>
+
+    <div class="code-block">
+        <div class="code-header">
+            <span class="code-filename">Terminal — common flags</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code># Scan entire project
+air-compliance scan .
+
+# Scan specific files
+air-compliance scan agent.py pipeline.py
+
+# JSON output for CI parsing
+air-compliance scan . --format json --output report.json
+
+# Only fail on HIGH severity (skip MEDIUM/LOW)
+air-compliance scan . --min-severity HIGH
+
+# Include GDPR and bias checks
+air-compliance scan . --gdpr --bias
+
+# Scan with trust layer verification
+air-compliance scan . --verify-trust-layers</code></pre>
+    </div>
+
+    <h3>Environment Variables</h3>
+    <div class="code-block">
+        <div class="code-header">
+            <span class="code-filename">Supported environment variables</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code># Custom audit chain signing key (for tamper-evident logs)
+TRUST_SIGNING_KEY=your-secret-key
+
+# Custom output directory for .air.json audit records
+AIR_RUNS_DIR=./audit-logs
+
+# Skip specific checks
+AIR_SKIP_CHECKS=art9_risk_categorization,art15_prompt_injection</code></pre>
+    </div>
+
+    <!-- What Gets Checked -->
+    <h2 id="what-gets-checked">What Gets Checked</h2>
+
+    <p>Every scan runs 39 automated gap analysis checks across 6 EU AI Act articles:</p>
+
+    <div class="benefit-grid">
+        <div class="benefit-card">
+            <h4>Article 9 — Risk Management</h4>
+            <p>Risk categorization, mitigation measures, residual risk documentation</p>
+        </div>
+        <div class="benefit-card">
+            <h4>Article 10 — Data Governance</h4>
+            <p>Training data documentation, PII detection, data quality measures</p>
+        </div>
+        <div class="benefit-card">
+            <h4>Article 11 — Technical Docs</h4>
+            <p>Model cards, system architecture, performance metrics documentation</p>
+        </div>
+        <div class="benefit-card">
+            <h4>Article 12 — Record-Keeping</h4>
+            <p>Audit trail presence, HMAC chain verification, log completeness</p>
+        </div>
+        <div class="benefit-card">
+            <h4>Article 14 — Human Oversight</h4>
+            <p>Human-in-the-loop checkpoints, override mechanisms, delegation logging</p>
+        </div>
+        <div class="benefit-card">
+            <h4>Article 15 — Robustness</h4>
+            <p>Prompt injection scanning, error handling, fallback mechanisms</p>
+        </div>
+    </div>
+
+    <p>Plus optional GDPR data flow scanning, bias/fairness checks, and ISO 42001 + NIST AI RMF crosswalk mapping.</p>
+
+    <!-- CTA -->
+    <div class="cta-box">
+        <h3>Start scanning in 10 seconds</h3>
+        <p>10 PyPI packages. 39 checks. 6 EU AI Act articles. Runs locally.</p>
+        <div class="cta-install" onclick="navigator.clipboard.writeText('pip install air-compliance').then(()=>this.textContent='Copied!')">pip install air-compliance</div>
+        <div style="margin-top: 1.2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="https://github.com/airblackbox/gateway" style="font-size:0.85rem">GitHub</a>
+            <a href="https://pypi.org/project/air-compliance" style="font-size:0.85rem">PyPI</a>
+            <a href="/demo" style="font-size:0.85rem">Live Demo</a>
+            <a href="/blog/" style="font-size:0.85rem">Blog</a>
+        </div>
+    </div>
+
+</div></section>
+
+<footer>
+    <div class="container">
+        <p>AIR Blackbox — The flight recorder for AI agents. Open source. Apache 2.0.</p>
+        <p><a href="/">Home</a> · <a href="/blog/">Blog</a> · <a href="https://github.com/airblackbox/gateway">GitHub</a> · <a href="https://pypi.org/project/air-compliance">PyPI</a></p>
+    </div>
+</footer>
+
+<script>
+function copyCode(btn) {
+    const code = btn.closest('.code-block').querySelector('code').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+}
+</script>
+
+</body>
+</html>
