@@ -8,9 +8,16 @@ export default async function handler(req, res) {
   // Simple auth — check for dashboard key in query params or header
   const key = req.query.key || req.headers['x-dashboard-key'];
   const envKey = process.env.DASHBOARD_KEY;
-  console.log(`Dashboard auth: key_len=${key ? key.length : 'none'}, env_len=${envKey ? envKey.length : 'none'}, match=${key === envKey}`);
   if (!envKey || key !== envKey) {
-    return res.status(401).json({ error: 'unauthorized' });
+    return res.status(401).json({
+      error: 'unauthorized',
+      debug: {
+        key_length: key ? key.length : null,
+        env_length: envKey ? envKey.length : null,
+        env_exists: !!envKey,
+        match: key === envKey,
+      }
+    });
   }
 
   if (!process.env.KV_REST_API_URL) {
