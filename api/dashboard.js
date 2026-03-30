@@ -7,7 +7,9 @@ import { kv } from '@vercel/kv';
 export default async function handler(req, res) {
   // Simple auth — check for dashboard key in query params or header
   const key = req.query.key || req.headers['x-dashboard-key'];
-  if (key !== process.env.DASHBOARD_KEY) {
+  const envKey = process.env.DASHBOARD_KEY;
+  console.log(`Dashboard auth: key_len=${key ? key.length : 'none'}, env_len=${envKey ? envKey.length : 'none'}, match=${key === envKey}`);
+  if (!envKey || key !== envKey) {
     return res.status(401).json({ error: 'unauthorized' });
   }
 
