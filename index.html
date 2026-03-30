@@ -76,6 +76,108 @@
       ]
     }
     </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is AIR Blackbox?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AIR Blackbox is an open-source EU AI Act gap analysis scanner for Python AI agents. It runs 39 automated checks across 6 EU AI Act articles (9, 10, 11, 12, 14, 15) plus GDPR and bias/fairness scanning to identify compliance gaps in your source code and runtime configuration. It supports 7 frameworks: LangChain, CrewAI, AutoGen, OpenAI Agents SDK, Google ADK, Haystack, and Claude Agent SDK."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What EU AI Act articles does it check?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AIR Blackbox checks 6 articles: Article 9 (Risk Management), Article 10 (Data Governance), Article 11 (Technical Documentation), Article 12 (Record-Keeping), Article 14 (Human Oversight), and Article 15 (Accuracy & Security). Each check is classified as static (verifiable from source code) or runtime (requires gateway/trust layer)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does two-tier scoring work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Two-tier scoring separates the 39 checks into two categories: 26 Static checks analyze code patterns, documentation, and configuration that can be verified from source code alone. 13 Runtime checks require a running gateway or trust layer to verify. This gives teams a realistic compliance score even without the full gateway deployed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When is the EU AI Act deadline?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The key deadline for high-risk AI systems is August 2, 2026. Penalties for non-compliance can reach up to 35 million euros or 7% of global annual turnover, whichever is higher. Prohibited AI practices enforcement began February 2, 2025. GPAI model obligations apply from August 2, 2025. Full enforcement begins August 2, 2027."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What frameworks does AIR Blackbox support?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AIR Blackbox has trust layer integrations for 7 frameworks: LangChain, CrewAI, AutoGen, OpenAI Agents SDK, Google ADK, Haystack, and Claude Agent SDK. The compliance scanner works on any Python AI code regardless of framework. There's also an MCP server for Claude Desktop and Cursor integration."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does it compare to Credo AI, Holistic AI, or OneTrust?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Enterprise AI governance platforms typically cost $50,000+/year and require sending code to their cloud. AIR Blackbox is free, open source (Apache 2.0), and runs 100% locally. It focuses specifically on EU AI Act technical requirements for Python AI agents."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is AIR Blackbox free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The core scanner and all 8 PyPI packages are 100% free and open source under the Apache 2.0 license. For teams that need managed infrastructure, we offer a Pro tier ($299/mo managed VPS) and an Enterprise tier (custom pricing, air-gapped deployment) with the same gap analysis engine plus dedicated infrastructure, fine-tuned models, and support."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the HMAC-SHA256 audit chain?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Every AI action logged through the AIR gateway or trust layers is written as a tamper-evident .air.json record. Each record is linked to the previous one via HMAC-SHA256 cryptographic hashes — creating a blockchain-style chain without the blockchain. If anyone modifies a record after the fact, the hash chain breaks and the tampering is detectable."
+          }
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to scan your AI code for EU AI Act compliance",
+      "description": "Use AIR Blackbox to check your Python AI code against EU AI Act requirements",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Your App Sends a Request",
+          "text": "Change your base URL from api.openai.com to localhost:8080. Same SDK. Same code. Same everything."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Gateway Authenticates & Proxies",
+          "text": "The gateway checks your gateway key, forwards the request to the upstream provider, and streams the response back in real-time. Sub-millisecond overhead."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "AIR Record Created (Background)",
+          "text": "A tamper-evident .air.json record is written asynchronously. Contains: request, response, model, tokens, timestamp, run ID. Never blocks your response."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Secrets Vault-Encrypted",
+          "text": "API keys and auth headers are stripped from the AIR record and encrypted separately. Even if someone gets the audit file, they can't extract credentials."
+        }
+      ]
+    }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {

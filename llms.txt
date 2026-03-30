@@ -1,0 +1,45 @@
+# AIR Blackbox
+
+> Open-source EU AI Act compliance scanner for Python AI agents
+
+AIR Blackbox is an open-source CLI tool that scans Python AI agent code for EU AI Act compliance gaps. It runs 45+ checks across Articles 9-15, including prompt injection detection, GDPR scanning, bias/fairness analysis, and ISO 42001 + NIST AI RMF crosswalk. It supports trust layers for 7 frameworks: LangChain, CrewAI, AutoGen, OpenAI SDK, Claude Agent SDK, Google ADK, and Haystack.
+
+## Key Links
+
+- [Homepage](https://airblackbox.ai)
+- [GitHub](https://github.com/airblackbox/gateway)
+- [PyPI](https://pypi.org/project/air-blackbox/)
+- [Documentation](https://airblackbox.ai/compliance-mapping)
+- [Blog](https://airblackbox.ai/blog/)
+- [Technical Specification](https://airblackbox.ai/spec)
+- [Integration Guides](https://airblackbox.ai/guides)
+
+## Installation
+
+pip install air-blackbox
+
+## Quick Start
+
+air-blackbox comply --scan . -v
+
+## Features
+
+- 45+ EU AI Act compliance checks (Articles 9-15)
+- Prompt injection detection (20 patterns, 5 categories)
+- GDPR scanner (8 checks)
+- Bias and fairness scanner (6 checks)
+- ISO 42001 + NIST AI RMF standards crosswalk
+- Agent-to-agent (A2A) compliance protocol
+- HMAC-SHA256 tamper-evident audit chains
+- Trust layers for 7 frameworks
+- Pre-commit hooks
+- Evidence bundle exporter
+- MCP server integration
+
+## License
+
+Apache 2.0
+
+## EU AI Act Deadline
+
+August 2, 2026 — High-risk AI systems must comply

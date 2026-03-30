@@ -10,13 +10,13 @@
     <loc>https://airblackbox.ai/quickstart</loc>
     <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://airblackbox.ai/demo</loc>
     <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://airblackbox.ai/spec</loc>
@@ -45,30 +45,31 @@
     <loc>https://airblackbox.ai/annotator</loc>
     <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://airblackbox.ai/blog/</loc>
     <lastmod>2026-03-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-  </url>  <url>
+  </url>
+  <url>
     <loc>https://airblackbox.ai/blog/eu-ai-act-compliance-checklist</loc>
     <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://airblackbox.ai/blog/eu-ai-act-august-2026-deadline</loc>
     <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://airblackbox.ai/blog/eu-ai-act-articles-9-15-technical-requirements</loc>
     <lastmod>2026-03-28</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://airblackbox.ai/blog/langchain-eu-ai-act-compliance</loc>
@@ -96,8 +97,8 @@
   </url>
   <url>
     <loc>https://airblackbox.ai/terms</loc>
-    <lastmod>2026-03-28</lastmod>
+    <lastmod>2026-03-30</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <priority>0.5</priority>
   </url>
 </urlset>
