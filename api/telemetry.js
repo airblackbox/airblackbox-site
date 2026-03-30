@@ -2,28 +2,20 @@
 // Receives anonymous usage events from AIR Blackbox CLI
 // Stores them in Vercel KV (Redis) for the dashboard
 
-export const config = {
-  runtime: 'edge',
-};
+import { kv } from '@vercel/kv';
 
-export default async function handler(request) {
+export default async function handler(req, res) {
   // Only accept POST
-  if (request.method !== 'POST') {
-    return new Response(JSON.stringify({ ok: true }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+  if (req.method !== 'POST') {
+    return res.status(200).json({ ok: true });
   }
 
   try {
-    const event = await request.json();
+    const event = req.body;
 
     // Validate required fields
     if (!event.anonymous_id || !event.command) {
-      return new Response(JSON.stringify({ error: 'missing fields' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return res.status(400).json({ error: 'missing fields' });
     }
 
     // Add server-side timestamp (don't trust client time)
@@ -36,7 +28,6 @@ export default async function handler(request) {
 
     // Store in Vercel KV if available, otherwise log to stdout
     if (process.env.KV_REST_API_URL) {
-      const { kv } = await import('@vercel/kv');
 
       // Store individual event with TTL of 90 days
       const eventKey = `evt:${Date.now()}:${event.anonymous_id.slice(0, 8)}`;
@@ -68,18 +59,10 @@ export default async function handler(request) {
       console.log(JSON.stringify({ telemetry_event: event }));
     }
 
-    return new Response(JSON.stringify({ ok: true }), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    });
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    return res.status(200).json({ ok: true });
   } catch (err) {
     // Never return errors to the client — telemetry should be invisible
-    return new Response(JSON.stringify({ ok: true }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return res.status(200).json({ ok: true });
   }
 }

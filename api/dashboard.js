@@ -2,29 +2,18 @@
 // Returns aggregated telemetry stats for the dashboard
 // Protected by a simple API key (set DASHBOARD_KEY env var)
 
-export const config = {
-  runtime: 'edge',
-};
+import { kv } from '@vercel/kv';
 
-export default async function handler(request) {
+export default async function handler(req, res) {
   // Simple auth — check for dashboard key in query params or header
-  const url = new URL(request.url);
-  const key = url.searchParams.get('key') || request.headers.get('x-dashboard-key');
+  const key = req.query.key || req.headers['x-dashboard-key'];
   if (key !== process.env.DASHBOARD_KEY) {
-    return new Response(JSON.stringify({ error: 'unauthorized' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return res.status(401).json({ error: 'unauthorized' });
   }
 
   if (!process.env.KV_REST_API_URL) {
-    return new Response(JSON.stringify({ error: 'KV not configured' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return res.status(500).json({ error: 'KV not configured' });
   }
-
-  const { kv } = await import('@vercel/kv');
 
   // Gather stats
   const today = new Date().toISOString().slice(0, 10);
@@ -82,11 +71,6 @@ export default async function handler(request) {
     generated_at: new Date().toISOString(),
   };
 
-  return new Response(JSON.stringify(stats, null, 2), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'max-age=60',
-    },
-  });
+  res.setHeader('Cache-Control', 'max-age=60');
+  return res.status(200).json(stats);
 }
