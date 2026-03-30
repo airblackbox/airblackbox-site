@@ -1,8 +1,20 @@
 // Vercel Serverless Function: /api/telemetry
 // Receives anonymous usage events from AIR Blackbox CLI
-// Stores them in Vercel KV (Redis) for the dashboard
+// Stores them in Redis (via REDIS_URL env var) for the dashboard
 
-import { kv } from '@vercel/kv';
+import Redis from 'ioredis';
+
+let redis;
+function getRedis() {
+  if (!redis) {
+    redis = new Redis(process.env.REDIS_URL, {
+      maxRetriesPerRequest: 1,
+      connectTimeout: 5000,
+      lazyConnect: true,
+    });
+  }
+  return redis;
+}
 
 export default async function handler(req, res) {
   // Only accept POST
@@ -26,33 +38,35 @@ export default async function handler(req, res) {
     delete event.code;
     delete event.project_name;
 
-    // Store in Vercel KV if available, otherwise log to stdout
-    if (process.env.KV_REST_API_URL) {
+    // Store in Redis if available, otherwise log to stdout
+    if (process.env.REDIS_URL) {
+      const r = getRedis();
+      await r.connect().catch(() => {});
 
       // Store individual event with TTL of 90 days
       const eventKey = `evt:${Date.now()}:${event.anonymous_id.slice(0, 8)}`;
-      await kv.set(eventKey, JSON.stringify(event), { ex: 90 * 86400 });
+      await r.set(eventKey, JSON.stringify(event), 'EX', 90 * 86400);
 
       // Increment daily counter
       const today = new Date().toISOString().slice(0, 10);
-      await kv.incr(`daily:${today}`);
+      await r.incr(`daily:${today}`);
 
       // Increment command counter
-      await kv.incr(`cmd:${event.command}`);
+      await r.incr(`cmd:${event.command}`);
 
       // Track unique users (HyperLogLog)
-      await kv.pfadd('unique_users', event.anonymous_id);
-      await kv.pfadd(`unique_users:${today}`, event.anonymous_id);
+      await r.pfadd('unique_users', event.anonymous_id);
+      await r.pfadd(`unique_users:${today}`, event.anonymous_id);
 
       // Track OS distribution
       if (event.os) {
-        await kv.incr(`os:${event.os}`);
+        await r.incr(`os:${event.os}`);
       }
 
       // Track Python version distribution
       if (event.python_version) {
         const pyMajorMinor = event.python_version.split('.').slice(0, 2).join('.');
-        await kv.incr(`py:${pyMajorMinor}`);
+        await r.incr(`py:${pyMajorMinor}`);
       }
     } else {
       // Fallback: log to Vercel's stdout (visible in runtime logs)
@@ -62,6 +76,7 @@ export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     return res.status(200).json({ ok: true });
   } catch (err) {
+    console.error('Telemetry error:', err.message);
     // Never return errors to the client — telemetry should be invisible
     return res.status(200).json({ ok: true });
   }
