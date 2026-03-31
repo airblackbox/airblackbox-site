@@ -419,11 +419,11 @@
 <!-- Overview Section -->
 <section>
     <div class="container">
-        <div class="status-badge">Draft Specification</div>
+        <div class="status-badge">Open Standard — v1.0.0 — March 2026</div>
 
         <h2 class="section-title">Overview</h2>
         <div class="content-block">
-            <p>The Audit Chain is a tamper-evident, cryptographically linked record structure designed for logging AI agent actions in compliance-critical environments. Built on industry-standard HMAC-SHA256 signatures and blockchain-style chain linking, the Audit Chain provides verifiable proof that:</p>
+            <p>The AIR Audit Chain Specification (ACS) is an open standard for tamper-evident, cryptographically linked record structures designed for logging AI agent actions in compliance-critical environments. Any tool, framework, or platform may implement this specification. Built on industry-standard HMAC-SHA256 signatures and blockchain-style chain linking, the Audit Chain provides verifiable proof that:</p>
             <ul style="margin-left: 24px; margin-bottom: 16px;">
                 <li>No entries have been modified after creation</li>
                 <li>No entries have been deleted from the sequence</li>
@@ -797,17 +797,130 @@ def verify_audit_chain(
     </div>
 </section>
 
+<!-- Comparison with Other Approaches -->
+<section>
+    <div class="container">
+        <h2 class="section-title">Comparison with Other Approaches</h2>
+        <div class="content-block">
+            <p>The AIR Audit Chain Specification was developed independently and prior to the publication of AEGIS (arXiv:2603.12621, March 2026), an academic pre-execution firewall for AI agents that uses Ed25519 signatures with SHA-256 hash chaining. The convergence on similar architectural patterns — interception-layer placement, tamper-evident chain linking, and cryptographic audit trails — validates the approach as the emerging standard for AI agent governance.</p>
+        </div>
+
+        <table class="spec-table">
+            <thead>
+                <tr>
+                    <th>Capability</th>
+                    <th>AIR Audit Chain Spec (ACS)</th>
+                    <th>AEGIS (arXiv 2026)</th>
+                    <th>Langfuse / Helicone</th>
+                    <th>Arthur AI / Lasso</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Architecture</td>
+                    <td style="color: var(--green);">Interception layer (inside the call)</td>
+                    <td style="color: var(--green);">Interception layer (pre-execution)</td>
+                    <td style="color: var(--text-muted);">Retrospective logging</td>
+                    <td style="color: var(--text-muted);">Gateway / proxy</td>
+                </tr>
+                <tr>
+                    <td>Tamper evidence</td>
+                    <td style="color: var(--green);">HMAC-SHA256 chain</td>
+                    <td style="color: var(--green);">Ed25519 + SHA-256 chain</td>
+                    <td style="color: var(--red);">None</td>
+                    <td style="color: var(--red);">None</td>
+                </tr>
+                <tr>
+                    <td>Open standard / spec</td>
+                    <td style="color: var(--green);">Yes (this document)</td>
+                    <td style="color: var(--text-muted);">Academic paper</td>
+                    <td style="color: var(--red);">No</td>
+                    <td style="color: var(--red);">No</td>
+                </tr>
+                <tr>
+                    <td>EU AI Act article mapping</td>
+                    <td style="color: var(--green);">Art. 12 + Art. 14</td>
+                    <td style="color: var(--text-muted);">Not specified</td>
+                    <td style="color: var(--red);">No</td>
+                    <td style="color: var(--red);">No</td>
+                </tr>
+                <tr>
+                    <td>Human oversight attestation</td>
+                    <td style="color: var(--green);">consent_required / consent_granted</td>
+                    <td style="color: var(--green);">Human approval gates</td>
+                    <td style="color: var(--red);">No</td>
+                    <td style="color: var(--red);">No</td>
+                </tr>
+                <tr>
+                    <td>PII detection</td>
+                    <td style="color: var(--green);">Yes (data_tokenized field)</td>
+                    <td style="color: var(--green);">Content scanning stage</td>
+                    <td style="color: var(--red);">No</td>
+                    <td style="color: var(--green);">Yes</td>
+                </tr>
+                <tr>
+                    <td>Compliance drift detection</td>
+                    <td style="color: var(--green);">39 checks in CI/CD</td>
+                    <td style="color: var(--red);">No</td>
+                    <td style="color: var(--red);">No</td>
+                    <td style="color: var(--red);">No</td>
+                </tr>
+                <tr>
+                    <td>Framework trust layers</td>
+                    <td style="color: var(--green);">7 frameworks + standalone SDKs</td>
+                    <td style="color: var(--green);">14 frameworks (Python, JS, Go)</td>
+                    <td style="color: var(--text-muted);">SDK callbacks</td>
+                    <td style="color: var(--text-muted);">Gateway only</td>
+                </tr>
+                <tr>
+                    <td>Shipping product</td>
+                    <td style="color: var(--green);">10 PyPI packages, 14,294+ downloads</td>
+                    <td style="color: var(--text-muted);">Academic prototype</td>
+                    <td style="color: var(--green);">Commercial SaaS</td>
+                    <td style="color: var(--green);">Commercial SaaS ($60M+ raised)</td>
+                </tr>
+                <tr>
+                    <td>Open source</td>
+                    <td style="color: var(--green);">Apache 2.0</td>
+                    <td style="color: var(--green);">Open source</td>
+                    <td style="color: var(--green);">Partial</td>
+                    <td style="color: var(--red);">Proprietary</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="content-block">
+            <p>The AIR Audit Chain Specification is published as an open standard. Any tool, platform, or framework may implement this specification to produce interoperable, tamper-evident audit records for AI agent compliance.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Adoption -->
+<section>
+    <div class="container">
+        <h2 class="section-title">Adopt This Specification</h2>
+        <div class="content-block">
+            <p>The AIR Audit Chain Specification is available under Apache 2.0. If you implement this spec in your tool or framework, we'll list you as a compatible implementation. This is an open standard — the goal is interoperability across the AI governance ecosystem.</p>
+        </div>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <a href="https://github.com/airblackbox/gateway" target="_blank" style="display: inline-block; background: var(--accent); color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none;">Reference Implementation on GitHub</a>
+            <a href="https://pypi.org/project/air-blackbox/" target="_blank" style="display: inline-block; background: transparent; color: var(--accent); padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; border: 1px solid var(--accent);">Install from PyPI</a>
+        </div>
+    </div>
+</section>
+
 <!-- Footer -->
 <footer>
     <div class="container">
         <div class="footer-links">
             <a href="/">Home</a>
-            <a href="/compliance-mapping.html">Compliance Mapping</a>
+            <a href="/compliance-mapping">Compliance Mapping</a>
+            <a href="/ci-cd">CI/CD</a>
             <a href="https://github.com/airblackbox" target="_blank">GitHub</a>
             <a href="https://pypi.org/search/?q=air+blackbox" target="_blank">PyPI</a>
             <a href="mailto:jason@airblackbox.ai">Contact</a>
         </div>
-        <div class="footer-copy">Apache 2.0 &middot; Draft Specification &middot; &copy; 2026 AIR Blackbox</div>
+        <div class="footer-copy">Apache 2.0 &middot; Open Standard v1.0.0 &middot; &copy; 2026 AIR Blackbox</div>
     </div>
 </footer>
 
