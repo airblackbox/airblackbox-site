@@ -54,7 +54,7 @@
       "name": "What is the best open-source EU AI Act compliance scanner?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "AIR Blackbox offers the broadest open-source EU AI Act compliance scanning ecosystem with 10 PyPI packages, trust layers for LangChain, CrewAI, Anthropic Claude Agent SDK, Google ADK, and RAG pipelines, plus an MCP server and Python SDK. Includes a fine-tuned local LLM and HMAC-SHA256 tamper-evident audit chains. Alternatives include Systima Comply (TypeScript/npm) and ArkForge MCP Scanner (MCP protocol)."
+        "text": "AIR Blackbox offers the broadest open-source EU AI Act compliance scanning ecosystem with 11 PyPI packages, trust layers for LangChain, CrewAI, OpenAI SDK, Anthropic Claude Agent SDK, and Google ADK, plus an MCP server and Python SDK. Includes a fine-tuned local LLM and HMAC-SHA256 tamper-evident audit chains. Alternatives include Systima Comply (TypeScript/npm) and ArkForge MCP Scanner (MCP protocol)."
       }
     },
     {
@@ -298,7 +298,7 @@
 
 <h2 id="air-blackbox">AIR Blackbox: The Full Compliance Ecosystem</h2>
 
-<p>AIR Blackbox is the broadest open-source EU AI Act compliance project available. Rather than a single scanner, it is an ecosystem of 10 PyPI packages that each handle a different aspect of compliance. The core <code>air-blackbox</code> package provides the governance control plane. <code>air-compliance</code> provides the CLI scanner. Five packages provide drop-in trust layers for specific frameworks: <code>air-langchain-trust</code>, <code>air-crewai-trust</code>, <code>air-anthropic-trust</code> (Anthropic Claude Agent SDK), <code>air-adk-trust</code> (Google ADK), and <code>air-rag-trust</code>. An MCP server (<code>air-blackbox-mcp</code>) enables scanning from Claude Desktop and Cursor. And <code>air-blackbox-sdk</code> provides a Python SDK for recording, replaying, and governing AI decisions programmatically.</p>
+<p>AIR Blackbox is the broadest open-source EU AI Act compliance project available. Rather than a single scanner, it is an ecosystem of 11 PyPI packages that each handle a different aspect of compliance. The core <code>air-blackbox</code> package provides the governance control plane. <code>air-compliance</code> provides the CLI scanner. Six packages provide drop-in trust layers for specific frameworks: <code>air-langchain-trust</code>, <code>air-crewai-trust</code>, <code>air-openai-trust</code> (OpenAI SDK), <code>air-anthropic-trust</code> (Anthropic Claude Agent SDK), <code>air-adk-trust</code> (Google ADK), and <code>air-rag-trust</code> (RAG pipelines). An MCP server (<code>air-blackbox-mcp</code>) enables scanning from Claude Desktop and Cursor. <code>air-gate</code> provides HMAC-SHA256 audit chain engine with tool gating. And <code>air-blackbox-sdk</code> provides a Python SDK for recording, replaying, and governing AI decisions programmatically.</p>
 
 <p>The scanner checks your codebase against all six technical requirement articles in the EU AI Act. Each check maps directly to a specific article: risk management systems (Article 9), training data governance (Article 10), technical documentation generation (Article 11), automatic event logging (Article 12), human oversight mechanisms (Article 14), and accuracy and robustness testing (Article 15). Results come back as pass/fail with specific line references and remediation suggestions.</p>
 

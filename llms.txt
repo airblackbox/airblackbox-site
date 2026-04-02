@@ -1,18 +1,29 @@
 # AIR Blackbox
 
-> Open-source EU AI Act compliance scanner for Python AI agents
+> The trust infrastructure between human intent and AI execution. Verify. Filter. Stabilize. Protect.
 
-AIR Blackbox is an open-source CLI tool that scans Python AI agent code for EU AI Act compliance gaps. It runs 45+ checks across Articles 9-15, including prompt injection detection, GDPR scanning, bias/fairness analysis, and ISO 42001 + NIST AI RMF crosswalk. It supports trust layers for 7 frameworks: LangChain, CrewAI, AutoGen, OpenAI SDK, Claude Agent SDK, Google ADK, and Haystack.
+AIR Blackbox is open-source trust infrastructure that sits inside every AI call — between your team and the AI stack — providing decision traceability, escalation intelligence, operational drift detection, and human oversight proof. 11 PyPI packages. 14,294+ downloads. Runs locally. Apache 2.0.
+
+AI made generation abundant. What becomes valuable now is the infrastructure that verifies, routes, constrains, and records machine-assisted work in real time. Compliance is the wedge. Trust infrastructure is the platform.
+
+## Why AIR Blackbox
+
+Enterprise governance platforms (Credo AI, Holistic AI, OneTrust) audit after the fact. AI security firewalls (Arthur AI, Lasso, Lakera) filter threats. AIR Blackbox sits inside the call — at the interception layer between human intent and AI execution. That gives you:
+
+- **Verify** — HMAC-SHA256 tamper-evident audit chains for decision traceability
+- **Filter** — PII detection and prompt injection scanning in real time
+- **Stabilize** — 39 compliance checks in CI/CD for operational drift detection
+- **Protect** — Human oversight attestation (Art. 14 delegation logging)
 
 ## Key Links
 
 - [Homepage](https://airblackbox.ai)
 - [GitHub](https://github.com/airblackbox/gateway)
 - [PyPI](https://pypi.org/project/air-blackbox/)
-- [Documentation](https://airblackbox.ai/compliance-mapping)
+- [Audit Chain Specification (Open Standard v1.0.0)](https://airblackbox.ai/spec)
+- [CI/CD Integration Guide](https://airblackbox.ai/ci-cd)
+- [Compliance Mapping](https://airblackbox.ai/compliance-mapping)
 - [Blog](https://airblackbox.ai/blog/)
-- [Technical Specification](https://airblackbox.ai/spec)
-- [Integration Guides](https://airblackbox.ai/guides)
 
 ## Installation
 
@@ -22,19 +33,40 @@ pip install air-blackbox
 
 air-blackbox comply --scan . -v
 
+## 11 PyPI Packages
+
+- air-blackbox — Governance control plane
+- air-compliance — CLI scanner (air-compliance scan .)
+- air-blackbox-sdk — Python SDK
+- air-blackbox-mcp — MCP server for AI editors
+- air-langchain-trust — Trust layer for LangChain
+- air-crewai-trust — Trust layer for CrewAI
+- air-openai-trust — Trust layer for OpenAI SDK
+- air-anthropic-trust — Trust layer for Anthropic Claude SDK
+- air-adk-trust — Trust layer for Google ADK
+- air-rag-trust — Trust layer for RAG pipelines
+- air-gate — HMAC-SHA256 audit chain engine with tool gating
+
 ## Features
 
-- 45+ EU AI Act compliance checks (Articles 9-15)
+- 39 EU AI Act compliance checks (Articles 9-15)
 - Prompt injection detection (20 patterns, 5 categories)
 - GDPR scanner (8 checks)
 - Bias and fairness scanner (6 checks)
 - ISO 42001 + NIST AI RMF standards crosswalk
 - Agent-to-agent (A2A) compliance protocol
-- HMAC-SHA256 tamper-evident audit chains
-- Trust layers for 7 frameworks
-- Pre-commit hooks
+- HMAC-SHA256 tamper-evident audit chains (open standard)
+- Trust layers for 6 frameworks + standalone SDK packages
+- GitHub Actions and pre-commit hooks for CI/CD
 - Evidence bundle exporter
 - MCP server integration
+- Fine-tuned local LLM (Llama 3.2 1B)
+
+## Independent Validation
+
+- Academic: AEGIS (arXiv:2603.12621, March 2026) independently published the same interception-layer architecture
+- Analyst: McKinsey "State of AI Trust in 2026" names trust infrastructure as critical for the agentic era
+- Market: 28% of US firms have zero confidence in their AI data quality (AnalyticsWeek, 2026)
 
 ## License
 
