@@ -152,6 +152,7 @@
             .features-grid { grid-template-columns: 1fr; }
             .nav-links { display: none; }
             .two-col { grid-template-columns: 1fr; }
+            section > div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
         }
     </style>
 </head>
@@ -176,8 +177,8 @@
     <h1>Every AI action.<span class="highlight">Gated. Signed. Auditable.</span></h1>
     <p>Gate is an AI action firewall that intercepts every tool call your agents make, checks it against policy, routes sensitive actions to humans via Slack, and signs everything with tamper-evident HMAC-SHA256 chains.</p>
     <div class="hero-buttons">
-        <a href="https://github.com/airblackbox/air-gate" target="_blank" class="btn-primary">View on GitHub</a>
-        <a href="#how-it-works" class="btn-secondary">See How It Works</a>
+        <a href="https://pypi.org/project/air-gate/" target="_blank" class="btn-primary">pip install air-gate</a>
+        <a href="https://github.com/airblackbox/air-gate" target="_blank" class="btn-secondary">View on GitHub</a>
     </div>
 </section>
 <!-- Video Demo -->
@@ -334,34 +335,114 @@
         </div>
     </div>
 </section>
+<!-- PII Redaction -->
+<section>
+    <div class="two-col">
+        <div>
+            <div class="terminal">
+                <div class="terminal-bar">
+                    <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
+                    <span class="terminal-title">PII Redaction</span>
+                </div>
+                <div class="terminal-body">
+<span class="t-comment"># Agent sends payload with PII</span>
+<br><span class="t-muted">POST /actions</span>
+<br><span class="t-muted">{</span>
+<br>&nbsp;&nbsp;<span class="t-accent">"to"</span>: <span class="t-green">"jane.doe@company.com"</span>,
+<br>&nbsp;&nbsp;<span class="t-accent">"ssn"</span>: <span class="t-green">"123-45-6789"</span>,
+<br>&nbsp;&nbsp;<span class="t-accent">"body"</span>: <span class="t-green">"Call me at 415-555-0123"</span>
+<br><span class="t-muted">}</span>
+<br><br>
+<span class="t-comment"># What enters the audit chain</span>
+<br><span class="t-muted">{</span>
+<br>&nbsp;&nbsp;<span class="t-accent">"to"</span>: <span class="t-yellow">"[REDACTED:sha256:a1b2c3d4...]"</span>,
+<br>&nbsp;&nbsp;<span class="t-accent">"ssn"</span>: <span class="t-yellow">"[REDACTED:sha256:e5f6a7b8...]"</span>,
+<br>&nbsp;&nbsp;<span class="t-accent">"body"</span>: <span class="t-green">"Call me at </span><span class="t-yellow">[REDACTED:sha256:9c0d1e2f...]</span><span class="t-green">"</span>
+<br><span class="t-muted">}</span>
+<br><br><span class="t-green">&#10003; 3 PII fields redacted</span>
+<br><span class="t-green">&#10003; GDPR Art. 17 erasure hashes preserved</span>
+                </div>
+            </div>
+        </div>
+        <div class="two-col-text">
+            <div class="section-label" style="text-align:left">Automatic PII Protection</div>
+            <h3>25+ PII categories. Zero config.</h3>
+            <p>Gate scans every payload before it enters the audit chain and redacts emails, phone numbers, SSNs, credit cards, medical records, LinkedIn URLs, and more. The original values never touch storage.</p>
+            <p>SHA-256 hashes of redacted values are preserved for GDPR Article 17 erasure lookups. Covers GDPR, HIPAA, PCI-DSS, and EEOC requirements across recruiting, finance, healthcare, and legal verticals.</p>
+            <div class="feature-tag">GDPR Art. 25 &middot; Data Protection by Design</div>
+        </div>
+    </div>
+</section>
+
+<!-- SDK & Framework Integrations -->
+<section>
+    <div class="section-label">Developer SDK</div>
+    <h2 class="section-title">Three lines to add Gate to any agent</h2>
+    <p class="section-sub">Use Gate as a library, a server, or a framework wrapper. No architecture changes required.</p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px;">
+        <div class="terminal">
+            <div class="terminal-bar">
+                <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
+                <span class="terminal-title">Library Mode</span>
+            </div>
+            <div class="terminal-body">
+<span class="t-accent">from</span> gate <span class="t-accent">import</span> GateClient
+<br><br>gate = GateClient() <span class="t-comment"># zero config</span>
+<br><br>result = gate.check(
+<br>&nbsp;&nbsp;<span class="t-green">"my-agent"</span>, <span class="t-green">"email"</span>,
+<br>&nbsp;&nbsp;<span class="t-green">"send_email"</span>,
+<br>&nbsp;&nbsp;payload={<span class="t-green">"to"</span>: <span class="t-green">"jane@co.com"</span>}
+<br>)
+<br><br><span class="t-accent">if</span> result[<span class="t-green">"decision"</span>] == <span class="t-green">"auto_allowed"</span>:
+<br>&nbsp;&nbsp;send_the_email()
+            </div>
+        </div>
+        <div class="terminal">
+            <div class="terminal-bar">
+                <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
+                <span class="terminal-title">LangChain Integration</span>
+            </div>
+            <div class="terminal-body">
+<span class="t-accent">from</span> gate.integrations.langchain <span class="t-accent">import</span> GatedTool
+<br><br><span class="t-comment"># Wrap any LangChain tool</span>
+<br>gated = GatedTool(
+<br>&nbsp;&nbsp;tool=my_search_tool,
+<br>&nbsp;&nbsp;agent_id=<span class="t-green">"research-agent"</span>,
+<br>)
+<br><br><span class="t-comment"># Every call goes through Gate</span>
+<br><span class="t-comment"># Policy checked + audit signed</span>
+<br>agent.tools = [gated]
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Quick Start -->
 <section>
     <div class="section-label">Get Started</div>
     <h2 class="section-title">Running in 60 seconds</h2>
-    <p class="section-sub">Clone, configure, run. Gate works with any AI agent that makes HTTP calls.</p>
+    <p class="section-sub">Install from PyPI. Works as a library or as a server with Slack.</p>
     <div class="terminal">
         <div class="terminal-bar">
             <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
             <span class="terminal-title">terminal</span>
         </div>
         <div class="terminal-body">
-<span class="t-comment"># Clone and install</span>
-<br><span class="t-green">$</span> git clone https://github.com/airblackbox/air-gate.git
-<br><span class="t-green">$</span> cd air-gate
-<br><span class="t-green">$</span> pip install -r requirements.txt
+<span class="t-comment"># Install from PyPI</span>
+<br><span class="t-green">$</span> pip install air-gate
 <br><br>
-<span class="t-comment"># Configure (optional: add Slack webhook for approvals)</span>
-<br><span class="t-green">$</span> cp .env.example .env
-<br><span class="t-green">$</span> <span class="t-muted"># edit .env with your SLACK_WEBHOOK_URL</span>
+<span class="t-comment"># Run the interactive demo (no server needed)</span>
+<br><span class="t-green">$</span> air-gate demo
 <br><br>
-<span class="t-comment"># Start the Gate proxy</span>
+<span class="t-comment"># Or start the full server with Slack approvals</span>
+<br><span class="t-green">$</span> pip install air-gate[server]
 <br><span class="t-green">$</span> uvicorn gate.proxy:app --reload
 <br><span class="t-blue">INFO</span>: &nbsp; Uvicorn running on <span class="t-accent">http://127.0.0.1:8000</span>
 <br><br>
-<span class="t-comment"># Point your agent's API calls at Gate</span>
+<span class="t-comment"># Submit an action</span>
 <br><span class="t-green">$</span> curl -X POST http://localhost:8000/actions \
 <br>&nbsp;&nbsp;-H "Content-Type: application/json" \
-<br>&nbsp;&nbsp;-d '{"agent_id": "my-agent", "action_type": "tool_call", "tool_name": "send_email"}'
+<br>&nbsp;&nbsp;-d '{"agent_id": "my-agent", "action_type": "email", "tool_name": "send_email"}'
         </div>
     </div>
 </section>
@@ -371,8 +452,8 @@
     <h2>Stop trusting. Start verifying.</h2>
     <p>Every AI agent action your company takes should be gated, signed, and auditable. Gate makes it happen in one afternoon.</p>
     <div class="hero-buttons">
-        <a href="https://github.com/airblackbox/air-gate" target="_blank" class="btn-primary">Star on GitHub</a>
-        <a href="/" class="btn-secondary">Back to AIR Blackbox</a>
+        <a href="https://pypi.org/project/air-gate/" target="_blank" class="btn-primary">pip install air-gate</a>
+        <a href="https://github.com/airblackbox/air-gate" target="_blank" class="btn-secondary">Star on GitHub</a>
     </div>
 </div>
 
