@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anthropic Leaked 500K Lines of Claude Code — Here's the AI Agent Security Pattern That Would Have Stopped It | AIR Blackbox</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="description" content="Anthropic's Claude Code source code leaked via NPM because no action firewall sat between the AI agent and a public registry. Here's how action gating prevents AI agent leaks, with code examples.">
+<meta name="keywords" content="Anthropic Claude Code leak, Claude Code source code leaked, NPM source code leak, AI agent security, AI agent action firewall, AI coding agent risks, Claude Code NPM, air-gate, AI agent governance, AI supply chain security, EU AI Act AI agents, prevent AI agent data leaks">
+<meta property="og:title" content="Anthropic Leaked 500K Lines of Claude Code — Here's the Pattern That Would Have Stopped It">
+<meta property="og:description" content="No action firewall sat between the AI agent and a public registry. Here's how action gating prevents this class of AI agent leak.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://airblackbox.ai/blog/anthropic-claude-code-leak-ai-agent-action-firewall">
+<link rel="canonical" href="https://airblackbox.ai/blog/anthropic-claude-code-leak-ai-agent-action-firewall">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Anthropic Leaked 500K Lines of Claude Code — Here's the Pattern That Would Have Stopped It">
+<meta name="twitter:description" content="No action firewall sat between the AI agent and a public registry. Here's how action gating prevents this class of AI agent leak.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Anthropic Leaked 500K Lines of Claude Code — Here's the AI Agent Security Pattern That Would Have Stopped It",
+  "description": "Anthropic's Claude Code source code leaked via NPM because no action firewall sat between the AI agent and a public registry. Here's how action gating prevents AI agent leaks.",
+  "url": "https://airblackbox.ai/blog/anthropic-claude-code-leak-ai-agent-action-firewall",
+  "datePublished": "2026-04-03",
+  "dateModified": "2026-04-03",
+  "author": {"@type": "Person", "name": "Jason Shotwell", "url": "https://airblackbox.ai"},
+  "publisher": {"@type": "Organization", "name": "AIR Blackbox", "url": "https://airblackbox.ai"},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://airblackbox.ai/blog/anthropic-claude-code-leak-ai-agent-action-firewall"},
+  "keywords": ["Anthropic Claude Code leak", "AI agent security", "action firewall", "NPM source code leak", "AI agent governance"]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://airblackbox.ai"},
+    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://airblackbox.ai/blog/"},
+    {"@type": "ListItem", "position": 3, "name": "Anthropic Claude Code Leak: The Case for AI Agent Action Firewalls", "item": "https://airblackbox.ai/blog/anthropic-claude-code-leak-ai-agent-action-firewall"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What happened with the Anthropic Claude Code source code leak?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On March 31, 2026, Anthropic accidentally published the complete source code of Claude Code (approximately 512,000 lines of TypeScript) to the public NPM registry. Version 2.1.88 of @anthropic-ai/claude-code shipped with a 59.8 MB JavaScript source map file that mapped minified production code back to the original TypeScript source, which pointed to a publicly accessible zip archive on Anthropic's Cloudflare R2 storage bucket. This was Anthropic's second data exposure in five days — the first leaked details of their unreleased Claude Mythos model."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How did Anthropic's Claude Code source code get leaked to NPM?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The leak was caused by a packaging error in the CI/CD pipeline. The build step included a JavaScript source map (.map file) that contained references to the original unobfuscated TypeScript source code. That source map pointed to a zip archive sitting in a publicly accessible Cloudflare R2 bucket. A security researcher found the direct bucket link and posted it publicly. Anthropic called it 'a release packaging issue caused by human error, not a security breach.'"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is an AI agent action firewall?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An AI agent action firewall is an interception layer that sits between an AI agent's decision to take an action and the action actually executing. Every agent action (publishing code, sending emails, making API calls, modifying databases) is evaluated against a policy engine before it happens. Actions are classified by risk level: low-risk actions auto-allow, medium-risk actions get scanned for PII and secrets, high-risk actions require human approval, and prohibited actions are blocked entirely. AIR Gate is an open-source implementation of this pattern for Python AI agents."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Could an action firewall have prevented the Anthropic leak?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, if the NPM publish step had run through an action firewall like AIR Gate, the policy engine would have flagged 'publish to public registry' as a high-risk action requiring human approval. The PII and secrets scanner would have detected internal source code patterns (debug comments, internal URLs, unreleased API references) in the payload. A human reviewer would have seen 512,000 lines of raw TypeScript instead of compiled JavaScript and caught the error before it shipped. The HMAC-SHA256 audit chain would also provide a tamper-evident record of exactly what was published."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is AIR Gate and how does it work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "AIR Gate is an open-source action firewall for AI agents, written in Python. It intercepts every agent action and evaluates it against a configurable policy engine. Actions get one of four outcomes: auto_allow (low risk, proceed immediately), require_approval (medium/high risk, route to a human), scan_and_allow (run PII redaction and secrets detection first), or block (prohibited action, never executes). Every action decision is logged in an HMAC-SHA256 tamper-evident audit chain for regulatory compliance. Install with: pip install air-gate"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the risks of ungated AI coding agents?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "AI coding agents like Claude Code, GitHub Copilot Workspace, Cursor, and Devin can write code, execute shell commands, publish packages, modify files, and make API calls. Without an action gate, these agents can: publish internal source code to public registries (as happened with Anthropic), commit secrets or API keys to public repos, send sensitive data to third-party APIs, execute destructive commands, and modify production infrastructure. The gap between 'agent decides to do X' and 'X happens' is where security failures occur."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does action gating relate to the EU AI Act?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The EU AI Act requires human oversight (Article 14) and record-keeping (Article 12) for high-risk AI systems. Action gating directly addresses both: Article 14 compliance requires that high-risk AI actions are reviewed by a human before execution, and Article 12 compliance requires tamper-evident logging of all AI system decisions. AIR Gate's policy engine routes high-risk actions to humans (Art. 14) and its HMAC-SHA256 audit chain creates cryptographic proof of every decision (Art. 12). The EU AI Act deadline for high-risk systems is August 2, 2026."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the Anthropic Claude Code leak related to the Axios supply chain attack?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "They happened concurrently but are separate incidents. The Claude Code source leak was caused by Anthropic's own packaging error — shipping source maps that pointed to raw TypeScript. Separately, users who installed Claude Code via NPM on March 31 between 00:21 and 03:29 UTC may have pulled a trojanized version of the Axios HTTP client containing a remote access trojan. This was a supply chain attack on the Axios library, not caused by Anthropic. Both incidents highlight the risks of ungated agent actions in software supply chains."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; color: #e6edf3; background: #080b14; }
+  .container { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
+  h1 { font-size: 2.2em; line-height: 1.2; margin-bottom: 16px; letter-spacing: -0.02em; color: #e6edf3; }
+  h2 { font-size: 1.4em; margin-top: 48px; margin-bottom: 16px; color: #e6edf3; }
+  h3 { font-size: 1.1em; margin-top: 32px; margin-bottom: 12px; color: #e6edf3; }
+  p { margin-bottom: 20px; color: #c9d1d9; }
+  .meta { color: #8b949e; font-size: 14px; margin-bottom: 40px; }
+  a { color: #58a6ff; }
+  code { background: #0d1117; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; color: #e6edf3; }
+  pre { background: #0d1117; color: #e6edf3; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #21262d; color: #c9d1d9; }
+  th { font-weight: 600; background: #0d1117; color: #e6edf3; }
+  blockquote { border-left: 3px solid #fbbf24; padding-left: 16px; margin: 24px 0; font-style: italic; color: #8b949e; }
+  .cta { background: #0d1117; color: #e6edf3; padding: 24px; border-radius: 8px; margin: 40px 0; text-align: center; border: 1px solid #21262d; }
+  .cta code { background: #1a1a1a; color: #e6edf3; }
+  .cta a { color: #58a6ff; }
+  footer { border-top: 1px solid #21262d; padding-top: 20px; margin-top: 60px; color: #8b949e; font-size: 13px; }
+  footer a { color: #58a6ff; }
+  .comment { color: #6a9955; }
+  .keyword { color: #569cd6; }
+  .string { color: #ce9178; }
+  .pass { color: #3fb950; }
+  .fail { color: #ff7b72; }
+  .warn { color: #fbbf24; }
+  ul { margin: 0 0 20px 24px; color: #c9d1d9; }
+  li { margin-bottom: 8px; }
+  .timeline { border-left: 2px solid #21262d; padding-left: 20px; margin: 24px 0; }
+  .timeline-item { margin-bottom: 20px; position: relative; }
+  .timeline-item::before { content: ''; position: absolute; left: -25px; top: 8px; width: 10px; height: 10px; border-radius: 50%; background: #fbbf24; }
+  .timeline-date { color: #8b949e; font-size: 13px; font-weight: 600; }
+</style>
+</head>
+<body>
+<nav style="background:#080b14;border-bottom:1px solid #21262d;padding:16px 0;">
+  <div style="max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="/" style="color:#e6edf3;font-weight:700;font-size:18px;text-decoration:none;">AIR <span style="color:#fbbf24;">Blackbox</span></a>
+    <span style="display:flex;gap:20px;">
+      <a href="/" style="color:#8b949e;text-decoration:none;">Home</a>
+      <a href="/compliance-mapping" style="color:#8b949e;text-decoration:none;">Docs</a>
+      <a href="/blog/" style="color:#fbbf24;text-decoration:none;">Blog</a>
+      <a href="https://github.com/airblackbox/gateway" style="color:#8b949e;text-decoration:none;">GitHub</a>
+      <a href="https://pypi.org/project/air-blackbox/" style="color:#8b949e;text-decoration:none;">PyPI</a>
+    </span>
+  </div>
+</nav>
+<div class="container">
+
+<h1>Anthropic Leaked 500K Lines of Claude Code. Here's the AI Agent Security Pattern That Would Have Stopped It.</h1>
+<p class="meta">April 3, 2026 · Jason Shotwell · 8 min read</p>
+
+<p>On March 31, 2026, Anthropic accidentally published the complete source code of Claude Code — their AI coding agent — to the public NPM registry. Roughly 512,000 lines of TypeScript, exposed by a single misconfigured source map file.</p>
+
+<p>Five days earlier, ~3,000 unpublished internal assets (blog drafts, model details, event plans for their unreleased "Claude Mythos" model) were found sitting in a publicly accessible data store.</p>
+
+<p>Two leaks in five days. From the company that built Claude.</p>
+
+<p>This post isn't about blaming Anthropic. Build systems break. Humans make packaging errors. What's interesting is the <strong>architectural pattern</strong> that would have caught this — and why every team using AI coding agents needs to understand it now.</p>
+
+<h2>What Actually Happened</h2>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-date">March 26, 2026 — First Leak</div>
+    <p style="margin-top:4px">~3,000 unpublished assets found in a publicly searchable data store linked to Anthropic's blog infrastructure. Draft blog posts revealed the existence of "Claude Mythos," an unreleased model Anthropic described internally as a "step change" in capabilities.</p>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-date">March 31, 2026 — Second Leak</div>
+    <p style="margin-top:4px">Version 2.1.88 of <code>@anthropic-ai/claude-code</code> shipped to NPM with a 59.8 MB JavaScript source map file. That source map mapped the minified production code back to the original TypeScript and pointed to a publicly accessible zip archive on Anthropic's Cloudflare R2 bucket. Security researcher Chaofan Shou found the direct link and posted it publicly.</p>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-date">Hours Later</div>
+    <p style="margin-top:4px">Mirrored repositories appeared on GitHub, some accumulating tens of thousands of stars before Anthropic's DMCA takedowns hit. 512,000 lines of Claude Code are now permanently in the wild.</p>
+  </div>
+</div>
+
+<p>Anthropic called it "a release packaging issue caused by human error, not a security breach." No customer data or model weights were exposed. But the reputational and competitive damage is done.</p>
+
+<h2>The Root Cause Isn't Human Error. It's Architecture.</h2>
+
+<p>Claude Code is an AI coding agent. It writes files, runs shell commands, executes build steps, and publishes packages. The NPM publish that leaked 512,000 lines of source code was an <strong>agent action</strong>.</p>
+
+<p>And there was no gate between "agent decides to publish" and "code hits a public registry."</p>
+
+<p>This is the architectural gap. AI agents are taking real-world, irreversible actions — shipping code, sending emails, making API calls, modifying databases — and the default pattern is: agent decides, action happens. No interception. No review. No audit trail.</p>
+
+<p>The question isn't "how did a human make a packaging error?" The question is: <strong>why did the system allow an unchecked publish to a public registry?</strong></p>
+
+<h2>The Pattern: Action Firewalls for AI Agents</h2>
+
+<p>An action firewall sits between an AI agent's decision and the real-world execution of that decision. Every action passes through a policy engine before it happens.</p>
+
+<p>Four possible outcomes:</p>
+
+<table>
+  <thead>
+    <tr><th>Risk Level</th><th>Outcome</th><th>What Happens</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="pass">Low</span></td><td>auto_allow</td><td>Action proceeds immediately. Read operations, local file writes.</td></tr>
+    <tr><td><span class="warn">Medium</span></td><td>scan_and_allow</td><td>PII redactor and secrets scanner run first. Then allow.</td></tr>
+    <tr><td><span class="fail">High</span></td><td>require_approval</td><td>Human must review and approve before action executes.</td></tr>
+    <tr><td style="color:#6b7280">Prohibited</td><td>block</td><td>Action never executes. Logged and flagged.</td></tr>
+  </tbody>
+</table>
+
+<p>If the Claude Code NPM publish had run through this pattern:</p>
+
+<ol style="margin: 0 0 20px 24px; color: #c9d1d9;">
+  <li style="margin-bottom:8px"><strong>Policy engine</strong> classifies "publish to public NPM registry" as <span class="fail">high-risk</span></li>
+  <li style="margin-bottom:8px"><strong>Secrets scanner</strong> detects internal source patterns — debug comments, internal URLs, unreleased API references, raw TypeScript instead of compiled JS</li>
+  <li style="margin-bottom:8px"><strong>Action routes to human</strong> for review before publish</li>
+  <li style="margin-bottom:8px"><strong>Human sees</strong> 512,000 lines of raw TypeScript instead of compiled JavaScript. Catches the error.</li>
+  <li style="margin-bottom:8px"><strong>Audit chain</strong> logs exactly what was reviewed, who approved/rejected, and when — cryptographic proof via HMAC-SHA256</li>
+</ol>
+
+<p>The publish never happens. The leak never occurs.</p>
+
+<h2>What This Looks Like in Code</h2>
+
+<p><a href="https://github.com/airblackbox/air-gate">AIR Gate</a> is an open-source implementation of this pattern. Here's what the NPM publish would look like if it went through a gate:</p>
+
+<pre><code><span class="keyword">from</span> gate <span class="keyword">import</span> GateClient
+
+client = GateClient()
+
+<span class="comment"># AI agent wants to publish to NPM</span>
+result = client.validate_action(
+    agent_id=<span class="string">"claude-code-build"</span>,
+    action=<span class="string">"npm_publish"</span>,
+    target=<span class="string">"@anthropic-ai/claude-code@2.1.88"</span>,
+    payload_size=<span class="string">"59.8MB"</span>,
+    contains_source_maps=<span class="keyword">True</span>
+)
+
+<span class="comment"># Policy engine response:</span>
+<span class="comment"># {</span>
+<span class="comment">#   "decision": "require_approval",</span>
+<span class="comment">#   "reason": "Publishing to public registry with source maps detected",</span>
+<span class="comment">#   "risk_score": 0.92,</span>
+<span class="comment">#   "flags": ["source_maps_included", "payload_exceeds_threshold"]</span>
+<span class="comment"># }</span>
+
+<span class="keyword">if</span> result[<span class="string">"decision"</span>] == <span class="string">"require_approval"</span>:
+    <span class="comment"># Route to human. Publish waits.</span>
+    approval = client.request_approval(
+        action_id=result[<span class="string">"action_id"</span>],
+        reviewer=<span class="string">"release-team@anthropic.com"</span>
+    )
+</code></pre>
+
+<p>The gate config that drives this is a simple YAML file:</p>
+
+<pre><code><span class="comment"># gate_config.yaml</span>
+policies:
+  - name: <span class="string">"block-source-maps-in-publish"</span>
+    match:
+      action: <span class="string">"npm_publish"</span>
+    conditions:
+      - contains_source_maps: <span class="keyword">true</span>
+    outcome: <span class="string">"block"</span>
+    reason: <span class="string">"Source maps must not be included in public packages"</span>
+
+  - name: <span class="string">"require-approval-for-publish"</span>
+    match:
+      action: <span class="string">"npm_publish"</span>
+    outcome: <span class="string">"require_approval"</span>
+    reason: <span class="string">"All public registry publishes require human review"</span>
+</code></pre>
+
+<h2>This Isn't Just About NPM Publishes</h2>
+
+<p>AI coding agents are taking actions across your entire development stack:</p>
+
+<table>
+  <thead>
+    <tr><th>Agent Action</th><th>Risk</th><th>What Could Go Wrong</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>npm publish</code></td><td><span class="fail">High</span></td><td>Internal source code hits public registry (Anthropic leak)</td></tr>
+    <tr><td><code>git push</code></td><td><span class="fail">High</span></td><td>Secrets, API keys, or internal code pushed to public repo</td></tr>
+    <tr><td><code>docker push</code></td><td><span class="fail">High</span></td><td>Internal container images exposed to public registry</td></tr>
+    <tr><td><code>curl POST</code> to external API</td><td><span class="warn">Medium</span></td><td>Sensitive data sent to third-party services</td></tr>
+    <tr><td><code>rm -rf</code></td><td><span class="fail">High</span></td><td>Destructive operations on production files</td></tr>
+    <tr><td>Database <code>DROP</code> / <code>DELETE</code></td><td><span class="fail">High</span></td><td>Irreversible data loss</td></tr>
+    <tr><td>Email/Slack send</td><td><span class="warn">Medium</span></td><td>Internal information shared externally</td></tr>
+    <tr><td>Read local files</td><td><span class="pass">Low</span></td><td>Generally safe — auto-allow</td></tr>
+  </tbody>
+</table>
+
+<p>Every one of these happens in AI coding agents today. Claude Code, GitHub Copilot Workspace, Cursor, Windsurf, Devin — they all execute real commands. The question is whether those commands pass through a gate first.</p>
+
+<h2>The EU AI Act Makes This Mandatory</h2>
+
+<p>This isn't just a security best practice. For teams operating in the EU, it's becoming law.</p>
+
+<p>The EU AI Act (enforcement deadline: <strong>August 2, 2026</strong>) requires two things that action firewalls directly address:</p>
+
+<p><strong>Article 14 — Human Oversight:</strong> High-risk AI systems must include mechanisms for human review of AI-assisted decisions. An action firewall's <code>require_approval</code> policy is a direct implementation: high-risk actions route to a human before execution.</p>
+
+<p><strong>Article 12 — Record-Keeping:</strong> AI systems must maintain tamper-evident logs of all decisions. AIR Gate's HMAC-SHA256 audit chain creates cryptographic proof of every action — what was attempted, what the policy decided, whether a human approved it, and when.</p>
+
+<p>The Anthropic leak happened in the US, where there's no equivalent mandate. But the architectural pattern is the same regardless of jurisdiction: if AI agents are taking actions, those actions need gates.</p>
+
+<h2>What This Means for Your Team</h2>
+
+<p>If you're using AI coding agents — and in 2026, most engineering teams are — ask yourself:</p>
+
+<ul>
+  <li>Can your AI agent publish to a public registry without a human reviewing the payload?</li>
+  <li>Can your AI agent push code to a public repo without secrets scanning?</li>
+  <li>Can your AI agent send data to external APIs without PII detection?</li>
+  <li>Do you have a tamper-evident log of every action your AI agent has taken?</li>
+</ul>
+
+<p>If the answer to any of these is yes, you have the same architectural gap that led to the Anthropic leak.</p>
+
+<h2>Honest Limitations</h2>
+
+<p>AIR Gate is built for Python AI agent workflows — not CI/CD pipelines written in bash or TypeScript. Anthropic's actual leak happened in a Node.js build step, so AIR Gate wouldn't have caught it directly. The <em>pattern</em> applies, but you'd need to implement action gating in your specific build toolchain.</p>
+
+<p>Also: action firewalls add friction. The <code>require_approval</code> step means a human has to review things. For teams shipping fast, that's a tradeoff. The question is whether the cost of review is less than the cost of a 512,000-line source code leak. For most teams, the math is obvious.</p>
+
+<div class="cta">
+  <p style="font-size: 1.1em; margin-bottom: 12px;"><strong>Try AIR Gate</strong></p>
+  <p style="margin-bottom: 12px;"><code>pip install air-gate</code></p>
+  <p style="margin-bottom: 0;"><a href="https://github.com/airblackbox/air-gate">GitHub</a> · <a href="https://airblackbox.ai/gate">Docs</a> · <a href="https://pypi.org/project/air-gate/">PyPI</a></p>
+</div>
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>What happened with the Anthropic Claude Code source code leak?</h3>
+<p>On March 31, 2026, Anthropic accidentally published ~512,000 lines of Claude Code's TypeScript source to the public NPM registry. Version 2.1.88 shipped with a 59.8 MB source map file that pointed to a zip archive on a public Cloudflare R2 bucket. This was Anthropic's second data exposure in five days — the first revealed their unreleased Claude Mythos model.</p>
+
+<h3>How did Claude Code's source code get leaked to NPM?</h3>
+<p>A packaging error in the build pipeline included a JavaScript source map (<code>.map</code> file) that contained references to the original unobfuscated TypeScript source. That source map pointed to a zip archive on a publicly accessible storage bucket. Anthropic called it "a release packaging issue caused by human error."</p>
+
+<h3>What is an AI agent action firewall?</h3>
+<p>An interception layer between an AI agent's decision and the real-world execution of that decision. Every action (publish, push, send, delete) passes through a policy engine. Actions are classified by risk: low-risk auto-allow, medium-risk get scanned, high-risk require human approval, prohibited get blocked. <a href="https://github.com/airblackbox/air-gate">AIR Gate</a> is an open-source implementation.</p>
+
+<h3>Could an action firewall have prevented the Anthropic leak?</h3>
+<p>Yes. If the NPM publish ran through a gate, the policy engine would flag it as high-risk. The scanner would detect source maps and internal code patterns in the payload. The action would route to a human for review. That human would see raw TypeScript instead of compiled JavaScript and catch the error before publish.</p>
+
+<h3>What AI coding agents need action firewalls?</h3>
+<p>Any agent that executes real-world actions: Claude Code, GitHub Copilot Workspace, Cursor, Windsurf, Devin, and custom agents built on LangChain, CrewAI, OpenAI Agents SDK, or Google ADK. If the agent can publish, push, send, or delete, it needs a gate.</p>
+
+<h3>Is the Claude Code leak related to the Axios supply chain attack?</h3>
+<p>They happened concurrently but are separate incidents. The source leak was Anthropic's packaging error. The Axios trojan was a supply chain attack on a third-party library. Users who installed Claude Code via NPM on March 31 between 00:21-03:29 UTC may have been affected by both.</p>
+
+<h3>Does the EU AI Act require action firewalls?</h3>
+<p>Not by name, but Article 14 (Human Oversight) and Article 12 (Record-Keeping) effectively require the same pattern: human review of high-risk AI actions and tamper-evident logging of all AI decisions. The enforcement deadline for high-risk systems is August 2, 2026.</p>
+
+<footer>
+  <p><a href="/blog/">← Back to Blog</a></p>
+  <p style="margin-top: 12px;">AIR Blackbox is open-source compliance infrastructure for AI agents. Apache 2.0 license. <a href="https://github.com/airblackbox">GitHub</a> · <a href="https://airblackbox.ai">airblackbox.ai</a></p>
+</footer>
+
+</div>
+</body>
+</html>

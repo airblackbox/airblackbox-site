@@ -101,6 +101,14 @@
       "destination": "/blog/gdpr-eu-ai-act-dual-compliance.html"
     },
     {
+      "source": "/blog/anthropic-claude-code-leak-ai-agent-action-firewall",
+      "destination": "/blog/anthropic-claude-code-leak-ai-agent-action-firewall.html"
+    },
+    {
+      "source": "/blog/ai-agent-pii-leaking",
+      "destination": "/blog/ai-agent-pii-leaking.html"
+    },
+    {
       "source": "/blog/eu-ai-act-compliance-tools-compared",
       "destination": "/blog/eu-ai-act-compliance-tools-compared.html"
     },
