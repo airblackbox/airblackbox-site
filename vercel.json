@@ -117,6 +117,10 @@
       "destination": "/controls/index.html"
     },
     {
+      "source": "/dashboard",
+      "destination": "/dashboard.html"
+    },
+    {
       "source": "/ci-cd",
       "destination": "/ci-cd.html"
     },
