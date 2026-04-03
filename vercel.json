@@ -113,6 +113,10 @@
       "destination": "/blog/eu-ai-act-compliance-tools-compared.html"
     },
     {
+      "source": "/controls",
+      "destination": "/controls/index.html"
+    },
+    {
       "source": "/ci-cd",
       "destination": "/ci-cd.html"
     },

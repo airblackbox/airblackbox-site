@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIR Controls - Runtime Visibility for AI Agents</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+            padding: 1rem 2rem;
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #00ff88;
+        }
+
+        .logo-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #00ff88;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #00ff88;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-byline {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .nav-byline a {
+            color: #00ff88;
+            text-decoration: none;
+        }
+
+        .cta-button {
+            background-color: #00ff88;
+            color: #0a0a0a;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .hero .subheading {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+            margin-bottom: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .button-primary {
+            background-color: #00ff88;
+            color: #0a0a0a;
+            padding: 0.9rem 1.8rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .button-primary:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .button-secondary {
+            background-color: transparent;
+            color: #00ff88;
+            padding: 0.9rem 1.8rem;
+            border: 1px solid #00ff88;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .button-secondary:hover {
+            background-color: rgba(0, 255, 136, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .trust-badges {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .badge-icon {
+            color: #00ff88;
+        }
+
+        /* Problem Section */
+        .problem-section {
+            padding: 4rem 2rem;
+            background-color: rgba(0, 255, 136, 0.02);
+            border-top: 1px solid rgba(0, 255, 136, 0.1);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+        }
+
+        .problem-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .problem-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .problem-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .problem-card {
+            background-color: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            padding: 2rem;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .problem-card:hover {
+            border-color: rgba(0, 255, 136, 0.4);
+            background-color: rgba(0, 255, 136, 0.08);
+            transform: translateY(-4px);
+        }
+
+        .problem-card h3 {
+            color: #00ff88;
+            margin-bottom: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .problem-card p {
+            color: #b0b0b0;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* Integration Section */
+        .integration-section {
+            padding: 4rem 2rem;
+        }
+
+        .integration-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .integration-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .integration-header p {
+            color: #888;
+            font-size: 0.95rem;
+        }
+
+        .code-tabs {
+            background-color: rgba(0, 255, 136, 0.02);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.15);
+            background-color: rgba(0, 0, 0, 0.4);
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 1rem;
+            background-color: transparent;
+            color: #888;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .tab-button.active {
+            color: #00ff88;
+            border-bottom-color: #00ff88;
+            background-color: rgba(0, 255, 136, 0.05);
+        }
+
+        .tab-button:hover {
+            color: #00ff88;
+        }
+
+        .tab-content {
+            padding: 2rem;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .code-block {
+            background-color: #000000;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 1.5rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #00ff88;
+        }
+
+        .code-block code {
+            color: #00ff88;
+        }
+
+        .pip-install {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 4px;
+        }
+
+        .pip-install p {
+            color: #888;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .pip-install code {
+            background-color: #000000;
+            padding: 0.5rem 1rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #00ff88;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        /* Dashboard Demo Section */
+        .demo-section {
+            padding: 4rem 2rem;
+            background-color: rgba(0, 255, 136, 0.02);
+            border-top: 1px solid rgba(0, 255, 136, 0.1);
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .demo-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-wrapper {
+            background-color: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.15);
+            background-color: rgba(0, 255, 136, 0.02);
+        }
+
+        .dashboard-title {
+            font-weight: 600;
+            color: #00ff88;
+        }
+
+        .dashboard-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .control-button {
+            background-color: transparent;
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .control-button:hover {
+            background-color: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.6);
+        }
+
+        .control-button.active {
+            background-color: rgba(0, 255, 136, 0.2);
+        }
+
+        .agent-tabs {
+            display: flex;
+            gap: 0;
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+            flex-wrap: wrap;
+        }
+
+        .agent-tab {
+            background-color: transparent;
+            color: #888;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .agent-tab.active {
+            background-color: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+            border-color: rgba(0, 255, 136, 0.5);
+        }
+
+        .agent-tab:hover {
+            border-color: rgba(0, 255, 136, 0.4);
+        }
+
+        .timeline-container {
+            height: 400px;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: rgba(0, 255, 136, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #00ff88;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-action {
+            color: #00ff88;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .timeline-details {
+            color: #888;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .timeline-time {
+            color: #555;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem;
+            background-color: rgba(0, 255, 136, 0.02);
+            border-top: 1px solid rgba(0, 255, 136, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00ff88;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 4rem 2rem;
+        }
+
+        .features-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .features-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background-color: rgba(0, 255, 136, 0.02);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            padding: 2rem;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(0, 255, 136, 0.4);
+            background-color: rgba(0, 255, 136, 0.08);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            color: #00ff88;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .feature-card p {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            padding: 4rem 2rem;
+            background-color: rgba(0, 255, 136, 0.02);
+            border-top: 1px solid rgba(0, 255, 136, 0.1);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .pricing-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .pricing-card {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            padding: 2.5rem;
+            border-radius: 8px;
+            position: relative;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card:hover {
+            border-color: rgba(0, 255, 136, 0.4);
+            transform: translateY(-4px);
+        }
+
+        .pricing-card.featured {
+            border-color: rgba(0, 255, 136, 0.4);
+            background-color: rgba(0, 255, 136, 0.05);
+            transform: scale(1.02);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #00ff88;
+            color: #0a0a0a;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .pricing-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00ff88;
+            margin-bottom: 0.25rem;
+        }
+
+        .pricing-period {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            flex: 1;
+        }
+
+        .pricing-features li {
+            padding: 0.75rem 0;
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .pricing-features li:before {
+            content: "✓";
+            color: #00ff88;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .pricing-button {
+            padding: 1rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+
+        .pricing-button-primary {
+            background-color: #00ff88;
+            color: #0a0a0a;
+        }
+
+        .pricing-button-primary:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .pricing-button-secondary {
+            background-color: transparent;
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .pricing-button-secondary:hover {
+            background-color: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.6);
+        }
+
+        .pricing-note {
+            color: #888;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        /* How It Fits Section */
+        .fit-section {
+            padding: 4rem 2rem;
+        }
+
+        .fit-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .fit-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+        }
+
+        .fit-diagram {
+            background-color: rgba(0, 255, 136, 0.02);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .fit-row {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+        }
+
+        .fit-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .fit-label {
+            color: #00ff88;
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        .fit-description {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+
+        .fit-arrow {
+            text-align: center;
+            color: #00ff88;
+            font-size: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .fit-chain {
+            padding: 1rem;
+            background-color: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 4px;
+            text-align: center;
+            color: #b0b0b0;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid rgba(0, 255, 136, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: #00ff88;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .footer-section a {
+            display: block;
+            color: #b0b0b0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #00ff88;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 255, 136, 0.1);
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .footer-bottom a {
+            color: #00ff88;
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .button-primary, .button-secondary {
+                width: 100%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-right {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .cta-button {
+                width: 100%;
+            }
+
+            .timeline-container {
+                height: 300px;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .trust-badges {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .tab-button {
+                flex: auto;
+                padding: 0.75rem 0.5rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 136, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 136, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo">
+                <span class="logo-dot"></span>
+                AIR Controls
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="https://docs.airblackbox.ai" target="_blank">Docs</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="nav-byline">
+                    <a href="https://airblackbox.ai" target="_blank">Part of AIR Blackbox</a>
+                </div>
+                <button class="cta-button" onclick="document.getElementById('pricing').scrollIntoView()">Get Started Free</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>See What Your AI Agents Actually Do</h1>
+            <p class="subheading">
+                Runtime visibility, audit trails, and kill switches for LangChain, CrewAI, AutoGen, and custom agents. Open source. Local-first. No data leaves your machine.
+            </p>
+            <div class="hero-buttons">
+                <a href="https://github.com/airblackbox/air-controls" target="_blank" class="button-primary">Get Started Free</a>
+                <button class="button-secondary" onclick="document.getElementById('demo').scrollIntoView()">View Live Demo</button>
+            </div>
+            <div class="trust-badges">
+                <div class="badge"><span class="badge-icon">Star</span> Open Source</div>
+                <div class="badge"><span class="badge-icon">Package</span> PyPI Package</div>
+                <div class="badge"><span class="badge-icon">License</span> Apache 2.0</div>
+                <div class="badge"><span class="badge-icon">Plugin</span> MCP Compatible</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem-section">
+        <div class="container">
+            <div class="problem-header">
+                <h2>The Problem</h2>
+                <p>AI agents are sending emails, updating CRMs, and making decisions. Nobody knows what they're actually doing.</p>
+            </div>
+            <div class="problem-cards">
+                <div class="problem-card">
+                    <h3>Blind Spots</h3>
+                    <p>Agents run autonomously but logs are useless to non-engineers. What did it actually do? You'll need to dig through a mountain of debug output.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>No Kill Switch</h3>
+                    <p>Can't stop a rogue agent without killing the whole system. If an agent goes haywire, your only option is a hard shutdown.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>Audit Failures</h3>
+                    <p>EU AI Act Article 12 requires tamper-evident records. Logs in a database? Good luck proving nothing was modified after the fact.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integration Section -->
+    <section class="integration-section">
+        <div class="container">
+            <div class="integration-header">
+                <h2>3 Lines. Any Framework.</h2>
+                <p>Works with LangChain, CrewAI, AutoGen, custom agents — whatever you're building.</p>
+            </div>
+
+            <div class="code-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="switchTab(event, 'langchain')">LangChain</button>
+                    <button class="tab-button" onclick="switchTab(event, 'custom')">Custom (Decorator)</button>
+                    <button class="tab-button" onclick="switchTab(event, 'crewai')">CrewAI</button>
+                    <button class="tab-button" onclick="switchTab(event, 'mcp')">MCP Server</button>
+                </div>
+
+                <div id="langchain" class="tab-content active">
+                    <div class="code-block"><code>from air_controls import setup_langchain_controls
+from langchain.agents import create_openai_functions_agent
+
+air = setup_langchain_controls()
+agent = create_openai_functions_agent(llm, tools, prompt)
+air.hook_agent(agent)</code></div>
+                </div>
+
+                <div id="custom" class="tab-content">
+                    <div class="code-block"><code>from air_controls import audit_action
+
+@audit_action(agent_name="my-bot")
+def process_request(request):
+    return llm.complete(request)
+
+# Every call to process_request is now logged & audited
+result = process_request("Do something important")</code></div>
+                </div>
+
+                <div id="crewai" class="tab-content">
+                    <div class="code-block"><code>from air_controls import setup_crewai_controls
+
+air = setup_crewai_controls()
+crew = Crew(agents=[agent1, agent2], tasks=[task1, task2])
+
+air.hook_crew(crew)
+crew.kickoff()</code></div>
+                </div>
+
+                <div id="mcp" class="tab-content">
+                    <div class="code-block"><code>from air_controls.mcp import MCPServer
+
+server = MCPServer(agent_name="research-bot")
+server.add_tool(search_web)
+server.add_tool(summarize)
+
+server.run()  # Works with Cursor, Claude Code, Windsurf</code></div>
+                </div>
+            </div>
+
+            <div class="pip-install">
+                <p>Install from PyPI:</p>
+                <code>pip install air-controls</code>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Demo Section -->
+    <section class="demo-section" id="demo">
+        <div class="container">
+            <div class="demo-header">
+                <h2>Interactive Dashboard Demo</h2>
+                <p>Real-time event timeline and audit chain verification</p>
+            </div>
+
+            <div class="dashboard-wrapper">
+                <div class="dashboard-header">
+                    <div class="dashboard-title">Agent Monitor</div>
+                    <div class="dashboard-controls">
+                        <button class="control-button active" id="pauseBtn" onclick="togglePause()">Pause</button>
+                        <button class="control-button" id="chainBtn" onclick="verifyChain()">Verify Chain</button>
+                    </div>
+                </div>
+
+                <div class="agent-tabs" id="agentTabs">
+                    <button class="agent-tab active" onclick="filterAgent(event, 'all')">All Agents</button>
+                    <button class="agent-tab" onclick="filterAgent(event, 'sales-bot')">sales-bot</button>
+                    <button class="agent-tab" onclick="filterAgent(event, 'research-crew')">research-crew</button>
+                    <button class="agent-tab" onclick="filterAgent(event, 'support-bot')">support-bot</button>
+                </div>
+
+                <div class="timeline-container" id="timeline"></div>
+
+                <div class="dashboard-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalEvents">0</div>
+                        <div class="stat-label">Total Events</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="activeAgents">3</div>
+                        <div class="stat-label">Active Agents</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="chainStatus">Valid</div>
+                        <div class="stat-label">Chain Status</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="uptime">100%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <div class="features-header">
+                <h2>Built for Production</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">Chart</div>
+                    <h3>Action Timeline</h3>
+                    <p>Every LLM call, tool use, and API request logged with full context and timing. See exactly what your agents are doing in real time.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">Stop</div>
+                    <h3>Kill Switch</h3>
+                    <p>Pause any agent instantly from CLI or dashboard. No more runaway agents. Stop, investigate, resume safely.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">Lock</div>
+                    <h3>HMAC-SHA256 Audit Chain</h3>
+                    <p>Tamper-evident records for compliance audits. Each event cryptographically linked to the previous one. Auditors can verify nothing was modified.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">Plug</div>
+                    <h3>Framework Agnostic</h3>
+                    <p>LangChain, CrewAI, AutoGen, OpenAI, custom agents—bring your own. Single integration point, works everywhere.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">Tools</div>
+                    <h3>MCP Server</h3>
+                    <p>Works with Cursor, Claude Code, Windsurf automatically. Drop it into your AI workflow. IDE integration out of the box.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">Home</div>
+                    <h3>Local-First</h3>
+                    <p>SQLite. No cloud. No data leaves your machine. Full control over your audit logs. Run it on your laptop or production infra.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section" id="pricing">
+        <div class="container">
+            <div class="pricing-header">
+                <h2>Simple Pricing</h2>
+                <p>Pay for what you use. No lock-in.</p>
+            </div>
+            <div class="pricing-cards">
+                <!-- Free Tier -->
+                <div class="pricing-card">
+                    <div class="pricing-name">Free</div>
+                    <div class="pricing-price">$0</div>
+                    <div class="pricing-period">/month</div>
+                    <ul class="pricing-features">
+                        <li>Unlimited agents</li>
+                        <li>CLI dashboard</li>
+                        <li>Event logging</li>
+                        <li>HMAC audit chain</li>
+                        <li>Open source</li>
+                    </ul>
+                    <a href="https://github.com/airblackbox/air-controls" target="_blank" class="pricing-button pricing-button-secondary">Get Started</a>
+                </div>
+
+                <!-- Pro Tier -->
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">Most Popular</div>
+                    <div class="pricing-name">Pro</div>
+                    <div class="pricing-price">$29</div>
+                    <div class="pricing-period">/agent/month</div>
+                    <ul class="pricing-features">
+                        <li>Web dashboard</li>
+                        <li>Email & Slack alerts</li>
+                        <li>Priority support</li>
+                        <li>Advanced analytics</li>
+                        <li>Team access (up to 5)</li>
+                        <li>All Free features</li>
+                    </ul>
+                    <a href="STRIPE_PRO_LINK" class="pricing-button pricing-button-primary">Start Pro Trial</a>
+                    <div class="pricing-note">14-day free trial, no credit card required</div>
+                </div>
+
+                <!-- Enterprise Tier -->
+                <div class="pricing-card">
+                    <div class="pricing-name">Enterprise</div>
+                    <div class="pricing-price">$99</div>
+                    <div class="pricing-period">/agent/month</div>
+                    <ul class="pricing-features">
+                        <li>SSO / SAML</li>
+                        <li>SLA guarantee</li>
+                        <li>Custom integrations</li>
+                        <li>Dedicated support</li>
+                        <li>Unlimited team seats</li>
+                        <li>Compliance reports</li>
+                    </ul>
+                    <a href="mailto:jason@airblackbox.ai?subject=AIR%20Controls%20Enterprise" class="pricing-button pricing-button-secondary">Contact Sales</a>
+                    <div class="pricing-note">Volume discounts available</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Fits Section -->
+    <section class="fit-section">
+        <div class="container">
+            <div class="fit-header">
+                <h2>How It All Fits Together</h2>
+                <p>AIR Controls is the runtime counterpart to AIR Blackbox</p>
+            </div>
+            <div class="fit-diagram">
+                <div class="fit-row">
+                    <div class="fit-label">AIR Blackbox</div>
+                    <div class="fit-description">Scans code pre-deploy for EU AI Act compliance issues (Articles 9-15)</div>
+                </div>
+                <div class="fit-arrow">Down arrow</div>
+                <div class="fit-row">
+                    <div class="fit-label">AIR Controls</div>
+                    <div class="fit-description">Monitors what agents actually do at runtime with tamper-evident logs</div>
+                </div>
+                <div class="fit-arrow">Down arrow</div>
+                <div class="fit-chain">
+                    Same HMAC-SHA256 audit chain for end-to-end compliance
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Product</h4>
+                <a href="https://github.com/airblackbox/air-controls" target="_blank">GitHub</a>
+                <a href="https://pypi.org/project/air-controls/" target="_blank">PyPI</a>
+                <a href="https://docs.airblackbox.ai" target="_blank">Documentation</a>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <a href="https://airblackbox.ai" target="_blank">AIR Blackbox</a>
+                <a href="https://airblackbox.ai/blog" target="_blank">Blog</a>
+                <a href="https://github.com/airblackbox" target="_blank">GitHub Org</a>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="https://airblackbox.ai/license" target="_blank">Apache 2.0 License</a>
+                <a href="https://airblackbox.ai/privacy" target="_blank">Privacy Policy</a>
+                <a href="https://airblackbox.ai/terms" target="_blank">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Built by <a href="https://x.com/jayshotwell" target="_blank">Jason Shotwell</a> - Apache 2.0 Licensed - Copyright 2026 AIR Blackbox</p>
+        </div>
+    </footer>
+
+    <script>
+        // Demo state
+        let demoState = {
+            isPaused: false,
+            eventCount: 0,
+            currentFilter: 'all',
+            events: []
+        };
+
+        const agents = [
+            { name: 'sales-bot', color: '#00ff88' },
+            { name: 'research-crew', color: '#00d4ff' },
+            { name: 'support-bot', color: '#ff00ff' }
+        ];
+
+        const actionTypes = [
+            { icon: 'Bot', type: 'LLM Call', templates: ['Called {agent} GPT-4 with prompt about {topic}', 'Invoked Claude API for {topic}', 'LLM inference: {topic}'] },
+            { icon: 'Link', type: 'Tool Use', templates: ['Used {tool} to {action}', 'Executed {tool} function', 'Tool invocation: {tool}'] },
+            { icon: 'Send', type: 'API Request', templates: ['Sent POST request to {endpoint}', 'API call to {endpoint}', 'HTTP request: {method} {endpoint}'] },
+            { icon: 'Mail', type: 'Email', templates: ['Sent email to {recipient} about {topic}', 'Email dispatched to {recipient}', 'Message: {topic}'] },
+            { icon: 'Save', type: 'File', templates: ['Modified file {file}', 'Created {file}', 'File write: {file}'] },
+            { icon: 'Database', type: 'Database', templates: ['Updated {table} in {db}', 'Database query: {table}', 'Record inserted in {table}'] },
+            { icon: 'Search', type: 'Web Search', templates: ['Searched for {query}', 'Web search: {query}', 'Found {count} results for {query}'] }
+        ];
+
+        const topics = ['budget', 'sales', 'customer support', 'project status', 'quarterly goals', 'market research'];
+        const tools = ['Salesforce API', 'Gmail', 'Slack', 'Google Sheets', 'PostgreSQL', 'OpenSearch'];
+        const endpoints = ['/api/customers', '/api/sales', '/api/reports', '/api/crm', '/webhook/notify'];
+        const files = ['sales_report.csv', 'customer_list.json', 'forecast.xlsx'];
+
+        function generateEvent() {
+            const agent = agents[Math.floor(Math.random() * agents.length)];
+            const actionTemplate = actionTypes[Math.floor(Math.random() * actionTypes.length)];
+            const templates = actionTemplate.templates;
+            let description = templates[Math.floor(Math.random() * templates.length)];
+
+            description = description
+                .replace('{topic}', topics[Math.floor(Math.random() * topics.length)])
+                .replace('{agent}', agent.name)
+                .replace('{tool}', tools[Math.floor(Math.random() * tools.length)])
+                .replace('{action}', ['fetch', 'update', 'process'][Math.floor(Math.random() * 3)])
+                .replace('{endpoint}', endpoints[Math.floor(Math.random() * endpoints.length)])
+                .replace('{method}', ['GET', 'POST', 'PUT', 'DELETE'][Math.floor(Math.random() * 4)])
+                .replace('{recipient}', 'user@example.com')
+                .replace('{file}', files[Math.floor(Math.random() * files.length)])
+                .replace('{table}', ['users', 'orders', 'customers', 'products'][Math.floor(Math.random() * 4)])
+                .replace('{db}', 'production')
+                .replace('{query}', topics[Math.floor(Math.random() * topics.length)])
+                .replace('{count}', Math.floor(Math.random() * 10) + 1);
+
+            return {
+                id: demoState.eventCount++,
+                agent: agent.name,
+                action: actionTemplate.type,
+                icon: actionTemplate.icon,
+                description: description,
+                timestamp: new Date(),
+                hash: Math.random().toString(16).substr(2, 8).toUpperCase()
+            };
+        }
+
+        function addEventToTimeline(event) {
+            if (demoState.currentFilter !== 'all' && event.agent !== demoState.currentFilter) {
+                return;
+            }
+
+            demoState.events.unshift(event);
+            if (demoState.events.length > 50) {
+                demoState.events.pop();
+            }
+
+            renderTimeline();
+        }
+
+        function renderTimeline() {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = demoState.events.map(event => `
+                <div class="timeline-item">
+                    <div class="timeline-icon">${event.icon}</div>
+                    <div class="timeline-content">
+                        <div class="timeline-action">${event.action}</div>
+                        <div class="timeline-details">${event.description}</div>
+                        <div class="timeline-details">Agent: <strong>${event.agent}</strong></div>
+                        <div class="timeline-time">${event.timestamp.toLocaleTimeString()} - Hash: ${event.hash}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('totalEvents').textContent = demoState.eventCount;
+        }
+
+        function togglePause() {
+            demoState.isPaused = !demoState.isPaused;
+            const btn = document.getElementById('pauseBtn');
+            btn.textContent = demoState.isPaused ? 'Resume' : 'Pause';
+            btn.classList.toggle('active');
+        }
+
+        function verifyChain() {
+            const chainStatus = document.getElementById('chainStatus');
+            chainStatus.textContent = 'Verifying...';
+            setTimeout(() => {
+                const isValid = Math.random() > 0.2;
+                chainStatus.textContent = isValid ? 'Valid' : 'Invalid';
+                chainStatus.style.color = isValid ? '#00ff88' : '#ff0000';
+                if (!isValid) {
+                    alert('Warning: Audit chain verification failed. This indicates potential tampering.');
+                }
+            }, 800);
+        }
+
+        function filterAgent(event, agent) {
+            demoState.currentFilter = agent;
+            document.querySelectorAll('.agent-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            renderTimeline();
+        }
+
+        function switchTab(event, tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Start demo
+        setInterval(() => {
+            if (!demoState.isPaused) {
+                const event = generateEvent();
+                addEventToTimeline(event);
+            }
+        }, 1500);
+
+        // Initial population
+        for (let i = 0; i < 5; i++) {
+            addEventToTimeline(generateEvent());
+        }
+    </script>
+</body>
+</html>
