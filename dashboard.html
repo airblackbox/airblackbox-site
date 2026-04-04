@@ -1368,9 +1368,9 @@
             const el = document.createElement('div');
             el.className = 'event-item';
 
-            const eventType = EVENT_TYPES.find(t => t.id === event.type);
+            const eventType = EVENT_TYPES.find(t => t.id === event.type) || { label: event.type, color: '#64c8ff' };
             const timestamp = new Date(event.timestamp);
-            const agent = AGENTS[event.agent];
+            const agent = AGENTS[event.agent] || { name: event.agent, className: 'agent-custom' };
 
             el.innerHTML = `
                 <div class="event-header">
@@ -1562,6 +1562,16 @@
 
         function updateAgentsList(agents) {
             if (!agents.length) return;
+
+            // Register real agents in AGENTS object so event rendering works
+            agents.forEach(agent => {
+                AGENTS[agent.id] = {
+                    name: agent.name || agent.id,
+                    description: agent.framework || 'custom',
+                    className: 'agent-' + agent.id.replace(/[^a-z0-9-]/g, '-')
+                };
+            });
+
             const container = document.querySelector('.agents-list');
             if (!container) return;
             container.innerHTML = '';
