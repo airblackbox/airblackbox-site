@@ -988,7 +988,7 @@
             <div class="top-bar-right">
                 <div class="toggle-group">
                     <span class="toggle-label">Demo Mode</span>
-                    <div class="toggle-switch" id="demoToggle"></div>
+                    <div class="toggle-switch active" id="demoToggle"></div>
                 </div>
                 <button class="icon-btn" id="settingsBtn" title="Settings">⚙</button>
             </div>
@@ -1031,7 +1031,7 @@
             </div>
             <div class="error-actions">
                 <button class="error-btn" id="retryBtn">Retry Connection</button>
-                <button class="error-btn" id="demoModeBtn">Enable Demo Mode</button>
+                <button class="error-btn" id="demoModeBtn">Demo Mode Active</button>
             </div>
         </div>
 
@@ -1114,7 +1114,7 @@
         // State Management
         const STATE = {
             connected: false,
-            demoMode: false,
+            demoMode: true,
             events: [],
             agents: {},
             selectedAgent: null,
@@ -1122,7 +1122,8 @@
             searchQuery: '',
             autoScroll: true,
             killSwitchTarget: null,
-            chainStatus: 'unverified'
+            chainStatus: 'unverified',
+            killedAgents: new Set()
         };
 
         // Event type definitions
@@ -1408,11 +1409,15 @@
             agentList.innerHTML = agents.map(agent => {
                 const eventCount = STATE.events.filter(e => e.agent === agent.name).length;
                 const isActive = STATE.selectedAgent === agent.name;
+                const isPaused = STATE.killedAgents.has(agent.name);
+                const statusLabel = isPaused ? 'Paused' : 'Active';
+                const statusColor = isPaused ? '#ff4d4d' : '#00ff88';
+                const dotStyle = isPaused ? 'background: #ff4d4d; box-shadow: 0 0 6px #ff4d4d;' : '';
 
                 return `
                     <div class="agent-item ${isActive ? 'active' : ''}" onclick="selectAgent('${agent.name}', event)">
                         <div class="agent-name">
-                            <div class="agent-status-dot"></div>
+                            <div class="agent-status-dot" style="${dotStyle}"></div>
                             <span>${agent.name}</span>
                         </div>
                         <div class="agent-stats">
@@ -1422,11 +1427,11 @@
                             </div>
                             <div class="agent-stat">
                                 <span>Status</span>
-                                <div class="agent-stat-value">Active</div>
+                                <div class="agent-stat-value" style="color: ${statusColor}">${statusLabel}</div>
                             </div>
                         </div>
                         <div class="agent-controls">
-                            <button class="kill-switch" onclick="showKillSwitchModal('${agent.name}', event)">KILL</button>
+                            <button class="kill-switch" onclick="showKillSwitchModal('${agent.name}', event)">${isPaused ? 'RESUME' : 'KILL'}</button>
                         </div>
                     </div>
                 `;
@@ -1465,7 +1470,10 @@
             STATE.killSwitchTarget = agentName;
             const modal = document.getElementById('killSwitchModal');
             const description = document.getElementById('killSwitchDescription');
-            description.textContent = `Stop ${agentName}? This will pause all actions.`;
+            const isPaused = STATE.killedAgents.has(agentName);
+            description.textContent = isPaused
+                ? `Resume ${agentName}? This will re-enable all actions.`
+                : `Stop ${agentName}? This will pause all actions.`;
             modal.classList.add('active');
         }
 
@@ -1476,30 +1484,57 @@
 
         async function confirmKillSwitch() {
             if (STATE.killSwitchTarget) {
-                try {
-                    const response = await fetch(CONFIG.apiUrl + '/agents/' + STATE.killSwitchTarget + '/pause', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' }
-                    });
-                    if (response.ok) {
-                        console.log('Paused agent:', STATE.killSwitchTarget);
-                        // Add a visual event to the timeline
-                        const evt = {
-                            id: 'kill-' + Date.now(),
-                            agent: STATE.killSwitchTarget,
-                            type: 'api-request',
-                            description: `Kill switch activated — agent "${STATE.killSwitchTarget}" paused`,
-                            timestamp: new Date().toISOString(),
-                            risk: 'medium',
-                            hash: generateHash()
-                        };
-                        STATE.events.unshift(evt);
-                        renderTimeline();
-                        updateStats();
+                const isPaused = STATE.killedAgents.has(STATE.killSwitchTarget);
+
+                if (isPaused) {
+                    // Resume the agent
+                    STATE.killedAgents.delete(STATE.killSwitchTarget);
+                    const evt = {
+                        id: 'resume-' + Date.now(),
+                        agent: STATE.killSwitchTarget,
+                        type: 'api-request',
+                        description: `Agent "${STATE.killSwitchTarget}" resumed`,
+                        timestamp: new Date().toISOString(),
+                        risk: 'low',
+                        hash: generateHash()
+                    };
+                    STATE.events.unshift(evt);
+
+                    if (STATE.connected && !STATE.demoMode) {
+                        try {
+                            await fetch(CONFIG.apiUrl + '/agents/' + STATE.killSwitchTarget + '/resume', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' }
+                            });
+                        } catch (e) { /* local resume still applied */ }
                     }
-                } catch (e) {
-                    console.log('Kill switch (demo mode):', STATE.killSwitchTarget);
+                } else {
+                    // Kill the agent
+                    STATE.killedAgents.add(STATE.killSwitchTarget);
+                    const evt = {
+                        id: 'kill-' + Date.now(),
+                        agent: STATE.killSwitchTarget,
+                        type: 'api-request',
+                        description: `Kill switch activated — agent "${STATE.killSwitchTarget}" paused`,
+                        timestamp: new Date().toISOString(),
+                        risk: 'medium',
+                        hash: generateHash()
+                    };
+                    STATE.events.unshift(evt);
+
+                    if (STATE.connected && !STATE.demoMode) {
+                        try {
+                            await fetch(CONFIG.apiUrl + '/agents/' + STATE.killSwitchTarget + '/pause', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' }
+                            });
+                        } catch (e) { /* local kill still applied */ }
+                    }
                 }
+
+                renderTimeline();
+                updateStats();
+                renderAgentList();
             }
             closeKillSwitchModal();
         }
@@ -1625,6 +1660,8 @@
         function generateDemoEvents() {
             if (STATE.demoMode) {
                 const newEvent = generateDemoEvent();
+                // Skip if this agent has been killed
+                if (STATE.killedAgents.has(newEvent.agent)) return;
                 STATE.events.unshift(newEvent);
 
                 renderTimeline();
@@ -1674,6 +1711,16 @@
         function init() {
             STATE.lastSync = new Date();
             renderFilterChips();
+
+            // Demo mode is on by default — seed initial events
+            if (STATE.demoMode) {
+                STATE.connected = true;
+                updateConnectionStatus();
+                for (let i = 0; i < 8; i++) {
+                    STATE.events.push(generateDemoEvent());
+                }
+            }
+
             renderAgentList();
             renderTimeline();
             updateStats();
