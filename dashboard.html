@@ -691,6 +691,11 @@
             100% { width: 100%; }
         }
 
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: none; }
+            50% { box-shadow: 0 0 20px rgba(255, 77, 77, 0.6); border-color: #ff4d4d; }
+        }
+
         /* Bottom Bar */
         .bottom-bar {
             padding: 12px 24px;
@@ -1005,12 +1010,16 @@
                 <div class="stat-value" id="statAgents">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Actions Blocked</div>
-                <div class="stat-value" id="statBlocked">0</div>
+                <div class="stat-label">Tokens Used</div>
+                <div class="stat-value" id="statTokens">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Chain Status</div>
-                <div class="stat-value" id="statChain">Valid</div>
+                <div class="stat-label">Total Cost</div>
+                <div class="stat-value" id="statCost">$0.00</div>
+            </div>
+            <div class="stat-card" id="tokenLimitCard" style="cursor: pointer;" onclick="showTokenLimitModal()">
+                <div class="stat-label">Token Limit</div>
+                <div class="stat-value" id="statTokenLimit">500K</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Uptime</div>
@@ -1123,7 +1132,12 @@
             autoScroll: true,
             killSwitchTarget: null,
             chainStatus: 'unverified',
-            killedAgents: new Set()
+            killedAgents: new Set(),
+            totalTokens: 0,
+            totalCost: 0,
+            tokenLimit: 500000,
+            tokenLimitEnabled: true,
+            tokenLimitTriggered: false
         };
 
         // Event type definitions
@@ -1251,12 +1265,29 @@
                 .replace('{quarter}', 'Q' + (Math.floor(Math.random() * 4) + 1))
                 .replace('{date}', new Date().toISOString().split('T')[0]);
 
+            // Realistic token counts by event type
+            const tokenRanges = {
+                'llm-call': [800, 4500],
+                'tool-use': [200, 1200],
+                'api-request': [100, 600],
+                'email': [500, 2000],
+                'file': [50, 300],
+                'database': [100, 500],
+                'web-search': [300, 1500]
+            };
+            const range = tokenRanges[eventType.id] || [100, 1000];
+            const tokens = Math.floor(Math.random() * (range[1] - range[0])) + range[0];
+            const costPer1k = eventType.id === 'llm-call' ? 0.015 : 0.002;
+            const cost = parseFloat(((tokens / 1000) * costPer1k).toFixed(4));
+
             return {
                 id: generateHash(12),
                 timestamp: new Date().toISOString(),
                 agent: agent.name,
                 type: eventType.id,
                 description: description,
+                tokens: tokens,
+                cost: cost,
                 hash: generateHash(32)
             };
         }
@@ -1373,11 +1404,18 @@
             const timestamp = new Date(event.timestamp);
             const agent = AGENTS[event.agent] || { name: event.agent, className: 'agent-custom' };
 
+            const tokenStr = event.tokens ? event.tokens.toLocaleString() : '—';
+            const costStr = event.cost ? '$' + event.cost.toFixed(4) : '—';
+
             el.innerHTML = `
                 <div class="event-header">
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                         <span class="event-timestamp">${formatTimestamp(timestamp)}</span>
                         <span class="event-type-badge ${event.type}">${eventType.label}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a94a6;">
+                        <span title="Tokens used">${tokenStr} tok</span>
+                        <span title="Cost" style="color: ${event.cost > 0.05 ? '#ff9664' : '#00ff88'};">${costStr}</span>
                     </div>
                 </div>
                 <div style="margin-bottom: 8px;">
@@ -1441,14 +1479,38 @@
         function updateStats() {
             const eventCount = STATE.events.length;
             const uniqueAgents = new Set(STATE.events.map(e => e.agent)).size;
-            const blockedCount = Math.floor(STATE.events.length * 0.15);
             const uptime = formatTime(Date.now() - CONFIG.startTime);
+
+            // Calculate totals from all events
+            STATE.totalTokens = STATE.events.reduce((sum, e) => sum + (e.tokens || 0), 0);
+            STATE.totalCost = STATE.events.reduce((sum, e) => sum + (e.cost || 0), 0);
 
             document.getElementById('statEvents').textContent = eventCount;
             document.getElementById('statAgents').textContent = uniqueAgents;
-            document.getElementById('statBlocked').textContent = blockedCount;
+            document.getElementById('statTokens').textContent = STATE.totalTokens >= 1000 ? (STATE.totalTokens / 1000).toFixed(1) + 'K' : STATE.totalTokens;
+            document.getElementById('statCost').textContent = '$' + STATE.totalCost.toFixed(2);
             document.getElementById('statUptime').textContent = uptime;
             document.getElementById('eventCount').textContent = eventCount;
+
+            // Token limit auto-stop
+            if (STATE.tokenLimitEnabled && STATE.totalTokens >= STATE.tokenLimit && !STATE.tokenLimitTriggered) {
+                STATE.tokenLimitTriggered = true;
+                triggerTokenLimitStop();
+            }
+
+            // Color the token limit card based on usage
+            const limitCard = document.getElementById('tokenLimitCard');
+            const usage = STATE.totalTokens / STATE.tokenLimit;
+            if (STATE.tokenLimitTriggered) {
+                limitCard.style.borderColor = '#ff4d4d';
+                document.getElementById('statTokenLimit').style.color = '#ff4d4d';
+            } else if (usage > 0.8) {
+                limitCard.style.borderColor = '#ff9664';
+                document.getElementById('statTokenLimit').style.color = '#ff9664';
+            } else {
+                limitCard.style.borderColor = '';
+                document.getElementById('statTokenLimit').style.color = '';
+            }
         }
 
         function updateLastSync() {
@@ -1631,6 +1693,64 @@
             });
         }
 
+        // Token Limit Auto-Stop
+        function triggerTokenLimitStop() {
+            // Kill ALL agents automatically
+            Object.keys(AGENTS).forEach(agentName => {
+                STATE.killedAgents.add(agentName);
+            });
+
+            // Add a warning event to the timeline
+            const evt = {
+                id: 'limit-' + Date.now(),
+                agent: 'air-controls',
+                type: 'api-request',
+                description: `TOKEN LIMIT REACHED (${(STATE.tokenLimit / 1000).toFixed(0)}K) — All agents automatically stopped to prevent overcost. Total spend: $${STATE.totalCost.toFixed(2)}`,
+                timestamp: new Date().toISOString(),
+                tokens: 0,
+                cost: 0,
+                risk: 'high',
+                hash: generateHash(32)
+            };
+            STATE.events.unshift(evt);
+
+            renderTimeline();
+            renderAgentList();
+
+            // Flash the token limit card
+            const limitCard = document.getElementById('tokenLimitCard');
+            limitCard.style.animation = 'none';
+            limitCard.offsetHeight; // trigger reflow
+            limitCard.style.animation = 'pulse-red 0.5s ease 3';
+        }
+
+        function showTokenLimitModal() {
+            const current = STATE.tokenLimit;
+            const currentK = Math.round(current / 1000);
+            const input = prompt(`Set token limit (in thousands).\nCurrent: ${currentK}K\nEnter 0 to disable.`, currentK);
+            if (input === null) return;
+            const val = parseInt(input);
+            if (isNaN(val) || val < 0) return;
+
+            if (val === 0) {
+                STATE.tokenLimitEnabled = false;
+                STATE.tokenLimitTriggered = false;
+                document.getElementById('statTokenLimit').textContent = 'OFF';
+            } else {
+                STATE.tokenLimit = val * 1000;
+                STATE.tokenLimitEnabled = true;
+                // Reset trigger if new limit is above current usage
+                if (STATE.totalTokens < STATE.tokenLimit) {
+                    STATE.tokenLimitTriggered = false;
+                    // Resume all agents
+                    STATE.killedAgents.clear();
+                    renderAgentList();
+                }
+                document.getElementById('statTokenLimit').textContent = val + 'K';
+            }
+            updateStats();
+        }
+
         // Main Poll Loop
         async function pollAPI() {
             if (!STATE.demoMode) {
@@ -1659,6 +1779,9 @@
 
         function generateDemoEvents() {
             if (STATE.demoMode) {
+                // Stop all demo events if token limit was hit
+                if (STATE.tokenLimitTriggered) return;
+
                 const newEvent = generateDemoEvent();
                 // Skip if this agent has been killed
                 if (STATE.killedAgents.has(newEvent.agent)) return;
@@ -1700,7 +1823,7 @@
         });
 
         document.getElementById('settingsBtn').addEventListener('click', function () {
-            alert('Settings panel coming soon');
+            showTokenLimitModal();
         });
 
         document.getElementById('killSwitchCancel').addEventListener('click', closeKillSwitchModal);
