@@ -1474,9 +1474,32 @@
             STATE.killSwitchTarget = null;
         }
 
-        function confirmKillSwitch() {
+        async function confirmKillSwitch() {
             if (STATE.killSwitchTarget) {
-                console.log('Killing agent:', STATE.killSwitchTarget);
+                try {
+                    const response = await fetch(CONFIG.apiUrl + '/agents/' + STATE.killSwitchTarget + '/pause', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    if (response.ok) {
+                        console.log('Paused agent:', STATE.killSwitchTarget);
+                        // Add a visual event to the timeline
+                        const evt = {
+                            id: 'kill-' + Date.now(),
+                            agent: STATE.killSwitchTarget,
+                            type: 'api-request',
+                            description: `Kill switch activated — agent "${STATE.killSwitchTarget}" paused`,
+                            timestamp: new Date().toISOString(),
+                            risk: 'medium',
+                            hash: generateHash()
+                        };
+                        STATE.events.unshift(evt);
+                        renderTimeline();
+                        updateStats();
+                    }
+                } catch (e) {
+                    console.log('Kill switch (demo mode):', STATE.killSwitchTarget);
+                }
             }
             closeKillSwitchModal();
         }
@@ -1485,21 +1508,82 @@
             const chainStatus = document.getElementById('chainStatus');
             chainStatus.innerHTML = '<div class="progress-bar"><div class="progress-fill"></div></div><span style="color: #ffa500;">Verifying chain...</span>';
 
-            await new Promise(resolve => setTimeout(resolve, 2500));
+            try {
+                const response = await fetch(CONFIG.apiUrl + '/verify', {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    STATE.chainStatus = data.valid ? 'valid' : 'invalid';
+                    if (data.valid) {
+                        chainStatus.className = 'chain-status valid';
+                        chainStatus.textContent = 'Chain Valid ✓';
+                        document.getElementById('statChain').textContent = 'Valid';
+                    } else {
+                        chainStatus.className = 'chain-status invalid';
+                        chainStatus.textContent = 'Chain Broken ✗ — ' + (data.message || 'tampering detected');
+                        document.getElementById('statChain').textContent = 'Invalid';
+                    }
+                    return;
+                }
+            } catch (e) {
+                // Fall back to demo mode verification
+            }
 
+            // Demo mode fallback
+            await new Promise(resolve => setTimeout(resolve, 2500));
             const isValid = Math.random() > 0.3;
             STATE.chainStatus = isValid ? 'valid' : 'invalid';
-
             if (isValid) {
                 chainStatus.className = 'chain-status valid';
                 chainStatus.textContent = 'Chain Valid ✓';
                 document.getElementById('statChain').textContent = 'Valid';
             } else {
-                const tamperedRecord = Math.floor(Math.random() * 1000) + 100;
                 chainStatus.className = 'chain-status invalid';
-                chainStatus.textContent = `Chain Broken ✗ — record #${tamperedRecord} tampered`;
+                chainStatus.textContent = 'Chain Broken ✗ — demo mode';
                 document.getElementById('statChain').textContent = 'Invalid';
             }
+        }
+
+        async function fetchAgents() {
+            try {
+                const response = await fetch(CONFIG.apiUrl + '/agents', {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (!response.ok) return [];
+                const data = await response.json();
+                return data.agents || [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function updateAgentsList(agents) {
+            if (!agents.length) return;
+            const container = document.querySelector('.agents-list');
+            if (!container) return;
+            container.innerHTML = '';
+            agents.forEach(agent => {
+                const statusClass = agent.status === 'paused' ? 'paused' : 'active';
+                const agentEl = document.createElement('div');
+                agentEl.className = 'agent-card' + (STATE.selectedAgent === agent.id ? ' active' : '');
+                agentEl.innerHTML = `
+                    <div class="agent-header">
+                        <div class="agent-status-dot ${statusClass}"></div>
+                        <span class="agent-name">${agent.name || agent.id}</span>
+                    </div>
+                    <div class="agent-meta">${agent.framework || 'custom'} · ${agent.total_events || 0} events</div>
+                `;
+                agentEl.addEventListener('click', () => {
+                    STATE.selectedAgent = STATE.selectedAgent === agent.id ? null : agent.id;
+                    document.querySelectorAll('.agent-card').forEach(c => c.classList.remove('active'));
+                    if (STATE.selectedAgent) agentEl.classList.add('active');
+                    renderTimeline();
+                });
+                container.appendChild(agentEl);
+            });
         }
 
         // Main Poll Loop
@@ -1519,6 +1603,8 @@
                         renderTimeline();
                         updateStats();
                     }
+                    const agents = await fetchAgents();
+                    updateAgentsList(agents);
                 }
             }
 
