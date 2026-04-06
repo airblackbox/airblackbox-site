@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why AIR Blackbox — Local-First AI Compliance That You Control</title>
+    <meta name="description" content="AIR Blackbox is local-first, open-source AI compliance infrastructure. No API keys. No phone-home. No vendor lock-in. HMAC-SHA256 audit chains you own. Compare architectures before choosing your compliance layer.">
+    <meta name="keywords" content="AI compliance comparison, local-first AI governance, HMAC-SHA256 audit trail, EU AI Act compliance tool, open source AI compliance, AI agent audit, tamper-evident logging, self-hosted compliance, no vendor lock-in AI, air-blackbox vs">
+    <meta property="og:title" content="Why AIR Blackbox — Local-First AI Compliance">
+    <meta property="og:description" content="Your compliance evidence should never leave your infrastructure. Compare local-first vs SaaS-dependent architectures.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://airblackbox.ai/why">
+    <link rel="canonical" href="https://airblackbox.ai/why">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #080b14;
+            --bg-card: #0d1117;
+            --bg-elevated: #161b22;
+            --border: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-dim: #484f58;
+            --accent: #fbbf24;
+            --accent-glow: rgba(251, 191, 36, 0.15);
+            --green: #3fb950;
+            --red: #f85149;
+            --yellow: #d29922;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Sora', -apple-system, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--sans); background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
+        a { color: #58a6ff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code, .mono { font-family: var(--mono); }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        /* Header */
+        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(8,11,20,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text-primary); }
+        .logo span { color: #fbbf24; }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: #fbbf24; text-decoration: none; }
+        .nav-links .btn-sm { background: #fbbf24; color: var(--bg-deep); padding: 0.4rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.8rem; }
+        .nav-links .active { color: #fbbf24; }
+
+        /* Hero */
+        .hero { padding: 9rem 0 4rem; text-align: center; position: relative; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(251,191,36,0.06) 0%, transparent 70%); pointer-events: none; }
+        .hero h1 { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 800; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 1.2rem; }
+        .hero h1 .highlight { background: linear-gradient(135deg, var(--accent), #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero .subtitle { color: var(--text-secondary); font-size: 1.05rem; max-width: 640px; margin: 0 auto 2.5rem; line-height: 1.8; }
+
+        /* Sections */
+        section { padding: 4rem 0; }
+        .section-label { font-family: var(--mono); font-size: 0.75rem; color: #fbbf24; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; }
+        .section-title { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; letter-spacing: -1px; margin-bottom: 1rem; }
+        .section-desc { color: var(--text-secondary); max-width: 600px; margin-bottom: 2.5rem; font-size: 0.95rem; line-height: 1.8; }
+
+        /* Comparison Table */
+        .compare-table { width: 100%; border-collapse: collapse; margin: 2rem 0; }
+        .compare-table th, .compare-table td { padding: 1rem 1.5rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+        .compare-table th { font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); background: var(--bg-elevated); }
+        .compare-table th:first-child { border-radius: 8px 0 0 0; }
+        .compare-table th:last-child { border-radius: 0 8px 0 0; }
+        .compare-table td:first-child { color: var(--text-secondary); font-weight: 500; }
+        .col-air { color: var(--green); font-weight: 600; }
+        .col-saas { color: var(--text-dim); }
+        .compare-table tr:hover { background: rgba(251,191,36,0.03); }
+
+        /* Principle Cards */
+        .principles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .principle-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: border-color 0.3s; }
+        .principle-card:hover { border-color: #fbbf24; }
+        .principle-num { font-family: var(--mono); font-size: 2.5rem; font-weight: 800; color: var(--accent); opacity: 0.2; margin-bottom: 0.5rem; }
+        .principle-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; }
+        .principle-card p { color: var(--text-secondary); font-size: 0.88rem; line-height: 1.7; }
+
+        /* Architecture diagram */
+        .arch-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0; }
+        .arch-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
+        .arch-panel h3 { font-family: var(--mono); font-size: 0.85rem; font-weight: 700; margin-bottom: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+        .arch-panel.local h3 { color: var(--green); }
+        .arch-panel.saas h3 { color: var(--text-dim); }
+        .arch-flow-v { display: flex; flex-direction: column; gap: 0.5rem; }
+        .arch-node { padding: 0.6rem 1rem; border-radius: 6px; font-size: 0.82rem; text-align: center; }
+        .arch-node.you { background: rgba(63, 185, 80, 0.1); border: 1px solid rgba(63, 185, 80, 0.3); color: var(--green); }
+        .arch-node.neutral { background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary); }
+        .arch-node.risk { background: rgba(248, 81, 73, 0.08); border: 1px solid rgba(248, 81, 73, 0.25); color: var(--red); }
+        .arch-arrow-down { text-align: center; color: var(--text-dim); font-family: var(--mono); font-size: 0.8rem; }
+
+        /* Crypto section */
+        .crypto-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0; }
+        .crypto-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
+        .crypto-card h4 { font-family: var(--mono); font-size: 0.9rem; margin-bottom: 1rem; }
+        .crypto-card.proven h4 { color: var(--green); }
+        .crypto-card.exotic h4 { color: var(--text-dim); }
+        .crypto-detail { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+        .crypto-detail:last-child { border-bottom: none; }
+        .crypto-label { color: var(--text-secondary); }
+        .crypto-value { font-family: var(--mono); }
+
+        /* Stats bar */
+        .stats-bar { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; padding: 2.5rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin: 2rem 0; }
+        .stat { text-align: center; }
+        .stat .num { font-size: 2rem; font-weight: 800; }
+        .stat .label { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.3rem; }
+
+        /* CTA */
+        .cta-section { text-align: center; padding: 5rem 0; }
+        .cta-section h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; margin-bottom: 1rem; }
+        .cta-section p { color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .cta-install { font-family: var(--mono); background: var(--bg-card); border: 1px solid var(--border); padding: 0.8rem 1.5rem; border-radius: 8px; font-size: 1rem; display: inline-block; margin-bottom: 1.5rem; color: var(--green); cursor: pointer; transition: border-color 0.2s; }
+        .cta-install:hover { border-color: #fbbf24; }
+        .cta-install::before { content: '$ '; color: var(--text-dim); }
+        .cta-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .cta-links a { padding: 0.7rem 1.5rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
+        .btn-primary { background: #fbbf24; color: var(--bg-deep); }
+        .btn-primary:hover { opacity: 0.85; text-decoration: none; }
+        .btn-secondary { border: 1px solid var(--border); color: var(--text-primary); }
+        .btn-secondary:hover { border-color: #fbbf24; text-decoration: none; }
+
+        /* Footer */
+        footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 3rem; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; }
+        .footer-col h4 { font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; }
+        .footer-col a { display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem; }
+        .footer-bottom { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.8rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .arch-compare, .crypto-compare { grid-template-columns: 1fr; }
+            .compare-table { font-size: 0.78rem; }
+            .compare-table th, .compare-table td { padding: 0.7rem 0.8rem; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .stats-bar { gap: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header><nav>
+        <a href="/" style="text-decoration:none"><div class="logo">AIR <span>Blackbox</span></div></a>
+        <div class="nav-links">
+            <a href="/#features">Features</a>
+            <a href="/why" class="active">Why AIR</a>
+            <a href="/blog/">Blog</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="https://github.com/airblackbox/gateway">GitHub</a>
+            <a href="https://pypi.org/project/air-blackbox/" class="btn-sm">PyPI</a>
+        </div>
+    </nav></header>
+
+    <!-- Hero -->
+    <div class="hero"><div class="container">
+        <h1>Your compliance evidence should<br><span class="highlight">never leave your infrastructure</span></h1>
+        <p class="subtitle">When regulators come asking, the question isn't "do you have logs?" It's "can you prove they haven't been tampered with, and do you control them?" Architecture decisions made today determine whether you can answer that question in 2027.</p>
+    </div></div>
+
+    <!-- Design Principles -->
+    <section><div class="container">
+        <div class="section-label">Design Principles</div>
+        <div class="section-title">Five decisions that define AIR Blackbox</div>
+        <p class="section-desc">Every architecture choice serves one goal: compliance evidence that you own, you control, and you can defend under audit.</p>
+
+        <div class="principles-grid">
+            <div class="principle-card">
+                <div class="principle-num">01</div>
+                <h3>Local-first. Always.</h3>
+                <p>Every audit record is written to your filesystem, your database, your infrastructure. Nothing phones home. Nothing requires an internet connection. If our website goes offline tomorrow, your compliance evidence is unaffected.</p>
+            </div>
+            <div class="principle-card">
+                <div class="principle-num">02</div>
+                <h3>No API key required</h3>
+                <p><code>pip install air-blackbox</code> and you're running. No signup, no account creation, no vendor relationship. The scanner, the trust layers, the audit chains &mdash; all work without authenticating to any external service.</p>
+            </div>
+            <div class="principle-card">
+                <div class="principle-num">03</div>
+                <h3>You own the cryptography</h3>
+                <p>HMAC-SHA256 runs in your process, on your machine. The signing keys never leave your environment. You can verify the chain yourself with standard tooling &mdash; no proprietary verification endpoint needed.</p>
+            </div>
+            <div class="principle-card">
+                <div class="principle-num">04</div>
+                <h3>Open source. Auditable code.</h3>
+                <p>Every line of code across all 11 packages is on GitHub under permissive licenses. You can read the signing logic, the policy engine, the scanner rules. No black boxes inside the blackbox.</p>
+            </div>
+            <div class="principle-card">
+                <div class="principle-num">05</div>
+                <h3>Framework-native integration</h3>
+                <p>Trust layers hook into LangChain callbacks, CrewAI decorators, OpenAI SDK, Claude Agent SDK, and Google ADK. One import, one line of config. No separate system to maintain.</p>
+            </div>
+            <div class="principle-card">
+                <div class="principle-num">06</div>
+                <h3>Scanner + runtime, not just one</h3>
+                <p>Static analysis catches gaps in your code before deployment. Runtime trust layers capture evidence during execution. You need both to satisfy Articles 11 and 12. Most tools only offer one.</p>
+            </div>
+        </div>
+    </div></section>
+
+    <!-- Architecture Comparison -->
+    <section style="border-top: 1px solid var(--border);"><div class="container">
+        <div class="section-label">Architecture</div>
+        <div class="section-title">Where does your compliance evidence live?</div>
+        <p class="section-desc">The most important question when evaluating any compliance tool. If the answer is "someone else's servers," you have a dependency that regulators will ask about.</p>
+
+        <div class="arch-compare">
+            <div class="arch-panel local">
+                <h3>Local-First (AIR Blackbox)</h3>
+                <div class="arch-flow-v">
+                    <div class="arch-node you">Your AI Agent</div>
+                    <div class="arch-arrow-down">&darr;</div>
+                    <div class="arch-node you">Trust Layer (in-process)</div>
+                    <div class="arch-arrow-down">&darr;</div>
+                    <div class="arch-node you">HMAC-SHA256 Signing (local)</div>
+                    <div class="arch-arrow-down">&darr;</div>
+                    <div class="arch-node you">Your SQLite / Your Filesystem</div>
+                    <div class="arch-arrow-down" style="margin-top: 0.5rem; color: var(--green);">&check; You control every layer</div>
+                </div>
+            </div>
+            <div class="arch-panel saas">
+                <h3>SaaS-Dependent Alternative</h3>
+                <div class="arch-flow-v">
+                    <div class="arch-node neutral">Your AI Agent</div>
+                    <div class="arch-arrow-down">&darr;</div>
+                    <div class="arch-node neutral">SDK Wrapper (in-process)</div>
+                    <div class="arch-arrow-down">&darr; API call over internet</div>
+                    <div class="arch-node risk">Vendor's Cloud Servers</div>
+                    <div class="arch-arrow-down">&darr;</div>
+                    <div class="arch-node risk">Vendor's Signing Service</div>
+                    <div class="arch-arrow-down" style="margin-top: 0.5rem; color: var(--red);">&times; Vendor controls evidence chain</div>
+                </div>
+            </div>
+        </div>
+    </div></section>
+
+    <!-- Comparison Table -->
+    <section><div class="container">
+        <div class="section-label">Comparison</div>
+        <div class="section-title">Architecture decisions matter</div>
+        <p class="section-desc">Not all compliance tools are built the same. The differences show up when auditors arrive.</p>
+
+        <table class="compare-table">
+            <thead>
+                <tr>
+                    <th>Capability</th>
+                    <th>AIR Blackbox</th>
+                    <th>SaaS-Dependent Tools</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Where evidence is stored</td>
+                    <td class="col-air">Your infrastructure</td>
+                    <td class="col-saas">Vendor's cloud</td>
+                </tr>
+                <tr>
+                    <td>Works offline</td>
+                    <td class="col-air">Yes &mdash; fully functional</td>
+                    <td class="col-saas">No &mdash; requires internet</td>
+                </tr>
+                <tr>
+                    <td>Account / API key required</td>
+                    <td class="col-air">No</td>
+                    <td class="col-saas">Yes</td>
+                </tr>
+                <tr>
+                    <td>Signing happens</td>
+                    <td class="col-air">In your process (HMAC-SHA256)</td>
+                    <td class="col-saas">On vendor's servers</td>
+                </tr>
+                <tr>
+                    <td>Vendor shutdown risk</td>
+                    <td class="col-air">None &mdash; self-contained</td>
+                    <td class="col-saas">Evidence pipeline breaks</td>
+                </tr>
+                <tr>
+                    <td>Verify chain independently</td>
+                    <td class="col-air">Yes &mdash; standard tooling</td>
+                    <td class="col-saas">Requires vendor's endpoint</td>
+                </tr>
+                <tr>
+                    <td>Source code</td>
+                    <td class="col-air">Fully open, auditable</td>
+                    <td class="col-saas">Closed / partial</td>
+                </tr>
+                <tr>
+                    <td>Static code scanner</td>
+                    <td class="col-air">39 checks, Articles 9-15</td>
+                    <td class="col-saas">Typically not included</td>
+                </tr>
+                <tr>
+                    <td>Framework trust layers</td>
+                    <td class="col-air">6 frameworks, 11 PyPI packages</td>
+                    <td class="col-saas">Limited integrations</td>
+                </tr>
+                <tr>
+                    <td>Cryptographic algorithm</td>
+                    <td class="col-air">HMAC-SHA256 (NIST standard)</td>
+                    <td class="col-saas">Varies &mdash; often proprietary</td>
+                </tr>
+                <tr>
+                    <td>Price</td>
+                    <td class="col-air">Free &amp; open source</td>
+                    <td class="col-saas">Free tier &rarr; paid lock-in</td>
+                </tr>
+            </tbody>
+        </table>
+    </div></section>
+
+    <!-- Cryptography -->
+    <section style="border-top: 1px solid var(--border);"><div class="container">
+        <div class="section-label">Cryptography</div>
+        <div class="section-title">Proven standards vs. exotic algorithms</div>
+        <p class="section-desc">Some tools market post-quantum signature schemes as a feature. Here's why that's a distraction for compliance evidence in 2026.</p>
+
+        <div class="crypto-compare">
+            <div class="crypto-card proven">
+                <h4>HMAC-SHA256 (AIR Blackbox)</h4>
+                <div class="crypto-detail">
+                    <span class="crypto-label">NIST approved</span>
+                    <span class="crypto-value" style="color: var(--green);">Yes &mdash; FIPS 198-1</span>
+                </div>
+                <div class="crypto-detail">
+                    <span class="crypto-label">Used by</span>
+                    <span class="crypto-value">Banking, healthcare, AWS, Stripe</span>
+                </div>
+                <div class="crypto-detail">
+                    <span class="crypto-label">Runs where</span>
+                    <span class="crypto-value" style="color: var(--green);">In your process</span>
+                </div>
+                <div class="crypto-detail">
+                    <span class="crypto-label">Dependencies</span>
+                    <span class="crypto-value">Python stdlib (hashlib)</span>
+                </div>
+                <div class="crypto-detail">
+                    <span class="crypto-label">Auditor familiarity</span>
+                    <span class="crypto-value" style="color: var(--green);">Universal</span>
+                </div>
+                <div class="crypto-detail">
+                    <span class="crypto-label">Quantum threat (2026)</span>
+                    <span class="crypto-value">Not applicable to HMAC</span>
+                </div>
+            </div>
+            <div class="crypto-card exotic">
+                <h4>Post-Quantum Schemes (e.g. ML-DSA)</h4>
+                <div class="crypto-detail">
+                    <span class="crypto-label">NIST approved</span>
+                    <span class="crypto-value">FIPS 204 (Aug 2024)</span>
+                </div>
+                <div class="crypto-detail">
+                    <span class="crypto-label">Used by</span>
+                    <span class="crypto-value">Research, early adopters</span>
+                </div>
+                <div class="crypto-detail">
+                    <span class="crypto-label">Runs where</span>
+                    <span class="crypto-value" style="color: var(--red);">Vendor's servers</span>
+                </div>
+                <div class="crypto-detail">
+                    <span class="crypto-label">Dependencies</span>
+                    <span class="crypto-value">Vendor's cloud API</span>
+                </div>
+                <div class="crypto-detail">
+                    <span class="crypto-label">Auditor familiarity</span>
+                    <span class="crypto-value" style="color: var(--red);">Very low</span>
+                </div>
+                <div class="crypto-detail">
+                    <span class="crypto-label">Quantum threat (2026)</span>
+                    <span class="crypto-value">Decades away for symmetric</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 2rem; margin-top: 1.5rem;">
+            <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.8;">
+                <strong style="color: var(--text-primary);">The technical reality:</strong> HMAC-SHA256 is a symmetric construction. Grover's algorithm (the quantum threat to symmetric crypto) would require a 2<sup>128</sup> quantum search &mdash; well beyond any projected quantum computer capability. NIST's own guidance is that HMAC-SHA256 remains secure in a post-quantum world. Post-quantum <em>signature</em> schemes solve a different problem (public-key authentication) that isn't relevant to tamper-evident audit chains. Marketing post-quantum crypto for compliance logs is solving a problem that doesn't exist.
+            </p>
+        </div>
+    </div></section>
+
+    <!-- What regulators actually ask -->
+    <section><div class="container">
+        <div class="section-label">Regulatory Reality</div>
+        <div class="section-title">What auditors actually ask for</div>
+        <p class="section-desc">We've read the regulation. Here's what Articles 11 and 12 actually require &mdash; and what they don't.</p>
+
+        <div class="principles-grid">
+            <div class="principle-card">
+                <h3>Art. 11 &mdash; Technical Documentation</h3>
+                <p>Requires documentation of the AI system's design, development, and intended purpose. AIR Blackbox's static scanner checks your codebase against 39 requirements and generates evidence bundles. No SaaS needed.</p>
+            </div>
+            <div class="principle-card">
+                <h3>Art. 12 &mdash; Record-Keeping</h3>
+                <p>Requires automatic logging of events during operation, with records that enable traceability. The key word is <strong>tamper-evident</strong> &mdash; you must prove records haven't been modified. HMAC-SHA256 chains do exactly this.</p>
+            </div>
+            <div class="principle-card">
+                <h3>What's NOT required</h3>
+                <p>The EU AI Act does not prescribe specific cryptographic algorithms, does not require post-quantum signatures, does not require cloud-based signing services, and does not require any vendor relationship for compliance evidence.</p>
+            </div>
+        </div>
+    </div></section>
+
+    <!-- Stats -->
+    <section><div class="container">
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="num" style="color: var(--green);">11</div>
+                <div class="label">PyPI Packages</div>
+            </div>
+            <div class="stat">
+                <div class="num" style="color: var(--accent);">6</div>
+                <div class="label">Framework Trust Layers</div>
+            </div>
+            <div class="stat">
+                <div class="num" style="color: #58a6ff;">39</div>
+                <div class="label">Compliance Checks</div>
+            </div>
+            <div class="stat">
+                <div class="num" style="color: var(--text-primary);">0</div>
+                <div class="label">External Dependencies</div>
+            </div>
+            <div class="stat">
+                <div class="num" style="color: var(--green);">$0</div>
+                <div class="label">Required to Start</div>
+            </div>
+        </div>
+    </div></section>
+
+    <!-- CTA -->
+    <section class="cta-section"><div class="container">
+        <h2>Start in 30 seconds. Own your evidence forever.</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">No signup. No API key. No vendor dependency. Just install and scan.</p>
+        <div class="cta-install" onclick="navigator.clipboard.writeText('pip install air-blackbox')">pip install air-blackbox</div>
+        <div class="cta-links">
+            <a href="/quickstart" class="btn-primary">Quickstart Guide</a>
+            <a href="https://github.com/airblackbox/gateway" class="btn-secondary">View on GitHub</a>
+            <a href="/dashboard" class="btn-secondary">Live Dashboard</a>
+        </div>
+    </div></section>
+
+    <!-- Footer -->
+    <footer><div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="logo" style="margin-bottom:0.8rem">AIR <span>Blackbox</span></div>
+                <p style="color:var(--text-dim); font-size:0.85rem;">EU AI Act gap analysis scanner.<br>Identifies gaps. Does not certify.<br>Open source. Apache 2.0.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="https://github.com/airblackbox/gateway">Gateway Repo</a>
+                <a href="https://pypi.org/project/air-blackbox/">PyPI Package</a>
+                <a href="/quickstart">Quickstart</a>
+            </div>
+            <div class="footer-col">
+                <h4>Ecosystem</h4>
+                <a href="https://github.com/airblackbox/VaultMind">VaultMind</a>
+                <a href="https://github.com/airblackbox/air-blackbox-mcp">MCP Server</a>
+                <a href="https://github.com/airblackbox">GitHub Org</a>
+            </div>
+            <div class="footer-col">
+                <h4>Community</h4>
+                <a href="https://github.com/airblackbox/gateway/discussions">Discussions</a>
+                <a href="https://github.com/airblackbox/gateway/issues">Issues</a>
+                <a href="mailto:jason@airblackbox.ai">jason@airblackbox.ai</a>
+                <a href="/terms" style="margin-top:0.5rem">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">&copy; 2026 AIR Blackbox. Open-source AI governance. Built on OpenTelemetry.</div>
+    </div></footer>
+</body>
+</html>

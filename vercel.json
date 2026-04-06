@@ -125,6 +125,10 @@
       "destination": "/ci-cd.html"
     },
     {
+      "source": "/why",
+      "destination": "/why.html"
+    },
+    {
       "source": "/security.txt",
       "destination": "/.well-known/security.txt"
     }
