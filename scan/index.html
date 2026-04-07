@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIR Blackbox — Scan Your AI Code for EU AI Act Compliance</title>
+    <meta name="description" content="Free, instant EU AI Act compliance scanner. Paste your Python AI agent code and get a compliance report across 6 articles. No sign-up. No data sent anywhere. Runs 100% in your browser.">
+    <meta name="keywords" content="EU AI Act scanner, AI compliance checker, free AI audit, Python AI compliance, LangChain compliance, CrewAI compliance, OpenAI compliance, Article 9, Article 10, Article 11, Article 12, Article 14, Article 15">
+    <meta property="og:title" content="AIR Blackbox — Free EU AI Act Compliance Scanner">
+    <meta property="og:description" content="Paste your Python AI code. Get instant compliance results across 6 EU AI Act articles. 100% in-browser. No data leaves your machine.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://airblackbox.ai/scan">
+    <link rel="canonical" href="https://airblackbox.ai/scan">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #080b14;
+            --bg-card: #0d1117;
+            --bg-elevated: #161b22;
+            --border: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-dim: #484f58;
+            --accent: #fbbf24;
+            --accent-glow: rgba(251, 191, 36, 0.15);
+            --green: #3fb950;
+            --red: #f85149;
+            --yellow: #d29922;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Sora', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--sans); background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
+        a { color: #58a6ff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code, .mono { font-family: var(--mono); }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        /* Header */
+        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(8,11,20,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text-primary); text-decoration: none; }
+        .logo span { color: #fbbf24; }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: #fbbf24; text-decoration: none; }
+        .nav-links .active { color: #fbbf24; }
+        .nav-links .btn-sm { background: #fbbf24; color: var(--bg-deep); padding: 0.4rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.8rem; }
+
+        /* Page */
+        .page { padding: 7rem 0 4rem; }
+        .page-header { text-align: center; margin-bottom: 3rem; }
+        .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 1rem; }
+        .page-header h1 .highlight { background: linear-gradient(135deg, var(--accent), #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .page-header p { color: var(--text-secondary); font-size: 1rem; max-width: 600px; margin: 0 auto; }
+        .privacy-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.3); color: var(--green); padding: 0.35rem 0.9rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-top: 1rem; letter-spacing: 0.3px; }
+        .privacy-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+        /* Editor Area */
+        .editor-wrapper { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+        .editor-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .editor-bar { background: var(--bg-elevated); padding: 0.65rem 1rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+        .editor-bar-left { display: flex; align-items: center; gap: 8px; }
+        .editor-dots { display: flex; gap: 6px; }
+        .editor-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot-red { background: var(--red); }
+        .dot-yellow { background: var(--yellow); }
+        .dot-green { background: var(--green); }
+        .editor-bar .filename { font-family: var(--mono); font-size: 0.78rem; color: var(--text-dim); margin-left: 8px; }
+        .editor-bar-right { display: flex; gap: 0.5rem; }
+        .example-btn { font-family: var(--mono); font-size: 0.7rem; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary); padding: 0.3rem 0.7rem; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .example-btn:hover { border-color: var(--accent); color: var(--accent); }
+        #codeInput {
+            width: 100%; min-height: 380px; padding: 1.2rem 1.5rem;
+            background: transparent; border: none; color: var(--text-primary);
+            font-family: var(--mono); font-size: 0.82rem; line-height: 1.8;
+            resize: vertical; outline: none; tab-size: 4;
+        }
+        #codeInput::placeholder { color: var(--text-dim); }
+
+        /* Scan Button */
+        .scan-actions { display: flex; gap: 1rem; align-items: center; justify-content: center; margin-bottom: 2.5rem; }
+        .scan-btn {
+            background: var(--accent); color: var(--bg-deep); border: none;
+            padding: 0.85rem 2.5rem; border-radius: 10px; font-family: var(--sans);
+            font-size: 1rem; font-weight: 700; cursor: pointer;
+            transition: all 0.2s; letter-spacing: -0.3px;
+        }
+        .scan-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .scan-btn:active { transform: translateY(0); }
+        .scan-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        .scan-btn .icon { margin-right: 0.5rem; }
+        .clear-btn {
+            background: transparent; border: 1px solid var(--border); color: var(--text-secondary);
+            padding: 0.85rem 1.5rem; border-radius: 10px; font-family: var(--sans);
+            font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s;
+        }
+        .clear-btn:hover { border-color: var(--red); color: var(--red); }
+
+        /* Results */
+        #results { display: none; }
+        #results.visible { display: block; }
+
+        .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .results-title { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; }
+
+        /* Score Ring */
+        .score-ring-wrapper { display: flex; align-items: center; gap: 1.5rem; }
+        .score-ring { position: relative; width: 80px; height: 80px; }
+        .score-ring svg { transform: rotate(-90deg); }
+        .score-ring-bg { fill: none; stroke: var(--bg-elevated); stroke-width: 6; }
+        .score-ring-fill { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease; }
+        .score-ring-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: var(--mono); font-size: 1.2rem; font-weight: 700; }
+        .score-details { display: flex; gap: 1.5rem; }
+        .score-stat { text-align: center; }
+        .score-stat .num { font-family: var(--mono); font-size: 1.3rem; font-weight: 700; }
+        .score-stat .label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Frameworks detected */
+        .frameworks-bar { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .framework-tag { font-family: var(--mono); font-size: 0.72rem; background: var(--bg-elevated); border: 1px solid var(--border); padding: 0.3rem 0.7rem; border-radius: 6px; color: var(--text-secondary); }
+        .framework-tag.trust { border-color: rgba(63,185,80,0.4); color: var(--green); }
+        .framework-tag.no-trust { border-color: rgba(248,81,73,0.3); color: var(--red); }
+
+        /* Article Cards */
+        .article-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; margin-bottom: 2.5rem; }
+        .article-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; transition: border-color 0.3s; }
+        .article-card:hover { border-color: var(--accent); }
+        .article-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+        .article-num { font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); }
+        .article-title { font-size: 0.95rem; font-weight: 700; }
+        .status-badge { font-family: var(--mono); font-size: 0.7rem; font-weight: 600; padding: 0.25rem 0.7rem; border-radius: 20px; letter-spacing: 0.5px; }
+        .status-pass { background: rgba(63,185,80,0.12); color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+        .status-warn { background: rgba(210,153,34,0.12); color: var(--yellow); border: 1px solid rgba(210,153,34,0.3); }
+        .status-fail { background: rgba(248,81,73,0.12); color: var(--red); border: 1px solid rgba(248,81,73,0.3); }
+
+        .finding-list { list-style: none; }
+        .finding-item { padding: 0.6rem 0; border-bottom: 1px solid rgba(33,38,45,0.5); display: flex; align-items: flex-start; gap: 0.8rem; }
+        .finding-item:last-child { border-bottom: none; }
+        .finding-icon { font-size: 0.85rem; margin-top: 2px; flex-shrink: 0; }
+        .finding-content { flex: 1; }
+        .finding-name { font-size: 0.82rem; font-weight: 600; margin-bottom: 0.2rem; }
+        .finding-evidence { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+        .finding-fix { font-size: 0.72rem; color: var(--accent); margin-top: 0.3rem; font-family: var(--mono); }
+        .severity-tag { font-family: var(--mono); font-size: 0.6rem; font-weight: 600; padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.5rem; vertical-align: middle; }
+        .sev-HIGH { background: rgba(248,81,73,0.15); color: var(--red); }
+        .sev-MEDIUM { background: rgba(210,153,34,0.15); color: var(--yellow); }
+        .sev-LOW { background: rgba(63,185,80,0.15); color: var(--green); }
+
+        /* Injection Results */
+        .injection-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+        .injection-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+        .injection-verdict { font-family: var(--mono); font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.7rem; border-radius: 20px; }
+        .verdict-CLEAN { background: rgba(63,185,80,0.12); color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+        .verdict-SUSPICIOUS { background: rgba(210,153,34,0.12); color: var(--yellow); border: 1px solid rgba(210,153,34,0.3); }
+        .verdict-BLOCKED { background: rgba(248,81,73,0.12); color: var(--red); border: 1px solid rgba(248,81,73,0.3); }
+
+        /* CTA */
+        .cta-section { text-align: center; padding: 3rem 0; border-top: 1px solid var(--border); }
+        .cta-section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.8rem; }
+        .cta-section p { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .cta-install { font-family: var(--mono); background: var(--bg-card); border: 1px solid var(--border); padding: 0.8rem 1.5rem; border-radius: 8px; font-size: 0.9rem; display: inline-block; color: var(--green); cursor: pointer; transition: border-color 0.2s; }
+        .cta-install:hover { border-color: var(--accent); }
+        .cta-install::before { content: '$ '; color: var(--text-dim); }
+        .cta-links { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap; }
+        .cta-links a { padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem; border: 1px solid var(--border); color: var(--text-primary); transition: all 0.2s; }
+        .cta-links a:hover { border-color: var(--accent); text-decoration: none; }
+
+        /* Footer */
+        footer { padding: 2rem 0; border-top: 1px solid var(--border); text-align: center; }
+        footer p { color: var(--text-dim); font-size: 0.75rem; }
+
+        @media (max-width: 768px) {
+            .article-cards { grid-template-columns: 1fr; }
+            .score-ring-wrapper { flex-direction: column; align-items: flex-start; }
+            .results-header { flex-direction: column; align-items: flex-start; }
+            .editor-bar-right { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo">AIR <span>Blackbox</span></a>
+            <div class="nav-links">
+                <a href="/demo">Demo</a>
+                <a href="/scan" class="active">Scan</a>
+                <a href="/quickstart">Docs</a>
+                <a href="/blog">Blog</a>
+                <a href="https://github.com/airblackbox" target="_blank">GitHub</a>
+                <a href="https://pypi.org/project/air-blackbox/" target="_blank" class="btn-sm">pip install</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="page">
+        <div class="container">
+            <div class="page-header">
+                <h1>Scan Your Code for <span class="highlight">EU AI Act</span> Compliance</h1>
+                <p>Paste your Python AI agent code below. Get an instant compliance report across 6 EU AI Act articles — 20 checks, zero sign-up.</p>
+                <div class="privacy-badge">100% in-browser — your code never leaves your machine</div>
+            </div>
+
+            <!-- Editor -->
+            <div class="editor-wrapper">
+                <div class="editor-panel">
+                    <div class="editor-bar">
+                        <div class="editor-bar-left">
+                            <div class="editor-dots">
+                                <div class="editor-dot dot-red"></div>
+                                <div class="editor-dot dot-yellow"></div>
+                                <div class="editor-dot dot-green"></div>
+                            </div>
+                            <span class="filename">your_agent.py</span>
+                        </div>
+                        <div class="editor-bar-right">
+                            <button class="example-btn" onclick="loadExample('bare')">Bare Agent</button>
+                            <button class="example-btn" onclick="loadExample('compliant')">Compliant Agent</button>
+                            <button class="example-btn" onclick="loadExample('crewai')">CrewAI</button>
+                        </div>
+                    </div>
+                    <textarea id="codeInput" placeholder="# Paste your Python AI agent code here...
+#
+# Example:
+# from langchain.agents import AgentExecutor
+# from langchain_openai import ChatOpenAI
+#
+# llm = ChatOpenAI(model='gpt-4o')
+# agent = AgentExecutor(agent=llm, tools=[my_tool])
+# result = agent.invoke({'input': 'Hello'})
+" spellcheck="false"></textarea>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="scan-actions">
+                <button class="scan-btn" id="scanBtn" onclick="runScan()">
+                    <span class="icon">&#9654;</span> Scan for Compliance
+                </button>
+                <button class="clear-btn" onclick="clearAll()">Clear</button>
+            </div>
+
+            <!-- Results -->
+            <div id="results">
+                <div class="results-header">
+                    <div>
+                        <div class="results-title" id="resultsTitle">Compliance Report</div>
+                        <div id="frameworksBar" class="frameworks-bar"></div>
+                    </div>
+                    <div class="score-ring-wrapper">
+                        <div class="score-ring">
+                            <svg width="80" height="80" viewBox="0 0 80 80">
+                                <circle class="score-ring-bg" cx="40" cy="40" r="34" />
+                                <circle class="score-ring-fill" id="scoreRing" cx="40" cy="40" r="34"
+                                    stroke-dasharray="213.6" stroke-dashoffset="213.6" />
+                            </svg>
+                            <div class="score-ring-text" id="scoreText">0%</div>
+                        </div>
+                        <div class="score-details">
+                            <div class="score-stat"><div class="num" id="statPass" style="color:var(--green)">0</div><div class="label">Pass</div></div>
+                            <div class="score-stat"><div class="num" id="statWarn" style="color:var(--yellow)">0</div><div class="label">Warn</div></div>
+                            <div class="score-stat"><div class="num" id="statFail" style="color:var(--red)">0</div><div class="label">Fail</div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="articleCards" class="article-cards"></div>
+
+                <div id="injectionSection" class="injection-section" style="display:none">
+                    <div class="injection-header">
+                        <div>
+                            <div class="article-num">Security</div>
+                            <div class="article-title">Prompt Injection Scan</div>
+                        </div>
+                        <span class="injection-verdict" id="injectionVerdict"></span>
+                    </div>
+                    <div id="injectionDetails"></div>
+                </div>
+
+                <div class="cta-section">
+                    <h2>Fix the gaps — add air-trust</h2>
+                    <p>One pip install. Any framework. Zero dependencies. HMAC-SHA256 audit chain, PII detection, injection scanning — all local.</p>
+                    <div class="cta-install" onclick="navigator.clipboard.writeText('pip install air-trust')">pip install air-trust</div>
+                    <div class="cta-links">
+                        <a href="https://github.com/airblackbox/air-trust" target="_blank">GitHub</a>
+                        <a href="https://pypi.org/project/air-trust/" target="_blank">PyPI</a>
+                        <a href="/quickstart">Quickstart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>AIR Blackbox — Open-source EU AI Act compliance for AI agents. Apache 2.0.</p>
+        </div>
+    </footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  AIR BLACKBOX — CLIENT-SIDE EU AI ACT COMPLIANCE SCANNER
+//  Ported from air-blackbox-mcp/scanner.py — runs 100% in browser
+// ═══════════════════════════════════════════════════════════════
+
+// ── Framework Detection ────────────────────────────────────────
+const FRAMEWORK_PATTERNS = {
+    langchain: [/from langchain/, /import langchain/, /ChatOpenAI/, /LLMChain/, /AgentExecutor/],
+    crewai: [/from crewai/, /import crewai/, /Crew\(/, /Agent\(.*role=/],
+    autogen: [/from autogen/, /import autogen/, /AssistantAgent/, /UserProxyAgent/],
+    openai: [/from openai/, /import openai/, /openai\.chat/, /client\.chat\.completions/],
+    haystack: [/from haystack/, /import haystack/, /Pipeline\(/],
+    llamaindex: [/from llama_index/, /import llama_index/, /VectorStoreIndex/, /ServiceContext/],
+    semantic_kernel: [/from semantic_kernel/, /import semantic_kernel/, /Kernel\(/],
+    anthropic: [/from anthropic/, /import anthropic/, /client\.messages\.create/],
+    google_adk: [/from google/, /import google\.generativeai/, /genai\.GenerativeModel/],
+    rag: [/VectorStore/, /Retriever/, /retrieve.*document/, /embedding/, /chunk/],
+};
+
+const TRUST_LAYER_PATTERNS = [
+    /air_langchain_trust/, /air_crewai_trust/, /air_autogen_trust/,
+    /air_openai_trust/, /air_rag_trust/, /air_trust/, /AirTrust/,
+    /AuditLedger/, /ConsentGate/, /DataVault/,
+];
+
+function detectFrameworks(code) {
+    const found = [];
+    for (const [name, patterns] of Object.entries(FRAMEWORK_PATTERNS)) {
+        for (const p of patterns) {
+            if (p.test(code)) { found.push(name); break; }
+        }
+    }
+    return found;
+}
+
+function detectTrustLayer(code) {
+    return TRUST_LAYER_PATTERNS.some(p => p.test(code));
+}
+
+// ── Article Checks ─────────────────────────────────────────────
+
+function checkArt9(code) {
+    const findings = [];
+    const llmPat = /\.chat\.completions\.create\(|\.invoke\(|\.run\(|\.generate\(|\.predict\(|\.messages\.create\(/;
+    const hasLlm = llmPat.test(code);
+    const hasTry = /\btry\b[\s\S]*?\bexcept\b/.test(code);
+    if (hasLlm) {
+        findings.push({
+            article: 9, name: "LLM call error handling",
+            severity: hasTry ? "LOW" : "HIGH",
+            status: hasTry ? "pass" : "fail",
+            evidence: hasTry ? "LLM calls wrapped in try/except" : "LLM calls found without error handling",
+            fix_hint: "Wrap LLM API calls in try/except to handle failures gracefully"
+        });
+    }
+    const hasFallback = /fallback|retry|backoff|with_fallbacks|with_retry|tenacity|max_retries/i.test(code);
+    findings.push({
+        article: 9, name: "Fallback / recovery patterns",
+        severity: "MEDIUM", status: hasFallback ? "pass" : "warn",
+        evidence: hasFallback ? "Fallback/retry patterns detected" : "No fallback or retry patterns found",
+        fix_hint: "Add fallback logic for LLM failures (retry, default response, alternative model)"
+    });
+    return findings;
+}
+
+function checkArt10(code) {
+    const findings = [];
+    const hasInput = /pydantic|BaseModel|validator|field_validator|validate_input|TypedDict|dataclass|InputGuard|sanitize/.test(code);
+    findings.push({
+        article: 10, name: "Input validation / schema enforcement",
+        severity: "MEDIUM", status: hasInput ? "pass" : "warn",
+        evidence: hasInput ? "Input validation detected (Pydantic/dataclass/TypedDict)" : "No structured input validation found",
+        fix_hint: "Use Pydantic models or dataclasses to validate inputs before LLM calls"
+    });
+    const hasPii = /pii|redact|mask_(?:data|pii|email)|anonymize|tokenize_pii|presidio|scrub|sensitive_data|gdpr|personal_data/i.test(code);
+    findings.push({
+        article: 10, name: "PII handling",
+        severity: hasPii ? "LOW" : "HIGH",
+        status: hasPii ? "pass" : "warn",
+        evidence: hasPii ? "PII-aware patterns found" : "No PII detection or masking patterns found",
+        fix_hint: "Add PII detection before sending data to LLM providers"
+    });
+    return findings;
+}
+
+function checkArt11(code) {
+    const findings = [];
+    const lines = code.split("\n");
+    let totalDefs = 0, documented = 0;
+    for (let i = 0; i < lines.length; i++) {
+        const s = lines[i].trim();
+        if ((s.startsWith("def ") || s.startsWith("class ")) && !s.startsWith("def _")) {
+            totalDefs++;
+            for (let j = i + 1; j < Math.min(i + 4, lines.length); j++) {
+                const nl = lines[j].trim();
+                if (nl === "") continue;
+                if (nl.startsWith('"""') || nl.startsWith("'''")) documented++;
+                break;
+            }
+        }
+    }
+    if (totalDefs > 0) {
+        const pct = (documented / totalDefs) * 100;
+        findings.push({
+            article: 11, name: "Code documentation (docstrings)",
+            severity: pct < 30 ? "MEDIUM" : "LOW",
+            status: pct >= 60 ? "pass" : pct >= 30 ? "warn" : "fail",
+            evidence: `${documented}/${totalDefs} public functions/classes have docstrings (${Math.round(pct)}%)`,
+            fix_hint: "Add docstrings to public functions explaining purpose and parameters"
+        });
+    }
+    let totalFn = 0, typedFn = 0;
+    for (const line of lines) {
+        const s = line.trim();
+        if (s.startsWith("def ") && !s.startsWith("def _")) {
+            totalFn++;
+            if (s.includes("->") || /:\s*(str|int|float|bool|list|dict|List|Dict|Optional|Any)/.test(s)) typedFn++;
+        }
+    }
+    if (totalFn > 0) {
+        const pct = (typedFn / totalFn) * 100;
+        findings.push({
+            article: 11, name: "Type annotations",
+            severity: "LOW",
+            status: pct >= 50 ? "pass" : pct >= 20 ? "warn" : "fail",
+            evidence: `${typedFn}/${totalFn} public functions have type hints (${Math.round(pct)}%)`,
+            fix_hint: "Add type hints to function signatures"
+        });
+    }
+    return findings;
+}
+
+function checkArt12(code) {
+    const findings = [];
+    const hasLog = /import logging|from logging|getLogger|structlog|loguru|logger\.|logging\./.test(code);
+    findings.push({
+        article: 12, name: "Application logging",
+        severity: hasLog ? "LOW" : "HIGH",
+        status: hasLog ? "pass" : "fail",
+        evidence: hasLog ? "Logging framework detected" : "No logging framework found",
+        fix_hint: "Add import logging and log key decisions, errors, and LLM interactions"
+    });
+    const hasTrace = /opentelemetry|otel|trace_id|span_id|run_id|request_id|langsmith|langfuse|helicone|instrumentation|dispatcher|event_handler|TracerProvider|callbacks/i.test(code);
+    findings.push({
+        article: 12, name: "Tracing / observability",
+        severity: "MEDIUM", status: hasTrace ? "pass" : "warn",
+        evidence: hasTrace ? "Tracing/observability integration found" : "No tracing or observability integration detected",
+        fix_hint: "Add OpenTelemetry, LangSmith, or similar to track AI decisions"
+    });
+    const hasAudit = /action_log|audit_trail|audit_log|log_action|record_action|event_log|CONTENT_TRACING_ENABLED|agent_events|crew_events|emit_event/i.test(code);
+    findings.push({
+        article: 12, name: "Agent action audit trail",
+        severity: "MEDIUM", status: hasAudit ? "pass" : "warn",
+        evidence: hasAudit ? "Action-level audit logging found" : "No action-level audit trail detected",
+        fix_hint: "Log every agent action with user_id, timestamp, action_type, and target"
+    });
+    return findings;
+}
+
+function checkArt14(code) {
+    const findings = [];
+    const hasHitl = /human_in_the_loop|human_approval|require_approval|require_confirmation|confirmation_gate|ask_human|human_input|HumanApprovalCallbackHandler|confirmation_strategy|allow_delegation|interrupt_before|interrupt_after/i.test(code);
+    findings.push({
+        article: 14, name: "Human-in-the-loop patterns",
+        severity: hasHitl ? "LOW" : "HIGH",
+        status: hasHitl ? "pass" : "warn",
+        evidence: hasHitl ? "Human oversight patterns found" : "No human approval gates detected",
+        fix_hint: "Add human approval gates for high-risk actions"
+    });
+    const hasRate = /rate_limit|max_tokens|max_iterations|max_steps|budget|token_limit|cost_limit|throttle|max_rpm/i.test(code);
+    findings.push({
+        article: 14, name: "Usage limits / budget controls",
+        severity: "MEDIUM", status: hasRate ? "pass" : "warn",
+        evidence: hasRate ? "Rate limiting or budget controls found" : "No rate limiting or budget controls detected",
+        fix_hint: "Set max_tokens, max_iterations, or budget limits to prevent runaway agents"
+    });
+    const hasId = /user_id|authorized_by|delegated_by|on_behalf_of|auth_context|identity_token|Fingerprint|AgentCard/i.test(code);
+    findings.push({
+        article: 14, name: "Agent-to-user identity binding",
+        severity: "MEDIUM", status: hasId ? "pass" : "warn",
+        evidence: hasId ? "User identity binding found" : "Agent actions not tied to authorizing user",
+        fix_hint: "Track user_id alongside every agent action"
+    });
+    const hasBound = /allowed_tools|tool_whitelist|blocked_tools|allowed_actions|permission_gate|restricted_actions|tool_filter|enabled_tools/i.test(code);
+    findings.push({
+        article: 14, name: "Agent action boundaries",
+        severity: "MEDIUM", status: hasBound ? "pass" : "warn",
+        evidence: hasBound ? "Action boundary controls found" : "Agent has unrestricted tool access",
+        fix_hint: "Define allowed_tools or action boundaries to limit agent capabilities"
+    });
+    return findings;
+}
+
+function checkArt15(code) {
+    const findings = [];
+    const hasInj = /prompt.?injection|guardrail|content_filter|moderation|safety_check|prompt_guard|nemo_guardrails|rebuff|lakera|hallucination_guardrail|llm_guardrail|trust_policy/i.test(code);
+    findings.push({
+        article: 15, name: "Prompt injection defense",
+        severity: hasInj ? "LOW" : "HIGH",
+        status: hasInj ? "pass" : "warn",
+        evidence: hasInj ? "Injection defense patterns found" : "No prompt injection defense detected",
+        fix_hint: "Add input sanitization or guardrails to detect prompt injection"
+    });
+    const hasOut = /output_parser|OutputParser|PydanticOutputParser|JsonOutputParser|validate_output|response_model|structured_output|output_pydantic|output_json/.test(code);
+    findings.push({
+        article: 15, name: "LLM output validation",
+        severity: "MEDIUM", status: hasOut ? "pass" : "warn",
+        evidence: hasOut ? "Output validation/parsing found" : "No structured output validation detected",
+        fix_hint: "Use output parsers to validate LLM responses before acting on them"
+    });
+    const hasRetry = /retry|backoff|tenacity|max_retries|exponential_backoff|with_retry|Retry\(/i.test(code);
+    findings.push({
+        article: 15, name: "Retry / backoff logic",
+        severity: "LOW", status: hasRetry ? "pass" : "warn",
+        evidence: hasRetry ? "Retry/backoff patterns found" : "No retry or backoff logic detected",
+        fix_hint: "Add retry with exponential backoff for LLM API calls"
+    });
+    const hasDanger = /f".*\{.*input.*\}.*"|\.format\(.*input/.test(code);
+    if (hasDanger) {
+        findings.push({
+            article: 15, name: "Unsafe input handling",
+            severity: "HIGH", status: "warn",
+            evidence: "Raw user input may be injected directly into prompts",
+            fix_hint: "Validate and sanitize user input before injecting into LLM prompts"
+        });
+    }
+    return findings;
+}
+
+// ── Injection Detection ────────────────────────────────────────
+const INJECTION_PATTERNS = [
+    ["role_override", 0.9, /(ignore|disregard|forget).*(?:previous|above|prior).*(?:instruction|rule|prompt)/i],
+    ["dan_jailbreak", 0.9, /(DAN|do anything now|jailbreak|unlock|god mode)/i],
+    ["system_prompt_override", 0.85, /(system prompt|system message|system instruction).*(?:is|was|should be|override)/i],
+    ["safety_bypass", 0.85, /(bypass|disable|turn off|ignore).*(?:safety|filter|guard|restriction|rule)/i],
+    ["new_identity", 0.8, /(you are now|act as|pretend to be|roleplay as|your new role)/i],
+    ["urgent_override", 0.8, /(emergency|urgent|critical|override|admin).*(?:command|order|instruction|access)/i],
+    ["privilege_escalation", 0.75, /(sudo|admin|root|superuser|elevated|privilege)/i],
+    ["delimiter_injection", 0.7, /(```|<\|im_sep\|>|<\|endoftext\|>|\[INST\]|\[\/INST\])/i],
+    ["hidden_instruction", 0.7, /(hidden|secret|covert|invisible).*(?:instruction|command|prompt|message)/i],
+    ["data_exfil", 0.65, /(send|post|email|upload|exfiltrate|leak).*(?:data|info|secret|key|password|token)/i],
+    ["xml_tag_injection", 0.6, /<\/?(?:system|assistant|user|human|ai|instruction)[^>]*>/],
+    ["hypothetical_bypass", 0.6, /(hypothetically|theoretically|in theory|what if).*(?:could you|would you|can you)/i],
+];
+
+function checkInjection(code) {
+    // Scan string literals in the code for injection patterns
+    const stringLiterals = [];
+    const strPat = /(?:f?"""[\s\S]*?"""|f?'''[\s\S]*?'''|f?"[^"]*"|f?'[^']*')/g;
+    let m;
+    while ((m = strPat.exec(code)) !== null) stringLiterals.push(m[0]);
+    const textToScan = stringLiterals.join("\n");
+    if (!textToScan.trim()) return null;
+
+    const detected = [];
+    let maxWeight = 0;
+    for (const [name, weight, pat] of INJECTION_PATTERNS) {
+        if (pat.test(textToScan)) {
+            detected.push({ pattern: name, weight });
+            maxWeight = Math.max(maxWeight, weight);
+        }
+    }
+    if (detected.length === 0) return null;
+    return {
+        detected,
+        confidence: Math.round(maxWeight * 100) / 100,
+        verdict: maxWeight >= 0.7 ? "BLOCKED" : "SUSPICIOUS",
+    };
+}
+
+// ── Main Scanner ───────────────────────────────────────────────
+function scanCode(code) {
+    const frameworks = detectFrameworks(code);
+    const hasTrust = detectTrustLayer(code);
+    const findings = [
+        ...checkArt9(code), ...checkArt10(code), ...checkArt11(code),
+        ...checkArt12(code), ...checkArt14(code), ...checkArt15(code),
+    ];
+    const total = findings.length;
+    const passing = findings.filter(f => f.status === "pass").length;
+    const warnings = findings.filter(f => f.status === "warn").length;
+    const failing = findings.filter(f => f.status === "fail").length;
+    const injection = checkInjection(code);
+
+    return { frameworks, hasTrust, findings, injection, summary: { total, passing, warnings, failing } };
+}
+
+// ── UI Rendering ───────────────────────────────────────────────
+
+const ARTICLE_NAMES = {
+    9: "Risk Management",
+    10: "Data Governance",
+    11: "Technical Documentation",
+    12: "Record-Keeping",
+    14: "Human Oversight",
+    15: "Accuracy, Robustness & Cybersecurity",
+};
+
+function renderResults(result) {
+    const el = document.getElementById("results");
+    el.classList.add("visible");
+
+    // Score ring
+    const { total, passing, warnings, failing } = result.summary;
+    const pct = total > 0 ? Math.round((passing / total) * 100) : 0;
+    const circumference = 213.6;
+    const offset = circumference - (circumference * pct / 100);
+    const ring = document.getElementById("scoreRing");
+    ring.style.strokeDashoffset = offset;
+    ring.style.stroke = pct >= 70 ? "var(--green)" : pct >= 40 ? "var(--yellow)" : "var(--red)";
+    document.getElementById("scoreText").textContent = pct + "%";
+    document.getElementById("scoreText").style.color = pct >= 70 ? "var(--green)" : pct >= 40 ? "var(--yellow)" : "var(--red)";
+    document.getElementById("statPass").textContent = passing;
+    document.getElementById("statWarn").textContent = warnings;
+    document.getElementById("statFail").textContent = failing;
+
+    // Frameworks bar
+    const fbar = document.getElementById("frameworksBar");
+    fbar.innerHTML = '<span style="font-size:0.75rem;color:var(--text-dim);margin-right:0.3rem">Detected:</span>';
+    if (result.frameworks.length === 0) {
+        fbar.innerHTML += '<span class="framework-tag">No AI framework detected</span>';
+    } else {
+        result.frameworks.forEach(fw => {
+            fbar.innerHTML += `<span class="framework-tag">${fw}</span>`;
+        });
+    }
+    const trustClass = result.hasTrust ? "trust" : "no-trust";
+    const trustLabel = result.hasTrust ? "AIR trust layer detected" : "No trust layer";
+    fbar.innerHTML += `<span class="framework-tag ${trustClass}">${trustLabel}</span>`;
+
+    // Article cards
+    const cardContainer = document.getElementById("articleCards");
+    cardContainer.innerHTML = "";
+    const grouped = {};
+    result.findings.forEach(f => {
+        if (!grouped[f.article]) grouped[f.article] = [];
+        grouped[f.article].push(f);
+    });
+    for (const art of [9, 10, 11, 12, 14, 15]) {
+        const items = grouped[art];
+        if (!items) continue;
+        const worstStatus = items.some(f => f.status === "fail") ? "fail" : items.some(f => f.status === "warn") ? "warn" : "pass";
+        const statusLabel = worstStatus === "pass" ? "PASS" : worstStatus === "warn" ? "WARN" : "FAIL";
+        let html = `<div class="article-card">
+            <div class="article-card-header">
+                <div>
+                    <div class="article-num">Article ${art}</div>
+                    <div class="article-title">${ARTICLE_NAMES[art]}</div>
+                </div>
+                <span class="status-badge status-${worstStatus}">${statusLabel}</span>
+            </div>
+            <ul class="finding-list">`;
+        items.forEach(f => {
+            const icon = f.status === "pass" ? '<span style="color:var(--green)">&#10003;</span>'
+                       : f.status === "warn" ? '<span style="color:var(--yellow)">&#9888;</span>'
+                       : '<span style="color:var(--red)">&#10007;</span>';
+            html += `<li class="finding-item">
+                <span class="finding-icon">${icon}</span>
+                <div class="finding-content">
+                    <div class="finding-name">${f.name}<span class="severity-tag sev-${f.severity}">${f.severity}</span></div>
+                    <div class="finding-evidence">${f.evidence}</div>
+                    ${f.status !== "pass" ? `<div class="finding-fix">${f.fix_hint}</div>` : ""}
+                </div>
+            </li>`;
+        });
+        html += "</ul></div>";
+        cardContainer.innerHTML += html;
+    }
+
+    // Injection section
+    const injSec = document.getElementById("injectionSection");
+    if (result.injection) {
+        injSec.style.display = "block";
+        const v = result.injection.verdict;
+        document.getElementById("injectionVerdict").className = `injection-verdict verdict-${v}`;
+        document.getElementById("injectionVerdict").textContent = v + " (" + result.injection.confidence + ")";
+        let dHtml = '<ul class="finding-list">';
+        result.injection.detected.forEach(d => {
+            dHtml += `<li class="finding-item">
+                <span class="finding-icon"><span style="color:var(--red)">&#9888;</span></span>
+                <div class="finding-content">
+                    <div class="finding-name">${d.pattern.replace(/_/g, " ")}<span class="severity-tag sev-HIGH">${d.weight}</span></div>
+                    <div class="finding-evidence">Prompt injection pattern detected in string literals</div>
+                </div>
+            </li>`;
+        });
+        dHtml += "</ul>";
+        document.getElementById("injectionDetails").innerHTML = dHtml;
+    } else {
+        injSec.style.display = "none";
+    }
+
+    // Scroll to results
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// ── Actions ────────────────────────────────────────────────────
+
+function runScan() {
+    const code = document.getElementById("codeInput").value.trim();
+    if (!code) {
+        alert("Paste some Python code first!");
+        return;
+    }
+    const btn = document.getElementById("scanBtn");
+    btn.disabled = true;
+    btn.innerHTML = '<span class="icon">&#9654;</span> Scanning...';
+
+    // Small delay for visual feedback
+    setTimeout(() => {
+        const result = scanCode(code);
+        renderResults(result);
+        btn.disabled = false;
+        btn.innerHTML = '<span class="icon">&#9654;</span> Re-Scan';
+    }, 300);
+}
+
+function clearAll() {
+    document.getElementById("codeInput").value = "";
+    document.getElementById("results").classList.remove("visible");
+    document.getElementById("scanBtn").innerHTML = '<span class="icon">&#9654;</span> Scan for Compliance';
+}
+
+// ── Example Code ───────────────────────────────────────────────
+const EXAMPLES = {
+    bare: `from langchain.agents import AgentExecutor
+from langchain_openai import ChatOpenAI
+from langchain.tools import tool
+
+llm = ChatOpenAI(model="gpt-4o")
+
+@tool
+def search_database(query: str) -> str:
+    """Search the customer database."""
+    return db.query(query)
+
+agent = AgentExecutor(agent=llm, tools=[search_database])
+result = agent.invoke({"input": "Find all EU customers"})
+print(result)`,
+
+    compliant: `import logging
+from langchain.agents import AgentExecutor
+from langchain_openai import ChatOpenAI
+from langchain.tools import tool
+from pydantic import BaseModel, field_validator
+from tenacity import retry, stop_after_attempt, wait_exponential
+import air_trust
+
+logger = logging.getLogger(__name__)
+
+# Input validation (Art 10)
+class SearchInput(BaseModel):
+    query: str
+    user_id: str
+
+    @field_validator("query")
+    def sanitize_query(cls, v):
+        if len(v) > 500:
+            raise ValueError("Query too long")
+        return v
+
+# Budget controls (Art 14)
+llm = ChatOpenAI(model="gpt-4o", max_tokens=2000, max_retries=3)
+
+# Trust layer wraps everything (Art 9, 12, 15)
+air = air_trust.session("customer-search")
+
+@tool
+def search_database(query: str) -> str:
+    """Search the customer database with PII redaction."""
+    logger.info(f"Database search: {query}")
+    result = db.query(query)
+    # PII handling (Art 10)
+    return redact_pii(result)
+
+# Human oversight (Art 14)
+agent = AgentExecutor(
+    agent=llm,
+    tools=[search_database],
+    max_iterations=10,
+    callbacks=[air_trust.trust(llm)],
+    handle_parsing_errors=True,
+)
+
+# Guardrails (Art 15)
+@retry(stop=stop_after_attempt(3), wait=wait_exponential())
+def run_agent(user_input: str, user_id: str):
+    """Run the agent with full compliance controls."""
+    validated = SearchInput(query=user_input, user_id=user_id)
+    scan = air_trust.scan_text(validated.query)
+    if scan.get("injection", {}).get("score", 0) > 0.7:
+        logger.warning("Injection attempt blocked")
+        raise ValueError("Injection detected")
+
+    result = agent.invoke({"input": validated.query})
+    logger.info(f"Agent completed for user_id={user_id}")
+    return result
+
+result = run_agent("Find all EU customers", user_id="usr_12345")`,
+
+    crewai: `from crewai import Agent, Task, Crew
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(model="gpt-4o")
+
+researcher = Agent(
+    role="Research Analyst",
+    goal="Find comprehensive market data",
+    backstory="You are an expert market researcher.",
+    llm=llm,
+    verbose=True,
+)
+
+writer = Agent(
+    role="Content Writer",
+    goal="Create compelling market reports",
+    backstory="You are a skilled technical writer.",
+    llm=llm,
+    verbose=True,
+)
+
+research_task = Task(
+    description="Research the current state of {topic}",
+    agent=researcher,
+    expected_output="A detailed research summary",
+)
+
+write_task = Task(
+    description="Write a market report based on the research",
+    agent=writer,
+    expected_output="A polished market report",
+)
+
+crew = Crew(
+    agents=[researcher, writer],
+    tasks=[research_task, write_task],
+    verbose=True,
+)
+
+result = crew.kickoff(inputs={"topic": "AI compliance tools"})
+print(result)`,
+};
+
+function loadExample(name) {
+    document.getElementById("codeInput").value = EXAMPLES[name] || "";
+    document.getElementById("results").classList.remove("visible");
+    document.getElementById("scanBtn").innerHTML = '<span class="icon">&#9654;</span> Scan for Compliance';
+}
+
+// Tab key support in textarea
+document.getElementById("codeInput").addEventListener("keydown", function(e) {
+    if (e.key === "Tab") {
+        e.preventDefault();
+        const start = this.selectionStart;
+        const end = this.selectionEnd;
+        this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
+        this.selectionStart = this.selectionEnd = start + 4;
+    }
+});
+</script>
+</body>
+</html>
