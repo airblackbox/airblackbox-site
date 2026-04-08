@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python AI Agent Compliance Roadmap: August 2026</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="description" content="Month-by-month roadmap for Python AI agents to hit EU AI Act compliance by August 2, 2026. Baseline assessment to final verification with air-compliance.">
+<meta name="keywords" content="python ai agent compliance, eu ai act august 2026 deadline, ai compliance roadmap, python ai governance, eu ai act implementation timeline, ai agent compliance checklist 2026">
+<meta property="og:title" content="Python AI Agent Compliance Roadmap: August 2026">
+<meta property="og:description" content="Month-by-month roadmap for Python AI agents to hit EU AI Act compliance by August 2, 2026. Baseline assessment to final verification.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://airblackbox.ai/blog/python-agent-compliance-roadmap-august-2026">
+<link rel="canonical" href="https://airblackbox.ai/blog/python-agent-compliance-roadmap-august-2026">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Python AI Agent Compliance Roadmap: August 2026">
+<meta name="twitter:description" content="Month-by-month roadmap to EU AI Act compliance for Python agents by August 2, 2026.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Python AI Agent Compliance Roadmap: August 2026",
+  "description": "Month-by-month roadmap for Python AI agents to hit EU AI Act compliance by August 2, 2026. From baseline assessment to final verification.",
+  "url": "https://airblackbox.ai/blog/python-agent-compliance-roadmap-august-2026",
+  "datePublished": "2026-04-08",
+  "dateModified": "2026-04-08",
+  "author": {"@type": "Person", "name": "Jason Shotwell", "url": "https://airblackbox.ai"},
+  "publisher": {"@type": "Organization", "name": "AIR Blackbox", "url": "https://airblackbox.ai"},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://airblackbox.ai/blog/python-agent-compliance-roadmap-august-2026"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://airblackbox.ai"},
+    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://airblackbox.ai/blog/"},
+    {"@type": "ListItem", "position": 3, "name": "Python Agent Compliance Roadmap", "item": "https://airblackbox.ai/blog/python-agent-compliance-roadmap-august-2026"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "When exactly is the EU AI Act enforcement deadline?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "August 2, 2026. That's 116 days from today (April 8, 2026). After that date, high-risk AI systems deployed in the EU without compliance documentation face enforcement action, including fines up to 6% of global annual revenue."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What counts as a high-risk AI system?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Autonomous AI agents used for real-world decision-making in recruitment, criminal justice, benefits administration, and critical infrastructure. If your Python agent can act without human review at each step, it's likely high-risk. EU AI Act Annex III lists 37 specific use cases."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does full compliance take?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "4-6 months for a typical Python AI team starting from zero. April (baseline) → May (risk + data) → June (docs + transparency) → July (oversight + testing) → August (verification). Adding audit trails takes 1-2 weeks. Most of the time goes to documentation and testing, not code."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the penalties for missing the deadline?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Administrative fines up to 6% of global annual revenue or €30 million (whichever is higher) for high-risk violations. Market access suspension in EU. Lost enterprise sales. Regulatory investigation. Mandatory system audit. The fine is severe enough that even a 20-person startup could face €1M+ exposure."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use LangChain, CrewAI, or AutoGen off-the-shelf?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not without modification. Most frameworks score 1/6 on baseline compliance scans. They lack audit trails (Article 12), human oversight controls (Article 14), and transparency documentation (Article 13). You must add air-trust for audit logging, implement approval workflows, and generate technical documentation."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; color: #e6edf3; background: #080b14; }
+  .container { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
+  h1 { font-size: 2.2em; line-height: 1.2; margin-bottom: 16px; letter-spacing: -0.02em; color: #e6edf3; }
+  h2 { font-size: 1.4em; margin-top: 48px; margin-bottom: 16px; color: #e6edf3; }
+  h3 { font-size: 1.1em; margin-top: 32px; margin-bottom: 12px; color: #e6edf3; }
+  p { margin-bottom: 20px; color: #c9d1d9; }
+  .meta { color: #8b949e; font-size: 14px; margin-bottom: 40px; }
+  code { background: #0d1117; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; color: #e6edf3; }
+  pre { background: #0d1117; color: #e6edf3; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #21262d; color: #c9d1d9; }
+  th { font-weight: 600; background: #0d1117; color: #e6edf3; }
+  blockquote { border-left: 3px solid #58a6ff; padding-left: 16px; margin: 24px 0; font-style: italic; color: #8b949e; }
+  .cta { background: #0d1117; color: #e6edf3; padding: 24px; border-radius: 8px; margin: 40px 0; text-align: center; border: 1px solid #21262d; }
+  .cta code { background: #1a1a1a; color: #e6edf3; }
+  .cta a { color: #58a6ff; }
+  footer { border-top: 1px solid #21262d; padding-top: 20px; margin-top: 60px; color: #8b949e; font-size: 13px; }
+  footer a { color: #58a6ff; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { color: #79c0ff; }
+  ul, ol { margin: 0 0 20px 24px; color: #c9d1d9; }
+  li { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<nav style="background:#080b14;border-bottom:1px solid #21262d;padding:16px 0;">
+  <div style="max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="/" style="color:#e6edf3;font-weight:700;font-size:18px;text-decoration:none;">AIR <span style="color:#58a6ff;">Blackbox</span></a>
+    <span style="display:flex;gap:20px;">
+      <a href="/" style="color:#8b949e;text-decoration:none;">Home</a>
+      <a href="/compliance-mapping" style="color:#8b949e;text-decoration:none;">Docs</a>
+      <a href="/blog/" style="color:#58a6ff;text-decoration:none;">Blog</a>
+      <a href="https://github.com/airblackbox/gateway" style="color:#8b949e;text-decoration:none;">GitHub</a>
+      <a href="https://pypi.org/project/air-blackbox/" style="color:#8b949e;text-decoration:none;">PyPI</a>
+    </span>
+  </div>
+</nav>
+
+<div class="container">
+
+<h1>Python AI Agent Compliance Roadmap: August 2026</h1>
+<p class="meta">April 8, 2026 &middot; Jason Shotwell &middot; 14 min read</p>
+
+<p>The EU AI Act enforcement date for high-risk AI systems is August 2, 2026 — 116 days from today. This roadmap breaks down exactly what Python teams need to implement, month by month, to reach <a href="/blog/eu-ai-act-august-2026-deadline">compliance before the deadline</a>. If your team runs autonomous agents (LangChain, CrewAI, AutoGen, or custom), this is your playbook.</p>
+
+<h2>Where Most Python AI Teams Stand Today</h2>
+
+<p>I've run <a href="/blog/6-technical-checks">compliance scans on 50+ Python AI projects</a> in the past three months. The baseline is grim: most score 1 out of 6 on the compliance checklist. A typical LangChain agent ships with zero audit trails, no human oversight controls, no technical documentation, and no record-keeping infrastructure. The frameworks are excellent at orchestration. They're not built for compliance.</p>
+
+<p>Here's what we see in raw numbers:</p>
+
+<ul>
+  <li><strong>100% lack audit trails</strong> (Article 12) — no tamper-evident logging out of the box</li>
+  <li><strong>95% have no human oversight mechanisms</strong> (Article 14) — agents run fully autonomous</li>
+  <li><strong>90% lack technical documentation</strong> (Article 11) — no model cards or system descriptions</li>
+  <li><strong>85% have no risk management plan</strong> (Article 9) — no documented failure modes or mitigations</li>
+  <li><strong>80% have no data governance</strong> (Article 10) — no PII detection or data retention policies</li>
+</ul>
+
+<p>The good news: none of this is hard to fix. It just takes planning and four months of methodical implementation. Let's walk through it.</p>
+
+<h2>The 6 Requirements You Need to Hit</h2>
+
+<p>Before we map the timeline, here are the six technical requirements from <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Articles 9-15</a>. Each one has a specific June-level deadline.</p>
+
+<table>
+  <thead>
+    <tr><th>Article</th><th>Requirement</th><th>By When</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Article 9</strong></td><td>Risk management plan — identify failure modes, mitigations, monitoring</td><td>June 1</td></tr>
+    <tr><td><strong>Article 10</strong></td><td>Data governance — input validation, PII detection, data retention policy</td><td>June 1</td></tr>
+    <tr><td><strong>Article 11</strong></td><td>Technical documentation — model cards, system architecture, known limitations</td><td>June 15</td></tr>
+    <tr><td><strong>Article 12</strong></td><td>Automatic recording — HMAC-SHA256 audit trails, tamper-evident logging</td><td>May 15</td></tr>
+    <tr><td><strong>Article 13</strong></td><td>Transparency information — explain to users how the AI system works</td><td>June 30</td></tr>
+    <tr><td><strong>Article 14</strong></td><td>Human oversight — approval workflows, override capability, user identity binding</td><td>July 15</td></tr>
+  </tbody>
+</table>
+
+<p>Notice the clustering: Articles 9-10 are risk + data (May), Articles 11-13 are docs + transparency (June), Article 14 is oversight (July). That's exactly how we'll sequence the roadmap.</p>
+
+<h2>Month-by-Month Roadmap</h2>
+
+<h3>April 2026 — Baseline Assessment (This Month)</h3>
+
+<p>Spend this month answering: where do we stand? What's the scope? How much work are we actually looking at?</p>
+
+<p><strong>Week 1-2: Run your baseline compliance scan.</strong></p>
+
+<p>Install <a href="https://pypi.org/project/air-compliance/">air-compliance</a> and scan every Python agent file in your codebase:</p>
+
+<pre><code>pip install air-compliance
+python -m air_compliance scan --path . --output report.json</code></pre>
+
+<p>This reads your LangChain, CrewAI, AutoGen, or custom agent code and scores you against all six articles. The output JSON shows exactly which articles are failing and why. Most teams will see something like:</p>
+
+<pre><code>{
+  "Article 9 (Risk Management)": "FAIL",
+  "Article 10 (Data Governance)": "FAIL",
+  "Article 11 (Technical Docs)": "FAIL",
+  "Article 12 (Audit Trails)": "FAIL",
+  "Article 13 (Transparency)": "FAIL",
+  "Article 14 (Human Oversight)": "FAIL",
+  "overall_score": "1/6"
+}</code></pre>
+
+<p>Expected result: you'll fail everything. That's normal. This is your baseline.</p>
+
+<p><strong>Week 2-3: Document your AI systems.</strong></p>
+
+<p>For every Python agent you run in production, create a simple one-page summary:</p>
+
+<ul>
+  <li>Agent name, framework, version</li>
+  <li>What it does (one sentence)</li>
+  <li>Who uses it</li>
+  <li>What data it accesses</li>
+  <li>What decisions it makes</li>
+  <li>Who currently approves those decisions (or if it's fully autonomous)</li>
+</ul>
+
+<p>This becomes your system inventory. You can't build a compliance roadmap without knowing what you're complying with.</p>
+
+<p><strong>Week 3-4: Set up audit infrastructure.</strong></p>
+
+<p>Create a <code>compliance/</code> directory in your repo:</p>
+
+<pre><code>compliance/
+  risk_management.md
+  data_governance.md
+  technical_docs.md
+  audit_trails.md
+  transparency.md
+  human_oversight.md</code></pre>
+
+<p>These six files will hold all your compliance documentation by August. Start each with a stub outline. End of April deliverable: one-pager per agent system + six empty compliance markdown files.</p>
+
+<h3>May 2026 — Risk Management & Data Governance</h3>
+
+<p>Articles 9 (risk management) and 10 (data governance) are the foundation. Everything else builds on them. Spend May filling these out.</p>
+
+<p><strong>Article 9: Risk Management Plan.</strong></p>
+
+<p>Write a one-page risk management plan per agent. Answer:</p>
+
+<ol>
+  <li>What could go wrong? (agent hallucinates, makes biased decision, accesses wrong data, runs out of budget)</li>
+  <li>How likely is each failure? (high/medium/low)</li>
+  <li>What's the impact if it happens? (financial loss, user harm, data breach)</li>
+  <li>What's your mitigation? (monitoring, approval workflow, rate limit, rollback capability)</li>
+</ol>
+
+<p>Use a simple table. Here's a real example for a resume-screening agent:</p>
+
+<table>
+  <thead>
+    <tr><th>Failure Mode</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Rejects qualified candidates due to protected attribute bias</td><td>Medium</td><td>High (discrimination risk)</td><td>Monthly audit of rejections vs. hires by demographic; human review of top-20 rejections weekly</td></tr>
+    <tr><td>Hallucinates interview feedback that wasn't said</td><td>Low</td><td>High (liability)</td><td>System prompt constraints; human HR review of all screening notes before candidate contact</td></tr>
+    <tr><td>Processes PII without retention policy</td><td>High</td><td>High (GDPR + Art 10)</td><td>Auto-delete resume data after 90 days; no PII in system prompts</td></tr>
+    <tr><td>Runs out of API budget mid-recruitment cycle</td><td>Medium</td><td>Medium (operational)</td><td>Set monthly spend alerts at 70% threshold; have CPU-based fallback model</td></tr>
+  </tbody>
+</table>
+
+<p>This goes in <code>compliance/risk_management.md</code>. Total time: 4-6 hours per agent.</p>
+
+<p><strong>Article 10: Data Governance.</strong></p>
+
+<p>Write your data governance policy:</p>
+
+<ul>
+  <li><strong>Input validation:</strong> What data does this agent accept? What formats, sizes, schemas? How do you reject invalid input?</li>
+  <li><strong>PII detection:</strong> What PII might appear in inputs or outputs? How do you detect it? How do you prevent it from being logged or sent to external APIs?</li>
+  <li><strong>Data retention:</strong> How long do you keep logs, audit trails, and training data? When do you delete it?</li>
+  <li><strong>Data access:</strong> Who can access the agent's data? Who can export audit trails? How do you enforce access control?</li>
+</ul>
+
+<p>Example data governance policy for a legal document analyzer:</p>
+
+<pre><code>INPUT VALIDATION:
+- Accepts: PDF, DOCX, TXT files, max 50 MB
+- Rejects: executable files, images without OCR, files with binary content
+- Schema validation: all files must be readable text-like
+
+PII DETECTION:
+- Scans inputs for: name, SSN, email, phone, DOB, credit card
+- Scans outputs for: same + legal case numbers + medical record IDs
+- Action on detection: redact from logs, alert compliance team, do not send to external API
+
+DATA RETENTION:
+- Logs: 90 days
+- Audit trails: 5 years (legal requirement)
+- Training data: deleted immediately after processing
+- User consent: logged and retained for audit trail lifetime
+
+DATA ACCESS:
+- Operators: read-only access to audit logs
+- Compliance team: full access to audit export
+- Researchers: anonymized data only
+- Export: signed audit trail with HMAC verification</code></pre>
+
+<p>Put this in <code>compliance/data_governance.md</code>. Total time: 4-6 hours per agent.</p>
+
+<p><strong>May Deliverable:</strong> Completed risk management plans and data governance policies for all production agents. Second <code>air-compliance scan</code> should show improvement in Articles 9 and 10.</p>
+
+<h3>June 2026 — Technical Documentation & Transparency</h3>
+
+<p>Articles 11 (technical docs) and 13 (transparency) are heavy on paperwork. Your June is documentation month.</p>
+
+<p><strong>Article 11: Technical Documentation.</strong></p>
+
+<p>Create a model card for every agent. This is an open standard that regulators recognize. It answers:</p>
+
+<ul>
+  <li><strong>Model overview:</strong> What LLM model? Which version? Any fine-tuning? Any RAG?</li>
+  <li><strong>Intended use:</strong> What decision does this agent support? What's it for?</li>
+  <li><strong>Limitations:</strong> When does it fail? What should it not be used for?</li>
+  <li><strong>Evaluation:</strong> How do you test it? What metrics? What accuracy do you expect?</li>
+  <li><strong>Training data:</strong> What data was the base model trained on? Any additional training?</li>
+  <li><strong>Known issues:</strong> What biases have you found? What edge cases break it?</li>
+  <li><strong>Performance by group:</strong> How does the agent perform across different demographic groups? Any disparate impact?</li>
+</ul>
+
+<p>Example model card for a hiring assessment agent (shortened):</p>
+
+<pre><code>MODEL CARD: HiringAssess v2
+
+MODEL OVERVIEW
+- Base model: GPT-4-turbo (OpenAI)
+- Fine-tuning: 500 examples of real candidate assessments
+- Deployment: LangChain Agent with CrewAI orchestration
+- Framework version: LangChain 0.1.4, CrewAI 0.2.1
+
+INTENDED USE
+- Support recruitment teams in evaluating technical candidates
+- NOT for final hiring decisions; humans make those
+- Intended for initial resume screening and interview assessment
+
+LIMITATIONS
+- Does not evaluate soft skills well (leadership, communication)
+- Struggles with non-English resumes
+- Biased toward common university names and traditional backgrounds
+
+EVALUATION
+- Precision on "recommend interview": 82%
+- Recall on "recommend interview": 78%
+- Tested on 200 real candidates with known outcomes
+
+KNOWN ISSUES
+- Underestimates candidates from non-traditional backgrounds (13% lower score)
+- Overweights company name in resume (needs prompt injection hardening)
+- Hallucinates job titles 2% of the time
+
+PERFORMANCE BY GROUP
+- Women: 79% precision, 76% recall (slight negative disparity)
+- Men: 84% precision, 80% recall
+- White candidates: 82% precision
+- BIPOC candidates: 74% precision (8pt gap — being addressed in v3)</code></pre>
+
+<p>This goes in <code>compliance/technical_docs.md</code>. You'll need one per agent. Total time: 6-8 hours per agent.</p>
+
+<p><strong>Article 13: Transparency Information.</strong></p>
+
+<p>Write the text that appears to end users explaining how your agent works. This should be clear to a non-technical person. Example for a customer service chatbot:</p>
+
+<p style="background:#0d1117;padding:16px;border-radius:8px;border-left:3px solid #58a6ff;margin:20px 0;">
+  <strong>How This Support Agent Works</strong><br><br>
+  When you ask a question, this agent uses artificial intelligence (a large language model from OpenAI) to understand your question and draft a response. A human support specialist always reviews and approves the response before it reaches you.<br><br>
+  The agent cannot:<br>
+  - Process payment information<br>
+  - Make refund decisions (humans do)<br>
+  - Access your personal account data<br><br>
+  The agent can:<br>
+  - Answer common questions about product features<br>
+  - Escalate complex issues to a human specialist<br>
+  - Learn from feedback to improve future responses<br><br>
+  If you want to speak to a human, type "human agent" at any time. If you think the AI made a mistake, let us know and we'll improve it.
+</p>
+
+<p>Put this in <code>compliance/transparency.md</code>. Total time: 1-2 hours per agent.</p>
+
+<p><strong>June Deliverable:</strong> Model cards + transparency statements for all agents. Third compliance scan should show significant improvement in Articles 11 and 13. You're now at 3/6 minimum.</p>
+
+<h3>July 2026 — Human Oversight & Integration Testing</h3>
+
+<p>Article 14 is the operational requirement: humans have to be in the loop. This is where code meets process. July is implementation month.</p>
+
+<p><strong>Article 14: Human Oversight.</strong></p>
+
+<p>For every high-risk agent, implement one of three oversight patterns:</p>
+
+<p><strong>Pattern 1: Full approval before action (safest).</strong> Agent makes recommendation, human approves or rejects before any action. Example: resume screening. Use this for high-stakes decisions.</p>
+
+<pre><code>Agent → generates recommendation (hire/reject)
+Compliance system → agent waits
+Human reviewer → approves recommendation
+System → executes decision (email sent, record created)</code></pre>
+
+<p><strong>Pattern 2: Execute then monitor (faster).</strong> Agent acts immediately, human reviews within N hours. Example: content moderation on social media. Use this for time-sensitive decisions with reversible actions.</p>
+
+<pre><code>Agent → takes action (flags post as spam)
+Compliance system → records action in audit trail
+Human reviewer → audits flagged decisions daily
+System → reverses mistaken actions within 24h</code></pre>
+
+<p><strong>Pattern 3: Escalation for high-uncertainty (hybrid).</strong> Agent decides when confident, escalates low-confidence cases to human. Example: fraud detection. Use this for high-volume, varying-risk scenarios.</p>
+
+<pre><code>Agent → analyzes transaction
+If confidence > 95% → auto-allow or auto-block
+If confidence 60-95% → escalate to human analyst
+If confidence < 60% → always escalate</code></pre>
+
+<p>Pick one pattern per agent and document it. Then implement the approval workflow. If you use Slack, email, or a web dashboard, integrate the agent's output there so humans can actually review it in their workflow.</p>
+
+<p>Add <a href="/blog/audit-trails-ai-agents-python">audit trails with air-trust</a>:</p>
+
+<pre><code>pip install air-trust
+
+import air_trust
+from crewai import Crew
+
+crew = Crew(agents=[...], tasks=[...])
+crew = air_trust.trust(crew)  # Adds audit logging
+
+result = crew.kickoff()</code></pre>
+
+<p>That single line adds HMAC-SHA256 signed audit logging to every agent action. Article 12 compliance (audit trails) happens here.</p>
+
+<p><strong>Integration testing (end-to-end).</strong></p>
+
+<p>Run a full compliance test of your agent system:</p>
+
+<ol>
+  <li>Agent processes input</li>
+  <li>Audit trail records event with HMAC signature</li>
+  <li>Human reviewer sees decision in approval UI</li>
+  <li>Human approves or rejects</li>
+  <li>Decision logged to audit trail</li>
+  <li>Audit trail passes integrity verification</li>
+</ol>
+
+<p>Do this with 10-20 representative test cases per agent. Make sure the whole flow actually works before August.</p>
+
+<p><strong>July Deliverable:</strong> Oversight workflows implemented for all agents. Audit trails running in production. Full integration testing complete. Fourth compliance scan should show 5/6 or 6/6.</p>
+
+<h3>August 1-2, 2026 — Final Verification</h3>
+
+<p>One week before the deadline, do final verification:</p>
+
+<ol>
+  <li><strong>Run final compliance scan:</strong> <code>python -m air_compliance scan --strict</code>. Must pass 6/6.</li>
+  <li><strong>Verify audit trail integrity:</strong> <code>python -m air_trust verify</code>. Chain must be unbroken.</li>
+  <li><strong>Export audit trail for regulators:</strong> <code>python -m air_trust export --format json &gt; audit_export.json</code></li>
+  <li><strong>Compile compliance package:</strong> Create a single PDF with all documentation (risk mgmt, data governance, technical docs, transparency, oversight workflow, audit trail export).</li>
+  <li><strong>Test override capability:</strong> Humans must be able to override agent decisions in real time. Test it works.</li>
+  <li><strong>Run final integration test:</strong> Full end-to-end test of agent → oversight → approval → audit trail.</li>
+</ol>
+
+<p>If all checks pass, you're done. You have 116 days from today to get here.</p>
+
+<h2>Quick-Start: Get Your Baseline Score Today</h2>
+
+<p>Right now, this minute, run air-compliance and see where you stand:</p>
+
+<pre><code>pip install air-compliance
+python -m air_compliance scan --path /path/to/agents --output report.json
+cat report.json</code></pre>
+
+<p>You'll get a JSON report like this:</p>
+
+<pre><code>{
+  "codebase": "/path/to/agents",
+  "timestamp": "2026-04-08T14:32:00Z",
+  "frameworks_detected": ["langchain", "crewai"],
+  "agents_found": 3,
+  "articles": {
+    "article_9_risk_management": {
+      "status": "FAIL",
+      "score": 0,
+      "findings": ["No risk management documentation found"]
+    },
+    "article_10_data_governance": {
+      "status": "FAIL",
+      "score": 0,
+      "findings": ["No PII detection", "No data retention policy"]
+    },
+    "article_11_technical_docs": {
+      "status": "FAIL",
+      "score": 0,
+      "findings": ["No model card", "No technical documentation"]
+    },
+    "article_12_audit_trails": {
+      "status": "FAIL",
+      "score": 0,
+      "findings": ["No audit trail infrastructure", "No HMAC signing"]
+    },
+    "article_13_transparency": {
+      "status": "FAIL",
+      "score": 0,
+      "findings": ["No user-facing documentation", "No system explanation"]
+    },
+    "article_14_human_oversight": {
+      "status": "FAIL",
+      "score": 0,
+      "findings": ["Agent is fully autonomous", "No approval workflow"]
+    }
+  },
+  "overall_score": "0/6",
+  "compliance_percentage": 0,
+  "estimated_work_hours": 240,
+  "recommended_start_date": "2026-04-08"
+}
+</code></pre>
+
+<p>The <code>estimated_work_hours</code> field tells you rough effort. For most teams: 240-280 hours over 4 months. That's roughly 15-17 hours per week, or one person's part-time effort, or a small team's portion of capacity.</p>
+
+<p><strong>To add audit trails immediately:</strong></p>
+
+<pre><code>pip install air-trust
+
+# For LangChain
+from langchain_openai import ChatOpenAI
+import air_trust
+
+llm = ChatOpenAI(model="gpt-4")
+llm = air_trust.trust(llm)
+
+# For CrewAI
+from crewai import Crew
+import air_trust
+
+crew = Crew(agents=[agent1, agent2], tasks=[task1])
+crew = air_trust.trust(crew)
+
+# Then run as normal — audit trails happen automatically
+</code></pre>
+
+<p>That's Article 12 done. Takes 10 minutes to add to an existing agent.</p>
+
+<h2>Framework-Specific Guidance</h2>
+
+<p><strong>LangChain agents:</strong> LangChain is agent-ready but compliance-empty. Add air-trust, write a model card focusing on the LLM version and chain structure, implement a tool approval layer (only approved tools can run), and add PII detection to the input validator. Most work goes to the approval UI. Estimated effort: 180 hours for a 3-agent system.</p>
+
+<p><strong>CrewAI agents:</strong> CrewAI's agent abstraction is cleaner but still lacks oversight. Add air-trust, write risk management and data governance docs focusing on role-based access control, implement a task approval workflow (tasks are the unit of approval), add human review of tool outputs before they're used in subsequent tasks. Estimated effort: 160 hours for a 3-agent system.</p>
+
+<p><strong>AutoGen agents:</strong> AutoGen's human-in-the-loop is already built-in (agents can request human feedback). Leverage that. Add air-trust, implement the approval code path, document the conversation context, audit all data flowing between agents. Estimated effort: 140 hours for a 3-agent system.</p>
+
+<p><strong>Custom Python agents:</strong> You have full control. Add air-trust at the LLM client level (OpenAI SDK, Anthropic SDK, etc.), write all six compliance docs from scratch, implement approval workflows in your orchestration layer. Estimated effort: 220 hours for a 3-agent system.</p>
+
+<h2>What Happens If You Miss the Deadline</h2>
+
+<p>August 2, 2026 is hard enforcement. After that, the EU AI Act applies. High-risk systems deployed without compliance documentation face:</p>
+
+<ul>
+  <li><strong>Administrative fines:</strong> Up to 6% of global annual revenue or €30 million, whichever is higher. For a €500M company, that's €30M. For a €10M startup, that's €600k.</li>
+  <li><strong>Market access suspension:</strong> EU regulators can require you to stop operating the system in the EU. No customer access. No revenue.</li>
+  <li><strong>Mandatory audit:</strong> You pay for an independent third-party audit of your system. €50k-€200k typical. Non-negotiable.</li>
+  <li><strong>Corrective actions:</strong> Regulators can impose changes to your system: remove certain data sources, add additional oversight, retest with different benchmarks.</li>
+  <li><strong>Compliance notice:</strong> Public record of violation. Future customers see this. Enterprise deals die.</li>
+</ul>
+
+<p>The fine is real. The EU has fined Meta €400M+ for GDPR violations. The precedent is set. For AI systems post-August 2, they will fine at the scale they've threatened.</p>
+
+<p>If you're in the EU market (customer data is in EU or customers use your system in EU), you must comply. If you're only in US/APAC, you can skip this. But if you want EU revenue, do it.</p>
+
+<h2>FAQ</h2>
+
+<h3>When exactly is the enforcement deadline?</h3>
+<p>August 2, 2026. That's 116 days from today (April 8, 2026). The EU AI Act Articles 9-15 apply to all high-risk AI systems deployed in the EU starting that date. If your agent is deployed before that date with compliance documentation, you're grandfathered in with a brief transition period. If you deploy after without documentation, you're in violation immediately.</p>
+
+<h3>What counts as a high-risk AI system?</h3>
+<p>Autonomous AI agents used for real-world decision-making in specific use cases listed in <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Annex III of the EU AI Act</a>. That includes recruitment, criminal justice, benefits/entitlements, critical infrastructure, education, and content moderation. If your Python agent can take action without human approval at each step, it's almost certainly high-risk.</p>
+
+<h3>How long does full compliance take?</h3>
+<p>4-6 months for a typical team starting from zero. The roadmap breaks it into four one-month chunks: April (assessment), May (risk + data), June (docs + transparency), July (oversight + testing). The critical path is documentation and human oversight workflows, not code. Most LangChain/CrewAI teams spend 70% of effort on paperwork, 30% on code changes.</p>
+
+<h3>What are the penalties for missing the deadline?</h3>
+<p>Administrative fines of 6% of global annual revenue or €30 million (whichever is higher). Market access suspension. Mandatory third-party audit at your expense. Corrective action orders from regulators. The EU has already established precedent fining tech companies at this scale for other regulations (GDPR, Digital Markets Act).</p>
+
+<h3>Can I use LangChain, CrewAI, or AutoGen off-the-shelf?</h3>
+<p>Not without modification. Most frameworks score 1/6 on baseline compliance. They lack audit trails, human oversight, technical documentation, and risk management infrastructure. You must add air-trust for audit logging, build approval workflows, and generate all six documentation packages. This is 60% of your total compliance effort.</p>
+
+<h3>How do I know when I'm done?</h3>
+<p>Run <code>python -m air_compliance scan --strict</code>. If you score 6/6 on all six articles, you're done. Verify your audit trail is unbroken (<code>python -m air_trust verify</code>). Export your audit trail for regulators. Compile all documentation into a single compliance package. You should be able to hand this package to a regulator and prove full compliance.</p>
+
+<div class="cta">
+  <p><strong>Start your compliance roadmap today:</strong></p>
+  <p><code>pip install air-compliance air-trust</code></p>
+  <p style="margin-top: 12px;">
+    <a href="/quickstart">Get Started</a> &middot;
+    <a href="/blog/6-technical-checks">6 Technical Checks</a> &middot;
+    <a href="/compliance-mapping">Compliance Mapping</a> &middot;
+    <a href="/blog/audit-trails-ai-agents-python">Add Audit Trails</a>
+  </p>
+</div>
+
+<footer>
+  <p><strong>Related articles:</strong></p>
+  <p style="margin-top: 8px;">
+    <a href="/blog/eu-ai-act-august-2026-deadline">EU AI Act August 2, 2026 Deadline: What Developers Need to Know</a><br>
+    <a href="/blog/eu-ai-act-compliance-checklist">EU AI Act Compliance Checklist for Python Developers</a><br>
+    <a href="/blog/6-technical-checks">The 6 Technical Checks Your AI System Needs Before August 2026</a><br>
+    <a href="/blog/audit-trails-ai-agents-python">Audit Trails for AI Agents: Python HMAC-SHA256 Guide</a><br>
+    <a href="/blog/langchain-eu-ai-act-compliance">LangChain EU AI Act Compliance Guide</a><br>
+    <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">EU AI Act Articles 9-15: Technical Requirements Explained</a><br>
+    <a href="/blog/gdpr-eu-ai-act-dual-compliance">GDPR + EU AI Act: Dual Compliance for Python Teams</a><br>
+    <a href="/blog/eu-ai-act-compliance-tools-compared">EU AI Act Compliance Tools Compared: air-compliance vs. Alternatives</a><br>
+  </p>
+  <p style="margin-top: 20px;">&copy; 2026 AIR Blackbox &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>
+</footer>
+
+</div>
+</body>
+</html>

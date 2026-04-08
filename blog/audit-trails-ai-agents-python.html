@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audit Trails for AI Agents: HMAC-SHA256 Python Guide</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="description" content="How to build tamper-evident audit trails for AI agents using HMAC-SHA256 in Python. Step-by-step implementation with air-trust, covering EU AI Act Article 12 record-keeping requirements.">
+<meta name="keywords" content="audit trail AI agents, HMAC-SHA256 audit chain Python, EU AI Act Article 12, AI agent logging, tamper-evident audit trail, air-trust Python, AI compliance audit trail, agent record keeping">
+<meta property="og:title" content="Audit Trails for AI Agents: Python HMAC-SHA256 Guide">
+<meta property="og:description" content="How to build tamper-evident audit trails for AI agents using HMAC-SHA256 in Python. Step-by-step implementation covering EU AI Act Article 12.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://airblackbox.ai/blog/audit-trails-ai-agents-python">
+<link rel="canonical" href="https://airblackbox.ai/blog/audit-trails-ai-agents-python">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Audit Trails for AI Agents: Python HMAC-SHA256 Guide">
+<meta name="twitter:description" content="Build tamper-evident audit trails for AI agents using HMAC-SHA256 in Python. Covers EU AI Act Article 12 record-keeping.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Audit Trails for AI Agents: Python HMAC-SHA256 Implementation Guide",
+  "description": "How to build tamper-evident audit trails for AI agents using HMAC-SHA256 in Python. Step-by-step implementation covering EU AI Act Article 12 record-keeping requirements.",
+  "url": "https://airblackbox.ai/blog/audit-trails-ai-agents-python",
+  "datePublished": "2026-04-08",
+  "dateModified": "2026-04-08",
+  "author": {"@type": "Person", "name": "Jason Shotwell", "url": "https://airblackbox.ai"},
+  "publisher": {"@type": "Organization", "name": "AIR Blackbox", "url": "https://airblackbox.ai"},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://airblackbox.ai/blog/audit-trails-ai-agents-python"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://airblackbox.ai"},
+    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://airblackbox.ai/blog/"},
+    {"@type": "ListItem", "position": 3, "name": "Audit Trails for AI Agents", "item": "https://airblackbox.ai/blog/audit-trails-ai-agents-python"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is an audit trail for AI agents?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An audit trail for AI agents is a tamper-evident log of every action an AI agent takes, including model calls, tool invocations, and data access. It uses cryptographic signatures (typically HMAC-SHA256) to chain records together so that any modification to historical entries is detectable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the EU AI Act require audit trails?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Article 12 of the EU AI Act requires high-risk AI systems to have automatic recording of events (logging) that enables traceability of the system's functioning. This includes recording inputs, outputs, and decision points throughout the AI system's lifecycle."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is HMAC-SHA256 and why use it for audit trails?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "HMAC-SHA256 is a keyed-hash message authentication code that produces a 256-bit signature. In audit chains, each record's signature includes the previous record's hash, creating a linked chain. If any record is modified after the fact, the chain breaks and the tampering is detected."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I add audit trails to LangChain or CrewAI agents?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Install air-trust (pip install air-trust) and wrap your client or agent with air_trust.trust(). This adds HMAC-SHA256 audit logging automatically with zero code changes to your existing agent logic. It supports LangChain, CrewAI, AutoGen, OpenAI SDK, and Haystack."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; color: #e6edf3; background: #080b14; }
+  .container { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
+  h1 { font-size: 2.2em; line-height: 1.2; margin-bottom: 16px; letter-spacing: -0.02em; color: #e6edf3; }
+  h2 { font-size: 1.4em; margin-top: 48px; margin-bottom: 16px; color: #e6edf3; }
+  h3 { font-size: 1.1em; margin-top: 32px; margin-bottom: 12px; color: #e6edf3; }
+  p { margin-bottom: 20px; color: #c9d1d9; }
+  .meta { color: #8b949e; font-size: 14px; margin-bottom: 40px; }
+  code { background: #0d1117; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; color: #e6edf3; }
+  pre { background: #0d1117; color: #e6edf3; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #21262d; color: #c9d1d9; }
+  th { font-weight: 600; background: #0d1117; color: #e6edf3; }
+  blockquote { border-left: 3px solid #58a6ff; padding-left: 16px; margin: 24px 0; font-style: italic; color: #8b949e; }
+  .cta { background: #0d1117; color: #e6edf3; padding: 24px; border-radius: 8px; margin: 40px 0; text-align: center; border: 1px solid #21262d; }
+  .cta code { background: #1a1a1a; color: #e6edf3; }
+  .cta a { color: #58a6ff; }
+  footer { border-top: 1px solid #21262d; padding-top: 20px; margin-top: 60px; color: #8b949e; font-size: 13px; }
+  footer a { color: #58a6ff; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { color: #79c0ff; }
+  ul, ol { margin: 0 0 20px 24px; color: #c9d1d9; }
+  li { margin-bottom: 8px; }
+  .comment { color: #6a9955; }
+  .keyword { color: #c586c0; }
+  .string { color: #ce9178; }
+  .func { color: #dcdcaa; }
+</style>
+</head>
+<body>
+<nav style="background:#080b14;border-bottom:1px solid #21262d;padding:16px 0;">
+  <div style="max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="/" style="color:#e6edf3;font-weight:700;font-size:18px;text-decoration:none;">AIR <span style="color:#58a6ff;">Blackbox</span></a>
+    <span style="display:flex;gap:20px;">
+      <a href="/" style="color:#8b949e;text-decoration:none;">Home</a>
+      <a href="/compliance-mapping" style="color:#8b949e;text-decoration:none;">Docs</a>
+      <a href="/blog/" style="color:#58a6ff;text-decoration:none;">Blog</a>
+      <a href="https://github.com/airblackbox/gateway" style="color:#8b949e;text-decoration:none;">GitHub</a>
+      <a href="https://pypi.org/project/air-blackbox/" style="color:#8b949e;text-decoration:none;">PyPI</a>
+    </span>
+  </div>
+</nav>
+
+<div class="container">
+
+<h1>Audit Trails for AI Agents: Python HMAC-SHA256 Implementation Guide</h1>
+<p class="meta">April 8, 2026 &middot; Jason Shotwell &middot; 12 min read</p>
+
+<p>An <strong>audit trail for AI agents</strong> is a tamper-evident log of every action an autonomous agent takes &mdash; every model call, tool invocation, and data access &mdash; cryptographically chained so that modifying any historical record is immediately detectable. If you deploy AI systems in the EU, <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Article 12 of the EU AI Act</a> requires exactly this: automatic recording of events that enables traceability throughout the system's lifecycle.</p>
+
+<p>This guide walks through building an HMAC-SHA256 audit chain in Python from scratch, then shows how to add one to any AI agent in a single line of code using <a href="https://pypi.org/project/air-trust/">air-trust</a>.</p>
+
+<h2>Why Standard Logging Isn't Enough</h2>
+
+<p>Most teams use Python's built-in <code>logging</code> module or ship events to a SIEM like Datadog or Splunk. That covers observability. It does not cover compliance.</p>
+
+<p>The problem is integrity. A standard log file can be edited, truncated, or deleted without any record of the change. When a regulator asks you to prove that your AI agent made specific decisions on a specific date, you need more than <code>logger.info()</code>. You need a chain of records where each entry is cryptographically linked to the one before it, making any retroactive modification mathematically detectable.</p>
+
+<p>This is what HMAC-SHA256 audit chains provide. The same concept behind blockchain and Git, applied to AI agent record-keeping.</p>
+
+<h2>How HMAC-SHA256 Audit Chains Work</h2>
+
+<p>The core idea is simple. Each record in the chain is signed with a formula:</p>
+
+<pre><code>signature = HMAC-SHA256(secret_key, previous_hash + current_record)</code></pre>
+
+<p>Because each signature includes the previous record's hash, modifying any entry in the chain invalidates every signature that follows it. An auditor (or automated tool) can walk the chain and verify that no records have been altered.</p>
+
+<p>Here's what that looks like in Python:</p>
+
+<pre><code><span class="keyword">import</span> hashlib, hmac, json, time
+
+<span class="keyword">class</span> AuditChain:
+    <span class="keyword">def</span> <span class="func">__init__</span>(self, signing_key: str):
+        self.key = signing_key.encode()
+        self.prev_hash = b<span class="string">"genesis"</span>
+        self.records = []
+
+    <span class="keyword">def</span> <span class="func">append</span>(self, event: dict) -&gt; dict:
+        <span class="comment"># Add timestamp</span>
+        event[<span class="string">"timestamp"</span>] = time.time()
+
+        <span class="comment"># Compute HMAC: previous hash + current record</span>
+        payload = self.prev_hash + json.dumps(
+            event, sort_keys=True
+        ).encode()
+        signature = hmac.new(
+            self.key, payload, hashlib.sha256
+        ).hexdigest()
+
+        <span class="comment"># Chain it</span>
+        record = {
+            <span class="string">"event"</span>: event,
+            <span class="string">"signature"</span>: signature,
+            <span class="string">"prev_hash"</span>: self.prev_hash.hex()
+                <span class="keyword">if</span> isinstance(self.prev_hash, bytes)
+                <span class="keyword">else</span> self.prev_hash,
+        }
+        self.prev_hash = signature.encode()
+        self.records.append(record)
+        <span class="keyword">return</span> record</code></pre>
+
+<p>That's the entire tamper-detection mechanism. Around 25 lines of Python. The complexity isn't in the cryptography &mdash; it's in making this work reliably across agent frameworks, persisting chains to durable storage, and handling concurrent writes from multi-agent systems.</p>
+
+<h2>What Article 12 Requires You to Log</h2>
+
+<p>The <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">EU AI Act Article 12</a> doesn't prescribe a specific format, but it requires that high-risk AI systems have logging capabilities that enable:</p>
+
+<ol>
+  <li><strong>Traceability of system functioning</strong> &mdash; what the system did and why</li>
+  <li><strong>Recording of events</strong> relevant to identifying risks and substantial modifications</li>
+  <li><strong>Identification of input data</strong> that triggered specific decisions</li>
+  <li><strong>Monitoring of human-machine interaction</strong> &mdash; who initiated what and when</li>
+</ol>
+
+<p>For AI agents specifically, that translates to logging: every LLM call (model, prompt hash, response hash, token count), every tool invocation (tool name, arguments, result), every decision point (which branch the agent took and why), and which human or system initiated the agent run.</p>
+
+<h2>Building It: From Scratch to Production</h2>
+
+<h3>Step 1: Persistence Layer</h3>
+
+<p>An in-memory chain is useless if the process crashes. You need durable storage. SQLite is the simplest option &mdash; single file, zero configuration, included in Python's standard library:</p>
+
+<pre><code><span class="keyword">import</span> sqlite3
+
+<span class="keyword">def</span> <span class="func">init_db</span>(db_path: str):
+    conn = sqlite3.connect(db_path)
+    conn.execute(<span class="string">"""
+        CREATE TABLE IF NOT EXISTS events (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            run_id TEXT,
+            timestamp REAL,
+            event_type TEXT,
+            framework TEXT,
+            payload TEXT,
+            signature TEXT,
+            prev_hash TEXT
+        )
+    """</span>)
+    conn.commit()
+    <span class="keyword">return</span> conn</code></pre>
+
+<p>Every event gets its own row. The <code>signature</code> and <code>prev_hash</code> columns form the chain. You can query by <code>run_id</code> to reconstruct a single agent run, or walk the entire table to verify chain integrity.</p>
+
+<h3>Step 2: Signing Key Management</h3>
+
+<p>The HMAC signing key is the root of trust. If someone has the key, they could theoretically rewrite the entire chain. Two approaches:</p>
+
+<p><strong>Auto-generated key (development/single-machine):</strong> Generate a random key on first run and store it at a known path with restricted permissions. This is what air-trust does by default &mdash; it creates <code>~/.air-trust/signing.key</code> with <code>chmod 600</code>.</p>
+
+<p><strong>Environment variable (production/CI):</strong> Set <code>AIR_TRUST_KEY</code> as an environment variable or inject it from your secrets manager. This lets you use the same key across multiple services while keeping it out of your codebase.</p>
+
+<pre><code><span class="keyword">import</span> os, hashlib
+<span class="keyword">from</span> pathlib <span class="keyword">import</span> Path
+
+<span class="keyword">def</span> <span class="func">get_signing_key</span>() -&gt; str:
+    <span class="comment"># 1. Check environment</span>
+    key = os.environ.get(<span class="string">"AIR_TRUST_KEY"</span>)
+    <span class="keyword">if</span> key:
+        <span class="keyword">return</span> key
+
+    <span class="comment"># 2. Check local file</span>
+    key_path = Path.home() / <span class="string">".air-trust"</span> / <span class="string">"signing.key"</span>
+    <span class="keyword">if</span> key_path.exists():
+        <span class="keyword">return</span> key_path.read_text().strip()
+
+    <span class="comment"># 3. Generate new key</span>
+    key = hashlib.sha256(os.urandom(32)).hexdigest()
+    key_path.parent.mkdir(parents=True, exist_ok=True)
+    key_path.write_text(key)
+    os.chmod(key_path, 0o600)
+    <span class="keyword">return</span> key</code></pre>
+
+<h3>Step 3: Chain Verification</h3>
+
+<p>An audit chain you can't verify is just a fancy log. Verification walks every record and recomputes the HMAC. If any computed signature doesn't match the stored one, the chain is broken at that record:</p>
+
+<pre><code><span class="keyword">def</span> <span class="func">verify_chain</span>(records: list, key: bytes) -&gt; tuple[bool, int]:
+    <span class="string">"""Verify chain integrity. Returns (valid, break_index)."""</span>
+    prev_hash = b<span class="string">"genesis"</span>
+
+    <span class="keyword">for</span> i, record <span class="keyword">in</span> enumerate(records):
+        payload = prev_hash + json.dumps(
+            record[<span class="string">"event"</span>], sort_keys=True
+        ).encode()
+        expected = hmac.new(
+            key, payload, hashlib.sha256
+        ).hexdigest()
+
+        <span class="keyword">if</span> expected != record[<span class="string">"signature"</span>]:
+            <span class="keyword">return</span> False, i  <span class="comment"># Chain broken here</span>
+
+        prev_hash = record[<span class="string">"signature"</span>].encode()
+
+    <span class="keyword">return</span> True, -1  <span class="comment"># All records verified</span></code></pre>
+
+<p>Run this as part of CI/CD to catch issues early. Run it before any regulatory audit to confirm chain integrity. Run it after any incident to prove records haven't been altered.</p>
+
+<h2>The One-Line Shortcut: air-trust</h2>
+
+<p>Building all of this from scratch is educational. Maintaining it across five agent frameworks is not. That's why I built <a href="https://pypi.org/project/air-trust/">air-trust</a> &mdash; a single package that handles the chain, storage, key management, framework adapters, and verification CLI.</p>
+
+<pre><code>pip install air-trust</code></pre>
+
+<p>Then wrap any AI client or agent:</p>
+
+<pre><code><span class="keyword">import</span> air_trust
+<span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI
+
+client = OpenAI()
+client = air_trust.trust(client)  <span class="comment"># That's it</span>
+
+<span class="comment"># Every call is now audit-logged with HMAC-SHA256</span>
+response = client.chat.completions.create(
+    model=<span class="string">"gpt-4"</span>,
+    messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"Summarize this report"</span>}]
+)</code></pre>
+
+<p>That single <code>trust()</code> call adds: HMAC-SHA256 signed audit chain stored in SQLite, automatic framework detection (OpenAI, LangChain, CrewAI, AutoGen, Haystack), PII scanning on inputs and outputs, prompt injection detection, and agent identity binding per <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Article 14</a>.</p>
+
+<h3>Framework Examples</h3>
+
+<p><strong>LangChain:</strong></p>
+
+<pre><code><span class="keyword">import</span> air_trust
+<span class="keyword">from</span> langchain_openai <span class="keyword">import</span> ChatOpenAI
+
+llm = ChatOpenAI(model=<span class="string">"gpt-4"</span>)
+llm = air_trust.trust(llm)
+
+<span class="comment"># All LangChain calls now generate audit records</span>
+result = llm.invoke(<span class="string">"What are the compliance requirements?"</span>)</code></pre>
+
+<p><strong>CrewAI:</strong></p>
+
+<pre><code><span class="keyword">import</span> air_trust
+<span class="keyword">from</span> crewai <span class="keyword">import</span> Agent, Task, Crew
+
+<span class="comment"># Wrap the entire Crew</span>
+crew = Crew(agents=[...], tasks=[...])
+crew = air_trust.trust(crew)
+
+<span class="comment"># Every agent action is audit-logged</span>
+result = crew.kickoff()</code></pre>
+
+<p><strong>Session-based logging</strong> for custom pipelines:</p>
+
+<pre><code><span class="keyword">import</span> air_trust
+
+<span class="keyword">with</span> air_trust.session(<span class="string">"data-pipeline"</span>) <span class="keyword">as</span> s:
+    data = load_training_data()
+    s.log(<span class="string">"data_loaded"</span>, rows=len(data))
+
+    model = train_model(data)
+    s.log(<span class="string">"model_trained"</span>, metrics={<span class="string">"accuracy"</span>: 0.94})
+
+    s.log(<span class="string">"pipeline_complete"</span>, risk_level=<span class="string">"low"</span>)</code></pre>
+
+<h2>Verifying Your Chain</h2>
+
+<p>air-trust ships with a CLI for chain verification, statistics, and export:</p>
+
+<pre><code><span class="comment"># Verify chain integrity</span>
+$ python -m air_trust verify
+Chain integrity: VALID
+Total records: 847
+Chain spans: 2026-03-15 to 2026-04-08
+
+<span class="comment"># Get chain statistics</span>
+$ python -m air_trust stats
+Total events:    847
+Frameworks:      openai, langchain, crewai
+Agents:          3
+Date range:      2026-03-15 to 2026-04-08
+
+<span class="comment"># Export for auditors (JSON or CSV)</span>
+$ python -m air_trust export --format json &gt; audit_export.json
+$ python -m air_trust export --format csv &gt; audit_export.csv</code></pre>
+
+<p>The <code>verify</code> command walks every record in the SQLite database, recomputes HMAC signatures, and reports any breaks. The <code>export</code> command produces auditor-ready output that maps directly to <a href="/blog/eu-ai-act-compliance-checklist">Article 12 requirements</a>.</p>
+
+<h2>Adding Audit Trails to CI/CD</h2>
+
+<p>Audit chains should be verified on every deployment, not just before audits. If you use GitHub Actions, you can add compliance scanning (including audit trail verification) with a single step:</p>
+
+<pre><code><span class="comment"># .github/workflows/compliance.yml</span>
+name: EU AI Act Compliance
+on: [push, pull_request]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: airblackbox/compliance-action@v1
+        with:
+          path: .
+          strict: true</code></pre>
+
+<p>This scans your codebase for all six <a href="/blog/6-technical-checks">EU AI Act technical requirements</a> and reports results directly in your pull request.</p>
+
+<h2>Audit Trail Architecture for Production</h2>
+
+<p>For teams running agents in production, here's a recommended architecture:</p>
+
+<table>
+  <thead>
+    <tr><th>Layer</th><th>Purpose</th><th>Tool</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Agent Framework</td><td>Runs agent logic</td><td>LangChain, CrewAI, AutoGen, etc.</td></tr>
+    <tr><td>Trust Layer</td><td>Intercepts calls, signs records</td><td>air-trust</td></tr>
+    <tr><td>Local Storage</td><td>SQLite audit chain</td><td>~/.air-trust/events.db</td></tr>
+    <tr><td>SIEM Export</td><td>Forward to observability stack</td><td>JSON export to Datadog, Splunk, etc.</td></tr>
+    <tr><td>Compliance Scanner</td><td>Verify chain + check all 6 articles</td><td>air-compliance</td></tr>
+    <tr><td>CI/CD Gate</td><td>Block deploys that break compliance</td><td>GitHub Action</td></tr>
+  </tbody>
+</table>
+
+<p>The trust layer sits between your agent framework and the LLM provider. It doesn't modify the agent's behavior &mdash; it observes and records. Your existing SIEM handles alerting and dashboards. The audit chain handles regulatory proof.</p>
+
+<h2>Common Mistakes</h2>
+
+<p><strong>Logging outputs but not inputs.</strong> Article 12 requires traceability of system functioning. If you only log what the model returned, you can't reconstruct why it returned that. Log the prompt (or a hash of it), the model version, and the configuration parameters.</p>
+
+<p><strong>Using regular hashes instead of HMAC.</strong> A SHA-256 hash of a record proves the record hasn't changed, but anyone who knows the hash algorithm can recompute a valid hash for a modified record. HMAC requires knowledge of the secret key, so only the original system can produce valid signatures.</p>
+
+<p><strong>Not verifying the chain regularly.</strong> A chain that hasn't been verified since it was created provides weaker evidence than one verified hourly in CI. Regular verification creates a paper trail showing the chain was intact at specific points in time.</p>
+
+<p><strong>Storing the signing key in the codebase.</strong> If the key is committed to Git, anyone with repo access can forge records. Use environment variables or a secrets manager.</p>
+
+<h2>FAQ</h2>
+
+<h3>What is an audit trail for AI agents?</h3>
+<p>An audit trail for AI agents is a tamper-evident log of every action an autonomous AI agent takes. It uses cryptographic signatures (HMAC-SHA256) to chain records together so that any modification to historical entries is mathematically detectable. This satisfies the EU AI Act Article 12 requirement for automatic recording of events that enables traceability.</p>
+
+<h3>Does the EU AI Act require audit trails?</h3>
+<p>Yes. <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Article 12</a> requires high-risk AI systems to have automatic recording of events (logging) that enables traceability of the system's functioning. The <a href="/blog/eu-ai-act-august-2026-deadline">enforcement deadline is August 2, 2026</a>. Standard application logs do not meet this requirement because they lack tamper-evidence.</p>
+
+<h3>How do I add audit trails to LangChain or CrewAI agents?</h3>
+<p>Install air-trust (<code>pip install air-trust</code>) and wrap your client or agent with <code>air_trust.trust()</code>. This adds HMAC-SHA256 audit logging automatically. It works with <a href="/blog/langchain-eu-ai-act-compliance">LangChain</a>, CrewAI, AutoGen, OpenAI SDK, and Haystack with zero code changes to your existing agent logic.</p>
+
+<h3>What is the performance impact of audit logging?</h3>
+<p>Minimal. HMAC-SHA256 computation takes microseconds. SQLite writes take single-digit milliseconds. The bottleneck in any AI agent pipeline is the LLM API call (typically 500ms-3s), not the audit logging. air-trust adds less than 5ms of overhead per call.</p>
+
+<h3>Can I export audit trails for external auditors?</h3>
+<p>Yes. air-trust includes a CLI export command: <code>python -m air_trust export --format json</code> produces auditor-ready JSON. CSV export is also available. The output includes timestamps, event types, framework identifiers, and chain signatures that an auditor can independently verify.</p>
+
+<div class="cta">
+  <p><strong>Add audit trails to your AI agents in 10 seconds:</strong></p>
+  <p><code>pip install air-trust</code></p>
+  <p style="margin-top: 12px;">
+    <a href="https://github.com/airblackbox/air-trust">GitHub</a> &middot;
+    <a href="https://pypi.org/project/air-trust/">PyPI</a> &middot;
+    <a href="/quickstart">Quickstart</a> &middot;
+    <a href="/blog/6-technical-checks">6 Technical Checks</a>
+  </p>
+</div>
+
+<footer>
+  <p><strong>Related articles:</strong></p>
+  <p style="margin-top: 8px;">
+    <a href="/blog/6-technical-checks">The 6 Technical Checks Your AI System Needs Before August 2026</a><br>
+    <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">EU AI Act Articles 9-15: Technical Requirements Explained</a><br>
+    <a href="/blog/eu-ai-act-compliance-checklist">EU AI Act Compliance Checklist for Python Developers</a><br>
+    <a href="/blog/langchain-eu-ai-act-compliance">LangChain EU AI Act Compliance Guide</a><br>
+    <a href="/blog/eu-ai-act-august-2026-deadline">EU AI Act August 2026 Deadline: What Developers Need to Do</a>
+  </p>
+  <p style="margin-top: 20px;">&copy; 2026 AIR Blackbox &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>
+</footer>
+
+</div>
+</body>
+</html>

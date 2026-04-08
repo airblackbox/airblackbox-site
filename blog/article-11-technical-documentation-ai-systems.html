@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Article 11 Technical Docs for AI Systems: Python Guide</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="description" content="Article 11 EU AI Act requires technical documentation for high-risk AI systems before deployment. Learn what's required, build model cards in Python, and automate docs with air-compliance.">
+<meta name="keywords" content="article 11 eu ai act, technical documentation ai systems, ai system documentation requirements, eu ai act documentation, model card python, ai system lifecycle documentation">
+<meta property="og:title" content="Article 11 Technical Documentation for AI Systems: Python Guide">
+<meta property="og:description" content="Master Article 11 technical documentation requirements. Build model cards, document architecture, and auto-generate compliance docs using Python.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://airblackbox.ai/blog/article-11-technical-documentation-ai-systems">
+<link rel="canonical" href="https://airblackbox.ai/blog/article-11-technical-documentation-ai-systems">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Article 11 Technical Docs for AI Systems: Python Guide">
+<meta name="twitter:description" content="Article 11 requires technical documentation for high-risk AI systems. Learn what to document and how to build it with Python.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Article 11 Technical Documentation for AI Systems: Python Implementation Guide",
+  "description": "Article 11 of the EU AI Act requires technical documentation for high-risk AI systems. Learn what to document, how to structure documentation, and automate it with Python.",
+  "url": "https://airblackbox.ai/blog/article-11-technical-documentation-ai-systems",
+  "datePublished": "2026-04-08",
+  "dateModified": "2026-04-08",
+  "author": {"@type": "Person", "name": "Jason Shotwell", "url": "https://airblackbox.ai"},
+  "publisher": {"@type": "Organization", "name": "AIR Blackbox", "url": "https://airblackbox.ai"},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://airblackbox.ai/blog/article-11-technical-documentation-ai-systems"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://airblackbox.ai"},
+    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://airblackbox.ai/blog/"},
+    {"@type": "ListItem", "position": 3, "name": "Article 11 Technical Documentation", "item": "https://airblackbox.ai/blog/article-11-technical-documentation-ai-systems"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Article 11 of the EU AI Act?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Article 11 requires providers of high-risk AI systems to create and maintain comprehensive technical documentation that demonstrates compliance with EU AI Act requirements before the system is placed on the market. This documentation must cover system description, design specifications, development process, risk management measures, testing procedures, and post-deployment monitoring."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What must technical documentation include?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Article 11 requires documentation to include: system description and purpose, input/output specifications, model architecture and training data information, design and development process documentation, risk management measures and monitoring procedures, results of testing and validation, information on changes and updates, and evidence of compliance with Articles 9, 10, 12, 14, and 15."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I auto-generate technical documentation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Modern approaches treat documentation as code. You can auto-generate system architecture diagrams from code scans, create model cards from dataclass definitions, and produce compliance documentation from your air-compliance scanner results. This keeps documentation synchronized with actual system behavior."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need separate documents for each article?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Article 11 documentation should cross-reference and integrate information from Articles 9 (risk management), 10 (data governance), 12 (record-keeping), 14 (human oversight), and 15 (accuracy and security). Regulators expect a unified technical file, not five separate documents."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When should I start building technical documentation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Immediately. Documentation is part of development, not an afterthought. Start documenting during design phase, update it as you build, integrate it into your CI/CD pipeline to keep it current, and maintain it throughout the system's lifecycle. The August 2026 enforcement deadline applies to all high-risk AI systems deployed after that date."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; color: #e6edf3; background: #080b14; }
+  .container { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
+  h1 { font-size: 2.2em; line-height: 1.2; margin-bottom: 16px; letter-spacing: -0.02em; color: #e6edf3; }
+  h2 { font-size: 1.4em; margin-top: 48px; margin-bottom: 16px; color: #e6edf3; }
+  h3 { font-size: 1.1em; margin-top: 32px; margin-bottom: 12px; color: #e6edf3; }
+  p { margin-bottom: 20px; color: #c9d1d9; }
+  .meta { color: #8b949e; font-size: 14px; margin-bottom: 40px; }
+  code { background: #0d1117; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; color: #e6edf3; }
+  pre { background: #0d1117; color: #e6edf3; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #21262d; color: #c9d1d9; }
+  th { font-weight: 600; background: #0d1117; color: #e6edf3; }
+  blockquote { border-left: 3px solid #58a6ff; padding-left: 16px; margin: 24px 0; font-style: italic; color: #8b949e; }
+  .cta { background: #0d1117; color: #e6edf3; padding: 24px; border-radius: 8px; margin: 40px 0; text-align: center; border: 1px solid #21262d; }
+  .cta code { background: #1a1a1a; color: #e6edf3; }
+  .cta a { color: #58a6ff; }
+  footer { border-top: 1px solid #21262d; padding-top: 20px; margin-top: 60px; color: #8b949e; font-size: 13px; }
+  footer a { color: #58a6ff; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { color: #79c0ff; }
+  ul, ol { margin: 0 0 20px 24px; color: #c9d1d9; }
+  li { margin-bottom: 8px; }
+  .comment { color: #6a9955; }
+  .keyword { color: #c586c0; }
+  .string { color: #ce9178; }
+  .func { color: #dcdcaa; }
+</style>
+</head>
+<body>
+<nav style="background:#080b14;border-bottom:1px solid #21262d;padding:16px 0;">
+  <div style="max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="/" style="color:#e6edf3;font-weight:700;font-size:18px;text-decoration:none;">AIR <span style="color:#58a6ff;">Blackbox</span></a>
+    <span style="display:flex;gap:20px;">
+      <a href="/" style="color:#8b949e;text-decoration:none;">Home</a>
+      <a href="/compliance-mapping" style="color:#8b949e;text-decoration:none;">Docs</a>
+      <a href="/blog/" style="color:#58a6ff;text-decoration:none;">Blog</a>
+      <a href="https://github.com/airblackbox/gateway" style="color:#8b949e;text-decoration:none;">GitHub</a>
+      <a href="https://pypi.org/project/air-blackbox/" style="color:#8b949e;text-decoration:none;">PyPI</a>
+    </span>
+  </div>
+</nav>
+
+<div class="container">
+
+<h1>Article 11 Technical Documentation for AI Systems: Python Implementation Guide</h1>
+<p class="meta">April 8, 2026 &middot; Jason Shotwell &middot; 14 min read</p>
+
+<p><strong>Article 11 of the EU AI Act requires providers of high-risk AI systems to create technical documentation that demonstrates compliance before the system is placed on the market.</strong> This isn't a Word document with outdated screenshots. It's a living record of system design, risk management, testing results, and post-deployment behavior that regulators can audit. If you ship AI in the EU after <a href="/blog/eu-ai-act-august-2026-deadline">August 2, 2026</a>, you need it.</p>
+
+<p>This guide walks through what Article 11 actually requires, what Annex IV spells out in detail, and how to build documentation programmatically using Python so it stays synchronized with your actual system.</p>
+
+<h2>What Article 11 Requires</h2>
+
+<p>Article 11 mandates that before deployment, high-risk AI providers must have technical documentation covering:</p>
+
+<ol>
+  <li><strong>System description</strong> — What the system does, what problem it solves, which users it serves</li>
+  <li><strong>Design specifications</strong> — Architecture, data pipelines, model selection rationale, training data characteristics</li>
+  <li><strong>Development process</strong> — How the system was built, tested, validated, and approved for deployment</li>
+  <li><strong>Risk management measures</strong> — Tied directly to <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Article 9</a> risk assessments: what risks were identified and how you mitigated them</li>
+  <li><strong>Monitoring and testing</strong> — What you're measuring post-deployment, how you detect failures, what triggers alerts</li>
+  <li><strong>Changes and updates</strong> — Version control for the entire system lifecycle, including data updates, model retraining, and configuration changes</li>
+  <li><strong>Compliance cross-references</strong> — How the system satisfies Articles 9, 10, <a href="/blog/audit-trails-ai-agents-python">12</a>, 14, and 15</li>
+</ol>
+
+<p>The key insight: This isn't documentation about compliance. It's documentation that proves compliance. Every requirement from Articles 9-15 should map to a specific section in your technical file.</p>
+
+<h2>Annex IV: The Actual Checklist</h2>
+
+<p>Annex IV of the EU AI Act lists the exact items that must be in your technical documentation. Here's what regulators will check:</p>
+
+<table>
+  <thead>
+    <tr><th>Documentation Item</th><th>What to Include</th><th>Maps to Article</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1. System description</td><td>Purpose, intended use, users affected</td><td>11</td></tr>
+    <tr><td>2. Data description</td><td>Training data provenance, characteristics, labeling methodology, bias assessment</td><td>10</td></tr>
+    <tr><td>3. Model architecture</td><td>Model type, algorithm, version, dependencies</td><td>11</td></tr>
+    <tr><td>4. Risk management file</td><td>Identified risks and mitigation measures</td><td>9</td></tr>
+    <tr><td>5. Performance testing</td><td>Accuracy, robustness, fairness metrics on test sets and real-world data</td><td>15</td></tr>
+    <tr><td>6. Monitoring system</td><td>How you detect performance degradation, drift, misuse</td><td>12</td></tr>
+    <tr><td>7. Logging capability</td><td>What events are recorded, how, for how long</td><td>12</td></tr>
+    <tr><td>8. User documentation</td><td>How to use the system correctly, limitations, failure modes</td><td>13</td></tr>
+    <tr><td>9. Incident response</td><td>What happens when the system fails, who to notify, how to recover</td><td>9, 14</td></tr>
+    <tr><td>10. Governance records</td><td>Who approved deployment, when, based on what evidence</td><td>14</td></tr>
+  </tbody>
+</table>
+
+<p>Each of these items should be updated during development and maintained throughout the system's operational lifetime. The <a href="/blog/eu-ai-act-august-2026-deadline">August 2026 enforcement deadline</a> applies to systems deployed after that date, so you need this documentation locked in before launch.</p>
+
+<h2>Building Technical Documentation in Python</h2>
+
+<p>Most teams still write documentation by hand: a markdown file, a wiki page, a PDF that gets stale immediately. Modern AI systems move too fast for that. Instead, treat documentation as code.</p>
+
+<h3>Model Cards: Documentation Starts with Data</h3>
+
+<p>A model card is a one-page summary of what a model does, what data trained it, and how it performs. It satisfies items 2, 3, and 5 from Annex IV. Define it as a Python dataclass:</p>
+
+<pre><code><span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass
+<span class="keyword">from</span> typing <span class="keyword">import</span> Optional
+<span class="keyword">import</span> json
+
+<span class="keyword">@dataclass</span>
+<span class="keyword">class</span> ModelCard:
+    <span class="comment"># System identification</span>
+    system_name: str
+    system_version: str
+    intended_use: str
+    <span class="comment"># Data</span>
+    training_data_source: str
+    training_data_size: int
+    labeling_methodology: str
+    known_biases: list[str]
+    <span class="comment"># Model</span>
+    model_type: str
+    framework: str
+    <span class="comment"># Performance</span>
+    accuracy_test_set: float
+    accuracy_real_world: float
+    fairness_metrics: dict
+    failure_modes: list[str]
+    <span class="comment"># Risk</span>
+    identified_risks: list[str]
+    mitigation_measures: dict
+    <span class="comment"># Monitoring</span>
+    monitoring_frequency: str
+    alert_thresholds: dict
+
+    <span class="keyword">def</span> <span class="func">to_markdown</span>(self) -> str:
+        <span class="string">"""Export as markdown for compliance documentation."""</span>
+        lines = [
+            <span class="string">f"# {self.system_name} v{self.system_version}"</span>,
+            <span class="string">f"\n## System Description\n{self.intended_use}"</span>,
+            <span class="string">f"\n## Training Data\n- Source: {self.training_data_source}"</span>,
+            <span class="string">f"- Size: {self.training_data_size:,} samples"</span>,
+            <span class="string">f"- Labeling: {self.labeling_methodology}"</span>,
+            <span class="string">f"- Known biases: {', '.join(self.known_biases)}"</span>,
+            <span class="string">f"\n## Model\n- Type: {self.model_type}"</span>,
+            <span class="string">f"- Framework: {self.framework}"</span>,
+            <span class="string">f"\n## Performance\n- Test accuracy: {self.accuracy_test_set:.2%}"</span>,
+            <span class="string">f"- Real-world accuracy: {self.accuracy_real_world:.2%}"</span>,
+            <span class="string">f"- Fairness: {json.dumps(self.fairness_metrics, indent=2)}"</span>,
+            <span class="string">f"\n## Failure Modes\n"</span> + <span class="string">"\n"</span>.join(
+                [<span class="string">f"- {mode}"</span> <span class="keyword">for</span> mode <span class="keyword">in</span> self.failure_modes]
+            ),
+            <span class="string">f"\n## Risks and Mitigations\n"</span> + <span class="string">"\n"</span>.join(
+                [<span class="string">f"- {risk}: {self.mitigation_measures[risk]}"</span>
+                 <span class="keyword">for</span> risk <span class="keyword">in</span> self.identified_risks]
+            ),
+        ]
+        <span class="keyword">return</span> <span class="string">"\n"</span>.join(lines)</code></pre>
+
+<p>Now, populate this card once during development and version it with your model:</p>
+
+<pre><code>card = ModelCard(
+    system_name=<span class="string">"CreditRisk-v2"</span>,
+    system_version=<span class="string">"2.3.1"</span>,
+    intended_use=<span class="string">"Assess creditworthiness for loan applications in EU markets"</span>,
+    training_data_source=<span class="string">"Internal loan database 2018-2025"</span>,
+    training_data_size=125000,
+    labeling_methodology=<span class="string">"Default status after 90 days"</span>,
+    known_biases=[<span class="string">"Overrepresented: prime-age males in tech hubs"</span>,
+                   <span class="string">"Underrepresented: rural applicants, older workers"</span>],
+    model_type=<span class="string">"Gradient boosting (XGBoost)"</span>,
+    framework=<span class="string">"xgboost==2.0.1"</span>,
+    accuracy_test_set=0.87,
+    accuracy_real_world=0.84,  <span class="comment"># Real-world is lower (normal)</span>
+    fairness_metrics={
+        <span class="string">"demographic_parity_difference"</span>: 0.12,
+        <span class="string">"equal_opportunity_difference"</span>: 0.08
+    },
+    failure_modes=[
+        <span class="string">"Model underperforms for self-employed applicants (< 60% accuracy)"</span>,
+        <span class="string">"Drift detected when interest rates change rapidly"</span>
+    ],
+    identified_risks=[
+        <span class="string">"Fairness: Model bias against certain age groups"</span>,
+        <span class="string">"Robustness: Performance degrades with economic shock"</span>,
+        <span class="string">"Transparency: Black-box model obscures decision logic"</span>
+    ],
+    mitigation_measures={
+        <span class="string">"Fairness: Model bias against certain age groups"</span>:
+            <span class="string">"Monitored monthly, threshold 0.15 triggers retraining review"</span>,
+        <span class="string">"Robustness: Performance degrades with economic shock"</span>:
+            <span class="string">"Real-time monitoring on economic indicators, auto-disable if GDP growth < -2%"</span>,
+        <span class="string">"Transparency: Black-box model obscures decision logic"</span>:
+            <span class="string">"SHAP explanations for every denial, audit trail per Article 12"</span>
+    },
+    monitoring_frequency=<span class="string">"Daily"</span>,
+    alert_thresholds={
+        <span class="string">"accuracy_drop"</span>: 0.03,
+        <span class="string">"fairness_gap"</span>: 0.20,
+        <span class="string">"drift_detected"</span>: True
+    }
+)
+
+<span class="comment"># Save and version with model</span>
+<span class="keyword">with</span> open(<span class="string">"docs/model_card.md"</span>, <span class="string">"w"</span>) <span class="keyword">as</span> f:
+    f.write(card.to_markdown())</code></pre>
+
+<p>This single dataclass becomes your Annex IV items 2, 3, and 5. It's version-controlled, auditable, and automatically formatted for regulators.</p>
+
+<h3>System Architecture: Auto-Generated from Scans</h3>
+
+<p>Running <a href="/blog/6-technical-checks">air-compliance</a> on your codebase produces a compliance report that maps directly to Article 11 requirements. Extract that report and build your architecture documentation:</p>
+
+<pre><code><span class="keyword">from</span> air_compliance <span class="keyword">import</span> scan_project
+
+<span class="comment"># Scan your codebase</span>
+report = scan_project(<span class="string">"./my_ai_system"</span>)
+
+<span class="comment"># Generate architecture documentation from scan results</span>
+arch_doc = <span class="string">f"""
+# System Architecture
+
+## Components Identified
+{report.components_summary}
+
+## Risk Assessment (Article 9)
+{report.article_9_findings}
+
+## Data Governance (Article 10)
+{report.article_10_findings}
+
+## High-Risk Zones
+- {chr(10).join([f"- {zone['name']}: {zone['risk_level']}"
+                   for zone in report.high_risk_areas])}
+
+## Dependencies
+{report.dependency_audit}
+
+## Compliance Score
+{report.overall_score}/100
+
+## Required Actions
+{report.remediation_steps}
+"""</span>
+
+<span class="keyword">with</span> open(<span class="string">"docs/architecture.md"</span>, <span class="string">"w"</span>) <span class="keyword">as</span> f:
+    f.write(arch_doc)</code></pre>
+
+<p>This auto-generated documentation is always in sync with your actual code. Run it in CI/CD on every commit to catch compliance drift before it reaches production.</p>
+
+<h2>Integrating with Article 9, 10, 12, 14, 15</h2>
+
+<p>Article 11 documentation doesn't stand alone. It must reference and integrate information from other articles:</p>
+
+<ul>
+  <li><strong>Article 9 (Risk Management):</strong> Your Article 11 technical file should include the risk register, mitigation strategies, and residual risk assessments. Link your model card's <code>identified_risks</code> directly to Article 9 risk IDs.</li>
+  <li><strong>Article 10 (Data Governance):</strong> Training data provenance, data quality metrics, bias assessment, and consent/licensing proof belong in your technical documentation. Include <a href="/compliance-mapping">consent matrices</a> and data source audits.</li>
+  <li><strong><a href="/blog/audit-trails-ai-agents-python">Article 12 (Record-Keeping):</a></strong> Link to your audit trail implementation. Show how events are logged, signed, and retained. Include sample audit logs.</li>
+  <li><strong>Article 14 (Human Oversight):</strong> Document approval workflows, human-in-the-loop decision points, and identity binding. Show who can modify the system and audit records of those modifications.</li>
+  <li><strong>Article 15 (Accuracy and Security):</strong> Include testing results, adversarial testing, and robustness validation. Document your penetration testing methodology and threat model.</li>
+</ul>
+
+<p>Example cross-reference:</p>
+
+<pre><code><span class="comment"># In your Article 11 technical file:</span>
+
+## Risk: Model Bias Against Certain Demographics
+- **Article 9 ID:** RISK-032
+- **Severity:** High
+- **Mitigation:** Monthly fairness audits, bias threshold 0.15
+- **Article 12 Link:** Fairness metrics logged daily to audit chain
+- **Article 14 Link:** Bias alert triggers manual review by Data Ethics Officer
+- **Article 15 Link:** Tested against NIST bias taxonomy, 94% of cases within tolerance</code></pre>
+
+<h2>Automating Documentation with air-compliance</h2>
+
+<p>Treat documentation generation as a CI/CD step, not a quarterly chore. Install air-compliance and run it on every deployment:</p>
+
+<pre><code>pip install air-compliance</code></pre>
+
+<p>Create a documentation generation pipeline:</p>
+
+<pre><code><span class="keyword">from</span> air_compliance <span class="keyword">import</span> scan_project, generate_documentation
+<span class="keyword">import</span> json
+<span class="keyword">from</span> datetime <span class="keyword">import</span> datetime
+
+<span class="comment"># Run compliance scan</span>
+report = scan_project(<span class="string">"./src"</span>)
+
+<span class="comment"># Load your model card</span>
+<span class="keyword">with</span> open(<span class="string">"model_card.json"</span>) <span class="keyword">as</span> f:
+    card = json.load(f)
+
+<span class="comment"># Generate complete technical file</span>
+tech_file = generate_documentation(
+    report=report,
+    model_card=card,
+    article_9_risks=load_risk_register(),
+    article_10_data=load_data_audit(),
+    article_12_logs=load_recent_audit_logs(),
+    article_14_approvals=load_approval_chain(),
+    article_15_tests=load_test_results(),
+    generated_at=datetime.now().isoformat()
+)
+
+<span class="comment"># Write as HTML and PDF for regulators</span>
+<span class="keyword">with</span> open(<span class="string">f"compliance/{report.version}/technical_file.html"</span>, <span class="string">"w"</span>) <span class="keyword">as</span> f:
+    f.write(tech_file.to_html())
+
+tech_file.to_pdf(
+    <span class="string">f"compliance/{report.version}/technical_file.pdf"</span>
+)</code></pre>
+
+<p>This generates a complete, auditable technical file with version control, timestamps, and cross-references. Every artifact is backed by source code and scan results, not hand-waving.</p>
+
+<h2>Documentation as Code</h2>
+
+<p>The reason to automate: documentation written by hand drifts. I've seen 50-page technical files that didn't match what the code actually did. Regulators don't just check the docs—they run your system and compare outputs to what you documented.</p>
+
+<p><strong>Documentation as code means:</strong></p>
+
+<ul>
+  <li><strong>Versioned in Git:</strong> Every documentation change is tracked, reviewed, and approved before deployment</li>
+  <li><strong>Tested in CI/CD:</strong> Run <code>air-compliance</code> on every commit. If code changes but documentation isn't updated, the build fails</li>
+  <li><strong>Auto-generated where possible:</strong> Model cards, architecture diagrams, performance metrics, risk matrices—all derived from authoritative sources (code, config, scan results)</li>
+  <li><strong>Human-written where necessary:</strong> System purpose, intended use cases, failure mitigation strategies—these are genuinely handwritten but reviewed by engineers and auditors</li>
+  <li><strong>Linked to source:</strong> Every statement in your technical file should reference the code, config, or test that backs it up</li>
+</ul>
+
+<p>The result is documentation that regulators trust because it's auditable. Every claim can be traced back to source.</p>
+
+<h2>Common Documentation Gaps</h2>
+
+<p><strong>No versioning.</strong> You update your model, but the technical file is still v1.0 from last year. Solution: Link version numbers to Git tags. Generate documentation per release.</p>
+
+<p><strong>No risk assessment linkage.</strong> Your Article 9 risk register is separate from Article 11 documentation. Regulators see the risks but not how you mitigated them in your actual system. Solution: Every risk in Article 9 must have a corresponding mitigation in Article 11 (code, test, monitoring rule).</p>
+
+<p><strong>No lifecycle updates.</strong> Documentation frozen at deployment. Real systems change: data drifts, models get retrained, configs evolve. Solution: Quarterly documentation reviews, automated monitoring for changes that require doc updates.</p>
+
+<p><strong>Performance data from dev, not production.</strong> Your accuracy is 92% in tests but 84% in production. If regulators find a gap, credibility dies. Solution: Include both test-set performance and real-world performance. Explain the gap.</p>
+
+<p><strong>Monitoring plans with no implementation.</strong> You document that you'll monitor accuracy drift, but nothing actually does it. Solution: Documentation should link to actual monitoring code. If you say you'll alert on drift > 3%, show the code that does it.</p>
+
+<h2>FAQ</h2>
+
+<h3>What is Article 11 of the EU AI Act?</h3>
+<p>Article 11 requires providers of high-risk AI systems to create and maintain comprehensive technical documentation demonstrating compliance with EU AI Act requirements before the system is placed on the market. This documentation must cover system design, development process, risk management, testing results, monitoring procedures, and evidence of compliance with Articles 9, 10, 12, 14, and 15.</p>
+
+<h3>What must be included in Article 11 technical documentation?</h3>
+<p>According to Annex IV, documentation must include: system description and intended use, training data characteristics and labeling methodology, model architecture and version information, risk management file with identified risks and mitigations, performance testing results on both test sets and real-world data, monitoring and logging systems, user documentation and failure modes, incident response procedures, and governance records showing deployment approval.</p>
+
+<h3>Can I use a Word document or PDF for Article 11 compliance?</h3>
+<p>Technically yes, but practically no. Regulators want auditable, traceable documentation. If your document claims "model accuracy is 91%" but the code trains a different model, you've failed. Treat documentation as code: version it in Git, generate it from scans and configs, test it in CI/CD, and link every claim to source.</p>
+
+<h3>Should I integrate Article 11 documentation with Articles 9, 10, 12, 14, and 15?</h3>
+<p>Yes. Regulators expect a unified technical file, not five separate documents. Your Article 11 file should cross-reference and integrate information from all other articles. Every risk identified in Article 9 should have a mitigation shown in Article 11 code. Every monitoring requirement from Article 12 should be linked to Article 11 monitoring procedures.</p>
+
+<h3>When should I start writing Article 11 documentation?</h3>
+<p>During development, not after. As you design your system, document it. As you build components, document them. Integrate documentation into your CI/CD pipeline so it's always current. Before the <a href="/blog/eu-ai-act-august-2026-deadline">August 2026 deadline</a>, lock your documentation in. After deployment, maintain it throughout the system's lifecycle as the system changes.</p>
+
+<div class="cta">
+  <p><strong>Generate Article 11 technical documentation automatically:</strong></p>
+  <p><code>pip install air-compliance</code></p>
+  <p style="margin-top: 12px;">
+    <a href="https://github.com/airblackbox/air-compliance">GitHub</a> &middot;
+    <a href="https://pypi.org/project/air-compliance/">PyPI</a> &middot;
+    <a href="/quickstart">Quickstart</a> &middot;
+    <a href="/compliance-mapping">Compliance Mapping</a>
+  </p>
+</div>
+
+<footer>
+  <p><strong>Related articles:</strong></p>
+  <p style="margin-top: 8px;">
+    <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">EU AI Act Articles 9-15: Technical Requirements Explained</a><br>
+    <a href="/blog/eu-ai-act-compliance-checklist">EU AI Act Compliance Checklist for Python Developers</a><br>
+    <a href="/blog/audit-trails-ai-agents-python">Audit Trails for AI Agents: HMAC-SHA256 Python Guide</a><br>
+    <a href="/blog/eu-ai-act-august-2026-deadline">EU AI Act August 2026 Deadline: What Developers Need to Do</a><br>
+    <a href="/blog/6-technical-checks">The 6 Technical Checks Your AI System Needs Before August 2026</a><br>
+    <a href="/blog/langchain-eu-ai-act-compliance">LangChain EU AI Act Compliance Guide</a>
+  </p>
+  <p style="margin-top: 20px;">&copy; 2026 AIR Blackbox &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>
+</footer>
+
+</div>
+</body>
+</html>
