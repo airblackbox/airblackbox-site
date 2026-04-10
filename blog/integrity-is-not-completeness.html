@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integrity Is Not Completeness: Adding Gap Detection to Tamper-Evident Audit Chains</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="description" content="air-trust v0.5.0 adds session-scoped completeness detection to the HMAC-SHA256 audit chain. Detect dropped records, missing sessions, and sequence gaps in your AI agent audit trail.">
+<meta name="keywords" content="audit chain completeness, session sequence numbers, gap detection ai agents, tamper-evident logging, hmac sha256 audit, eu ai act article 12, air-trust 0.5.0, record keeping ai systems, session completeness python, agent audit trail">
+<meta property="og:title" content="Integrity Is Not Completeness: Adding Gap Detection to Tamper-Evident Audit Chains">
+<meta property="og:description" content="Your audit chain proves records weren't changed. Does it prove records weren't dropped? air-trust v0.5.0 adds session completeness detection.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://airblackbox.ai/blog/integrity-is-not-completeness">
+<link rel="canonical" href="https://airblackbox.ai/blog/integrity-is-not-completeness">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Integrity Is Not Completeness">
+<meta name="twitter:description" content="Your audit chain proves records weren't changed. Does it prove records weren't dropped? air-trust v0.5.0 adds session completeness detection.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Integrity Is Not Completeness: Adding Gap Detection to Tamper-Evident Audit Chains",
+  "description": "air-trust v0.5.0 adds session-scoped completeness detection to the HMAC-SHA256 audit chain. Detect dropped records, missing sessions, and sequence gaps.",
+  "url": "https://airblackbox.ai/blog/integrity-is-not-completeness",
+  "datePublished": "2026-04-10",
+  "dateModified": "2026-04-10",
+  "author": {"@type": "Person", "name": "Jason Shotwell", "url": "https://airblackbox.ai"},
+  "publisher": {"@type": "Organization", "name": "AIR Blackbox", "url": "https://airblackbox.ai"},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://airblackbox.ai/blog/integrity-is-not-completeness"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://airblackbox.ai"},
+    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://airblackbox.ai/blog/"},
+    {"@type": "ListItem", "position": 3, "name": "Integrity Is Not Completeness", "item": "https://airblackbox.ai/blog/integrity-is-not-completeness"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the difference between integrity and completeness in an audit chain?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Integrity proves records were not changed after being written (via HMAC-SHA256 chaining). Completeness proves records were not dropped or silently deleted from a session. You need both to trust an audit trail. air-trust v0.5.0 adds session-scoped completeness detection on top of the existing integrity chain."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does air-trust detect dropped records?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Every record within a session gets a monotonically increasing session_seq number (0, 1, 2, ...) and a prev_session_seq pointing to the previous record. The verifier checks that sequences increase by exactly 1 with no gaps, duplicates, or rewinds. A missing number means a record was dropped."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does session completeness prove every event was logged?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Completeness proves the chain is gap-free within recorded sessions. It cannot prove that all important events were submitted to the chain in the first place, or that sessions which should have started actually did. It is a session-scoped guarantee, not a universal one. The SPEC.md v1.1 threat model documents these limits explicitly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is air-trust v0.5.0 backward compatible with v0.4.0?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. v1.1 is additive-only. Records without session_seq (from v0.4.0 or earlier) still verify for integrity. The completeness verifier only checks records that carry v1.1 fields. Mixed chains with both v1.0 and v1.1 records are explicitly supported."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does this relate to EU AI Act Article 12?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Article 12 requires that high-risk AI systems have logging capabilities designed to enable monitoring of operation. Integrity alone tells the auditor that logs were not tampered with. Completeness tells the auditor that logs were not selectively deleted. Together, they give the strongest evidence that the logging system itself is functioning correctly."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; color: #e6edf3; background: #080b14; }
+  .container { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
+  h1 { font-size: 2.2em; line-height: 1.2; margin-bottom: 16px; letter-spacing: -0.02em; color: #e6edf3; }
+  h2 { font-size: 1.4em; margin-top: 48px; margin-bottom: 16px; color: #e6edf3; }
+  h3 { font-size: 1.1em; margin-top: 32px; margin-bottom: 12px; color: #e6edf3; }
+  p { margin-bottom: 20px; color: #c9d1d9; }
+  .meta { color: #8b949e; font-size: 14px; margin-bottom: 40px; }
+  code { background: #0d1117; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; color: #e6edf3; }
+  pre { background: #0d1117; color: #e6edf3; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #21262d; color: #c9d1d9; }
+  th { font-weight: 600; background: #0d1117; color: #e6edf3; }
+  blockquote { border-left: 3px solid #58a6ff; padding-left: 16px; margin: 24px 0; font-style: italic; color: #8b949e; }
+  .cta { background: #0d1117; color: #e6edf3; padding: 24px; border-radius: 8px; margin: 40px 0; text-align: center; border: 1px solid #21262d; }
+  .cta code { background: #1a1a1a; color: #e6edf3; }
+  .cta a { color: #58a6ff; }
+  footer { border-top: 1px solid #21262d; padding-top: 20px; margin-top: 60px; color: #8b949e; font-size: 13px; }
+  footer a { color: #58a6ff; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { color: #79c0ff; }
+  ul, ol { margin: 0 0 20px 24px; color: #c9d1d9; }
+  li { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<nav style="background:#080b14;border-bottom:1px solid #21262d;padding:16px 0;">
+  <div style="max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="/" style="color:#e6edf3;font-weight:700;font-size:18px;text-decoration:none;">AIR <span style="color:#58a6ff;">Blackbox</span></a>
+    <span style="display:flex;gap:20px;">
+      <a href="/" style="color:#8b949e;text-decoration:none;">Home</a>
+      <a href="/compliance-mapping" style="color:#8b949e;text-decoration:none;">Docs</a>
+      <a href="/blog/" style="color:#58a6ff;text-decoration:none;">Blog</a>
+      <a href="https://github.com/airblackbox/air-trust" style="color:#8b949e;text-decoration:none;">GitHub</a>
+      <a href="https://pypi.org/project/air-trust/" style="color:#8b949e;text-decoration:none;">PyPI</a>
+    </span>
+  </div>
+</nav>
+
+<div class="container">
+
+<h1>Integrity Is Not Completeness</h1>
+<p class="meta">April 10, 2026 &middot; Jason Shotwell &middot; 9 min read</p>
+
+<p>Every HMAC-SHA256 audit chain makes one promise: if a record is modified after it was written, the chain breaks and the verifier tells you. This is <strong>integrity</strong>. It is necessary. It is not sufficient.</p>
+
+<p>The question that integrity does not answer:</p>
+
+<blockquote>How do you know a record wasn't silently deleted instead of modified?</blockquote>
+
+<p>If someone removes record #103 from the chain, records #102 and #104 still have valid hashes. The chain looks intact. The gap is invisible unless you knew record #103 existed in the first place. This is the <strong>completeness problem</strong>, and until today, air-trust did not address it.</p>
+
+<p><code>air-trust</code> v0.5.0 adds <strong>session-scoped completeness detection</strong> to the existing tamper-evident chain. New records get monotonic sequence numbers. The verifier checks for gaps. You now get two guarantees instead of one: records were not <em>changed</em>, and records were not <em>dropped</em>.</p>
+
+<h2>The Problem in Plain English</h2>
+
+<p>Imagine an AI agent that makes five tool calls in a session. Your audit chain records all five. Each record is HMAC-signed and chained to the previous one. If an auditor comes in and asks "was this log tampered with?", you can answer confidently: no, the chain is intact.</p>
+
+<p>But what if the agent made <em>six</em> tool calls, and one of them &mdash; the one that accessed a customer database &mdash; was quietly removed from the chain before the auditor arrived? The remaining five records still verify. The chain is intact. The log is incomplete.</p>
+
+<p>For EU AI Act Article 12, this matters. The regulation requires that high-risk AI systems maintain logs that "enable the monitoring of the operation of the high-risk AI system." Monitoring means you need to see <em>everything</em>. If an operator can delete inconvenient records without detection, the logging requirement is satisfied in letter but not in spirit.</p>
+
+<h2>How Session Completeness Works</h2>
+
+<p>The fix is deceptively simple. Every record in a session gets two new fields:</p>
+
+<table>
+  <thead>
+    <tr><th>Field</th><th>Type</th><th>Meaning</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>session_seq</code></td><td>integer</td><td>Monotonic counter starting at 0. Increments by 1 for each record.</td></tr>
+    <tr><td><code>prev_session_seq</code></td><td>integer</td><td>The <code>session_seq</code> of the previous record. -1 for the first record.</td></tr>
+  </tbody>
+</table>
+
+<p>These fields are included in the HMAC payload, so they are tamper-evident just like every other field. If someone changes a sequence number, the chain hash breaks. If someone deletes a record, the gap between consecutive sequence numbers becomes visible.</p>
+
+<p>A session also gets three lifecycle record types: <code>session_start</code> (must be the first record), <code>checkpoint</code> (optional waypoints), and <code>session_end</code> (should be the last record). A missing <code>session_end</code> means the session crashed or was interrupted &mdash; the verifier flags it.</p>
+
+<h2>What the Verifier Now Checks</h2>
+
+<p>The verifier performs two independent passes:</p>
+
+<p><strong>Pass 1: Integrity (unchanged).</strong> Replay the chain from genesis, recompute every HMAC. If any recomputed hash does not match the stored hash, the chain has been tampered with. This is the same check that shipped in v0.1.0.</p>
+
+<p><strong>Pass 2: Completeness (new).</strong> Group records by <code>session_id</code>. For each session, check that sequence numbers increase by exactly 1, that the first record is <code>session_start</code>, that the last record is <code>session_end</code>, and that there are no duplicates or rewinds.</p>
+
+<p>The output is structured:</p>
+
+<pre><code>{
+  "integrity": {
+    "valid": true,
+    "records": 47,
+    "broken_at": null
+  },
+  "completeness": {
+    "sessions_checked": 3,
+    "sessions_complete": 2,
+    "sessions_incomplete": 1,
+    "issues": [
+      {
+        "session_id": "d4e5f6...",
+        "issue": "gap",
+        "expected_seq": 5,
+        "actual_seq": 7,
+        "record_index": 23
+      }
+    ]
+  }
+}</code></pre>
+
+<p>Integrity failures are <strong>FAIL</strong> (someone changed a record). Completeness issues are <strong>WARN</strong> (something is suspicious but the chain itself is intact). Missing <code>session_end</code> is <strong>INFO</strong> (could be a crash, not necessarily malicious).</p>
+
+<h2>Using It</h2>
+
+<p>Install or upgrade:</p>
+
+<pre><code>pip install air-trust==0.5.0</code></pre>
+
+<p>If you already use <code>air_trust.session()</code>, you get completeness for free. Every event written inside the session block now gets a <code>session_id</code> and sequence numbers automatically &mdash; including adapter events from wrapped LLM clients:</p>
+
+<pre><code>import air_trust
+
+# Adapter events inherit the session_id automatically
+with air_trust.session("my-pipeline") as s:
+    client = s.trust(OpenAI())
+    # This LLM call gets session_seq=1, prev_session_seq=0
+    result = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": "Hello"}]
+    )
+    s.log("Result validated")  # session_seq=2</code></pre>
+
+<p>Verify from Python:</p>
+
+<pre><code>result = air_trust.verify()
+print(result["integrity"]["valid"])       # True
+print(result["completeness"]["issues"])   # []</code></pre>
+
+<p>Or from the CLI:</p>
+
+<pre><code># Human-readable output with PASS / WARN / FAIL tiers
+python -m air_trust verify
+
+# JSON output for CI/CD pipelines
+python -m air_trust verify --json</code></pre>
+
+<h2>What Completeness Does NOT Prove</h2>
+
+<p>This is as important as what it does prove. The <a href="https://github.com/airblackbox/air-trust/blob/main/SPEC.md">SPEC.md v1.1</a> includes a threat model with explicit scope limits. Here they are:</p>
+
+<ul>
+  <li><strong>Omission by the recording system.</strong> If the code never calls <code>chain.write()</code> for a particular action, there is no record to be missing. Completeness proves the chain is gap-free, not that the chain captured everything important.</li>
+  <li><strong>Entire session suppression.</strong> If a session never starts (no <code>session_start</code> emitted), there is nothing to check. Completeness is scoped to sessions that exist.</li>
+  <li><strong>Off-ledger activity.</strong> Actions taken outside the audited code path leave no trace. The chain can only witness what it participates in.</li>
+  <li><strong>Cross-agent attestation.</strong> Agent A logging that it called Agent B does not prove Agent B agrees. That requires bilateral signatures, which is a separate problem (and a separate future spec).</li>
+</ul>
+
+<p>The honest claim:</p>
+
+<blockquote>For sessions that were started and recorded, air-trust v0.5.0 can detect if records were dropped, duplicated, reordered, or if the session ended abnormally. It cannot prove that all sessions that should have existed do exist, or that all important actions were submitted to the chain.</blockquote>
+
+<p>This is a <strong>session-scoped</strong> completeness guarantee. It is meaningful for Article 12 because it proves the logging system itself is functioning correctly for the sessions it monitors. It is not a claim of universal coverage.</p>
+
+<h2>Backward Compatibility</h2>
+
+<p>v1.1 is additive-only:</p>
+
+<ul>
+  <li>Records from v0.4.0 (without <code>session_seq</code>) still verify for integrity. The completeness check simply skips them.</li>
+  <li>Mixed chains with both v1.0 and v1.1 records work fine.</li>
+  <li>No existing field meanings change.</li>
+  <li>The <code>verify()</code> output has the new <code>integrity</code> and <code>completeness</code> sections but also keeps the top-level <code>valid</code>, <code>records</code>, and <code>broken_at</code> keys for backward compatibility.</li>
+</ul>
+
+<h2>The Severity Table</h2>
+
+<table>
+  <thead>
+    <tr><th>Issue</th><th>Severity</th><th>What it means</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Chain hash mismatch</td><td><strong>FAIL</strong></td><td>A record was modified. Trust is broken.</td></tr>
+    <tr><td>Sequence gap</td><td><strong>WARN</strong></td><td>A record appears to be missing from the session.</td></tr>
+    <tr><td>Duplicate sequence</td><td><strong>WARN</strong></td><td>Two records claim the same position. Possible replay.</td></tr>
+    <tr><td>Sequence rewind</td><td><strong>WARN</strong></td><td>The counter went backward. Possible replay or corruption.</td></tr>
+    <tr><td>Missing session_end</td><td><strong>INFO</strong></td><td>Session may have crashed or is still running.</td></tr>
+    <tr><td>Missing session_start</td><td><strong>WARN</strong></td><td>First record is not a lifecycle boundary. Possible truncation.</td></tr>
+  </tbody>
+</table>
+
+<h2>What Comes Next</h2>
+
+<p>Session completeness closes the single-agent gap. The next frontier is <strong>cross-agent attestation</strong>: when Agent A calls Agent B, can both sides prove the handoff happened? That requires bilateral signatures (Ed25519, not HMAC), a signed envelope protocol, and a way to correlate audit records across system boundaries.</p>
+
+<p>We are not building that yet. The <a href="https://github.com/airblackbox/air-trust/blob/main/ROADMAP.md">ROADMAP.md</a> in the air-trust repo has the vision for signed handoffs and co-attestation, but we are explicitly waiting for real demand signal before committing engineering time. If cross-agent attestation is something you need, <a href="https://github.com/airblackbox/air-trust/discussions">open a discussion on GitHub</a> &mdash; that is exactly the pull signal that would move it from vision to build.</p>
+
+<div class="cta">
+  <p style="margin-bottom:12px;"><strong>Get air-trust v0.5.0</strong></p>
+  <p style="margin-bottom:12px;"><code>pip install air-trust==0.5.0</code></p>
+  <p style="margin-bottom:0;">
+    <a href="https://github.com/airblackbox/air-trust">GitHub</a> &middot;
+    <a href="https://pypi.org/project/air-trust/">PyPI</a> &middot;
+    <a href="https://github.com/airblackbox/air-trust/blob/main/SPEC.md">SPEC.md v1.1</a> &middot;
+    <a href="https://github.com/airblackbox/air-trust/blob/main/CHANGELOG.md">Changelog</a>
+  </p>
+</div>
+
+<footer>
+  <p>&copy; 2026 AIR Blackbox &middot; <a href="/">Home</a> &middot; <a href="/blog/">Blog</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>
+</footer>
+
+</div>
+</body>
+</html>

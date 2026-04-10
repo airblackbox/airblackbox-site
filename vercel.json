@@ -113,6 +113,26 @@
       "destination": "/blog/eu-ai-act-compliance-tools-compared.html"
     },
     {
+      "source": "/blog/integrity-is-not-completeness",
+      "destination": "/blog/integrity-is-not-completeness.html"
+    },
+    {
+      "source": "/blog/csa-agentic-trust-framework-python",
+      "destination": "/blog/csa-agentic-trust-framework-python.html"
+    },
+    {
+      "source": "/blog/audit-trails-ai-agents-python",
+      "destination": "/blog/audit-trails-ai-agents-python.html"
+    },
+    {
+      "source": "/blog/article-11-technical-documentation-ai-systems",
+      "destination": "/blog/article-11-technical-documentation-ai-systems.html"
+    },
+    {
+      "source": "/blog/python-agent-compliance-roadmap-august-2026",
+      "destination": "/blog/python-agent-compliance-roadmap-august-2026.html"
+    },
+    {
       "source": "/scan",
       "destination": "/scan/index.html"
     },
@@ -131,6 +151,10 @@
     {
       "source": "/why",
       "destination": "/why.html"
+    },
+    {
+      "source": "/which-product",
+      "destination": "/which-product.html"
     },
     {
       "source": "/security.txt",
