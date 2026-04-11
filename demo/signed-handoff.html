@@ -36,6 +36,75 @@
     overflow-x: hidden;
   }
 
+  /* Site navigation */
+  .site-nav {
+    background: #080b14;
+    border-bottom: 1px solid #21262d;
+    padding: 14px 0;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    backdrop-filter: blur(12px);
+  }
+
+  .site-nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .site-nav-logo {
+    color: #e6edf3;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+
+  .site-nav-logo span { color: #fbbf24; }
+
+  .site-nav-links {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .site-nav-links a {
+    color: #8b949e;
+    text-decoration: none;
+    font-size: 13px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: color 0.2s;
+  }
+
+  .site-nav-links a:hover { color: #fbbf24; }
+  .site-nav-links a.active { color: #58a6ff; }
+
+  .site-nav-links .nav-cta {
+    background: #fbbf24;
+    color: #080b14;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  .site-nav-links .nav-cta:hover { background: #f59e0b; color: #080b14; }
+
+  /* Hamburger for mobile */
+  .nav-toggle { display: none; background: none; border: none; color: #8b949e; font-size: 22px; cursor: pointer; }
+
+  @media (max-width: 700px) {
+    .nav-toggle { display: block; }
+    .site-nav-links { display: none; flex-direction: column; width: 100%; gap: 12px; padding-top: 12px; }
+    .site-nav-links.open { display: flex; }
+    .site-nav-inner { flex-wrap: wrap; }
+  }
+
   .container {
     max-width: 1100px;
     margin: 0 auto;
@@ -44,7 +113,7 @@
 
   header {
     text-align: center;
-    padding: 40px 0 30px;
+    padding: 30px 0 24px;
   }
 
   header h1 {
@@ -412,6 +481,23 @@
 </style>
 </head>
 <body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="/" class="site-nav-logo">AIR <span>Blackbox</span></a>
+    <button class="nav-toggle" onclick="document.querySelector('.site-nav-links').classList.toggle('open')" aria-label="Menu">☰</button>
+    <div class="site-nav-links">
+      <a href="/">Home</a>
+      <a href="/scan">Scan</a>
+      <a href="/which-product">Products</a>
+      <a href="/blog/">Blog</a>
+      <a href="/demo/signed-handoff" class="active">Demo</a>
+      <a href="/compliance-mapping">Docs</a>
+      <a href="https://github.com/airblackbox" target="_blank">GitHub</a>
+      <a href="https://pypi.org/project/air-trust/" class="nav-cta" target="_blank">PyPI</a>
+    </div>
+  </div>
+</nav>
 
 <div class="container">
   <header>
