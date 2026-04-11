@@ -41,6 +41,10 @@
       "destination": "/demo/index.html"
     },
     {
+      "source": "/demo/signed-handoff",
+      "destination": "/demo/signed-handoff.html"
+    },
+    {
       "source": "/vaultmind",
       "destination": "/vaultmind/index.html"
     },
