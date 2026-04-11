@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proving the Handoff: Adding Cross-Agent Signatures to Tamper-Evident Audit Chains</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="description" content="air-trust v0.6.0 adds Ed25519 signed handoff records to the HMAC-SHA256 audit chain. Prove which agent sent a task, acknowledge receipt, and detect payload swaps in multi-agent workflows with asymmetric signatures.">
+<meta name="keywords" content="signed handoffs ai agents, Ed25519 asymmetric signatures, cross-agent attestation audit chain, multi-agent workflows, handoff protocol, payload integrity verification, tamper-evident agent communication, EU AI Act Article 12, air-trust 0.6.0, agent identity verification, handoff acknowledgment python">
+<meta property="og:title" content="Proving the Handoff: Adding Cross-Agent Signatures to Tamper-Evident Audit Chains">
+<meta property="og:description" content="HMAC proves integrity. Ed25519 proves identity. air-trust v0.6.0 adds signed handoff records so agents can cryptographically prove who sent a task, who received it, and whether the payload was swapped.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://airblackbox.ai/blog/proving-the-handoff">
+<link rel="canonical" href="https://airblackbox.ai/blog/proving-the-handoff">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Proving the Handoff">
+<meta name="twitter:description" content="Cryptographically prove which agent sent a task, whether it was received, and if the payload was modified. air-trust v0.6.0 adds signed handoffs to the audit chain.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Proving the Handoff: Adding Cross-Agent Signatures to Tamper-Evident Audit Chains",
+  "description": "air-trust v0.6.0 adds Ed25519 signed handoff records to the HMAC-SHA256 audit chain. Prove which agent sent a task, acknowledge receipt, and detect payload swaps in multi-agent workflows.",
+  "url": "https://airblackbox.ai/blog/proving-the-handoff",
+  "datePublished": "2026-04-10",
+  "dateModified": "2026-04-10",
+  "author": {"@type": "Person", "name": "Jason Shotwell", "url": "https://airblackbox.ai"},
+  "publisher": {"@type": "Organization", "name": "AIR Blackbox", "url": "https://airblackbox.ai"},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://airblackbox.ai/blog/proving-the-handoff"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://airblackbox.ai"},
+    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://airblackbox.ai/blog/"},
+    {"@type": "ListItem", "position": 3, "name": "Proving the Handoff", "item": "https://airblackbox.ai/blog/proving-the-handoff"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why is HMAC alone not enough for cross-agent workflows?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "HMAC uses a shared secret, so any party with the key can create a valid signature. In multi-agent systems, you need to prove identity: which specific agent sent this handoff. Ed25519 asymmetric signatures solve this because only the agent with the private key can sign, and anyone with the public key can verify who did it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the three handoff record types in v1.2?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "handoff_request (Agent A signs: 'I am sending this task to Agent B'), handoff_ack (Agent B signs: 'I received it, the payload hash matches'), and handoff_result (Agent B signs: 'Here is my output'). Together, they form a complete cryptographic proof of the handoff lifecycle."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can signed handoffs detect key compromise?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. If a private key is stolen, an attacker can forge valid signatures that look identical to legitimate ones. Signed handoffs prove identity only if the keys themselves remain secure. They do not provide protection against key compromise. The threat model in SPEC.md v1.2 documents this limit explicitly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does payload_hash prevent handoff tampering?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The handoff_request includes SHA-256(task_data). The handoff_ack includes the same hash. If the task is modified between request and ack, the hashes will not match, and verification fails. It proves the payload was not swapped, and that both agents agreed on what was being handed off."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is v0.6.0 backward compatible with v0.5.0 chains?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Handoff records are optional and only appear on cross-agent boundaries. v0.5.0 chains (with session_seq and completeness) verify unchanged. Mixed chains with both integrity/completeness and signed handoffs work fine. The HMAC chain itself is untouched."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; color: #e6edf3; background: #080b14; }
+  .container { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
+  h1 { font-size: 2.2em; line-height: 1.2; margin-bottom: 16px; letter-spacing: -0.02em; color: #e6edf3; }
+  h2 { font-size: 1.4em; margin-top: 48px; margin-bottom: 16px; color: #e6edf3; }
+  h3 { font-size: 1.1em; margin-top: 32px; margin-bottom: 12px; color: #e6edf3; }
+  p { margin-bottom: 20px; color: #c9d1d9; }
+  .meta { color: #8b949e; font-size: 14px; margin-bottom: 40px; }
+  code { background: #0d1117; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; color: #e6edf3; }
+  pre { background: #0d1117; color: #e6edf3; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #21262d; color: #c9d1d9; }
+  th { font-weight: 600; background: #0d1117; color: #e6edf3; }
+  blockquote { border-left: 3px solid #58a6ff; padding-left: 16px; margin: 24px 0; font-style: italic; color: #8b949e; }
+  .cta { background: #0d1117; color: #e6edf3; padding: 24px; border-radius: 8px; margin: 40px 0; text-align: center; border: 1px solid #21262d; }
+  .cta code { background: #1a1a1a; color: #e6edf3; }
+  .cta a { color: #58a6ff; }
+  footer { border-top: 1px solid #21262d; padding-top: 20px; margin-top: 60px; color: #8b949e; font-size: 13px; }
+  footer a { color: #58a6ff; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { color: #79c0ff; }
+  ul, ol { margin: 0 0 20px 24px; color: #c9d1d9; }
+  li { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<nav style="background:#080b14;border-bottom:1px solid #21262d;padding:16px 0;">
+  <div style="max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="/" style="color:#e6edf3;font-weight:700;font-size:18px;text-decoration:none;">AIR <span style="color:#58a6ff;">Blackbox</span></a>
+    <span style="display:flex;gap:20px;">
+      <a href="/" style="color:#8b949e;text-decoration:none;">Home</a>
+      <a href="/compliance-mapping" style="color:#8b949e;text-decoration:none;">Docs</a>
+      <a href="/blog/" style="color:#58a6ff;text-decoration:none;">Blog</a>
+      <a href="https://github.com/airblackbox/air-trust" style="color:#8b949e;text-decoration:none;">GitHub</a>
+      <a href="https://pypi.org/project/air-trust/" style="color:#8b949e;text-decoration:none;">PyPI</a>
+    </span>
+  </div>
+</nav>
+
+<div class="container">
+
+<h1>Proving the Handoff</h1>
+<p class="meta">April 10, 2026 &middot; Jason Shotwell &middot; 10 min read</p>
+
+<p>Multi-agent workflows are now standard. Agent A researches. Agent B writes. Agent C reviews. Each agent publishes events to the audit chain, and the HMAC chain proves those events were not modified. But what the chain <em>cannot</em> prove is who sent what to whom, whether the handoff was acknowledged, or if the task itself was swapped in transit.</p>
+
+<p>The core problem: HMAC uses a shared secret. Any party with the secret can sign. You need asymmetric signatures for cross-agent identity.</p>
+
+<p><code>air-trust</code> v0.6.0 adds <strong>Ed25519 signed handoff records</strong> to the existing HMAC-SHA256 chain. When Agent A hands off a task to Agent B, three new record types form a cryptographic proof: a request that Agent A signed, an acknowledgment that Agent B signed, and a result that Agent B signed. Together, they prove the handoff happened, both sides agreed on the payload, and the outcome is attributed to the right agent.</p>
+
+<h2>The Problem: Identity in a Shared Chain</h2>
+
+<p>Imagine Agent A (a researcher) is tasked with analyzing EU AI Act compliance trends and handing off findings to Agent B (a report writer). Agent A calls <code>handoff_request()</code>, publishing a record that says: "I am sending this research package to Agent B." The record is HMAC-signed and chained.</p>
+
+<p>Later, an auditor asks: "Did Agent A actually send this? Could someone else have forged it?"</p>
+
+<p>The answer, under the v0.5.0 chain, is: "Probably. We have HMAC, which proves the record wasn't modified after it was written. But HMAC doesn't prove who wrote it, because anyone with the key can sign."</p>
+
+<p>This gap matters in multi-agent systems. When Agent A delegates work to Agent B, both agents need to leave a record that can be independently verified. Not just "a record exists," but "Agent A wrote this record, and Agent B received it and agreed on the payload."</p>
+
+<p>For EU AI Act Article 12 (record-keeping for high-risk AI systems), this is critical. If multiple agents are operating the same system, regulators need to know which agent was responsible for each decision, which agent handed off to which, and whether all parties to a handoff agreed on what was being handed off.</p>
+
+<h2>The Design: Keeping HMAC, Adding Ed25519</h2>
+
+<p>The solution preserves the existing integrity model and layers asymmetric signatures on top.</p>
+
+<p><strong>HMAC-SHA256 remains unchanged.</strong> Every record, including handoff records, is chained via HMAC. If someone modifies a record after it is written, the hash breaks. The chain integrity check is identical to v0.5.0 and earlier.</p>
+
+<p><strong>Ed25519 is added for handoff identity.</strong> Ed25519 is an elliptic curve signature scheme. Each agent generates a keypair (private key for signing, public key for verification). When an agent writes a handoff record, it includes:</p>
+
+<ul>
+  <li>A SHA-256 hash of the payload (the task or result being handed off)</li>
+  <li>The agent's public key (so anyone can verify)</li>
+  <li>An Ed25519 signature over those fields (proving only the agent with the private key could have signed)</li>
+  <li>A nonce (replay protection)</li>
+  <li>The counterparty's fingerprint (who is on the other side of the handoff)</li>
+</ul>
+
+<p>The HMAC still covers all of these new fields, so they are tamper-evident just like everything else in the chain.</p>
+
+<h2>The Handoff Protocol: Three Records</h2>
+
+<p>A complete handoff consists of three records, each signed by the responsible agent:</p>
+
+<p><strong>1. handoff_request (Agent A signs)</strong></p>
+
+<p>Agent A publishes:</p>
+
+<ul>
+  <li><code>type: "handoff_request"</code></li>
+  <li><code>interaction_id</code> — A unique identifier linking all three records in this handoff (UUID)</li>
+  <li><code>counterparty_id</code> — Agent B's fingerprint (so the record declares who is receiving this)</li>
+  <li><code>payload_hash</code> — SHA-256(task_data). The hash of the work being handed off.</li>
+  <li><code>nonce</code> — A random value (prevents replay attacks)</li>
+  <li><code>public_key</code> — Agent A's Ed25519 public key</li>
+  <li><code>signature</code> — Ed25519 signature of [interaction_id, counterparty_id, payload_hash, nonce]</li>
+</ul>
+
+<p><strong>2. handoff_ack (Agent B signs)</strong></p>
+
+<p>Agent B receives and processes the request. If the payload hash matches what Agent B received, Agent B publishes an acknowledgment:</p>
+
+<ul>
+  <li><code>type: "handoff_ack"</code></li>
+  <li><code>interaction_id</code> — Same as the request (links them together)</li>
+  <li><code>counterparty_id</code> — Agent A's fingerprint (Agent B acknowledges who sent this)</li>
+  <li><code>payload_hash</code> — The same hash from the request. If they don't match, Agent B does NOT publish an ack.</li>
+  <li><code>nonce</code> — Agent B's own nonce</li>
+  <li><code>public_key</code> — Agent B's Ed25519 public key</li>
+  <li><code>signature</code> — Ed25519 signature of [interaction_id, counterparty_id, payload_hash, nonce]</li>
+</ul>
+
+<p>If the payload hash from the request does not match what Agent B received, the ack is not published, and a mismatch alert is logged. This proves the payload was not swapped.</p>
+
+<p><strong>3. handoff_result (Agent B signs)</strong></p>
+
+<p>After processing, Agent B publishes its output:</p>
+
+<ul>
+  <li><code>type: "handoff_result"</code></li>
+  <li><code>interaction_id</code> — Same as request and ack (links all three records)</li>
+  <li><code>counterparty_id</code> — Agent A's fingerprint</li>
+  <li><code>result_hash</code> — SHA-256 of Agent B's output</li>
+  <li><code>nonce</code> — Agent B's nonce</li>
+  <li><code>public_key</code> — Agent B's Ed25519 public key</li>
+  <li><code>signature</code> — Ed25519 signature of [interaction_id, counterparty_id, result_hash, nonce]</li>
+</ul>
+
+<p>All three records are added to the chain in sequence. The verifier checks that all three are present, that signatures are valid, and that hashes match between request and ack.</p>
+
+<h2>What the Verifier Checks</h2>
+
+<p>The verification process has three passes:</p>
+
+<p><strong>Pass 1: Integrity (unchanged).</strong> Replay the HMAC chain from genesis. If any hash breaks, the chain was tampered with.</p>
+
+<p><strong>Pass 2: Completeness (from v0.5.0).</strong> Check for gaps in session sequence numbers within each session.</p>
+
+<p><strong>Pass 3: Handoff identity (new).</strong> For each handoff_request/ack/result triplet:</p>
+
+<ul>
+  <li>Verify the Ed25519 signature on each record using the declared public key</li>
+  <li>Confirm all three records are present (request + ack + result)</li>
+  <li>Confirm the interaction_id is the same on all three</li>
+  <li>Confirm the counterparty_id in request matches the public_key fingerprint in ack (and vice versa)</li>
+  <li>Confirm the payload_hash in request matches the payload_hash in ack</li>
+  <li>Confirm each nonce is unique (no replay)</li>
+</ul>
+
+<p>The verifier output is structured:</p>
+
+<pre><code>{
+  "integrity": {
+    "valid": true,
+    "records": 52
+  },
+  "completeness": {
+    "sessions_checked": 3,
+    "sessions_complete": 3
+  },
+  "handoffs": {
+    "handoffs_checked": 2,
+    "handoffs_valid": 2,
+    "issues": []
+  }
+}</code></pre>
+
+<p>The severity levels are clear:</p>
+
+<table>
+  <thead>
+    <tr><th>Issue</th><th>Severity</th><th>What it means</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Signature invalid</td><td><strong>FAIL</strong></td><td>Ed25519 signature does not verify. Identity is forged.</td></tr>
+    <tr><td>Missing handoff_ack</td><td><strong>WARN</strong></td><td>Request sent but no ack. Did Agent B receive it?</td></tr>
+    <tr><td>Payload mismatch</td><td><strong>WARN</strong></td><td>Request and ack disagree on payload_hash. Payload was swapped.</td></tr>
+    <tr><td>Counterparty mismatch</td><td><strong>WARN</strong></td><td>Request says it goes to Agent B, but ack is from Agent C. Routing error or forgery.</td></tr>
+    <tr><td>Duplicate nonce</td><td><strong>WARN</strong></td><td>Two records from the same agent use the same nonce. Possible replay.</td></tr>
+    <tr><td>Missing handoff_result</td><td><strong>INFO</strong></td><td>Request and ack present, but no result yet. Handoff in progress or incomplete.</td></tr>
+  </tbody>
+</table>
+
+<h2>Code Example: The Handoff Protocol</h2>
+
+<p>Here is how it works in practice:</p>
+
+<pre><code>from air_trust.events import Event, AgentIdentity
+from air_trust.chain import AuditChain
+from air_trust.keys import generate_keypair, compute_payload_hash, generate_nonce
+
+# Create identities and generate keypairs
+agent_a = AgentIdentity(agent_name="researcher", owner="jason@airblackbox.ai")
+agent_b = AgentIdentity(agent_name="writer", owner="jason@airblackbox.ai")
+generate_keypair(agent_a.fingerprint)
+generate_keypair(agent_b.fingerprint)
+
+chain = AuditChain()
+iid = "handoff-001-2026-04-10"
+task_data = "research EU AI Act trends in 2026"
+task_hash = compute_payload_hash(task_data)
+
+# Agent A sends handoff request
+chain.write(Event(
+    type="handoff_request",
+    framework="raw_python",
+    identity=agent_a,
+    interaction_id=iid,
+    counterparty_id=agent_b.fingerprint,
+    payload_hash=task_hash,
+    nonce=generate_nonce(),
+))
+
+# Agent B receives and verifies payload matches
+received_hash = compute_payload_hash("research EU AI Act trends in 2026")
+assert received_hash == task_hash, "Payload mismatch!"
+
+# Agent B acknowledges
+chain.write(Event(
+    type="handoff_ack",
+    framework="raw_python",
+    identity=agent_b,
+    interaction_id=iid,
+    counterparty_id=agent_a.fingerprint,
+    payload_hash=task_hash,
+    nonce=generate_nonce(),
+))
+
+# Agent B does the work and publishes result
+result_data = "EU AI Act Articles 9-15 now require..."
+result_hash = compute_payload_hash(result_data)
+
+chain.write(Event(
+    type="handoff_result",
+    framework="raw_python",
+    identity=agent_b,
+    interaction_id=iid,
+    counterparty_id=agent_a.fingerprint,
+    result_hash=result_hash,
+    nonce=generate_nonce(),
+))
+
+# Verify the chain
+result = air_trust.verify()
+print(result["handoffs"]["handoffs_valid"])  # 1</code></pre>
+
+<h2>CLI Verification</h2>
+
+<p>From the command line:</p>
+
+<pre><code># Human-readable output
+python3 -m air_trust verify
+
+# JSON output for CI/CD
+python3 -m air_trust verify --json
+
+# Filter to handoff records only
+python3 -m air_trust verify --handoffs-only</code></pre>
+
+<h2>What Signed Handoffs Do NOT Prove</h2>
+
+<p>This is as important as what they do prove. The <a href="https://github.com/airblackbox/air-trust/blob/main/SPEC.md">SPEC.md v1.2</a> includes a comprehensive threat model. Here are the explicit limits:</p>
+
+<ul>
+  <li><strong>Key compromise.</strong> If Agent A's private key is stolen, an attacker can forge valid signatures that are indistinguishable from legitimate ones. Signed handoffs assume the keys themselves remain secure. If you suspect a key has been compromised, you must revoke it (future work: key rotation and revocation lists).</li>
+  <li><strong>Collusion.</strong> If Agent A and Agent B cooperate, they can forge a fake handoff exchange that never actually happened. Both agents have keys and can create signatures that match. Identity verification works only if the agents are not collaborating.</li>
+  <li><strong>Off-chain handoffs.</strong> If Agent A and Agent B communicate outside the audit chain (email, Slack, phone call), there is no record. The chain only witnesses exchanges that go through <code>handoff_request()</code> / <code>handoff_ack()</code>.</li>
+  <li><strong>Payload quality.</strong> The payload_hash proves the payload was not tampered with. It does not prove the payload is correct, useful, or safe. Hash matching is a necessary but not sufficient condition for trust.</li>
+  <li><strong>Authorization.</strong> Ed25519 proves identity: "This agent signed this record." It does not prove authorization: "This agent was allowed to do this." For authorization, you need separate access control logic.</li>
+</ul>
+
+<p>The honest claim:</p>
+
+<blockquote>For handoffs that flow through the chain, v0.6.0 can cryptographically prove which agent sent the request, which agent acknowledged it, whether both sides agreed on the payload, and which agent published the result. It cannot prove the keys were never compromised, the agents were not colluding, or that the payload itself is correct.</blockquote>
+
+<h2>Backward Compatibility</h2>
+
+<p>v0.6.0 is fully backward compatible with v0.5.0 and earlier:</p>
+
+<ul>
+  <li>The HMAC chain is unchanged. v0.5.0 records still verify.</li>
+  <li>Session completeness checks still work on v1.1 records.</li>
+  <li>Handoff records are optional. They only appear when agents explicitly use the handoff API. Ordinary event records do not include Ed25519 fields.</li>
+  <li>Mixed chains (integrity + completeness + handoffs) all verify together.</li>
+  <li>No breaking changes to the Event model.</li>
+</ul>
+
+<p>The only new dependency is the <code>cryptography</code> library, which is optional. Install with:</p>
+
+<pre><code>pip install air-trust[handoffs]</code></pre>
+
+<p>This brings in PyCA/cryptography for Ed25519 support.</p>
+
+<h2>What Comes Next</h2>
+
+<p>v1.2 is unilateral signing. Agent A signs "I am sending this" and "Here is my result." Agent B signs "I received it" and "Here is what I did."</p>
+
+<p>Future work (v1.3) would add <strong>bilateral co-attestation</strong>: both agents sign a single joint handoff record, proving they both witnessed the exchange and agreed on the terms. This would close the collusion gap, though it requires both agents to be online and cooperating at the moment of handoff.</p>
+
+<p>We are not building co-attestation yet. Real demand drives prioritization. If multi-party signatures are something you need, <a href="https://github.com/airblackbox/air-trust/discussions">open a discussion on GitHub</a> &mdash; that signal influences the roadmap.</p>
+
+<h2>Getting Started</h2>
+
+<p>Install the new version:</p>
+
+<pre><code>pip install air-trust==0.6.0</code></pre>
+
+<p>Generate keypairs for your agents (one-time setup):</p>
+
+<pre><code>from air_trust.keys import generate_keypair
+generate_keypair("researcher-001")  # Creates ~/.air-trust/keys/researcher-001.private_key</code></pre>
+
+<p>Then use the handoff API in your agent code:</p>
+
+<pre><code>from air_trust.handoffs import handoff_request, handoff_ack, handoff_result
+
+# Agent A
+handoff_request(
+    interaction_id="task-123",
+    counterparty=agent_b,
+    payload=research_findings
+)
+
+# Agent B
+handoff_ack(interaction_id="task-123", payload=research_findings)
+# ... do work ...
+handoff_result(interaction_id="task-123", result=report)</code></pre>
+
+<p>Verify:</p>
+
+<pre><code>python3 -m air_trust verify --json</code></pre>
+
+<div class="cta">
+  <p style="margin-bottom:12px;"><strong>Get air-trust v0.6.0 with signed handoffs</strong></p>
+  <p style="margin-bottom:12px;"><code>pip install air-trust[handoffs]==0.6.0</code></p>
+  <p style="margin-bottom:0;">
+    <a href="https://github.com/airblackbox/air-trust">GitHub</a> &middot;
+    <a href="https://pypi.org/project/air-trust/">PyPI</a> &middot;
+    <a href="https://github.com/airblackbox/air-trust/blob/main/SPEC.md">SPEC.md v1.2</a> &middot;
+    <a href="https://github.com/airblackbox/air-trust/blob/main/examples/signed_handoff.py">Demo: signed_handoff.py</a>
+  </p>
+</div>
+
+<footer>
+  <p>&copy; 2026 AIR Blackbox &middot; <a href="/">Home</a> &middot; <a href="/blog/">Blog</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>
+</footer>
+
+</div>
+</body>
+</html>

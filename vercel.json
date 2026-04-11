@@ -113,6 +113,10 @@
       "destination": "/blog/eu-ai-act-compliance-tools-compared.html"
     },
     {
+      "source": "/blog/proving-the-handoff",
+      "destination": "/blog/proving-the-handoff.html"
+    },
+    {
       "source": "/blog/integrity-is-not-completeness",
       "destination": "/blog/integrity-is-not-completeness.html"
     },
