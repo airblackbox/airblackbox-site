@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compliance Oracle &amp; Attestation Pool | AIR Blackbox</title>
+    <meta name="description" content="Publish cryptographically signed compliance attestations to the AIR Blackbox public registry. Three-party trust: your team signs, the world verifies. ML-DSA-65 quantum-safe signatures. Embeddable badges.">
+    <meta property="og:title" content="Compliance Oracle & Attestation Pool — AIR Blackbox">
+    <meta property="og:description" content="Publish signed compliance proofs. Three-party trust architecture. ML-DSA-65 quantum-safe signatures. Embeddable verification badges.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://airblackbox.ai/attest">
+    <link rel="canonical" href="https://airblackbox.ai/attest">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
+    <style>
+        :root {
+            --bg-deep: #080b14;
+            --bg-card: #0d1117;
+            --bg-elevated: #161b22;
+            --border: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-dim: #484f58;
+            --accent: #fbbf24;
+            --accent-glow: rgba(251, 191, 36, 0.15);
+            --green: #3fb950;
+            --red: #f85149;
+            --blue: #58a6ff;
+            --mono: 'JetBrains Mono', 'Courier New', monospace;
+            --sans: 'Sora', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--sans);
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* Nav */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: rgba(8, 11, 20, 0.9);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-logo {
+            font-family: var(--mono);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 5rem 2rem 3rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: var(--accent-glow);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: var(--accent);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+        .hero h1 span { color: var(--accent); }
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Code block */
+        .code-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: left;
+            overflow-x: auto;
+            max-width: 650px;
+            margin: 0 auto 1rem;
+        }
+        .code-block .prompt { color: var(--green); }
+        .code-block .comment { color: var(--text-dim); }
+        .code-block .flag { color: var(--accent); }
+        .code-block .url { color: var(--blue); }
+
+        /* Section */
+        .section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        .section h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .section h2 span { color: var(--accent); }
+        .section .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Three-party grid */
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        @media (max-width: 700px) {
+            .trust-grid { grid-template-columns: 1fr; }
+        }
+        .trust-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        .trust-card .role {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+        }
+        .trust-card h3 {
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+        }
+        .trust-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Flow steps */
+        .flow {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .flow-step {
+            display: flex;
+            gap: 1.2rem;
+            align-items: flex-start;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+        }
+        .flow-num {
+            font-family: var(--mono);
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--accent);
+            flex-shrink: 0;
+            width: 2rem;
+            text-align: center;
+        }
+        .flow-content h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+        .flow-content p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .flow-content code {
+            background: var(--bg-elevated);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+        }
+
+        /* Schema preview */
+        .schema-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .schema-card h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        .schema-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+        .schema-row:last-child { border-bottom: none; }
+        .schema-key {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .schema-val {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            text-align: right;
+            max-width: 55%;
+            word-break: break-all;
+        }
+
+        /* API reference */
+        .api-endpoint {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .api-method {
+            display: inline-block;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+        }
+        .api-method.post { background: rgba(63, 185, 80, 0.15); color: var(--green); }
+        .api-method.get { background: rgba(88, 166, 255, 0.15); color: var(--blue); }
+        .api-path {
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+        .api-desc {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Badge preview */
+        .badge-demo {
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+        .badge-demo img {
+            margin-bottom: 1rem;
+        }
+        .badge-demo .embed-code {
+            background: var(--bg-deep);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.8rem;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            word-break: break-all;
+            text-align: left;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-top: 1px solid var(--border);
+        }
+        .cta-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+        }
+        .cta-section p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+        .cta-code {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.2rem 2rem;
+            font-family: var(--mono);
+            font-size: 0.95rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        .cta-code .prompt { color: var(--green); }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+        footer a { color: var(--blue); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* Divider */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="nav-logo">AIR <span>Blackbox</span></a>
+        <div class="nav-links">
+            <a href="/quickstart">Quickstart</a>
+            <a href="/spec">Spec</a>
+            <a href="/compliance-mapping">Mapping</a>
+            <a href="/blog">Blog</a>
+            <a href="https://github.com/airblackbox/gateway">GitHub</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="hero">
+        <div class="hero-badge">Phase 2D -- Public Registry</div>
+        <h1>Compliance <span>Oracle</span> &amp; Attestation Pool</h1>
+        <p>
+            Your team scans the code. ML-DSA-65 signs the proof. The registry makes it
+            independently verifiable. Three parties. Zero trust required.
+        </p>
+        <div class="code-block">
+            <span class="comment"># Scan, sign, and publish in one command</span><br>
+            <span class="prompt">$</span> air-blackbox attest create <span class="flag">--publish</span> <span class="flag">--name</span> "My AI System"<br><br>
+            <span class="comment"># Output:</span><br>
+            <span class="comment"># Published! Registry accepted the attestation.</span><br>
+            <span class="comment">#   Verify: <span class="url">https://airblackbox.ai/verify/air-att-2026-04-12-a7f3c2e1</span></span><br>
+            <span class="comment">#   Badge:  <span class="url">https://airblackbox.ai/badge/air-att-2026-04-12-a7f3c2e1</span></span>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Three-Party Trust -->
+    <div class="section">
+        <h2>Three-Party <span>Trust</span></h2>
+        <p class="subtitle">No single party controls the proof. The architecture makes collusion structurally difficult.</p>
+
+        <div class="trust-grid">
+            <div class="trust-card">
+                <div class="role">Party 1 -- Provider</div>
+                <h3>Your Team</h3>
+                <p>
+                    Runs the scan. Holds the private key. Signs the attestation record with
+                    ML-DSA-65 (FIPS 204, quantum-safe). The signature proves the scan results
+                    came from your key and have not been modified.
+                </p>
+            </div>
+            <div class="trust-card">
+                <div class="role">Party 2 -- Verifier</div>
+                <h3>Deployer / Regulator</h3>
+                <p>
+                    Clicks the verify link or fetches the API. Sees scan results, cryptographic
+                    proof, and evidence hashes. Can independently confirm the signature without
+                    trusting the provider or the registry.
+                </p>
+            </div>
+            <div class="trust-card">
+                <div class="role">Party 3 -- Oracle</div>
+                <h3>AIR Blackbox Registry</h3>
+                <p>
+                    Stores the signed attestation. Serves the verification page and SVG badge.
+                    Cannot forge signatures (does not hold your private key). Provides
+                    availability, not authority.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- How It Works -->
+    <div class="section">
+        <h2>How It <span>Works</span></h2>
+        <p class="subtitle">From scan to publicly verifiable proof in four steps.</p>
+
+        <div class="flow">
+            <div class="flow-step">
+                <div class="flow-num">1</div>
+                <div class="flow-content">
+                    <h4>Hash + Scan</h4>
+                    <p>
+                        The CLI hashes your codebase (SHA-256) and runs compliance checks across
+                        all selected frameworks (EU AI Act, ISO 42001, NIST AI RMF, Colorado SB 24-205).
+                    </p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="flow-num">2</div>
+                <div class="flow-content">
+                    <h4>Build Attestation Record</h4>
+                    <p>
+                        Results are assembled into a structured record: system hash, check counts,
+                        framework list, scanner version, evidence bundle hash, and timestamps.
+                        Schema version <code>1.0</code>.
+                    </p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="flow-num">3</div>
+                <div class="flow-content">
+                    <h4>Sign with ML-DSA-65</h4>
+                    <p>
+                        The record is serialized to canonical bytes and signed with your ML-DSA-65
+                        private key. The signature, algorithm, and public key fingerprint are embedded
+                        in the record.
+                    </p>
+                </div>
+            </div>
+            <div class="flow-step">
+                <div class="flow-num">4</div>
+                <div class="flow-content">
+                    <h4>Publish to Registry</h4>
+                    <p>
+                        With <code>--publish</code>, the signed record is POSTed to the public registry.
+                        The registry validates the schema, checks for duplicates, and returns a
+                        verification URL and embeddable badge.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Attestation Schema -->
+    <div class="section">
+        <h2>Attestation <span>Schema</span></h2>
+        <p class="subtitle">What the registry stores. No source code. No secrets. Only proof.</p>
+
+        <div class="schema-card">
+            <h3>Record Fields</h3>
+            <div class="schema-row"><span class="schema-key">attestation_id</span><span class="schema-val">air-att-2026-04-12-a7f3c2e1</span></div>
+            <div class="schema-row"><span class="schema-key">schema_version</span><span class="schema-val">1.0</span></div>
+            <div class="schema-row"><span class="schema-key">subject.system_hash</span><span class="schema-val">SHA-256 of scanned codebase</span></div>
+            <div class="schema-row"><span class="schema-key">subject.system_name</span><span class="schema-val">Human-readable name</span></div>
+            <div class="schema-row"><span class="schema-key">scan.frameworks</span><span class="schema-val">["eu", "iso42001", "nist", "colorado"]</span></div>
+            <div class="schema-row"><span class="schema-key">scan.checks_passed</span><span class="schema-val">35</span></div>
+            <div class="schema-row"><span class="schema-key">scan.checks_total</span><span class="schema-val">39</span></div>
+            <div class="schema-row"><span class="schema-key">crypto.algorithm</span><span class="schema-val">ML-DSA-65</span></div>
+            <div class="schema-row"><span class="schema-key">crypto.signature</span><span class="schema-val">Hex-encoded ML-DSA-65 signature</span></div>
+            <div class="schema-row"><span class="schema-key">crypto.public_key_fingerprint</span><span class="schema-val">SHA-256 of public key</span></div>
+            <div class="schema-row"><span class="schema-key">evidence.bundle_hash</span><span class="schema-val">SHA-256 of .air-evidence ZIP</span></div>
+            <div class="schema-row"><span class="schema-key">evidence.audit_chain_hash</span><span class="schema-val">HMAC-SHA256 chain head</span></div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- API Reference -->
+    <div class="section">
+        <h2>API <span>Reference</span></h2>
+        <p class="subtitle">Three endpoints. All public. No authentication required for reads.</p>
+
+        <div class="api-endpoint">
+            <span class="api-method post">POST</span>
+            <span class="api-path">/api/attest</span>
+            <p class="api-desc">
+                Publish a signed attestation record. The registry validates the schema, verifies
+                check count math, requires a cryptographic signature, and rejects duplicates.
+                Max body size: 100KB. Records expire after 2 years.
+            </p>
+        </div>
+
+        <div class="api-endpoint">
+            <span class="api-method get">GET</span>
+            <span class="api-path">/api/attest?id=air-att-...</span>
+            <p class="api-desc">
+                Retrieve a raw attestation record as JSON. Returns the full record including
+                cryptographic proof for programmatic verification.
+            </p>
+        </div>
+
+        <div class="api-endpoint">
+            <span class="api-method get">GET</span>
+            <span class="api-path">/verify/air-att-...</span>
+            <p class="api-desc">
+                Human-readable verification page. Shows scan summary, system info, cryptographic
+                proof details, and an embeddable badge with copy-to-clipboard markdown.
+            </p>
+        </div>
+
+        <div class="api-endpoint">
+            <span class="api-method get">GET</span>
+            <span class="api-path">/badge/air-att-...</span>
+            <p class="api-desc">
+                SVG badge for embedding in READMEs, websites, and CI/CD dashboards. Green for
+                all checks passed, yellow for warnings, blue for multi-framework attestations.
+                Cached for 5 minutes.
+            </p>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Badge Preview -->
+    <div class="section">
+        <h2>Embeddable <span>Badges</span></h2>
+        <p class="subtitle">Show compliance status anywhere. One line of markdown.</p>
+
+        <div class="badge-demo">
+            <div style="margin-bottom:1.5rem">
+                <svg xmlns="http://www.w3.org/2000/svg" width="199" height="20" role="img" aria-label="AIR Attested: EU+ISO | 35/39">
+                    <title>AIR Attested: EU+ISO | 35/39</title>
+                    <linearGradient id="s" x2="0" y2="100%">
+                        <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+                        <stop offset="1" stop-opacity=".1"/>
+                    </linearGradient>
+                    <clipPath id="r">
+                        <rect width="199" height="20" rx="3" fill="#fff"/>
+                    </clipPath>
+                    <g clip-path="url(#r)">
+                        <rect width="88" height="20" fill="#555"/>
+                        <rect x="88" width="111" height="20" fill="#4c1"/>
+                        <rect width="199" height="20" fill="url(#s)"/>
+                    </g>
+                    <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="11">
+                        <text aria-hidden="true" x="44" y="15" fill="#010101" fill-opacity=".3">AIR Attested</text>
+                        <text x="44" y="14" fill="#fff">AIR Attested</text>
+                        <text aria-hidden="true" x="142" y="15" fill="#010101" fill-opacity=".3">EU+ISO | 35/39</text>
+                        <text x="142" y="14" fill="#fff">EU+ISO | 35/39</text>
+                    </g>
+                </svg>
+            </div>
+            <div class="embed-code">[![AIR Attested](https://airblackbox.ai/badge/air-att-2026-04-12-a7f3c2e1)](https://airblackbox.ai/verify/air-att-2026-04-12-a7f3c2e1)</div>
+            <div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.5rem">Markdown -- paste into any README or documentation</div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+        <h2>Start Publishing Attestations</h2>
+        <p>Install the scanner. Generate keys. Scan and publish.</p>
+        <div class="code-block" style="max-width:550px;margin:0 auto 1.5rem;text-align:left">
+            <span class="prompt">$</span> pip install air-blackbox<br>
+            <span class="prompt">$</span> air-blackbox sign <span class="flag">--keygen</span><br>
+            <span class="prompt">$</span> air-blackbox attest create <span class="flag">--publish</span> <span class="flag">--name</span> "My AI System"
+        </div>
+        <div style="font-size:0.85rem;color:var(--text-secondary)">
+            <a href="https://pypi.org/project/air-blackbox/" style="color:var(--blue);text-decoration:none">PyPI</a> &middot;
+            <a href="https://github.com/airblackbox/gateway" style="color:var(--blue);text-decoration:none">GitHub</a> &middot;
+            <a href="/quickstart" style="color:var(--blue);text-decoration:none">Quickstart Guide</a>
+        </div>
+    </div>
+
+    <footer>
+        AIR Blackbox attestations verify that a compliance scan was performed and cryptographically signed.
+        They do not certify or guarantee regulatory compliance. Consult a qualified attorney for binding legal guidance.<br><br>
+        <a href="https://airblackbox.ai">airblackbox.ai</a> &middot;
+        <a href="https://github.com/airblackbox/gateway">GitHub</a> &middot;
+        <a href="https://pypi.org/project/air-blackbox/">PyPI</a> &middot;
+        <a href="/terms">Terms</a>
+    </footer>
+</body>
+</html>

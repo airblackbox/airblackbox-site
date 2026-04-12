@@ -157,16 +157,24 @@
       "destination": "/ci-cd.html"
     },
     {
-      "source": "/why",
-      "destination": "/why.html"
-    },
-    {
       "source": "/which-product",
       "destination": "/which-product.html"
     },
     {
       "source": "/security.txt",
       "destination": "/.well-known/security.txt"
+    },
+    {
+      "source": "/verify/:id",
+      "destination": "/api/verify/:id"
+    },
+    {
+      "source": "/badge/:id",
+      "destination": "/api/badge/:id"
+    },
+    {
+      "source": "/attest",
+      "destination": "/attest.html"
     }
   ],
   "headers": [
@@ -190,6 +198,15 @@
   "functions": {
     "api/webhook.py": {
       "maxDuration": 120
+    },
+    "api/attest.js": {
+      "maxDuration": 10
+    },
+    "api/badge/[id].js": {
+      "maxDuration": 10
+    },
+    "api/verify/[id].js": {
+      "maxDuration": 10
     }
   }
 }
