@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Which AIR Blackbox product should I use? — air-trust vs gateway vs air-gate vs air-platform</title>
+    <meta name="description" content="A plain-English decision tree for choosing between air-trust, gateway, air-gate, and air-platform. One question, one answer, one install command.">
+    <meta name="keywords" content="air-trust vs gateway, AIR Blackbox decision tree, which compliance tool, air-gate vs air-trust, air-platform deployment, EU AI Act compliance library vs proxy, HMAC audit chain Python, AI agent tool gating">
+    <meta property="og:title" content="Which AIR Blackbox product should I use?">
+    <meta property="og:description" content="Python library? HTTP proxy? Tool approval? Docker bundle? Pick the right AIR Blackbox product in 60 seconds.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://airblackbox.ai/which-product">
+    <link rel="canonical" href="https://airblackbox.ai/which-product">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is the difference between air-trust and gateway?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "air-trust is a Python library you import into your code. gateway is a standalone HTTP proxy you run as a separate process. Both produce HMAC-SHA256 signed audit chains. Use air-trust if your agent is in Python. Use gateway if you need to audit calls from multiple languages or services that all hit the same LLM endpoint."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Do I need air-trust AND gateway, or just one?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "For most developers, just one. air-trust is the default recommendation. Only add gateway if you have a polyglot stack or need language-agnostic auditing. They overlap in function but serve different integration models."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What does air-gate do that air-trust does not?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "air-gate adds human-in-the-loop approval for agent tool calls. It can pause an agent before it executes a dangerous tool (file write, API call, database operation) and require a human to approve. air-trust logs everything but does not block execution."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is air-platform?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "air-platform is the complete AIR Blackbox stack. It bundles air-trust, gateway, and air-gate together with an episode store, a policy engine, and Jaeger distributed tracing, all pre-wired in one Docker Compose file. It is the full-stack deployment option for enterprises that want every integration model running together with unified HMAC audit chains."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Which one should I install first if I am just exploring?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Install air-trust. It is one pip command, has zero dependencies, and produces a working HMAC-signed audit chain in under a minute. Graduate to gateway, air-gate, or air-platform only if you hit a specific limitation."
+                }
+            }
+        ]
+    }
+    </script>
+    <style>
+        :root {
+            --bg-deep: #080b14;
+            --bg-card: #0d1117;
+            --bg-elevated: #161b22;
+            --border: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-dim: #484f58;
+            --accent: #fbbf24;
+            --accent-glow: rgba(251, 191, 36, 0.15);
+            --green: #3fb950;
+            --red: #f85149;
+            --yellow: #d29922;
+            --blue: #58a6ff;
+            --purple: #bc8cff;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Sora', -apple-system, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--sans); background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
+        a { color: var(--blue); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code, .mono { font-family: var(--mono); }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        /* Header */
+        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(8,11,20,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text-primary); }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--accent); text-decoration: none; }
+        .nav-links .btn-sm { background: var(--accent); color: var(--bg-deep); padding: 0.4rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.8rem; }
+        .nav-links .active { color: var(--accent); }
+
+        /* Hero */
+        .hero { padding: 9rem 0 3rem; text-align: center; position: relative; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(251,191,36,0.06) 0%, transparent 70%); pointer-events: none; }
+        .hero h1 { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 800; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 1.2rem; }
+        .hero h1 .highlight { background: linear-gradient(135deg, var(--accent), #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero .subtitle { color: var(--text-secondary); font-size: 1.05rem; max-width: 720px; margin: 0 auto 1rem; line-height: 1.8; }
+
+        /* Sections */
+        section { padding: 3.5rem 0; }
+        .section-label { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; }
+        .section-title { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; letter-spacing: -1px; margin-bottom: 1rem; }
+        .section-desc { color: var(--text-secondary); max-width: 720px; margin-bottom: 2.5rem; font-size: 0.95rem; line-height: 1.8; }
+
+        /* 60-second decision box */
+        .tldr-box { background: var(--bg-card); border: 1px solid var(--accent); border-radius: 12px; padding: 2rem; margin: 2rem 0; box-shadow: 0 0 40px rgba(251,191,36,0.08); }
+        .tldr-box h3 { font-family: var(--mono); font-size: 0.85rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 1.2rem; }
+        .tldr-item { display: flex; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+        .tldr-item:last-child { border-bottom: none; }
+        .tldr-q { flex: 1; color: var(--text-secondary); font-size: 0.9rem; }
+        .tldr-q strong { color: var(--text-primary); }
+        .tldr-a { flex: 0 0 auto; font-family: var(--mono); font-size: 0.85rem; color: var(--green); font-weight: 600; white-space: nowrap; }
+
+        /* Product cards */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .product-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: border-color 0.3s, transform 0.3s; }
+        .product-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .product-card .pkg { font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.5rem; }
+        .product-card h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.6rem; font-family: var(--mono); }
+        .product-card .tagline { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1.2rem; min-height: 3.2rem; }
+        .product-card .install { font-family: var(--mono); background: var(--bg-elevated); border: 1px solid var(--border); padding: 0.6rem 1rem; border-radius: 6px; font-size: 0.8rem; color: var(--green); display: block; margin-bottom: 1.2rem; }
+        .product-card .install::before { content: '$ '; color: var(--text-dim); }
+        .product-card .when-use { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; }
+        .product-card .when-use strong { color: var(--text-primary); display: block; margin-bottom: 0.4rem; font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; }
+        .product-card.air-trust { border-color: rgba(251,191,36,0.4); }
+        .product-card.air-trust h3 { color: var(--accent); }
+        .product-card.gateway h3 { color: var(--blue); }
+        .product-card.air-gate h3 { color: var(--purple); }
+        .product-card.air-platform h3 { color: var(--green); }
+        .product-card .repo-link { display: inline-block; margin-top: 1rem; font-size: 0.8rem; color: var(--text-dim); }
+
+        /* Comparison table */
+        .compare-table { width: 100%; border-collapse: collapse; margin: 2rem 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .compare-table th, .compare-table td { padding: 1rem 1.2rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: top; }
+        .compare-table th { font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-dim); background: var(--bg-elevated); }
+        .compare-table td:first-child { color: var(--text-secondary); font-weight: 500; }
+        .compare-table tr:last-child td { border-bottom: none; }
+        .compare-table .t-header { color: var(--accent); font-family: var(--mono); font-size: 0.75rem; }
+        .compare-table .t-gw { color: var(--blue); font-family: var(--mono); font-size: 0.75rem; }
+        .compare-table .t-gt { color: var(--purple); font-family: var(--mono); font-size: 0.75rem; }
+        .compare-table .t-pl { color: var(--green); font-family: var(--mono); font-size: 0.75rem; }
+
+        /* Scenario cards */
+        .scenario-list { display: flex; flex-direction: column; gap: 1rem; margin: 2rem 0; }
+        .scenario { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 1.4rem 1.6rem; }
+        .scenario .person { font-size: 0.82rem; color: var(--text-dim); font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem; }
+        .scenario .situation { color: var(--text-primary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 0.6rem; }
+        .scenario .answer { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; }
+        .scenario .answer code { background: var(--bg-elevated); padding: 0.15rem 0.45rem; border-radius: 4px; color: var(--accent); font-size: 0.8rem; }
+
+        /* FAQ */
+        .faq-list { display: flex; flex-direction: column; gap: 1rem; margin: 2rem 0; }
+        .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.4rem 1.6rem; }
+        .faq-item h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.6rem; color: var(--text-primary); }
+        .faq-item p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; }
+
+        /* CTA */
+        .cta-section { text-align: center; padding: 4rem 0 5rem; }
+        .cta-section h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; margin-bottom: 1rem; }
+        .cta-section p { color: var(--text-secondary); margin-bottom: 2rem; max-width: 560px; margin-left: auto; margin-right: auto; font-size: 0.95rem; }
+        .cta-install { font-family: var(--mono); background: var(--bg-card); border: 1px solid var(--border); padding: 0.8rem 1.5rem; border-radius: 8px; font-size: 1rem; display: inline-block; margin-bottom: 1.5rem; color: var(--green); cursor: pointer; transition: border-color 0.2s; }
+        .cta-install:hover { border-color: var(--accent); }
+        .cta-install::before { content: '$ '; color: var(--text-dim); }
+        .cta-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .cta-links a { padding: 0.7rem 1.5rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
+        .btn-primary { background: var(--accent); color: var(--bg-deep); }
+        .btn-primary:hover { opacity: 0.85; text-decoration: none; }
+        .btn-secondary { border: 1px solid var(--border); color: var(--text-primary); }
+        .btn-secondary:hover { border-color: var(--accent); text-decoration: none; }
+
+        /* Footer */
+        footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 1rem; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; }
+        .footer-col h4 { font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; }
+        .footer-col a { display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem; }
+        .footer-bottom { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.8rem; text-align: center; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .product-grid { grid-template-columns: 1fr; }
+            .compare-table { font-size: 0.75rem; }
+            .compare-table th, .compare-table td { padding: 0.65rem 0.7rem; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .tldr-item { flex-direction: column; gap: 0.3rem; }
+            .tldr-a { align-self: flex-start; }
+            .nav-links a:not(.btn-sm) { display: none; }
+            .nav-links .btn-sm { display: inline-block; }
+        }
+    </style>
+</head>
+<body>
+    <header><nav>
+        <a href="/" style="text-decoration:none"><div class="logo">AIR <span>Blackbox</span></div></a>
+        <div class="nav-links">
+            <a href="/#features">Features</a>
+            <a href="/why">Why AIR</a>
+            <a href="/which-product" class="active">Which Product</a>
+            <a href="/blog/">Blog</a>
+            <a href="https://github.com/airblackbox">GitHub</a>
+            <a href="https://pypi.org/project/air-trust/" class="btn-sm">PyPI</a>
+        </div>
+    </nav></header>
+
+    <!-- Hero -->
+    <div class="hero"><div class="container">
+        <h1>Which <span class="highlight">AIR Blackbox</span> product should I use?</h1>
+        <p class="subtitle">Four open-source projects. All solve AI agent compliance. They sound similar because they share the same HMAC-SHA256 audit chain at the core &mdash; but they serve different integration models. Here is the plain-English decision tree.</p>
+    </div></div>
+
+    <!-- 60-second TL;DR -->
+    <section style="padding-top: 0;"><div class="container">
+        <div class="tldr-box">
+            <h3>&#9889; 60-Second Decision Tree</h3>
+            <div class="tldr-item">
+                <div class="tldr-q"><strong>My agent is written in Python.</strong> I want HMAC audit logs without standing up infrastructure.</div>
+                <div class="tldr-a">&rarr; air-trust</div>
+            </div>
+            <div class="tldr-item">
+                <div class="tldr-q"><strong>I have agents in multiple languages</strong> (Python + Node + Ruby) all hitting the same LLM API, and I need one audit trail for all of them.</div>
+                <div class="tldr-a">&rarr; gateway</div>
+            </div>
+            <div class="tldr-item">
+                <div class="tldr-q"><strong>My agent calls dangerous tools</strong> (file write, database ops, production APIs) and I need a human to approve each call before it executes.</div>
+                <div class="tldr-a">&rarr; air-gate</div>
+            </div>
+            <div class="tldr-item">
+                <div class="tldr-q"><strong>I want the full stack</strong> &mdash; air-trust + gateway + air-gate + episode store + policy engine + Jaeger, all pre-wired and running with one command.</div>
+                <div class="tldr-a">&rarr; air-platform</div>
+            </div>
+            <div class="tldr-item">
+                <div class="tldr-q"><strong>I am just exploring and want to see what compliance evidence looks like.</strong></div>
+                <div class="tldr-a">&rarr; air-trust</div>
+            </div>
+        </div>
+        <p style="color: var(--text-dim); font-size: 0.8rem; text-align: center; margin-top: 1rem;">If you are still not sure after reading the decision tree, the answer is <code style="color: var(--accent); background: var(--bg-elevated); padding: 0.15rem 0.45rem; border-radius: 4px;">pip install air-trust</code>. It is the default for a reason.</p>
+    </div></section>
+
+    <!-- The four products -->
+    <section style="border-top: 1px solid var(--border);"><div class="container">
+        <div class="section-label">The Four Products</div>
+        <div class="section-title">What each one actually is</div>
+        <p class="section-desc">Three individual components and one complete stack that packages all of them together. All four share the same HMAC-SHA256 audit chain core &mdash; air-trust, gateway, and air-gate are the standalone pieces; air-platform is everything pre-wired.</p>
+
+        <div class="product-grid">
+            <div class="product-card air-trust">
+                <div class="pkg">Python library</div>
+                <h3>air-trust</h3>
+                <div class="tagline">Import it. Wrap your LLM client. Every call is signed and logged to local SQLite. Zero dependencies.</div>
+                <code class="install">pip install air-trust</code>
+                <div class="when-use">
+                    <strong>Use when</strong>
+                    Your agent lives in a Python process. You want the lowest-friction path to a tamper-evident audit trail. You do not want to run extra services.
+                </div>
+                <a href="https://github.com/airblackbox/air-trust" class="repo-link">github.com/airblackbox/air-trust &rarr;</a>
+            </div>
+
+            <div class="product-card gateway">
+                <div class="pkg">HTTP proxy</div>
+                <h3>gateway</h3>
+                <div class="tagline">A reverse proxy for LLM API calls. Point your client at localhost. Every request is recorded and signed before it reaches OpenAI / Anthropic / etc.</div>
+                <code class="install">docker run airblackbox/gateway</code>
+                <div class="when-use">
+                    <strong>Use when</strong>
+                    You have agents in more than one language. You want language-agnostic auditing. You are OK running a separate service alongside your app.
+                </div>
+                <a href="https://github.com/airblackbox/gateway" class="repo-link">github.com/airblackbox/gateway &rarr;</a>
+            </div>
+
+            <div class="product-card air-gate">
+                <div class="pkg">Tool approval checkpoint</div>
+                <h3>air-gate</h3>
+                <div class="tagline">Pauses agents before they execute tool calls and requires a human approval. Same HMAC chain &mdash; but it blocks, not just logs.</div>
+                <code class="install">pip install air-gate</code>
+                <div class="when-use">
+                    <strong>Use when</strong>
+                    Your agent has access to real-world side effects (file writes, payments, API calls) and "log it after the fact" is not enough. You need prevention, not just evidence.
+                </div>
+                <a href="https://github.com/airblackbox/air-gate" class="repo-link">github.com/airblackbox/air-gate &rarr;</a>
+            </div>
+
+            <div class="product-card air-platform">
+                <div class="pkg">The full stack</div>
+                <h3>air-platform</h3>
+                <div class="tagline">The complete AIR Blackbox stack: air-trust + gateway + air-gate + episode store + policy engine + Jaeger tracing, all pre-wired in one Compose file.</div>
+                <code class="install">docker compose up</code>
+                <div class="when-use">
+                    <strong>Use when</strong>
+                    You want everything. Library + proxy + tool gating + tracing + policy engine, all running together with shared audit chains. Enterprise deployment in under 5 minutes.
+                </div>
+                <a href="https://github.com/airblackbox/air-platform" class="repo-link">github.com/airblackbox/air-platform &rarr;</a>
+            </div>
+        </div>
+    </div></section>
+
+    <!-- Comparison table -->
+    <section style="border-top: 1px solid var(--border);"><div class="container">
+        <div class="section-label">Side-by-Side</div>
+        <div class="section-title">Capability comparison</div>
+        <p class="section-desc">A flat matrix of what each product does and does not do. Use this to sanity-check the decision tree above.</p>
+
+        <div style="overflow-x: auto;">
+        <table class="compare-table">
+            <thead>
+                <tr>
+                    <th>Capability</th>
+                    <th class="t-header">air-trust</th>
+                    <th class="t-gw">gateway</th>
+                    <th class="t-gt">air-gate</th>
+                    <th class="t-pl">air-platform</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>What it is</td>
+                    <td>Python library</td>
+                    <td>HTTP proxy</td>
+                    <td>Tool approval checkpoint</td>
+                    <td>All three + observability, pre-wired</td>
+                </tr>
+                <tr>
+                    <td>Includes the others?</td>
+                    <td>Standalone</td>
+                    <td>Standalone</td>
+                    <td>Standalone</td>
+                    <td>Yes &mdash; bundles air-trust + gateway + air-gate</td>
+                </tr>
+                <tr>
+                    <td>Language support</td>
+                    <td>Python only</td>
+                    <td>Any (HTTP client)</td>
+                    <td>Python only</td>
+                    <td>Any (via bundled gateway)</td>
+                </tr>
+                <tr>
+                    <td>HMAC-SHA256 audit chain</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes (unified across all components)</td>
+                </tr>
+                <tr>
+                    <td>Human-in-the-loop approval</td>
+                    <td>No</td>
+                    <td>No</td>
+                    <td>Yes</td>
+                    <td>Yes (via bundled air-gate)</td>
+                </tr>
+                <tr>
+                    <td>Distributed tracing (Jaeger)</td>
+                    <td>No</td>
+                    <td>No</td>
+                    <td>No</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>Policy engine</td>
+                    <td>Basic</td>
+                    <td>Basic</td>
+                    <td>Basic</td>
+                    <td>Full (OPA-compatible)</td>
+                </tr>
+                <tr>
+                    <td>Requires separate process</td>
+                    <td>No</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                    <td>Yes (Docker Compose)</td>
+                </tr>
+                <tr>
+                    <td>Install time</td>
+                    <td>~30 seconds</td>
+                    <td>~5 minutes</td>
+                    <td>~30 seconds</td>
+                    <td>~5 minutes</td>
+                </tr>
+                <tr>
+                    <td>Works offline</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>CSA ATF conformance (v0.4.0+)</td>
+                    <td>Yes</td>
+                    <td>Planned</td>
+                    <td>Planned</td>
+                    <td>Yes (via bundled air-trust)</td>
+                </tr>
+                <tr>
+                    <td>Typical user</td>
+                    <td>Python developer</td>
+                    <td>Platform engineer</td>
+                    <td>Agent ops team</td>
+                    <td>Enterprise / compliance lead</td>
+                </tr>
+                <tr>
+                    <td>License</td>
+                    <td>Apache 2.0</td>
+                    <td>Apache 2.0</td>
+                    <td>Apache 2.0</td>
+                    <td>Apache 2.0</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div></section>
+
+    <!-- Scenarios -->
+    <section style="border-top: 1px solid var(--border);"><div class="container">
+        <div class="section-label">Common Scenarios</div>
+        <div class="section-title">"What should I pick if I am&hellip;"</div>
+        <p class="section-desc">Real situations from real developers. Find yours and copy the install command.</p>
+
+        <div class="scenario-list">
+            <div class="scenario">
+                <div class="person">Solo Python dev, LangChain agent in a Jupyter notebook</div>
+                <div class="situation">You have one Python agent. You want to see what the EU AI Act evidence trail looks like. You do not want to learn Docker.</div>
+                <div class="answer">&rarr; <code>pip install air-trust</code>. One import, three lines of code, done. You will have signed audit records on your disk in under a minute.</div>
+            </div>
+
+            <div class="scenario">
+                <div class="person">Startup running agents in production (Python + Node backend)</div>
+                <div class="situation">Your backend is split. Python for the agent logic, Node for the API layer. Both call OpenAI. You need ONE unified audit trail across both.</div>
+                <div class="answer">&rarr; <strong style="color: var(--blue);">gateway</strong>. Run it as a sidecar. Point both your Python and Node clients at it. Every call from either service gets the same signed chain.</div>
+            </div>
+
+            <div class="scenario">
+                <div class="person">Fintech with agents that move money</div>
+                <div class="situation">Your agent can initiate transactions. Logging-after-the-fact is not enough &mdash; you need a human to approve every payment before it goes through. Regulators will ask about it.</div>
+                <div class="answer">&rarr; <strong style="color: var(--purple);">air-gate</strong> as the approval checkpoint for the payment tool, plus <code>air-trust</code> for the rest of the agent's calls. They compose well.</div>
+            </div>
+
+            <div class="scenario">
+                <div class="person">Enterprise compliance team piloting AI governance</div>
+                <div class="situation">You want to show the security and compliance functions what "tamper-evident agent logs" look like without asking engineering to integrate a library. You need something a compliance analyst can spin up on a VM &mdash; with every capability turned on.</div>
+                <div class="answer">&rarr; <strong style="color: var(--green);">air-platform</strong>. One <code>docker compose up</code> and the complete AIR Blackbox stack is live: air-trust for Python agents, gateway for non-Python services, air-gate for tool approvals, a policy engine, an episode store, and Jaeger tracing. All sharing one audit chain. Point any test agent at it and show the dashboard.</div>
+            </div>
+
+            <div class="scenario">
+                <div class="person">CrewAI developer exploring frameworks</div>
+                <div class="situation">You are prototyping with CrewAI. You are not sure whether CrewAI is your final framework. You want compliance evidence that will not lock you into one framework.</div>
+                <div class="answer">&rarr; <code>pip install air-trust</code>. Its adapters cover LangChain, CrewAI, LlamaIndex, AutoGen, and 15+ others. If you switch frameworks later, the same <code>air_trust.trust(...)</code> call still works.</div>
+            </div>
+
+            <div class="scenario">
+                <div class="person">SRE adding compliance to a multi-tenant agent platform</div>
+                <div class="situation">You operate a platform where customers bring their own agents. You cannot control which libraries or languages they use, but you do control the outbound network.</div>
+                <div class="answer">&rarr; <strong style="color: var(--blue);">gateway</strong> at the egress layer. Every tenant's LLM call passes through it. Every tenant gets the same audit guarantee whether they wrote their agent in Python, Go, or Ruby.</div>
+            </div>
+        </div>
+    </div></section>
+
+    <!-- FAQ -->
+    <section style="border-top: 1px solid var(--border);"><div class="container">
+        <div class="section-label">Frequently Asked</div>
+        <div class="section-title">Answers to the confusing parts</div>
+        <p class="section-desc">Questions that come up on every office hours call and in every GitHub discussion.</p>
+
+        <div class="faq-list">
+            <div class="faq-item">
+                <h4>Do I need more than one of these?</h4>
+                <p>Usually no &mdash; and if you need more than one, use air-platform. For individual developers, pick the single component that matches your integration model (air-trust, gateway, or air-gate) and ship. For enterprises that want multiple integration models running together with unified auditing, use air-platform; it bundles all three plus a policy engine and tracing, so you get the full picture without wiring three separate installs together.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Why did you build four projects instead of one?</h4>
+                <p>Honest answer: the audit chain is the same core, but the three integration models serve very different users. A Python developer does not want to run Docker. A platform engineer does not want to import a library into every service. A compliance lead does not want to write code at all. One tool cannot be the right shape for all three &mdash; but an enterprise <em>deployment</em> often needs all three running side-by-side. That is what air-platform is for: it is not a fourth product, it is the complete stack that bundles air-trust, gateway, and air-gate together with shared auditing, an episode store, a policy engine, and Jaeger tracing.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Can I migrate from one to another later?</h4>
+                <p>Yes. The audit record format is identical across all four. An air-trust SQLite database can be imported into a gateway deployment, and vice versa. Your historical evidence does not get stranded if you change integration models.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Which one gets the most updates?</h4>
+                <p>air-trust is the current focus. It just shipped v0.4.0 with CSA Agentic Trust Framework conformance, and it is the package most actively developed. The others receive backports of the shared audit chain logic but do not get new features as quickly.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Is any of this certified for EU AI Act?</h4>
+                <p>No. None of these tools certify anything. The EU AI Act does not have a certification scheme for compliance tooling &mdash; certification applies to the AI system itself. AIR Blackbox products produce the <em>evidence</em> (Article 12 record-keeping, Article 11 technical documentation) that regulators or auditors will ask for. The certification decision remains with the operator of the AI system.</p>
+            </div>
+            <div class="faq-item">
+                <h4>What about the August 2, 2026 deadline?</h4>
+                <p>That is when general-purpose AI model obligations under the EU AI Act become enforceable. If you are deploying agents in or serving users in the EU, Articles 11 and 12 apply to you on that date. All four AIR Blackbox products are designed to produce the evidence trail those articles require. Start with air-trust this week. Graduate to the others only if you hit a limitation.</p>
+            </div>
+        </div>
+    </div></section>
+
+    <!-- CTA -->
+    <section class="cta-section"><div class="container">
+        <h2>Start with the default. Graduate later.</h2>
+        <p>If you are still not sure, install air-trust. It is one command, zero dependencies, and takes 30 seconds. You can switch to gateway, air-gate, or air-platform any time &mdash; your audit records come with you.</p>
+        <div class="cta-install" onclick="navigator.clipboard.writeText('pip install air-trust')">pip install air-trust</div>
+        <div class="cta-links">
+            <a href="/quickstart" class="btn-primary">Quickstart Guide</a>
+            <a href="https://github.com/airblackbox" class="btn-secondary">GitHub Org</a>
+            <a href="/why" class="btn-secondary">Why Local-First?</a>
+        </div>
+    </div></section>
+
+    <!-- Footer -->
+    <footer><div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="logo" style="margin-bottom:0.8rem">AIR <span>Blackbox</span></div>
+                <p style="color:var(--text-dim); font-size:0.85rem;">Open-source AI agent governance.<br>Local-first. HMAC-signed.<br>Apache 2.0.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Products</h4>
+                <a href="https://github.com/airblackbox/air-trust">air-trust</a>
+                <a href="https://github.com/airblackbox/gateway">gateway</a>
+                <a href="https://github.com/airblackbox/air-gate">air-gate</a>
+                <a href="https://github.com/airblackbox/air-platform">air-platform</a>
+            </div>
+            <div class="footer-col">
+                <h4>Learn</h4>
+                <a href="/why">Why Local-First</a>
+                <a href="/quickstart">Quickstart</a>
+                <a href="/blog/">Blog</a>
+                <a href="/compliance-mapping">Compliance Mapping</a>
+            </div>
+            <div class="footer-col">
+                <h4>Community</h4>
+                <a href="https://github.com/airblackbox">GitHub Org</a>
+                <a href="https://github.com/airblackbox/air-trust/discussions">Discussions</a>
+                <a href="mailto:jason@airblackbox.ai">jason@airblackbox.ai</a>
+                <a href="/terms" style="margin-top:0.5rem">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">&copy; 2026 AIR Blackbox. Open-source AI governance. Built on OpenTelemetry.</div>
+    </div></footer>
+</body>
+</html>
