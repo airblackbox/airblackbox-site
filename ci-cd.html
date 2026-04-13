@@ -230,7 +230,7 @@ jobs:
     </div>
 
     <h3>What This Does</h3>
-    <p>On every push to <code>main</code> or <code>develop</code> (and every PR into <code>main</code>), this workflow installs the scanner, runs 39 gap analysis checks against your Python AI code, and fails the build if any HIGH-severity issues are found. The full report is uploaded as a build artifact you can download anytime.</p>
+    <p>On every push to <code>main</code> or <code>develop</code> (and every PR into <code>main</code>), this workflow installs the scanner, runs 48 gap analysis checks against your Python AI code, and fails the build if any HIGH-severity issues are found. The full report is uploaded as a build artifact you can download anytime.</p>
 
     <h3>PR Status Check (Optional)</h3>
     <p>To require compliance scans to pass before merging, go to your repo's Settings → Branches → Branch protection rules → Require status checks, and add <strong>"EU AI Act Compliance"</strong> as a required check.</p>
@@ -358,7 +358,7 @@ AIR_SKIP_CHECKS=art9_risk_categorization,art15_prompt_injection</code></pre>
     <!-- What Gets Checked -->
     <h2 id="what-gets-checked">What Gets Checked</h2>
 
-    <p>Every scan runs 39 automated gap analysis checks across 6 EU AI Act articles:</p>
+    <p>Every scan runs 48 automated gap analysis checks across 6 EU AI Act articles + GDPR:</p>
 
     <div class="benefit-grid">
         <div class="benefit-card">
@@ -392,8 +392,8 @@ AIR_SKIP_CHECKS=art9_risk_categorization,art15_prompt_injection</code></pre>
     <!-- CTA -->
     <div class="cta-box">
         <h3>Start scanning in 10 seconds</h3>
-        <p>11 PyPI packages. 39 checks. 6 EU AI Act articles. Runs locally.</p>
-        <div class="cta-install" onclick="navigator.clipboard.writeText('pip install air-compliance').then(()=>this.textContent='Copied!')">pip install air-compliance</div>
+        <p>4 PyPI packages. 48 checks. 6 EU AI Act articles + GDPR. Runs locally.</p>
+        <div class="cta-install" onclick="navigator.clipboard.writeText('pip install air-blackbox').then(()=>this.textContent='Copied!')">pip install air-blackbox</div>
         <div style="margin-top: 1.2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
             <a href="https://github.com/airblackbox/gateway" style="font-size:0.85rem">GitHub</a>
             <a href="https://pypi.org/project/air-compliance" style="font-size:0.85rem">PyPI</a>
