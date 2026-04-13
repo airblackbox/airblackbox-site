@@ -283,13 +283,13 @@
 
     <!-- Guide Cards -->
     <div class="guides-grid">
-        <a href="https://github.com/airblackbox/air-langchain-trust/blob/main/docs/integration-guide.md" class="guide-card">
+        <a href="https://github.com/airblackbox/gateway/blob/main/docs/langchain-integration.md" class="guide-card">
             <div class="guide-icon langchain">&#x1f517;</div>
             <h3>LangChain / LangGraph</h3>
             <p>Add a callback handler to any LangChain agent or chain. Works with LangGraph too. Automatic audit trails, PII detection, consent gates, and injection scanning.</p>
             <div class="guide-meta">
                 <span>&#x23f1; 5 min</span>
-                <span>v0.2.0</span>
+                <span>v1.10.0</span>
                 <span>+ Gate support</span>
             </div>
         </a>
@@ -300,7 +300,7 @@
             <p>Plugin for Google's Agent Development Kit. Drop into any ADK agent with one line. Automatic tool risk classification, audit chains, and policy enforcement.</p>
             <div class="guide-meta">
                 <span>&#x23f1; 5 min</span>
-                <span>v0.2.0</span>
+                <span>v1.10.0</span>
                 <span>+ Gate support</span>
             </div>
         </a>
@@ -335,7 +335,7 @@
 <span class="prompt">$</span> cd air-gate && docker compose up -d
 
 <span class="comment"># 2. Run the end-to-end demo</span>
-<span class="prompt">$</span> pip install air-langchain-trust air-adk-trust
+<span class="prompt">$</span> pip install air-blackbox
 <span class="prompt">$</span> python examples/e2e_demo.py
 
 <span class="output">  <span class="accent">AIR Blackbox — End-to-End Demo</span></span>
@@ -404,19 +404,19 @@
                 <div class="pkg-desc">Compliance scan engine</div>
             </div>
             <div class="pkg">
-                <div class="pkg-name">air-compliance</div>
-                <div class="pkg-ver">CLI Tool</div>
-                <div class="pkg-desc">air-compliance scan .</div>
+                <div class="pkg-name">air-trust</div>
+                <div class="pkg-ver">Trust Layers</div>
+                <div class="pkg-desc">7 framework integrations</div>
             </div>
             <div class="pkg">
-                <div class="pkg-name">air-langchain-trust</div>
-                <div class="pkg-ver">v0.2.0</div>
-                <div class="pkg-desc">LangChain + Gate</div>
+                <div class="pkg-name">air-openai-trust</div>
+                <div class="pkg-ver">OpenAI SDK</div>
+                <div class="pkg-desc">OpenAI Agents wrapper</div>
             </div>
             <div class="pkg">
-                <div class="pkg-name">air-adk-trust</div>
-                <div class="pkg-ver">v0.2.0</div>
-                <div class="pkg-desc">Google ADK + Gate</div>
+                <div class="pkg-name">air-blackbox-mcp</div>
+                <div class="pkg-ver">MCP Server</div>
+                <div class="pkg-desc">Claude Desktop + Cursor</div>
             </div>
         </div>
     </div>

@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMAC-SHA256 Audit Chain Explorer - AIR Blackbox</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            background: #1a1a2e;
+            border-bottom: 1px solid #16213e;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            color: #22d3ee;
+            text-decoration: none;
+            margin-right: 2rem;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #4ade80;
+        }
+
+        nav .logo {
+            font-weight: bold;
+            color: #e0e0e0;
+            margin-right: auto;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #16213e 0%, #0a0a0a 100%);
+            padding: 3rem 2rem;
+            border-bottom: 1px solid #16213e;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #22d3ee;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #a0a0a0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Chain visualization */
+        .chain-wrapper {
+            background: #1a1a2e;
+            border: 1px solid #16213e;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .chain {
+            display: flex;
+            gap: 0.5rem;
+            min-width: max-content;
+            padding: 1rem 0;
+        }
+
+        .record-card {
+            background: #0d1520;
+            border: 2px solid #16213e;
+            border-radius: 8px;
+            padding: 1.2rem;
+            min-width: 280px;
+            max-width: 280px;
+            position: relative;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .record-card:hover {
+            border-color: #22d3ee;
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.2);
+        }
+
+        .record-card.verified {
+            border-color: #4ade80;
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.2);
+        }
+
+        .record-card.verified::after {
+            content: "✓";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #4ade80;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .record-card.tampered {
+            border-color: #f87171;
+            box-shadow: 0 0 20px rgba(248, 113, 113, 0.3);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #16213e;
+        }
+
+        .record-number {
+            font-weight: bold;
+            color: #22d3ee;
+            font-size: 0.9rem;
+        }
+
+        .record-type {
+            background: #16213e;
+            color: #a78bfa;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .record-timestamp {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin: 0.5rem 0;
+            font-family: monospace;
+        }
+
+        .record-data {
+            font-size: 0.85rem;
+            margin: 0.8rem 0;
+            line-height: 1.4;
+        }
+
+        .record-data-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.3rem 0;
+            word-break: break-word;
+        }
+
+        .record-data-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .record-data-value {
+            color: #e0e0e0;
+            margin-left: 0.5rem;
+        }
+
+        .record-hash {
+            background: #0a0a0a;
+            border: 1px solid #16213e;
+            padding: 0.6rem;
+            border-radius: 4px;
+            margin: 0.8rem 0;
+            font-family: "Courier New", monospace;
+            font-size: 0.7rem;
+            color: #fbbf24;
+            word-break: break-all;
+            animation: typewriter 1s steps(16) forwards;
+        }
+
+        @keyframes typewriter {
+            from { opacity: 0.3; }
+            to { opacity: 1; }
+        }
+
+        .hash-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .prev-hash {
+            background: #0a0a0a;
+            border: 1px solid #16213e;
+            padding: 0.6rem;
+            border-radius: 4px;
+            margin: 0.8rem 0;
+            font-family: "Courier New", monospace;
+            font-size: 0.7rem;
+            color: #22d3ee;
+            word-break: break-all;
+        }
+
+        .arrow {
+            display: flex;
+            align-items: center;
+            color: #16213e;
+            font-size: 1.5rem;
+            margin: 0 -0.25rem;
+            user-select: none;
+        }
+
+        /* Control panel */
+        .control-panel {
+            background: #1a1a2e;
+            border: 1px solid #16213e;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .control-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        select {
+            background: #0d1520;
+            border: 1px solid #16213e;
+            color: #e0e0e0;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        select:hover, select:focus {
+            border-color: #22d3ee;
+            box-shadow: 0 0 10px rgba(34, 211, 238, 0.1);
+            outline: none;
+        }
+
+        button {
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #22d3ee;
+            color: #0a0a0a;
+        }
+
+        .btn-primary:hover {
+            background: #06b6d4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34, 211, 238, 0.3);
+        }
+
+        .btn-danger {
+            background: #f87171;
+            color: #0a0a0a;
+        }
+
+        .btn-danger:hover {
+            background: #ef4444;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(248, 113, 113, 0.3);
+        }
+
+        .btn-success {
+            background: #4ade80;
+            color: #0a0a0a;
+        }
+
+        .btn-success:hover {
+            background: #22c55e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 222, 128, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .status-message {
+            padding: 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .status-message.show {
+            display: block;
+        }
+
+        .status-message.success {
+            background: rgba(74, 222, 128, 0.2);
+            border: 1px solid #4ade80;
+            color: #4ade80;
+        }
+
+        .status-message.error {
+            background: rgba(248, 113, 113, 0.2);
+            border: 1px solid #f87171;
+            color: #f87171;
+        }
+
+        /* Explainer section */
+        .explainer {
+            background: #1a1a2e;
+            border: 1px solid #16213e;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .explainer h2 {
+            color: #22d3ee;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .explainer-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .step {
+            background: #0d1520;
+            border: 1px solid #16213e;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #16213e;
+            border: 2px solid #22d3ee;
+            border-radius: 50%;
+            line-height: 40px;
+            margin-bottom: 1rem;
+            color: #22d3ee;
+            font-weight: bold;
+        }
+
+        .step h3 {
+            color: #a78bfa;
+            margin-bottom: 1rem;
+        }
+
+        .step p {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            line-height: 1.6;
+        }
+
+        .formula {
+            background: #0a0a0a;
+            border-left: 3px solid #fbbf24;
+            padding: 1.5rem;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #fbbf24;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            line-height: 1.8;
+        }
+
+        /* Why it matters */
+        .why-matters {
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
+            border-left: 4px solid #22d3ee;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .why-matters h2 {
+            color: #22d3ee;
+            margin-bottom: 1rem;
+        }
+
+        .why-matters p {
+            color: #a0a0a0;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .why-matters p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a2e;
+            border-top: 1px solid #16213e;
+            padding: 2rem;
+            text-align: center;
+            color: #6b7280;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: #22d3ee;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #4ade80;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .control-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            select, button {
+                width: 100%;
+            }
+
+            .record-card {
+                min-width: 250px;
+                max-width: 250px;
+            }
+
+            .explainer-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tamper-mode {
+            background: rgba(248, 113, 113, 0.1) !important;
+            border: 2px dashed #f87171 !important;
+        }
+
+        .tamper-mode:hover {
+            cursor: pointer;
+            background: rgba(248, 113, 113, 0.2) !important;
+        }
+
+        .scanning-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #4ade80, transparent);
+            animation: scan 0.5s ease-in-out;
+        }
+
+        @keyframes scan {
+            from {
+                opacity: 0;
+                left: -100%;
+            }
+            to {
+                opacity: 0;
+                left: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">AIR Blackbox</div>
+        <a href="/">Home</a>
+        <a href="/docs">Docs</a>
+        <a href="/demo">Demos</a>
+        <a href="https://github.com/airblackbox/airblackbox" target="_blank">GitHub</a>
+    </nav>
+
+    <!-- Header -->
+    <header>
+        <h1>HMAC-SHA256 Audit Chain</h1>
+        <p>Every AI action your agent takes becomes a tamper-evident record. Change one byte, the whole chain breaks.</p>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Chain Visualization -->
+        <div class="chain-wrapper">
+            <div class="chain" id="chain"></div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <div class="control-group">
+                <label for="recordType">Record Type:</label>
+                <select id="recordType">
+                    <option value="llm_call">LLM Call</option>
+                    <option value="tool_call">Tool Call</option>
+                    <option value="pii_detection">PII Detection</option>
+                    <option value="injection_scan">Injection Scan</option>
+                    <option value="checkpoint">Checkpoint</option>
+                    <option value="human_approval">Human Approval</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <button class="btn-primary" id="addBtn">+ Add Record</button>
+                <button class="btn-success" id="verifyBtn">Verify Chain</button>
+                <button class="btn-danger" id="tamperfBtn">Tamper with Record</button>
+                <button class="btn-secondary" id="resetBtn">Reset</button>
+            </div>
+
+            <div class="status-message" id="statusMessage"></div>
+        </div>
+
+        <!-- Explainer Section -->
+        <div class="explainer">
+            <h2>How It Works</h2>
+            <div class="explainer-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Record</h3>
+                    <p>Event data is captured: timestamp, type, input, output, metadata.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Hash</h3>
+                    <p>HMAC-SHA256 combines record data + previous hash + signing key into unique fingerprint.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Chain</h3>
+                    <p>Each record's hash becomes the next record's previous hash reference.</p>
+                </div>
+            </div>
+
+            <div class="formula">
+HMAC-SHA256(record_data + prev_hash + signing_key) = new_hash<br><br>
+Example:<br>
+record_data = {"type":"llm_call","model":"gpt-4","tokens":1247}<br>
+prev_hash = "8a4b2f9c..."<br>
+signing_key = "sk-audit-key-..."<br>
+new_hash = "d7c3e1a5f2b8..."
+            </div>
+
+            <p style="color: #a0a0a0; font-style: italic;">
+                When you change a single byte in any record, its HMAC completely changes. The next record still references
+                the old hash, creating a mismatch. Verification fails immediately, exposing the tampering.
+            </p>
+        </div>
+
+        <!-- Why It Matters -->
+        <div class="why-matters">
+            <h2>Why This Matters</h2>
+            <p>
+                <strong>Article 12 of the EU AI Act requires "automatic recording of events."</strong> But recording isn't enough —
+                records that can be silently modified aren't evidence. They're just data.
+            </p>
+            <p>
+                HMAC-SHA256 chains make every modification detectable. This is the same principle as blockchain, but without
+                the blockchain. No consensus mechanism. No gas fees. Just cryptographic linking.
+            </p>
+            <p>
+                When you audit an agent's decision-making, you need proof that the records haven't been altered. This demo shows
+                exactly how that proof works.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            <strong>pip install air-blackbox</strong> |
+            <a href="https://github.com/airblackbox/airblackbox" target="_blank">GitHub</a> |
+            <a href="https://airblackbox.ai" target="_blank">airblackbox.ai</a>
+        </p>
+    </footer>
+
+    <script>
+        // Constants
+        const COLORS = {
+            green: '#4ade80',
+            red: '#f87171',
+            yellow: '#fbbf24',
+            cyan: '#22d3ee',
+            purple: '#a78bfa'
+        };
+
+        // Record types and sample data
+        const RECORD_SAMPLES = {
+            session_start: {
+                agent: 'research-bot',
+                framework: 'langchain',
+                start_time: new Date().toISOString()
+            },
+            llm_call: {
+                model: 'gpt-4',
+                tokens: 1247,
+                status: 'success'
+            },
+            tool_call: {
+                tool: 'search_database',
+                input: 'EU customers',
+                status: 'success'
+            },
+            pii_detection: {
+                detected: ['email'],
+                action: 'flagged',
+                consent: 'pending'
+            },
+            pii_scan: {
+                detected: ['email'],
+                action: 'flagged',
+                consent: 'pending'
+            },
+            injection_scan: {
+                pattern: 'role_override',
+                confidence: 0.92,
+                blocked: true
+            },
+            checkpoint: {
+                step: 'verification_complete',
+                records: 5,
+                status: 'ok'
+            },
+            human_approval: {
+                decision: 'approved',
+                reviewer: 'audit_team',
+                reason: 'safe to proceed'
+            },
+            session_end: {
+                duration: '2,340ms',
+                events: 5,
+                status: 'complete'
+            }
+        };
+
+        // Audit chain state
+        let auditChain = [];
+        let tamperedRecordIndex = null;
+        let isTamperMode = false;
+
+        // Initialize chain with pre-loaded records
+        function initializeChain() {
+            auditChain = [
+                createRecord('session_start', RECORD_SAMPLES.session_start),
+                createRecord('llm_call', RECORD_SAMPLES.llm_call),
+                createRecord('tool_call', RECORD_SAMPLES.tool_call),
+                createRecord('pii_scan', RECORD_SAMPLES.pii_scan),
+                createRecord('session_end', RECORD_SAMPLES.session_end)
+            ];
+            renderChain();
+        }
+
+        // Simple SHA256-like hash simulation (for demo purposes)
+        function simpleHash(data) {
+            let hash = 0;
+            const str = JSON.stringify(data);
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return 'sha256_' + Math.abs(hash).toString(16).padStart(16, '0');
+        }
+
+        // HMAC simulation
+        function computeHMAC(recordData, prevHash, signingKey = 'audit-key') {
+            const combined = JSON.stringify({
+                data: recordData,
+                prev: prevHash,
+                key: signingKey
+            });
+            return simpleHash(combined).substring(0, 16).toUpperCase();
+        }
+
+        // Create a record with HMAC
+        function createRecord(type, data) {
+            const prevRecord = auditChain[auditChain.length - 1];
+            const prevHash = prevRecord ? prevRecord.hash : '0000000000000000';
+
+            const timestamp = new Date().toISOString();
+            const recordData = {
+                type,
+                timestamp,
+                ...data
+            };
+
+            const hash = computeHMAC(recordData, prevHash);
+
+            return {
+                type,
+                timestamp,
+                data,
+                hash,
+                prevHash,
+                verified: false,
+                originalHash: hash
+            };
+        }
+
+        // Render the chain
+        function renderChain() {
+            const chainEl = document.getElementById('chain');
+            chainEl.innerHTML = '';
+
+            auditChain.forEach((record, index) => {
+                const card = document.createElement('div');
+                card.className = 'record-card';
+                if (record.verified) card.classList.add('verified');
+                if (tamperedRecordIndex === index) card.classList.add('tampered');
+                if (isTamperMode) card.classList.add('tamper-mode');
+
+                const shortHash = record.hash.substring(0, 8);
+                const shortPrevHash = record.prevHash.substring(0, 8);
+
+                card.innerHTML = `
+                    <div class="record-header">
+                        <div class="record-number">Record #${index}</div>
+                        <div class="record-type">${record.type}</div>
+                    </div>
+                    <div class="record-timestamp">${record.timestamp.substring(11, 19)}</div>
+                    <div class="record-data">
+                        ${Object.entries(record.data).map(([key, value]) => `
+                            <div class="record-data-item">
+                                <span class="record-data-label">${key}:</span>
+                                <span class="record-data-value">${typeof value === 'object' ? JSON.stringify(value) : value}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="hash-label">HMAC Hash</div>
+                    <div class="record-hash">${record.hash}</div>
+                    <div class="hash-label">Previous Hash</div>
+                    <div class="prev-hash">${shortPrevHash}</div>
+                `;
+
+                if (isTamperMode) {
+                    card.style.cursor = 'pointer';
+                    card.onclick = () => tampersWithRecord(index);
+                }
+
+                chainEl.appendChild(card);
+
+                // Add arrow between records
+                if (index < auditChain.length - 1) {
+                    const arrow = document.createElement('div');
+                    arrow.className = 'arrow';
+                    arrow.textContent = '→';
+                    chainEl.appendChild(arrow);
+                }
+            });
+        }
+
+        // Add a new record
+        function addRecord() {
+            const type = document.getElementById('recordType').value;
+            const samples = RECORD_SAMPLES[type] || { value: 'new record' };
+            const record = createRecord(type, samples);
+            auditChain.push(record);
+            renderChain();
+            showStatus(`Added ${type} record`, 'success');
+        }
+
+        // Verify the entire chain
+        async function verifyChain() {
+            // Reset verification state
+            auditChain.forEach(r => r.verified = false);
+            renderChain();
+
+            let allValid = true;
+
+            for (let i = 0; i < auditChain.length; i++) {
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                const record = auditChain[i];
+                const expectedPrevHash = i === 0 ? '0000000000000000' : auditChain[i - 1].hash;
+
+                const computedHash = computeHMAC(record.data, expectedPrevHash);
+
+                if (computedHash === record.hash && record.prevHash === expectedPrevHash) {
+                    record.verified = true;
+                } else {
+                    allValid = false;
+                    showStatus(`INTEGRITY VIOLATION at record #${i}`, 'error');
+                    renderChain();
+                    return;
+                }
+
+                renderChain();
+            }
+
+            if (allValid) {
+                showStatus('Chain integrity: VERIFIED ✓', 'success');
+            }
+        }
+
+        // Tamper with a record
+        function startTamperMode() {
+            if (isTamperMode) {
+                isTamperMode = false;
+                tamperedRecordIndex = null;
+                showStatus('Tamper mode disabled', 'success');
+            } else {
+                isTamperMode = true;
+                showStatus('Click on any record to tamper with it', 'success');
+            }
+            renderChain();
+        }
+
+        function tampersWithRecord(index) {
+            if (!isTamperMode) return;
+
+            const record = auditChain[index];
+
+            // Simulate tampering: change data slightly
+            if (record.data.tokens) {
+                record.data.tokens = record.data.tokens + 100;
+            } else if (record.data.status) {
+                record.data.status = record.data.status === 'success' ? 'failed' : 'success';
+            } else {
+                record.data.value = 'TAMPERED';
+            }
+
+            // DON'T update the hash - this is the point of the demo
+            tamperedRecordIndex = index;
+            isTamperMode = false;
+
+            renderChain();
+            showStatus('Record tampered! Click "Verify Chain" to detect the tampering.', 'error');
+
+            // Auto-run verification
+            setTimeout(() => verifyChain(), 500);
+        }
+
+        // Reset the chain
+        function resetChain() {
+            tamperedRecordIndex = null;
+            isTamperMode = false;
+            initializeChain();
+            showStatus('Chain reset to initial state', 'success');
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message show ${type}`;
+            setTimeout(() => {
+                statusEl.classList.remove('show');
+            }, 4000);
+        }
+
+        // Event listeners
+        document.getElementById('addBtn').addEventListener('click', addRecord);
+        document.getElementById('verifyBtn').addEventListener('click', verifyChain);
+        document.getElementById('tamperfBtn').addEventListener('click', startTamperMode);
+        document.getElementById('resetBtn').addEventListener('click', resetChain);
+
+        // Initialize
+        initializeChain();
+    </script>
+</body>
+</html>

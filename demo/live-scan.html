@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIR Blackbox — Live Scan</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: #0a0a0a;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navigation Bar */
+nav {
+  background: #16213e;
+  border-bottom: 1px solid #1a1a2e;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.nav-logo {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-logo .blackbox {
+  color: #ffbd2e;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: #b0b0b0;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: #e0e0e0;
+}
+
+/* Main Container */
+.container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Left Panel - Code Editor */
+.panel-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #1a1a2e;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.panel-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #1a1a2e;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.panel-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.sample-dropdown {
+  background: #1a1a2e;
+  border: 1px solid #2a2a3e;
+  color: #b0b0b0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.sample-dropdown:hover {
+  border-color: #3a3a4e;
+  color: #e0e0e0;
+}
+
+/* Code Editor Area */
+.editor-wrapper {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.line-numbers {
+  background: #1a1a2e;
+  border-right: 1px solid #2a2a3e;
+  padding: 16px 12px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #4a4a6a;
+  user-select: none;
+  overflow: hidden;
+  min-width: 40px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.code-editor {
+  flex: 1;
+  background: #1a1a2e;
+  border: none;
+  color: #e0e0e0;
+  padding: 16px 20px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  resize: none;
+  outline: none;
+  overflow: auto;
+}
+
+.code-editor::placeholder {
+  color: #4a4a6a;
+}
+
+/* Scanning pulse overlay */
+.editor-wrapper.scanning::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 188, 212, 0.03);
+  pointer-events: none;
+  animation: pulse 1.5s infinite;
+  border-left: 3px solid #00bcd4;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+.editor-controls {
+  padding: 16px 20px;
+  border-top: 1px solid #1a1a2e;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  background: #0a0a0a;
+}
+
+.scan-btn {
+  background: #f97316;
+  color: white;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.scan-btn:hover:not(:disabled) {
+  background: #ea580c;
+  transform: translateY(-2px);
+}
+
+.scan-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.scan-btn.scanning {
+  background: #00bcd4;
+}
+
+/* Right Panel - Results */
+.panel-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.results-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #1a1a2e;
+  flex-shrink: 0;
+}
+
+.results-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.results-header p {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* Scanning Progress */
+.scan-progress {
+  padding: 16px 20px;
+  border-bottom: 1px solid #1a1a2e;
+  font-size: 13px;
+  color: #00bcd4;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  min-height: 24px;
+  display: none;
+}
+
+.scan-progress.active {
+  display: block;
+  animation: pulse-text 1s infinite;
+}
+
+@keyframes pulse-text {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+/* Results Table */
+.results-table {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+
+.results-table::-webkit-scrollbar {
+  width: 6px;
+}
+
+.results-table::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+.results-table::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+.result-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 80px 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #2a2a3e;
+  font-size: 13px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.result-row:last-child {
+  border-bottom: none;
+}
+
+.article-label {
+  color: #666;
+  font-weight: 600;
+  text-align: right;
+  padding-right: 8px;
+}
+
+.article-desc {
+  color: #b0b0b0;
+}
+
+.status-badge {
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.status-pass {
+  background: rgba(40, 200, 64, 0.15);
+  color: #4ade80;
+}
+
+.status-fail {
+  background: rgba(255, 95, 87, 0.15);
+  color: #f87171;
+}
+
+.status-warn {
+  background: rgba(255, 189, 46, 0.15);
+  color: #fbbf24;
+}
+
+.detail-text {
+  color: #666;
+  font-size: 12px;
+}
+
+/* Coverage Bar */
+.coverage-bar {
+  padding: 16px 20px;
+  border-top: 1px solid #1a1a2e;
+  background: #1a1a2e;
+  flex-shrink: 0;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.coverage-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-label {
+  color: #666;
+  font-size: 12px;
+}
+
+.stat-value {
+  font-weight: 600;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.stat-pass {
+  color: #4ade80;
+}
+
+.stat-fail {
+  color: #f87171;
+}
+
+.stat-warn {
+  color: #fbbf24;
+}
+
+.compliance-banner {
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  display: none;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.compliance-banner.show {
+  display: block;
+}
+
+.banner-compliant {
+  background: rgba(40, 200, 64, 0.1);
+  border: 1px solid rgba(40, 200, 64, 0.3);
+  color: #4ade80;
+}
+
+.banner-non-compliant {
+  background: rgba(255, 95, 87, 0.1);
+  border: 1px solid rgba(255, 95, 87, 0.3);
+  color: #f87171;
+}
+
+.banner-partial {
+  background: rgba(255, 189, 46, 0.1);
+  border: 1px solid rgba(255, 189, 46, 0.3);
+  color: #fbbf24;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #666;
+  text-align: center;
+  padding: 40px;
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state-text {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Footer */
+footer {
+  background: #16213e;
+  border-top: 1px solid #1a1a2e;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: 13px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.install-code {
+  background: #1a1a2e;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  color: #b0b0b0;
+  user-select: all;
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  color: #00bcd4;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px 8px;
+  transition: color 0.2s;
+}
+
+.copy-btn:hover {
+  color: #22d3ee;
+}
+
+.footer-links {
+  display: flex;
+  gap: 16px;
+  list-style: none;
+}
+
+.footer-links a {
+  color: #666;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: #b0b0b0;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .panel-left, .panel-right {
+    flex: 1;
+    border: none;
+    border-top: 1px solid #1a1a2e;
+  }
+
+  .panel-left {
+    border: none;
+  }
+
+  .result-row {
+    grid-template-columns: 1fr;
+  }
+
+  .article-label {
+    text-align: left;
+  }
+
+  footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-section {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    gap: 12px;
+    font-size: 12px;
+  }
+
+  .panel-header {
+    padding: 12px 16px;
+  }
+
+  .code-editor {
+    font-size: 12px;
+    padding: 12px 16px;
+  }
+
+  .line-numbers {
+    font-size: 12px;
+    padding: 12px 8px;
+  }
+
+  .scan-btn {
+    padding: 8px 20px;
+    font-size: 13px;
+  }
+
+  .coverage-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sample-dropdown {
+    width: 100%;
+  }
+
+  .panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-logo">
+    AIR <span class="blackbox">Blackbox</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/scan">Scan</a></li>
+    <li><a href="/demo">Demos</a></li>
+    <li><a href="/blog/">Blog</a></li>
+    <li><a href="https://github.com/airblackbox" target="_blank">GitHub</a></li>
+    <li><a href="https://pypi.org/project/air-blackbox/" target="_blank">PyPI</a></li>
+  </ul>
+</nav>
+
+<!-- Main Container -->
+<div class="container">
+  <!-- Left Panel: Code Editor -->
+  <div class="panel-left">
+    <div class="panel-header">
+      <h3>Code Input</h3>
+      <select class="sample-dropdown" id="sampleSelect">
+        <option value="">Load a sample...</option>
+        <option value="langchain">LangChain Agent</option>
+        <option value="crewai">CrewAI Pipeline</option>
+        <option value="openai">OpenAI Agent</option>
+        <option value="rag">RAG Pipeline</option>
+      </select>
+    </div>
+
+    <div class="editor-wrapper" id="editorWrapper">
+      <div class="line-numbers" id="lineNumbers"></div>
+      <textarea
+        class="code-editor"
+        id="codeEditor"
+        spellcheck="false"
+        placeholder="Paste your Python AI agent code here..."
+      ></textarea>
+    </div>
+
+    <div class="editor-controls">
+      <button class="scan-btn" id="scanBtn" onclick="runScan()">▶ Scan Code</button>
+    </div>
+  </div>
+
+  <!-- Right Panel: Results -->
+  <div class="panel-right">
+    <div class="results-header">
+      <h3>Compliance Results</h3>
+      <p>EU AI Act (Articles 9-15) Pattern Scan</p>
+    </div>
+
+    <div class="scan-progress" id="scanProgress">Checking Article 9... Risk Management</div>
+
+    <div class="results-table" id="resultsTable">
+      <div class="empty-state">
+        <div class="empty-state-icon">📋</div>
+        <div class="empty-state-text">
+          Paste code on the left and click "Scan Code" to analyze compliance
+        </div>
+      </div>
+    </div>
+
+    <div class="coverage-bar" id="coverageBar" style="display: none;">
+      <div class="coverage-stats" id="coverageStats"></div>
+      <div class="compliance-banner" id="complianceBanner"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-section">
+    <span class="install-code" id="installCode">pip install air-blackbox</span>
+    <button class="copy-btn" onclick="copyToClipboard()">📋 Copy</button>
+  </div>
+  <ul class="footer-links">
+    <li><a href="https://github.com/airblackbox" target="_blank">GitHub</a></li>
+    <li><a href="https://airblackbox.ai" target="_blank">airblackbox.ai</a></li>
+  </ul>
+</footer>
+
+<script>
+// Sample code templates
+const SAMPLES = {
+  langchain: `from langchain.agents import AgentExecutor
+from langchain_openai import ChatOpenAI
+from langchain.tools import tool
+
+llm = ChatOpenAI(model="gpt-4")
+
+@tool
+def search_database(query: str) -> str:
+    """Search the customer database"""
+    return db.query(query)
+
+agent = AgentExecutor(agent=llm, tools=[search_database])
+result = agent.invoke({"input": "Find all EU customers"})`,
+
+  crewai: `from crewai import Agent, Crew, Process, Task
+from crewai_tools import tool
+
+@tool
+def fetch_analytics(metric: str) -> str:
+    """Fetch analytics data"""
+    return analytics.get(metric)
+
+research_agent = Agent(
+    role="Research Analyst",
+    goal="Find market trends",
+    tools=[fetch_analytics]
+)
+
+task = Task(description="Analyze Q4 trends")
+crew = Crew(agents=[research_agent], tasks=[task])
+result = crew.kickoff()`,
+
+  openai: `from openai import OpenAI
+
+client = OpenAI(api_key="sk-...")
+
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "search_docs",
+            "description": "Search documentation"
+        }
+    }
+]
+
+response = client.chat.completions.create(
+    model="gpt-4-turbo",
+    messages=[{"role": "user", "content": "Find docs on API"}],
+    tools=tools
+)`,
+
+  rag: `from langchain.vectorstores import Chroma
+from langchain.chains import RetrievalQA
+from langchain_openai import ChatOpenAI
+from langchain.document_loaders import PDFLoader
+
+loader = PDFLoader("docs.pdf")
+docs = loader.load()
+vectorstore = Chroma.from_documents(docs)
+
+qa_chain = RetrievalQA.from_chain_type(
+    llm=ChatOpenAI(model="gpt-4"),
+    retriever=vectorstore.as_retriever()
+)
+
+answer = qa_chain.run("What are the security requirements?")`
+};
+
+// Compliance checks
+const CHECKS = [
+  {
+    article: "9",
+    title: "Risk Management",
+    description: "Risk classification & mitigation",
+    patterns: [/risk\s*[:=]|classify_risk|risk_level|risk_assessment/i],
+    trustLayerPass: true
+  },
+  {
+    article: "10",
+    title: "Data Governance",
+    description: "Input validation & PII handling",
+    patterns: [/input\s*validation|validate|sanitize|schema|pydantic/i],
+    trustLayerPass: true
+  },
+  {
+    article: "11",
+    title: "Technical Documentation",
+    description: "Model cards & documentation",
+    patterns: [/model_card|ModelCard|documentation|docstring|__doc__/i],
+    trustLayerPass: false
+  },
+  {
+    article: "12",
+    title: "Record-Keeping",
+    description: "Tamper-evident logging & audit trails",
+    patterns: [/AuditChain|audit|logging|\.air\.json|HMAC|audit_trail/i],
+    trustLayerPass: true
+  },
+  {
+    article: "14",
+    title: "Human Oversight",
+    description: "Kill switches & approval gates",
+    patterns: [/human_in_the_loop|approval|kill_switch|ConsentGate|require_approval/i],
+    trustLayerPass: true
+  },
+  {
+    article: "15",
+    title: "Accuracy & Robustness",
+    description: "Drift detection & injection defense",
+    patterns: [/injection|drift|monitor|PII|bias|adversarial/i],
+    trustLayerPass: true
+  }
+];
+
+const TRUST_LAYER_PATTERNS = [
+  /air_blackbox\.trust|AirLangchainTrust|AirCrewAITrust|AirOpenAITrust|AirAutoGenTrust|AirTrust/i
+];
+
+let scanning = false;
+
+function updateLineNumbers() {
+  const editor = document.getElementById('codeEditor');
+  const lineNumbers = document.getElementById('lineNumbers');
+  const lines = editor.value.split('\n').length;
+  lineNumbers.innerHTML = Array(lines).fill(0).map((_, i) => i + 1).join('\n');
+}
+
+function initializeEditor() {
+  const editor = document.getElementById('codeEditor');
+  editor.value = SAMPLES.langchain;
+  updateLineNumbers();
+}
+
+document.getElementById('codeEditor').addEventListener('input', updateLineNumbers);
+document.getElementById('sampleSelect').addEventListener('change', function() {
+  if (this.value) {
+    document.getElementById('codeEditor').value = SAMPLES[this.value];
+    updateLineNumbers();
+  }
+});
+
+async function runScan() {
+  if (scanning) return;
+
+  const code = document.getElementById('codeEditor').value;
+  if (!code.trim()) {
+    alert('Please paste some code to scan');
+    return;
+  }
+
+  scanning = true;
+  const scanBtn = document.getElementById('scanBtn');
+  scanBtn.disabled = true;
+  scanBtn.classList.add('scanning');
+  scanBtn.textContent = '⏳ Scanning...';
+
+  const editorWrapper = document.getElementById('editorWrapper');
+  editorWrapper.classList.add('scanning');
+
+  const resultsTable = document.getElementById('resultsTable');
+  resultsTable.innerHTML = '';
+
+  const scanProgress = document.getElementById('scanProgress');
+  scanProgress.classList.add('active');
+
+  const coverageBar = document.getElementById('coverageBar');
+  coverageBar.style.display = 'none';
+
+  // Check for trust layer
+  const hasTrustLayer = TRUST_LAYER_PATTERNS.some(pattern => pattern.test(code));
+
+  // Run checks with animation delay
+  const results = [];
+  for (let i = 0; i < CHECKS.length; i++) {
+    await new Promise(resolve => setTimeout(resolve, 400));
+
+    const check = CHECKS[i];
+    scanProgress.textContent = `Checking Article ${check.article}... ${check.title}`;
+
+    let status = 'FAIL';
+    let detail = 'Pattern not found';
+
+    if (hasTrustLayer && check.trustLayerPass) {
+      status = 'PASS';
+      detail = 'Handled by trust layer';
+    } else {
+      const found = check.patterns.some(pattern => pattern.test(code));
+      if (found) {
+        status = 'PASS';
+        detail = 'Pattern detected';
+      } else {
+        status = 'WARN';
+        detail = 'No implementation detected';
+      }
+    }
+
+    results.push({ ...check, status, detail });
+
+    // Render result row
+    const row = document.createElement('div');
+    row.className = 'result-row';
+    const statusClass = `status-${status.toLowerCase()}`;
+    row.innerHTML = `
+      <div class="article-label">Art. ${check.article}</div>
+      <div class="article-desc">${check.title}</div>
+      <div class="status-badge ${statusClass}">${status}</div>
+      <div class="detail-text">${check.detail}</div>
+    `;
+    resultsTable.appendChild(row);
+  }
+
+  scanProgress.classList.remove('active');
+
+  // Calculate coverage
+  const passed = results.filter(r => r.status === 'PASS').length;
+  const failed = results.filter(r => r.status === 'FAIL').length;
+  const warned = results.filter(r => r.status === 'WARN').length;
+
+  // Show coverage bar
+  const coverageStats = document.getElementById('coverageStats');
+  coverageStats.innerHTML = `
+    <div class="stat-item">
+      <div class="stat-label">Coverage</div>
+      <div class="stat-value stat-pass">${passed}/6</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Pass</div>
+      <div class="stat-value stat-pass">✓ ${passed}</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Warn</div>
+      <div class="stat-value stat-warn">⚠ ${warned}</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Fail</div>
+      <div class="stat-value stat-fail">✗ ${failed}</div>
+    </div>
+  `;
+
+  // Show compliance banner
+  const banner = document.getElementById('complianceBanner');
+  banner.classList.add('show');
+
+  if (failed === 0 && warned === 0) {
+    banner.className = 'compliance-banner show banner-compliant';
+    banner.innerHTML = '✓ Technical requirements covered — pair with organizational compliance';
+  } else if (failed === 0) {
+    banner.className = 'compliance-banner show banner-partial';
+    banner.innerHTML = '⚠ Partial coverage — some patterns missing, review Article 11';
+  } else {
+    banner.className = 'compliance-banner show banner-non-compliant';
+    banner.innerHTML = `✗ Not compliant with EU AI Act — ${failed} article(s) failing`;
+  }
+
+  coverageBar.style.display = 'block';
+
+  // Reset button
+  editorWrapper.classList.remove('scanning');
+  scanBtn.disabled = false;
+  scanBtn.classList.remove('scanning');
+  scanBtn.textContent = '▶ Scan Code';
+  scanning = false;
+}
+
+function copyToClipboard() {
+  const text = document.getElementById('installCode').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    const original = btn.textContent;
+    btn.textContent = '✓ Copied';
+    setTimeout(() => {
+      btn.textContent = original;
+    }, 2000);
+  });
+}
+
+// Initialize on load
+window.addEventListener('DOMContentLoaded', initializeEditor);
+</script>
+
+</body>
+</html>

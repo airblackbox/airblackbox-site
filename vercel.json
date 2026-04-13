@@ -45,6 +45,26 @@
       "destination": "/demo/signed-handoff.html"
     },
     {
+      "source": "/demo/hub",
+      "destination": "/demo/hub.html"
+    },
+    {
+      "source": "/demo/live-scan",
+      "destination": "/demo/live-scan.html"
+    },
+    {
+      "source": "/demo/trust-layer",
+      "destination": "/demo/trust-layer.html"
+    },
+    {
+      "source": "/demo/audit-chain",
+      "destination": "/demo/audit-chain.html"
+    },
+    {
+      "source": "/demo/before-after",
+      "destination": "/demo/before-after.html"
+    },
+    {
       "source": "/vaultmind",
       "destination": "/vaultmind/index.html"
     },

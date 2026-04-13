@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Before & After - AIR Blackbox</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #e8e8e8;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            background: #1a1a2e;
+            border-bottom: 1px solid #16213e;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: #22d3ee;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-logo span {
+            color: #4ade80;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #e8e8e8;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #22d3ee;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #16213e 0%, #0f3f5c 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 2px solid #22d3ee;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #22d3ee;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #a8a8a8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 2rem 1.5rem;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .header p {
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Framework Selector */
+        .framework-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 2rem;
+            background: #0a0a0a;
+            border-bottom: 1px solid #16213e;
+            flex-wrap: wrap;
+        }
+
+        .framework-btn {
+            padding: 0.6rem 1.2rem;
+            background: #1a1a2e;
+            border: 2px solid #16213e;
+            color: #e8e8e8;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .framework-btn:hover {
+            border-color: #22d3ee;
+            color: #22d3ee;
+        }
+
+        .framework-btn.active {
+            background: #22d3ee;
+            color: #0a0a0a;
+            border-color: #22d3ee;
+        }
+
+        /* Comparison Container */
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 3rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 1024px) {
+            .comparison-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        /* Panel */
+        .panel {
+            background: #1a1a2e;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel.without {
+            border-left: 4px solid #f87171;
+        }
+
+        .panel.with {
+            border-left: 4px solid #4ade80;
+        }
+
+        .panel-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #16213e;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .panel.without .panel-header {
+            color: #f87171;
+        }
+
+        .panel.with .panel-header {
+            color: #4ade80;
+        }
+
+        .status-icon {
+            font-size: 1.3rem;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #0f1419;
+            padding: 1.5rem;
+            font-family: "Courier New", monospace;
+            font-size: 0.85rem;
+            color: #a8a8a8;
+            overflow-x: auto;
+            border-bottom: 1px solid #16213e;
+            flex-grow: 1;
+            min-height: 250px;
+        }
+
+        .code-block code {
+            display: block;
+            white-space: pre;
+        }
+
+        .highlight {
+            background: rgba(34, 211, 238, 0.1);
+            color: #22d3ee;
+            padding: 0.1rem 0.2rem;
+            border-radius: 2px;
+        }
+
+        /* Checklist */
+        .checklist {
+            padding: 1.5rem;
+            background: #0f1419;
+        }
+
+        .checklist-title {
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .checklist-icon {
+            flex-shrink: 0;
+            font-size: 1.2rem;
+            margin-top: 0.1rem;
+        }
+
+        .panel.without .checklist-icon {
+            color: #f87171;
+        }
+
+        .panel.with .checklist-icon {
+            color: #4ade80;
+        }
+
+        /* Compliance Score */
+        .compliance-score {
+            padding: 1.5rem;
+            text-align: center;
+            border-top: 1px solid #16213e;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .score-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .panel.without .score-text {
+            color: #f87171;
+        }
+
+        .panel.with .score-text {
+            color: #4ade80;
+        }
+
+        .score-label {
+            font-size: 0.85rem;
+            color: #8a8a8a;
+        }
+
+        .score-bar {
+            width: 100%;
+            height: 6px;
+            background: #0f1419;
+            border-radius: 3px;
+            margin-top: 0.75rem;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease-out;
+            width: 0%;
+        }
+
+        .panel.without .score-fill {
+            background: #f87171;
+        }
+
+        .panel.with .score-fill {
+            background: #4ade80;
+        }
+
+        /* Auditor Text */
+        .auditor-text {
+            padding: 1rem 1.5rem;
+            font-size: 0.85rem;
+            color: #8a8a8a;
+            font-style: italic;
+            border-top: 1px solid #16213e;
+        }
+
+        /* Diff Section */
+        .diff-section {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .diff-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #22d3ee;
+        }
+
+        .diff-container {
+            background: #1a1a2e;
+            border: 1px solid #16213e;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .diff-code {
+            background: #0f1419;
+            padding: 1.5rem;
+            font-family: "Courier New", monospace;
+            font-size: 0.85rem;
+            color: #a8a8a8;
+            overflow-x: auto;
+        }
+
+        .diff-line {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .diff-prefix {
+            display: inline-block;
+            width: 30px;
+            margin-right: 0.5rem;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .diff-added {
+            color: #4ade80;
+        }
+
+        .diff-removed {
+            color: #f87171;
+        }
+
+        .diff-neutral {
+            color: #a8a8a8;
+        }
+
+        .diff-stats {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            border-top: 1px solid #16213e;
+        }
+
+        .diff-stat {
+            text-align: center;
+        }
+
+        .diff-stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .diff-stat-label {
+            font-size: 0.85rem;
+            color: #8a8a8a;
+        }
+
+        .diff-added .diff-stat-number {
+            color: #4ade80;
+        }
+
+        /* Audit Records Section */
+        .audit-section {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .audit-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #22d3ee;
+        }
+
+        .audit-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .audit-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .json-block {
+            background: #0f1419;
+            border: 1px solid #16213e;
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: "Courier New", monospace;
+            font-size: 0.8rem;
+            color: #a8a8a8;
+            overflow-x: auto;
+        }
+
+        .json-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .json-key {
+            color: #22d3ee;
+        }
+
+        .json-value {
+            color: #4ade80;
+        }
+
+        .json-string {
+            color: #fbbf24;
+        }
+
+        /* HMAC Chain Visualization */
+        .chain-visualization {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .chain-block {
+            background: #1a1a2e;
+            border: 2px solid #16213e;
+            border-radius: 6px;
+            padding: 1rem;
+            min-width: 140px;
+            text-align: center;
+            animation: slideIn 0.6s ease-out forwards;
+        }
+
+        .chain-block:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .chain-block:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .chain-block:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .chain-block:nth-child(4) {
+            animation-delay: 0.6s;
+        }
+
+        .chain-block.linked {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.05);
+        }
+
+        .chain-label {
+            font-size: 0.75rem;
+            color: #8a8a8a;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chain-hash {
+            font-family: "Courier New", monospace;
+            font-size: 0.7rem;
+            color: #4ade80;
+            word-break: break-all;
+        }
+
+        .chain-arrow {
+            font-size: 1.5rem;
+            color: #22d3ee;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Run Comparison Button */
+        .action-section {
+            text-align: center;
+            padding: 2rem;
+            background: #0a0a0a;
+            border-top: 1px solid #16213e;
+        }
+
+        .run-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #22d3ee 0%, #4ade80 100%);
+            color: #0a0a0a;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            max-width: 300px;
+        }
+
+        .run-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(34, 211, 238, 0.3);
+        }
+
+        .run-btn:active {
+            transform: translateY(0);
+        }
+
+        .run-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Animation states */
+        .animating .panel.without .checklist-icon {
+            animation: fadeOut 0.3s ease-out;
+        }
+
+        .animating .panel.with .checklist-icon {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0.3; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0.3; }
+            to { opacity: 1; }
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a2e;
+            border-top: 1px solid #16213e;
+            padding: 2rem;
+            text-align: center;
+            color: #8a8a8a;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: #22d3ee;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: #4ade80;
+        }
+
+        /* Tooltip */
+        .tooltip-trigger {
+            cursor: help;
+            border-bottom: 1px dotted #22d3ee;
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip-content {
+            display: none;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f1419;
+            color: #e8e8e8;
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            border: 1px solid #16213e;
+            white-space: nowrap;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .tooltip-trigger:hover .tooltip-content {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .tooltip-content {
+                white-space: normal;
+                max-width: 200px;
+            }
+        }
+
+        /* Responsive Footer */
+        @media (max-width: 768px) {
+            footer {
+                padding: 1.5rem;
+            }
+            .footer-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="/" class="nav-logo">AIR <span>Blackbox</span></a>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/scan">Scan</a></li>
+            <li><a href="/demos">Demos</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="https://github.com" target="_blank">GitHub</a></li>
+            <li><a href="https://pypi.org" target="_blank">PyPI</a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>Before & After</h1>
+        <p>Same agent. Two lines of code. Everything changes.</p>
+    </div>
+
+    <!-- Framework Selector -->
+    <div class="framework-selector">
+        <button class="framework-btn active" data-framework="langchain">LangChain</button>
+        <button class="framework-btn" data-framework="crewai">CrewAI</button>
+        <button class="framework-btn" data-framework="openai">OpenAI SDK</button>
+        <button class="framework-btn" data-framework="autogen">AutoGen</button>
+    </div>
+
+    <!-- Comparison Panels -->
+    <div class="comparison-container">
+        <!-- Without Panel -->
+        <div class="panel without">
+            <div class="panel-header">
+                <span class="status-icon">✕</span>
+                Without AIR Blackbox
+            </div>
+            <div class="code-block">
+                <code id="code-without"></code>
+            </div>
+            <div class="checklist">
+                <div class="checklist-title">What happens when this agent runs:</div>
+                <div class="checklist-item">
+                    <span class="checklist-icon">✕</span>
+                    <span>No audit trail</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checklist-icon">✕</span>
+                    <span>No input validation</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checklist-icon">✕</span>
+                    <span>No PII detection</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checklist-icon">✕</span>
+                    <span>No injection scanning</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checklist-icon">✕</span>
+                    <span>No tamper-evident logging</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checklist-icon">✕</span>
+                    <span>No human oversight gates</span>
+                </div>
+            </div>
+            <div class="compliance-score">
+                <div class="score-text"><span id="score-without">0</span>/6</div>
+                <div class="score-label">FAIL</div>
+                <div class="score-bar">
+                    <div class="score-fill" id="fill-without" style="width: 0%;"></div>
+                </div>
+            </div>
+            <div class="auditor-text">
+                "An auditor sees: nothing. No proof your agent did anything safely."
+            </div>
+        </div>
+
+        <!-- With Panel -->
+        <div class="panel with">
+            <div class="panel-header">
+                <span class="status-icon">✓</span>
+                With AIR Blackbox
+            </div>
+            <div class="code-block">
+                <code id="code-with"></code>
+            </div>
+            <div class="checklist">
+                <div class="checklist-title">What happens when this agent runs:</div>
+                <div class="checklist-item">
+                    <span class="checklist-icon">✓</span>
+                    <span><span class="tooltip-trigger">Every LLM call logged with HMAC-SHA256 chain<span class="tooltip-content">Article 12: Record-keeping with tamper-evident proof</span></span></span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checklist-icon">✓</span>
+                    <span><span class="tooltip-trigger">Tool inputs validated against schemas<span class="tooltip-content">Article 10: Data governance and validation</span></span></span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checklist-icon">✓</span>
+                    <span><span class="tooltip-trigger">PII detected and flagged before processing<span class="tooltip-content">Article 10: Personal data protection</span></span></span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checklist-icon">✓</span>
+                    <span><span class="tooltip-trigger">Prompt injection patterns scanned on every input<span class="tooltip-content">Article 15: Security and injection defense</span></span></span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checklist-icon">✓</span>
+                    <span><span class="tooltip-trigger">Tamper-evident .air.json records written<span class="tooltip-content">Article 12: Immutable audit logs</span></span></span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checklist-icon">✓</span>
+                    <span><span class="tooltip-trigger">Consent gates available for sensitive operations<span class="tooltip-content">Article 14: Human oversight</span></span></span>
+                </div>
+            </div>
+            <div class="compliance-score">
+                <div class="score-text"><span id="score-with">0</span>/6</div>
+                <div class="score-label">PASS</div>
+                <div class="score-bar">
+                    <div class="score-fill" id="fill-with" style="width: 0%;"></div>
+                </div>
+            </div>
+            <div class="auditor-text">
+                "An auditor sees: complete, tamper-evident proof of every decision your agent made."
+            </div>
+        </div>
+    </div>
+
+    <!-- Diff Section -->
+    <div class="diff-section">
+        <h2 class="diff-title">What Actually Changed</h2>
+        <div class="diff-container">
+            <div class="diff-code" id="diff-code"></div>
+            <div class="diff-stats">
+                <div class="diff-stat diff-added">
+                    <div class="diff-stat-number">2</div>
+                    <div class="diff-stat-label">Lines Added</div>
+                </div>
+                <div class="diff-stat diff-neutral">
+                    <div class="diff-stat-number">0</div>
+                    <div class="diff-stat-label">Refactoring</div>
+                </div>
+                <div class="diff-stat">
+                    <div class="diff-stat-number" style="color: #4ade80;">6</div>
+                    <div class="diff-stat-label">Articles Covered</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audit Records Section -->
+    <div class="audit-section">
+        <h2 class="audit-title">What Gets Created</h2>
+
+        <div class="audit-grid">
+            <div>
+                <h3 style="margin-bottom: 1rem; color: #22d3ee;">Sample .air.json Audit Record</h3>
+                <div class="json-block">
+                    <pre id="json-sample"></pre>
+                </div>
+            </div>
+            <div>
+                <h3 style="margin-bottom: 1rem; color: #22d3ee;">HMAC-SHA256 Chain</h3>
+                <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #8a8a8a;">
+                    Each record links to the previous via HMAC. Change one record, the chain breaks.
+                </p>
+                <div class="chain-visualization" id="chain-viz"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Section -->
+    <div class="action-section">
+        <button class="run-btn" id="run-btn">▶ Run Comparison</button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div>pip install <strong>air-blackbox</strong></div>
+            <a href="https://github.com" target="_blank" class="footer-link">GitHub</a>
+            <a href="https://airblackbox.ai" target="_blank" class="footer-link">airblackbox.ai</a>
+        </div>
+    </footer>
+
+    <script>
+        // Framework code examples
+        const frameworks = {
+            langchain: {
+                without: `from langchain.agents import AgentExecutor
+from langchain_openai import ChatOpenAI
+from langchain.tools import Tool
+
+llm = ChatOpenAI(model="gpt-4")
+tools = [
+    Tool(
+        name="SearchDB",
+        func=search_database,
+        description="Search the database"
+    )
+]
+
+agent = AgentExecutor(
+    agent=llm,
+    tools=tools,
+    verbose=True
+)
+
+result = agent.invoke({
+    "input": "Find users from 2024"
+})`,
+                with: `<span class="highlight">from air_blackbox.trust.langchain import AirLangchainTrust</span>
+from langchain.agents import AgentExecutor
+from langchain_openai import ChatOpenAI
+from langchain.tools import Tool
+
+<span class="highlight">air = AirLangchainTrust()</span>
+
+llm = ChatOpenAI(model="gpt-4")
+tools = [
+    Tool(
+        name="SearchDB",
+        func=search_database,
+        description="Search the database"
+    )
+]
+
+agent = <span class="highlight">air.wrap(AgentExecutor(</span>
+    agent=llm,
+    tools=tools,
+    verbose=True
+<span class="highlight">))</span>
+
+result = agent.invoke({
+    "input": "Find users from 2024"
+})`,
+                diff: `  from air_blackbox.trust.langchain import AirLangchainTrust
+  from langchain.agents import AgentExecutor
+  from langchain_openai import ChatOpenAI
+  from langchain.tools import Tool
+
+  llm = ChatOpenAI(model="gpt-4")
+  tools = [
+      Tool(
+          name="SearchDB",
+          func=search_database,
+          description="Search the database"
+      )
+  ]
+
++ agent = air.wrap(AgentExecutor(
+    agent=llm,
+    tools=tools,
+    verbose=True
++ ))
+
+  result = agent.invoke({
+      "input": "Find users from 2024"
+  })`
+            },
+            crewai: {
+                without: `from crewai import Agent, Task, Crew
+from crewai_tools import tool
+
+@tool
+def search_database(query: str):
+    """Search the database"""
+    return db.search(query)
+
+analyst = Agent(
+    role="Data Analyst",
+    goal="Find relevant data",
+    tools=[search_database]
+)
+
+task = Task(
+    description="Search for user records",
+    agent=analyst
+)
+
+crew = Crew(
+    agents=[analyst],
+    tasks=[task]
+)
+
+result = crew.kickoff()`,
+                with: `<span class="highlight">from air_blackbox.trust.crewai import AirCrewAITrust</span>
+from crewai import Agent, Task, Crew
+from crewai_tools import tool
+
+<span class="highlight">air = AirCrewAITrust()</span>
+
+@tool
+def search_database(query: str):
+    """Search the database"""
+    return db.search(query)
+
+analyst = Agent(
+    role="Data Analyst",
+    goal="Find relevant data",
+    tools=[search_database]
+)
+
+task = Task(
+    description="Search for user records",
+    agent=analyst
+)
+
+crew = <span class="highlight">air.wrap(Crew(</span>
+    agents=[analyst],
+    tasks=[task]
+<span class="highlight">))</span>
+
+result = crew.kickoff()`,
+                diff: `+ from air_blackbox.trust.crewai import AirCrewAITrust
+  from crewai import Agent, Task, Crew
+  from crewai_tools import tool
+
++ air = AirCrewAITrust()
+
+  @tool
+  def search_database(query: str):
+      """Search the database"""
+      return db.search(query)
+
+  analyst = Agent(
+      role="Data Analyst",
+      goal="Find relevant data",
+      tools=[search_database]
+  )
+
+  task = Task(
+      description="Search for user records",
+      agent=analyst
+  )
+
++ crew = air.wrap(Crew(
+    agents=[analyst],
+    tasks=[task]
++ ))
+
+  result = crew.kickoff()`
+            },
+            openai: {
+                without: `import openai
+from openai import OpenAI
+
+client = OpenAI(api_key="sk-...")
+
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "search_db",
+            "description": "Search database",
+            "parameters": {...}
+        }
+    }
+]
+
+response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[
+        {"role": "user",
+         "content": "Find users"}
+    ],
+    tools=tools
+)`,
+                with: `<span class="highlight">from air_blackbox.trust.openai import AirOpenAITrust</span>
+import openai
+from openai import OpenAI
+
+<span class="highlight">air = AirOpenAITrust()</span>
+
+client = <span class="highlight">air.wrap(OpenAI(api_key="sk-..."))</span>
+
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "search_db",
+            "description": "Search database",
+            "parameters": {...}
+        }
+    }
+]
+
+response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[
+        {"role": "user",
+         "content": "Find users"}
+    ],
+    tools=tools
+)`,
+                diff: `+ from air_blackbox.trust.openai import AirOpenAITrust
+  import openai
+  from openai import OpenAI
+
++ air = AirOpenAITrust()
+
+- client = OpenAI(api_key="sk-...")
++ client = air.wrap(OpenAI(api_key="sk-..."))
+
+  tools = [
+      {
+          "type": "function",
+          "function": {
+              "name": "search_db",
+              "description": "Search database",
+              "parameters": {...}
+          }
+      }
+  ]
+
+  response = client.chat.completions.create(
+      model="gpt-4",
+      messages=[
+          {"role": "user",
+           "content": "Find users"}
+      ],
+      tools=tools
+  )`
+            },
+            autogen: {
+                without: `from autogen import AssistantAgent, UserProxyAgent
+import autogen
+
+config_list = [{"model": "gpt-4", "api_key": "..."}]
+
+assistant = AssistantAgent(
+    name="analyst",
+    llm_config={"config_list": config_list}
+)
+
+user_proxy = UserProxyAgent(
+    name="user",
+    human_input_mode="NEVER",
+    max_consecutive_auto_reply=10
+)
+
+user_proxy.initiate_chat(
+    assistant,
+    message="Analyze this data"
+)`,
+                with: `<span class="highlight">from air_blackbox.trust.autogen import AirAutoGenTrust</span>
+from autogen import AssistantAgent, UserProxyAgent
+import autogen
+
+<span class="highlight">air = AirAutoGenTrust()</span>
+
+config_list = [{"model": "gpt-4", "api_key": "..."}]
+
+assistant = <span class="highlight">air.wrap(AssistantAgent(</span>
+    name="analyst",
+    llm_config={"config_list": config_list}
+<span class="highlight">))</span>
+
+user_proxy = UserProxyAgent(
+    name="user",
+    human_input_mode="NEVER",
+    max_consecutive_auto_reply=10
+)
+
+user_proxy.initiate_chat(
+    assistant,
+    message="Analyze this data"
+)`,
+                diff: `+ from air_blackbox.trust.autogen import AirAutoGenTrust
+  from autogen import AssistantAgent, UserProxyAgent
+  import autogen
+
++ air = AirAutoGenTrust()
+
+  config_list = [{"model": "gpt-4", "api_key": "..."}]
+
++ assistant = air.wrap(AssistantAgent(
+    name="analyst",
+    llm_config={"config_list": config_list}
++ ))
+
+  user_proxy = UserProxyAgent(
+      name="user",
+      human_input_mode="NEVER",
+      max_consecutive_auto_reply=10
+  )
+
+  user_proxy.initiate_chat(
+      assistant,
+      message="Analyze this data"
+  )`
+            }
+        };
+
+        // Sample JSON audit record
+        const sampleJSON = {
+            timestamp: "2024-04-13T14:23:45.123Z",
+            action: "tool_call",
+            tool_name: "search_database",
+            input: { query: "SELECT * FROM users" },
+            output: { rows: 42, duration_ms: 234 },
+            llm_call_id: "call-abc123def456",
+            hmac_previous: "e3b0c44298fc1c149afbf4c8996fb92...",
+            hmac_current: "5e7c5d4a9c8b6f2e1d3a4c5b6e7f8a9b...",
+            compliance_checks: {
+                injection_scanned: true,
+                pii_flagged: false,
+                schema_validated: true
+            }
+        };
+
+        // Initialize page
+        let currentFramework = 'langchain';
+
+        function updateCodeBlocks() {
+            const framework = frameworks[currentFramework];
+            document.getElementById('code-without').innerHTML = framework.without;
+            document.getElementById('code-with').innerHTML = framework.with;
+            updateDiff();
+            updateChain();
+        }
+
+        function updateDiff() {
+            const framework = frameworks[currentFramework];
+            const diffCode = framework.diff;
+
+            const lines = diffCode.split('\n').map(line => {
+                let prefix = '  ';
+                let className = 'diff-neutral';
+
+                if (line.startsWith('+')) {
+                    prefix = '+';
+                    className = 'diff-added';
+                    line = line.substring(1);
+                } else if (line.startsWith('-')) {
+                    prefix = '-';
+                    className = 'diff-removed';
+                    line = line.substring(1);
+                }
+
+                return `<div class="diff-line ${className}"><span class="diff-prefix">${prefix}</span>${escapeHtml(line)}</div>`;
+            }).join('');
+
+            document.getElementById('diff-code').innerHTML = diffCode ? diffCode : '<div style="color: #888;">No changes</div>';
+        }
+
+        function updateChain() {
+            const hashes = [
+                'e3b0c44298fc1c14...',
+                '5e7c5d4a9c8b6f2e...',
+                '7f9e8d7c6b5a4f3e...',
+                '2c1b0a9f8e7d6c5b...'
+            ];
+
+            const chainHTML = hashes.map((hash, idx) => {
+                let html = `
+                    <div class="chain-block ${idx > 0 ? 'linked' : ''}">
+                        <div class="chain-label">Record ${idx + 1}</div>
+                        <div class="chain-hash">${hash}</div>
+                    </div>
+                `;
+                if (idx < hashes.length - 1) {
+                    html += '<div class="chain-arrow">→</div>';
+                }
+                return html;
+            }).join('');
+
+            document.getElementById('chain-viz').innerHTML = chainHTML;
+        }
+
+        function updateJSON() {
+            const json = JSON.stringify(sampleJSON, null, 2);
+            const highlighted = json
+                .replace(/"(\w+)":/g, '<span class="json-key">"$1"</span>:')
+                .replace(/: "([^"]+)"/g, ': <span class="json-string">"$1"</span>')
+                .replace(/: (true|false|null|\d+)/g, ': <span class="json-value">$1</span>');
+
+            document.getElementById('json-sample').innerHTML = highlighted;
+        }
+
+        function animateScores() {
+            const container = document.querySelector('.comparison-container');
+            container.classList.add('animating');
+
+            // Animate scores
+            const withoutScore = document.getElementById('score-without');
+            const withScore = document.getElementById('score-with');
+            const fillWithout = document.getElementById('fill-without');
+            const fillWith = document.getElementById('fill-with');
+
+            let count = 0;
+            const interval = setInterval(() => {
+                if (count <= 6) {
+                    withoutScore.textContent = count > 0 ? count - 1 : 0;
+                    withScore.textContent = count;
+                    fillWithout.style.width = (Math.max(0, count - 1) * 16.67) + '%';
+                    fillWith.style.width = (count * 16.67) + '%';
+                    count++;
+                } else {
+                    clearInterval(interval);
+                    withScore.textContent = '6';
+                    fillWith.style.width = '100%';
+                    container.classList.remove('animating');
+                }
+            }, 100);
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Event listeners
+        document.querySelectorAll('.framework-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.framework-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFramework = btn.dataset.framework;
+                updateCodeBlocks();
+            });
+        });
+
+        document.getElementById('run-btn').addEventListener('click', () => {
+            const btn = document.getElementById('run-btn');
+            btn.disabled = true;
+            animateScores();
+            setTimeout(() => {
+                btn.disabled = false;
+            }, 2000);
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCodeBlocks();
+            updateJSON();
+        });
+    </script>
+</body>
+</html>

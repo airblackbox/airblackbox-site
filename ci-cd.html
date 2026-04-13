@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CI/CD Integration — AIR Blackbox EU AI Act Compliance Scanner</title>
     <meta name="description" content="Add EU AI Act compliance scanning to your CI/CD pipeline in 2 minutes. GitHub Actions workflow, pre-commit hooks, and GitLab CI configs. Catch compliance gaps before they reach production.">
-    <meta name="keywords" content="EU AI Act CI/CD, compliance scanner GitHub Actions, AI compliance pre-commit hook, automated compliance checking, air-compliance CI pipeline, EU AI Act automation, Python AI compliance pipeline, DevOps AI governance">
+    <meta name="keywords" content="EU AI Act CI/CD, compliance scanner GitHub Actions, AI compliance pre-commit hook, automated compliance checking, air-blackbox CI pipeline, EU AI Act automation, Python AI compliance pipeline, DevOps AI governance">
     <meta property="og:title" content="CI/CD Integration — AIR Blackbox Compliance Scanner">
     <meta property="og:description" content="Add EU AI Act compliance scanning to your CI/CD pipeline in 2 minutes. GitHub Actions, pre-commit hooks, GitLab CI.">
     <meta property="og:type" content="article">
@@ -201,10 +201,10 @@ jobs:
           python-version: "3.11"
 
       - name: Install AIR Compliance Scanner
-        run: pip install air-compliance
+        run: pip install air-blackbox
 
       - name: Run compliance scan
-        run: air-compliance scan . --format json --output compliance-report.json
+        run: air-blackbox comply --scan . --format json --output compliance-report.json
 
       - name: Check for HIGH severity gaps
         run: |
@@ -248,9 +248,9 @@ jobs:
         <pre><code>repos:
   - repo: local
     hooks:
-      - id: air-compliance
+      - id: air-blackbox
         name: EU AI Act Compliance Scan
-        entry: air-compliance scan
+        entry: air-blackbox comply --scan
         language: system
         types: [python]
         pass_filenames: true
@@ -265,13 +265,13 @@ jobs:
             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
         <pre><code># Install pre-commit and the scanner
-pip install pre-commit air-compliance
+pip install pre-commit air-blackbox
 
 # Install the hooks into your repo
 pre-commit install
 
 # Test it manually
-pre-commit run air-compliance --all-files</code></pre>
+pre-commit run air-blackbox --all-files</code></pre>
     </div>
 
     <p>Now every <code>git commit</code> that touches Python files will run the compliance scan first. If HIGH-severity gaps are found, the commit is blocked until you fix them.</p>
@@ -288,8 +288,8 @@ pre-commit run air-compliance --all-files</code></pre>
   stage: test
   image: python:3.11-slim
   script:
-    - pip install air-compliance
-    - air-compliance scan . --format json --output compliance-report.json
+    - pip install air-blackbox
+    - air-blackbox comply --scan . --format json --output compliance-report.json
     - |
       HIGH_COUNT=$(python3 -c "
       import json
@@ -321,22 +321,22 @@ pre-commit run air-compliance --all-files</code></pre>
             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
         <pre><code># Scan entire project
-air-compliance scan .
+air-blackbox comply --scan .
 
 # Scan specific files
-air-compliance scan agent.py pipeline.py
+air-blackbox comply --scan agent.py pipeline.py
 
 # JSON output for CI parsing
-air-compliance scan . --format json --output report.json
+air-blackbox comply --scan . --format json --output report.json
 
 # Only fail on HIGH severity (skip MEDIUM/LOW)
-air-compliance scan . --min-severity HIGH
+air-blackbox comply --scan . --min-severity HIGH
 
 # Include GDPR and bias checks
-air-compliance scan . --gdpr --bias
+air-blackbox comply --scan . --gdpr --bias
 
 # Scan with trust layer verification
-air-compliance scan . --verify-trust-layers</code></pre>
+air-blackbox comply --scan . --verify-trust-layers</code></pre>
     </div>
 
     <h3>Environment Variables</h3>
@@ -396,7 +396,7 @@ AIR_SKIP_CHECKS=art9_risk_categorization,art15_prompt_injection</code></pre>
         <div class="cta-install" onclick="navigator.clipboard.writeText('pip install air-blackbox').then(()=>this.textContent='Copied!')">pip install air-blackbox</div>
         <div style="margin-top: 1.2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
             <a href="https://github.com/airblackbox/gateway" style="font-size:0.85rem">GitHub</a>
-            <a href="https://pypi.org/project/air-compliance" style="font-size:0.85rem">PyPI</a>
+            <a href="https://pypi.org/project/air-blackbox" style="font-size:0.85rem">PyPI</a>
             <a href="/demo" style="font-size:0.85rem">Live Demo</a>
             <a href="/blog/" style="font-size:0.85rem">Blog</a>
         </div>
@@ -407,7 +407,7 @@ AIR_SKIP_CHECKS=art9_risk_categorization,art15_prompt_injection</code></pre>
 <footer>
     <div class="container">
         <p>AIR Blackbox — The flight recorder for AI agents. Open source. Apache 2.0.</p>
-        <p><a href="/">Home</a> · <a href="/blog/">Blog</a> · <a href="https://github.com/airblackbox/gateway">GitHub</a> · <a href="https://pypi.org/project/air-compliance">PyPI</a></p>
+        <p><a href="/">Home</a> · <a href="/blog/">Blog</a> · <a href="https://github.com/airblackbox/gateway">GitHub</a> · <a href="https://pypi.org/project/air-blackbox">PyPI</a></p>
     </div>
 </footer>
 
