@@ -26,7 +26,7 @@
       "description": "Open-source EU AI Act compliance scanner for Python AI agents. 48 checks across Articles 9-12, 14-15 + GDPR, GDPR scanning, bias detection, prompt injection detection, ISO 42001 and NIST AI RMF crosswalk. ML-DSA-65 quantum-safe signing. Self-verifying evidence bundles. Trust layers for 7 frameworks.",
       "url": "https://airblackbox.ai",
       "downloadUrl": "https://pypi.org/project/air-blackbox/",
-      "softwareVersion": "1.9.0",
+      "softwareVersion": "1.10.0",
       "license": "https://opensource.org/licenses/Apache-2.0",
       "offers": [
         {
@@ -88,7 +88,7 @@
           "name": "What is AIR Blackbox?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "AIR Blackbox is an open-source EU AI Act compliance scanner for Python AI agents. It runs 48 automated checks across 6 EU AI Act articles (9, 10, 11, 12, 14, 15) plus GDPR and bias/fairness scanning. Version 1.9.0 adds ML-DSA-65 quantum-safe signing, self-verifying evidence bundles, and an Article 12 Compliance Layer with static + runtime analysis. It supports 7 frameworks: LangChain, CrewAI, OpenAI Agents SDK, Google ADK, Claude Agent SDK, AutoGen, and Haystack."
+            "text": "AIR Blackbox is an open-source EU AI Act compliance scanner for Python AI agents. It runs 48 automated checks across 6 EU AI Act articles (9, 10, 11, 12, 14, 15) plus GDPR and bias/fairness scanning. Version 1.10.0 adds the A2A Transaction Layer for signed, tamper-evident agent-to-agent compliance auditing, plus ML-DSA-65 quantum-safe signing, self-verifying evidence bundles, and hybrid static + runtime analysis. It supports 7 frameworks: LangChain, CrewAI, OpenAI Agents SDK, Google ADK, Claude Agent SDK, AutoGen, and Haystack."
           }
         },
         {
@@ -947,7 +947,7 @@ client = OpenAI(
         <div style="max-width:750px;margin-top:2rem">
             <div class="faq-item">
                 <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What is AIR Blackbox?</div>
-                <div class="faq-a">AIR Blackbox is an open-source EU AI Act compliance scanner for Python AI agents. It runs 48 automated checks across 6 EU AI Act articles (9, 10, 11, 12, 14, 15) plus GDPR and bias/fairness scanning to identify compliance gaps in your source code and runtime configuration. It does not certify or guarantee compliance. v1.9.0 adds ML-DSA-65 (FIPS 204) quantum-safe digital signatures, self-verifying <code>.air-evidence</code> bundles, an Article 12 Compliance Layer with hybrid static + runtime analysis, and trust layers for 7 frameworks: LangChain, CrewAI, OpenAI Agents SDK, Google ADK, Claude Agent SDK, AutoGen, and Haystack. Install with <code>pip install air-blackbox</code> and scan with <code>air-blackbox comply --scan . -v</code>. The entire tool runs locally.</div>
+                <div class="faq-a">AIR Blackbox is an open-source EU AI Act compliance scanner for Python AI agents. It runs 48 automated checks across 6 EU AI Act articles (9, 10, 11, 12, 14, 15) plus GDPR and bias/fairness scanning to identify compliance gaps in your source code and runtime configuration. It does not certify or guarantee compliance. v1.10.0 adds the A2A Transaction Layer for signed, tamper-evident agent-to-agent compliance auditing with bilateral proof, ML-DSA-65 (FIPS 204) quantum-safe digital signatures, self-verifying <code>.air-evidence</code> bundles, and trust layers for 7 frameworks: LangChain, CrewAI, OpenAI Agents SDK, Google ADK, Claude Agent SDK, AutoGen, and Haystack. Install with <code>pip install air-blackbox</code> and scan with <code>air-blackbox comply --scan . -v</code>. The entire tool runs locally.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What EU AI Act articles does it check?</div>
