@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIR Blackbox — Trust Infrastructure Between Your Team and AI</title>
+    <title>AIR Blackbox — Audit Infrastructure for AI Agents</title>
     <meta name="description" content="Open-source trust infrastructure for AI. ML-DSA-65 quantum-safe signing, HMAC-SHA256 tamper-evident audit chains, self-verifying evidence bundles. Trust layers for 7 frameworks. 48 EU AI Act + GDPR compliance checks. Prompt injection detection, GDPR scanning, bias detection, ISO 42001 + NIST AI RMF crosswalk. Article 12 Compliance Layer with static + runtime analysis. Runs locally. pip install air-blackbox.">
     <meta name="keywords" content="EU AI Act compliance, AI agent audit trail, tamper-evident logging, AI compliance scanner, Python AI governance, LangChain compliance, CrewAI compliance, OpenAI SDK compliance, Claude Agent SDK, Anthropic compliance, Google ADK, AI risk management, Article 9, Article 10, Article 11, Article 12, Article 14, Article 15, HMAC audit chain, AI agent security, prompt injection detection, PII detection, open source AI compliance, AI Act August 2026, air-blackbox, pip install air-blackbox, AI bill of materials, AIBOM, AI observability, MCP server compliance, GDPR AI compliance, AI bias detection, AI fairness scanner, ISO 42001, NIST AI RMF, agent-to-agent compliance, A2A protocol, evidence bundle, pre-commit AI compliance, standards crosswalk">
-    <meta property="og:title" content="AIR Blackbox — Trust Infrastructure Between Your Team and AI">
-    <meta property="og:description" content="Open-source trust infrastructure for AI. Verify, filter, stabilize, protect. ML-DSA-65 quantum-safe signing. HMAC-SHA256 audit chains. Self-verifying evidence bundles. Trust layers for 7 frameworks. Runs locally.">
+    <meta property="og:title" content="AIR Blackbox — Audit Infrastructure for AI Agents">
+    <meta property="og:description" content="When your AI gets it wrong, you need proof of what happened. Open-source audit infrastructure: HMAC-SHA256 tamper-evident chains, ML-DSA-65 quantum-safe signing, EU AI Act gap analysis. 7 frameworks. Runs locally.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://airblackbox.ai">
     <meta property="og:image" content="https://airblackbox.ai/og-image.svg">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="AIR Blackbox — Trust Infrastructure Between Your Team and AI">
-    <meta name="twitter:description" content="AI makes creation easier. AIR Blackbox handles what gets harder: trust, accountability, traceability. ML-DSA-65 signing. HMAC-SHA256 audit chains. Self-verifying evidence bundles. 7 framework trust layers. Open source.">
+    <meta name="twitter:title" content="AIR Blackbox — Audit Infrastructure for AI Agents">
+    <meta name="twitter:description" content="When your AI gets it wrong, you need proof of what happened. Tamper-evident audit chains, quantum-safe signing, EU AI Act gap analysis. 7 frameworks. Free and open source.">
     <link rel="canonical" href="https://airblackbox.ai">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <script type="application/ld+json">
@@ -360,11 +360,11 @@
     <section class="hero"><div class="container">
         <div class="deadline" id="countdown"></div>
         <script>(function(){var d=document.getElementById('countdown');var days=Math.ceil((new Date('2026-08-02')-new Date())/(1000*60*60*24));d.textContent='\u26A0 '+days+' DAYS TO EU AI ACT HIGH-RISK DEADLINE';})()</script>
-        <h1>The <span class="highlight">Trust Infrastructure</span><br>Between Your Team and AI</h1>
-        <p class="subtitle">AI makes creation easier. AIR Blackbox handles what gets harder: trust, accountability, traceability, and compliance. HMAC-SHA256 audit chains, ML-DSA-65 quantum-safe signing, and self-verifying evidence bundles. Trust layers for 7 frameworks. Runs locally.</p>
+        <h1>Your AI agents are making decisions.<br><span class="highlight">Can you prove it?</span></h1>
+        <p class="subtitle">Every AI decision your organization makes is now a legal record. AIR Blackbox is the infrastructure that creates it, signs it, and makes it tamper-proof — before you need it.</p>
         <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox && air-blackbox comply --scan . -v').then(()=>this.textContent='Copied!')">pip install air-blackbox && air-blackbox comply --scan . -v</div>
         <div class="hero-links">
-            <a href="https://github.com/airblackbox/gateway" class="btn-primary">Star on GitHub</a>
+            <a href="/scan" class="btn-primary">Run the Free Gap Scan</a>
             <a href="#how-it-works" class="btn-secondary">See How It Works ↓</a>
         </div>
     </div></section>
@@ -372,37 +372,37 @@
     <!-- The Real Problem -->
     <section id="problem"><div class="container">
         <div class="section-label">The Real Problem</div>
-        <h2 class="section-title">AI doesn't just create faster. It erodes trust, accountability, and traceability.</h2>
-        <p class="section-desc">The biggest opportunities aren't in making AI more powerful. They're in handling the damage, ambiguity, overload, and trust gaps created by AI abundance.</p>
+        <h2 class="section-title">Nobody remembers why the AI did that.</h2>
+        <p class="section-desc">No audit trail. No replay. No evidence. When something goes wrong with an AI agent — and it will — most teams discover they have nothing to show a regulator, a client, or a board.</p>
         <div class="problem-grid">
             <div class="problem-card">
                 <div class="icon">&#x1F9E0;</div>
-                <h3>Decision Traceability</h3>
-                <p>Teams make faster decisions with weaker memory. No one remembers why a decision was made, what the AI suggested vs. what the human chose, or what assumptions were true at the time. AIR Blackbox captures the logic path behind every AI-assisted decision.</p>
+                <h3>"Why did the AI recommend that?" — and nobody knows</h3>
+                <p>Teams make faster decisions with weaker memory. No one remembers what the AI suggested vs. what the human chose, or what assumptions were true at the time. AIR Blackbox captures the logic path behind every AI-assisted decision.</p>
             </div>
             <div class="problem-card">
                 <div class="icon">&#x26A1;</div>
-                <h3>Escalation Intelligence</h3>
+                <h3>The AI handled something it should have handed off</h3>
                 <p>AI automates support, operations, and decisions — but failures happen when something that should have been escalated stays automated. AIR trust layers detect when AI output requires human judgment and route accordingly.</p>
             </div>
             <div class="problem-card">
                 <div class="icon">&#x1F4C9;</div>
-                <h3>Operational Drift</h3>
+                <h3>Your AI codebase diverged from policy. Somewhere.</h3>
                 <p>As teams use AI to move faster, they slowly accumulate undocumented process changes, inconsistent standards, and broken assumptions. AIR scans your codebase on every commit to detect drift before it becomes an incident.</p>
             </div>
             <div class="problem-card">
                 <div class="icon">&#x2705;</div>
-                <h3>Human Authenticity Proof</h3>
+                <h3>Your auditor wants proof a human actually reviewed this</h3>
                 <p>When everything can be AI-generated, the premium shifts to verified human review. AIR trust layers create cryptographic proof that a human reviewed, approved, and signed off on AI-assisted output.</p>
             </div>
             <div class="problem-card">
                 <div class="icon">&#x1F6E1;&#xFE0F;</div>
-                <h3>Liability Mapping</h3>
+                <h3>Your AI made a decision. Who's legally on the hook?</h3>
                 <p>People use AI for taxes, contracts, decisions, and healthcare without understanding what they're personally on the hook for. AIR compliance reports tell you exactly where your AI creates real-world legal exposure.</p>
             </div>
             <div class="problem-card">
                 <div class="icon">&#x1F50D;</div>
-                <h3>Context Collapse Protection</h3>
+                <h3>The rough draft became the policy. Nobody caught it.</h3>
                 <p>AI flattens context aggressively — a rough draft becomes a policy, an internal brainstorm becomes customer-facing copy. AIR audit chains preserve the boundary between draft and final, speculative and approved.</p>
             </div>
         </div>
@@ -411,8 +411,8 @@
     <!-- The Moat -->
     <section id="moat"><div class="container">
         <div class="section-label">Why AIR Blackbox</div>
-        <h2 class="section-title">We own the interception layer.</h2>
-        <p class="section-desc">Enterprise governance platforms audit after the fact. AIR Blackbox sits inside the call — between your team and the AI. That's a fundamentally different architecture.</p>
+        <h2 class="section-title">Security tools filter threats. We build the record of everything.</h2>
+        <p class="section-desc">Arthur AI, Lasso, and Lakera protect the input. When regulators audit the output — who said what, who approved it, whether anyone tampered with the log — they have nothing. AIR Blackbox does.</p>
         <div class="problem-grid">
             <div class="problem-card" style="border-color: var(--accent);">
                 <div class="icon" style="font-size:1.2rem; color:var(--accent);">VERIFY</div>
@@ -436,7 +436,7 @@
             </div>
         </div>
         <div style="text-align:center; margin-top:2rem; padding:1.5rem; background:var(--bg-card); border:1px solid var(--border); border-radius:10px;">
-            <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;">The future winners are products that <strong style="color:var(--text-primary)">verify, filter, stabilize, and protect</strong> — not generate.<br>Compliance is the wedge. Trust infrastructure is the platform.</p>
+            <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;"><strong style="color:var(--text-primary)">The Four Layers: Verify. Filter. Stabilize. Protect.</strong><br>Every piece of AIR Blackbox maps to one of these four functions. Together they form a complete audit infrastructure for AI systems.</p>
         </div>
     </div></section>
 
@@ -641,23 +641,23 @@
         <div class="verticals-grid">
             <div class="vertical-card">
                 <div class="industry">Healthcare</div>
-                <h3>AI-Assisted Clinical Decisions</h3>
+                <h3>Your AI recommended a treatment. The chart says the AI did it. Your log says nothing.</h3>
                 <p>When your AI suggests a diagnosis, regulators want the decision lineage: what was asked, what was returned, who reviewed it, and what was overridden. AIR captures that entire chain.</p>
             </div>
             <div class="vertical-card">
                 <div class="industry">Financial Services</div>
-                <h3>Algorithmic Accountability</h3>
+                <h3>The model flagged a trade. Three people acted on it. None of that is in the audit trail.</h3>
                 <p>Trading desks and advisory platforms need to prove what the model said, who approved it, and whether it should have been escalated to a human. AIR provides decision traceability and escalation intelligence.</p>
             </div>
             <div class="vertical-card">
                 <div class="industry">Legal</div>
-                <h3>Human Review Proof</h3>
+                <h3>Your associate used AI to draft the brief. Can you prove a human reviewed every line?</h3>
                 <p>Law firms using AI for contract review and brief drafting need to prove a human actually reviewed the output — not just rubber-stamped it. AIR trust layers create cryptographic human oversight attestation.</p>
             </div>
             <div class="vertical-card">
                 <div class="industry">Enterprise AI Teams</div>
-                <h3>Operational Drift Prevention</h3>
-                <p>Your team adopted AI across 12 workflows last quarter. How many drifted from policy? AIR scans on every commit, detects where AI usage diverges from your standards, and blocks violations before they ship.</p>
+                <h3>Your AI agents touched 40 workflows last quarter. How many drifted from policy?</h3>
+                <p>AIR scans on every commit, detects where AI usage diverges from your standards, and blocks violations before they ship. Compliance drift is invisible until it becomes an incident.</p>
             </div>
         </div>
     </div></section>
@@ -689,8 +689,8 @@
     <!-- Security Comparison -->
     <section id="vs-security"><div class="container">
         <div class="section-label">Not Just Security</div>
-        <h2 class="section-title">AI firewalls filter threats. We build trust infrastructure.</h2>
-        <p class="section-desc">Arthur AI ($60M raised), Lasso Security, and Lakera Guard are AI security platforms. They filter. That's one of four things teams need.</p>
+        <h2 class="section-title">They do one thing. We do four.</h2>
+        <p class="section-desc">Arthur AI ($60M raised), Lasso Security, and Lakera Guard are AI security platforms. They filter threats. When a regulator asks for the audit trail, they have nothing.</p>
         <div style="overflow-x:auto">
         <table style="width:100%;border-collapse:collapse;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:2rem 0">
             <thead>
