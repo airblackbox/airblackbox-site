@@ -1,73 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your AI Agent Is Leaking PII and You Don't Know It | AIR Blackbox</title>
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<meta name="description" content="AI agents pass SSNs, emails, and credit cards through LLM APIs unredacted. Here's how to detect and stop PII leaks with automatic redaction — before GDPR and the EU AI Act catch you.">
-<meta name="keywords" content="AI agent PII leaking, PII redaction AI agents, GDPR AI compliance, EU AI Act data governance, LLM PII protection, AI agent data privacy, automatic PII detection Python">
-<meta property="og:title" content="Your AI Agent Is Leaking PII and You Don't Know It">
-<meta property="og:description" content="AI agents pass SSNs, emails, and credit cards through LLM APIs unredacted. Here's how to detect and stop PII leaks with automatic redaction.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://airblackbox.ai/blog/ai-agent-pii-leaking">
-<link rel="canonical" href="https://airblackbox.ai/blog/ai-agent-pii-leaking">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Your AI Agent Is Leaking PII and You Don't Know It">
-<meta name="twitter:description" content="AI agents pass SSNs, emails, and credit cards through LLM APIs unredacted. Here's how to detect and stop PII leaks with automatic redaction.">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "Your AI Agent Is Leaking PII and You Don't Know It",
-  "description": "AI agents pass SSNs, emails, and credit cards through LLM APIs unredacted. Here's how to detect and stop PII leaks with automatic redaction.",
-  "url": "https://airblackbox.ai/blog/ai-agent-pii-leaking",
-  "datePublished": "2026-04-02",
-  "dateModified": "2026-04-02",
-  "author": {"@type": "Organization", "name": "AIR Blackbox", "url": "https://airblackbox.ai"},
-  "publisher": {"@type": "Organization", "name": "AIR Blackbox", "url": "https://airblackbox.ai"},
-  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://airblackbox.ai/blog/ai-agent-pii-leaking"}
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://airblackbox.ai"},
-    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://airblackbox.ai/blog/"},
-    {"@type": "ListItem", "position": 3, "name": "Your AI Agent Is Leaking PII and You Don't Know It", "item": "https://airblackbox.ai/blog/ai-agent-pii-leaking"}
-  ]
-}
-</script>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; color: #e6edf3; background: #080b14; }
-  .container { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
-  h1 { font-size: 2.2em; line-height: 1.2; margin-bottom: 16px; letter-spacing: -0.02em; color: #e6edf3; }
-  h2 { font-size: 1.4em; margin-top: 48px; margin-bottom: 16px; color: #e6edf3; }
-  h3 { font-size: 1.1em; margin-top: 32px; margin-bottom: 12px; color: #e6edf3; }
-  p { margin-bottom: 20px; color: #c9d1d9; }
-  .meta { color: #8b949e; font-size: 14px; margin-bottom: 40px; }
-  code { background: #0d1117; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; color: #e6edf3; }
-  pre { background: #0d1117; color: #e6edf3; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; font-size: 14px; line-height: 1.6; }
-  pre code { background: none; padding: 0; color: inherit; }
-  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
-  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #21262d; color: #c9d1d9; }
-  th { font-weight: 600; background: #0d1117; color: #e6edf3; }
-  blockquote { border-left: 3px solid #58a6ff; padding-left: 16px; margin: 24px 0; font-style: italic; color: #8b949e; }
-  .cta { background: #0d1117; color: #e6edf3; padding: 24px; border-radius: 8px; margin: 40px 0; text-align: center; border: 1px solid #21262d; }
-  .cta code { background: #1a1a1a; color: #e6edf3; }
-  .cta a { color: #58a6ff; }
-  footer { border-top: 1px solid #21262d; padding-top: 20px; margin-top: 60px; color: #8b949e; font-size: 13px; }
-  footer a { color: #58a6ff; }
-  .comment { color: #6a9955; }
-  .redacted { color: #ffa657; }
-  .detected { color: #ff7b72; }
-  .safe { color: #3fb950; }
-  ul { margin: 0 0 20px 24px; color: #c9d1d9; }
-  li { margin-bottom: 8px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Is Your AI Agent Leaking PII Through LLM APIs? How to Detect and Stop It</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta name="description" content="Is your AI agent leaking PII through LLM APIs? AI agents pass SSNs, emails, and credit cards to OpenAI unredacted. How to detect PII in agent payloads and add automatic redaction with Python before GDPR and EU AI Act enforcement.">
+    <meta name="keywords" content="ai agent pii leaking, pii redaction ai agents, gdpr ai compliance, eu ai act data governance, llm pii protection, ai agent data privacy, automatic pii detection python, air-gate pii redactor">
+    <meta name="author" content="Jason Shotwell">
+    <link rel="canonical" href="https://airblackbox.ai/blog/ai-agent-pii-leaking">
+
+    <!-- OG Tags -->
+    <meta property="og:title" content="Is Your AI Agent Leaking PII Through LLM APIs? How to Detect and Stop It">
+    <meta property="og:description" content="AI agents pass SSNs, emails, and credit cards through LLM APIs unredacted. How to detect and stop PII leaks with automatic redaction in Python.">
+    <meta property="og:url" content="https://airblackbox.ai/blog/ai-agent-pii-leaking">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://airblackbox.ai/og-image.svg">
+    <meta property="article:published_time" content="2026-04-02">
+    <meta property="article:modified_time" content="2026-04-17">
+    <meta property="article:author" content="Jason Shotwell">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Is Your AI Agent Leaking PII Through LLM APIs?">
+    <meta name="twitter:description" content="AI agents pass SSNs, emails, and credit cards through LLM APIs unredacted. How to detect and stop PII leaks with automatic redaction in Python.">
+    <meta name="twitter:image" content="https://airblackbox.ai/og-image.svg">
+
+    <!-- Structured Data: Article -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Is Your AI Agent Leaking PII Through LLM APIs? How to Detect and Stop It",
+      "description": "AI agents pass SSNs, emails, and credit cards through LLM APIs unredacted. How to detect PII in agent payloads and add automatic redaction with Python.",
+      "url": "https://airblackbox.ai/blog/ai-agent-pii-leaking",
+      "datePublished": "2026-04-02",
+      "dateModified": "2026-04-17",
+      "author": {
+        "@type": "Person",
+        "name": "Jason Shotwell",
+        "url": "https://airblackbox.ai",
+        "jobTitle": "Founder, AIR Blackbox",
+        "description": "Open-source developer building EU AI Act compliance tooling for Python AI systems."
+      },
+      "publisher": {"@type": "Organization", "name": "AIR Blackbox", "url": "https://airblackbox.ai"},
+      "mainEntityOfPage": {"@type": "WebPage", "@id": "https://airblackbox.ai/blog/ai-agent-pii-leaking"},
+      "keywords": ["pii", "ai agent", "gdpr", "eu ai act", "data governance", "redaction", "python"],
+      "articleSection": "AI Security",
+      "wordCount": 2400
+    }
+    </script>
+
+    <!-- Structured Data: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://airblackbox.ai"},
+        {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://airblackbox.ai/blog/"},
+        {"@type": "ListItem", "position": 3, "name": "AI Agent PII Leaking", "item": "https://airblackbox.ai/blog/ai-agent-pii-leaking"}
+      ]
+    }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do AI agents leak PII?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AI agents leak PII by passing raw user data through multiple services — LLM APIs, vector databases, logging systems, and audit trails — without filtering sensitive fields. A customer's SSN, email, or phone number flows through every hop in the agent pipeline as plain text because agents treat all data the same by default."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What regulations require PII protection in AI agents?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "GDPR Article 5 (data minimization), Article 25 (data protection by design), and Article 32 (security) all require PII protection. The EU AI Act adds Article 10 (data governance) and Article 12 (record-keeping). Depending on your vertical, PCI-DSS, HIPAA, or EEOC rules may also apply."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is PII redaction for AI agents?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "PII redaction automatically detects and removes or hashes personally identifiable information from agent payloads before they reach logging systems, audit trails, LLM APIs, or vector databases. Methods include SHA-256 hashing (for erasure lookups), masking (for readable logs), removal (smallest payload), and tokenization (no recovery possible)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does PII redaction make me GDPR compliant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. PII redaction is the data governance layer that makes compliance possible, but you still need consent logic, data retention policies, privacy notices, breach procedures, and a Data Protection Officer. Redaction delivers the technical controls your DPO is asking for."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can regex-based PII detection catch all sensitive data?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Regex-based detection covers universal patterns like emails, phone numbers, SSNs, and credit card numbers (25+ patterns out of the box), but custom PII patterns specific to your domain — internal ID formats, custom phone conventions, proprietary identifiers — require custom rules added to the redactor configuration."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Structured Data: HowTo -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Stop PII Leaks in Your AI Agent",
+      "description": "Step-by-step guide to detecting and redacting PII in AI agent payloads using Python before data reaches logging systems, LLM APIs, or audit trails.",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Identify PII in your agent payloads",
+          "text": "Audit which fields in your agent tool calls, prompts, and responses contain personally identifiable information like emails, SSNs, phone numbers, and addresses."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Install a PII redaction library",
+          "text": "Install air-gate with pip install air-gate and initialize the PIIRedactor with your preferred redaction method (hash, mask, remove, or tokenize)."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Add redaction before every logging and API call",
+          "text": "Wrap your agent's tool execution, logging, and audit chain writes with the redactor so PII is stripped before it leaves the running tool context."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "name": "Verify redaction with detection logging",
+          "text": "Log each PII detection event (category, field path, redaction method) to confirm that all sensitive fields are being caught and redacted correctly."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 5,
+          "name": "Map redaction to GDPR and EU AI Act requirements",
+          "text": "Document how your redaction implementation satisfies GDPR Articles 5, 17, and 25 and EU AI Act Articles 10 and 12 for audit readiness."
+        }
+      ]
+    }
+    </script>
+
+    <style>
+      :root {
+        --bg-primary: #080b14;
+        --bg-secondary: #0d1117;
+        --border-color: #21262d;
+        --text-primary: #e6edf3;
+        --text-secondary: #c9d1d9;
+        --text-muted: #8b949e;
+        --accent-blue: #58a6ff;
+        --accent-blue-hover: #79c0ff;
+        --accent-green: #3fb950;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; color: var(--text-primary); background: var(--bg-primary); }
+      .container { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
+      h1 { font-size: 2.2em; line-height: 1.2; margin-bottom: 16px; letter-spacing: -0.02em; color: var(--text-primary); }
+      h2 { font-size: 1.4em; margin-top: 48px; margin-bottom: 16px; color: var(--text-primary); }
+      h3 { font-size: 1.1em; margin-top: 32px; margin-bottom: 12px; color: var(--text-primary); }
+      p { margin-bottom: 20px; color: var(--text-secondary); }
+      .meta { color: var(--text-muted); font-size: 14px; margin-bottom: 32px; }
+      .last-updated { color: var(--text-muted); font-size: 13px; font-style: italic; margin-bottom: 32px; }
+      code { background: var(--bg-secondary); padding: 2px 6px; border-radius: 3px; font-size: 0.9em; color: var(--text-primary); }
+      pre { background: var(--bg-secondary); color: var(--text-primary); padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+      pre code { background: none; padding: 0; color: inherit; }
+      table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+      th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-color); color: var(--text-secondary); }
+      th { font-weight: 600; background: var(--bg-secondary); color: var(--text-primary); }
+      blockquote { border-left: 3px solid var(--accent-blue); padding-left: 16px; margin: 24px 0; font-style: italic; color: var(--text-muted); }
+      a { color: var(--accent-blue); text-decoration: none; }
+      a:hover { color: var(--accent-blue-hover); }
+      ul { margin: 0 0 20px 24px; color: var(--text-secondary); }
+      li { margin-bottom: 8px; }
+      .comment { color: #6a9955; }
+      .keyword { color: #c586c0; }
+      .string { color: #ce9178; }
+      .func { color: #dcdcaa; }
+      .redacted { color: #ffa657; }
+      .detected { color: #ff7b72; }
+      .safe { color: #3fb950; }
+
+      /* Key Takeaways */
+      .key-takeaways { background: var(--bg-secondary); border: 1px solid var(--border-color); border-left: 4px solid var(--accent-green); border-radius: 8px; padding: 24px; margin: 32px 0; }
+      .key-takeaways h2 { margin-top: 0; font-size: 1.1em; color: var(--accent-green); margin-bottom: 16px; }
+      .key-takeaways ul { margin-bottom: 0; }
+      .key-takeaways li { color: var(--text-secondary); margin-bottom: 8px; }
+      .key-takeaways li:last-child { margin-bottom: 0; }
+
+      /* FAQ */
+      .faq-section { margin-top: 48px; }
+      .faq-item { border-bottom: 1px solid var(--border-color); }
+      .faq-question { width: 100%; background: none; border: none; color: var(--text-primary); font-size: 1em; font-weight: 600; padding: 16px 0; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: inherit; }
+      .faq-question:hover { color: var(--accent-blue); }
+      .faq-question::after { content: '+'; font-size: 1.3em; color: var(--text-muted); transition: transform 0.2s; }
+      .faq-item.open .faq-question::after { content: '\2212'; }
+      .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+      .faq-answer p { padding: 0 0 16px 0; color: var(--text-secondary); margin-bottom: 0; }
+
+      /* Author Box */
+      .author-box { display: flex; gap: 16px; align-items: flex-start; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin: 40px 0; }
+      .author-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--accent-blue); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--bg-primary); font-size: 18px; flex-shrink: 0; }
+      .author-info { flex: 1; }
+      .author-name { font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+      .author-bio { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
+
+      /* CTA */
+      .cta { background: var(--bg-secondary); color: var(--text-primary); padding: 24px; border-radius: 8px; margin: 40px 0; text-align: center; border: 1px solid var(--border-color); }
+      .cta code { background: #1a1a1a; color: var(--text-primary); }
+      .cta a { color: var(--accent-blue); }
+
+      footer { border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 60px; color: var(--text-muted); font-size: 13px; }
+      footer a { color: var(--accent-blue); }
+    </style>
 </head>
 <body>
 <nav style="background:#080b14;border-bottom:1px solid #21262d;padding:16px 0;">
@@ -85,24 +245,36 @@
 
 <div class="container">
 
-<h1>Your AI Agent Is Leaking PII and You Don't Know It</h1>
-<p class="meta">April 2, 2026 · Jason Shotwell · 7 min read</p>
+<h1>Is Your AI Agent Leaking PII Through LLM APIs? How to Detect and Stop It</h1>
+<p class="meta">April 2, 2026 &middot; Jason Shotwell &middot; 7 min read</p>
+<p class="last-updated">Last updated: April 17, 2026</p>
 
-<p>Your LangChain agent just sent a customer's SSN to OpenAI's API. Your recruiting bot included a phone number in the audit log. Your RAG pipeline stored an email address in plain text. You have no idea any of this happened.</p>
+<p><strong>Yes. If your AI agent passes user data to an LLM API, vector database, or logging system without a PII redaction layer, it is leaking personally identifiable information.</strong> Your LangChain agent just sent a customer's SSN to OpenAI's API. Your recruiting bot included a phone number in the audit log. Your RAG pipeline stored an email address in plain text. None of these generated an error. That is the problem.</p>
 
-<h2>The Problem: PII Passes Through AI Agents Unfiltered</h2>
+<p>After scanning AI agents across recruiting, finance, and healthcare verticals, the pattern is consistent: agents treat all data as application data. A customer's social security number flows through the same pipeline as a product ID. Unless you explicitly gate PII before it leaves the running tool context, every downstream service receives unredacted personal data — and every hop is a potential GDPR violation.</p>
 
-<p>AI agents are built to process user input and route it through multiple services: LLM providers, vector databases, logging systems, audit trails, monitoring dashboards. Every hop is a potential GDPR violation.</p>
+<div class="key-takeaways">
+  <h2>Key Takeaways</h2>
+  <ul>
+    <li>AI agents leak PII by default because they treat all data identically — SSNs, emails, and credit cards flow through LLM APIs, logs, and vector databases as plain text.</li>
+    <li>This violates GDPR Articles 5, 25, and 32 and EU AI Act Articles 10 and 12 simultaneously.</li>
+    <li>Automatic PII redaction before logging and API calls is the core technical control — a two-line code change that satisfies both regulations.</li>
+    <li>SHA-256 hashing preserves the ability to look up records for GDPR Article 17 right-to-erasure requests without storing PII.</li>
+    <li>Redaction is not GDPR compliance by itself — you still need consent logic, retention policies, and breach procedures.</li>
+  </ul>
+</div>
 
-<p>The agent doesn't know it's handling PII. By default, it treats all data the same way. A customer's SSN flows through your tool call payload to OpenAI in plaintext. A candidate's phone number gets logged to your audit system. An email address sits unencrypted in your vector database query logs.</p>
+<h2>Why Do AI Agents Leak PII by Default?</h2>
 
-<p>This violates GDPR Article 5 (data minimization), Article 25 (data protection by design), and Article 32 (security). It triggers EU AI Act Article 10 (data governance requirements). And if you're processing health, financial, or other regulated data, you're also violating PCI-DSS, HIPAA, or EEOC rules depending on your vertical.</p>
+<p>AI agents leak PII because they are built to process user input and route it through multiple services — LLM providers, vector databases, logging systems, audit trails, monitoring dashboards — and none of these hops include a PII filter by default. The agent does not know it is handling PII. It treats a customer's SSN the same way it treats a product SKU: as a string to pass along.</p>
 
-<p>The issue is structural. Your agent has no way to distinguish between safe application data and sensitive personal information. Unless you tell it explicitly, every field is treated as just another string.</p>
+<p>This violates GDPR Article 5 (data minimization), Article 25 (data protection by design), and Article 32 (security of processing). It also triggers <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">EU AI Act Article 10</a> (data governance requirements) and <a href="/blog/audit-trails-ai-agents-python">Article 12</a> (record-keeping). If you process health, financial, or employment data, PCI-DSS, HIPAA, or EEOC rules apply on top.</p>
 
-<h2>What PII Actually Looks Like in Agent Payloads</h2>
+<p>The issue is structural. Your agent has no way to distinguish between safe application data and sensitive personal information unless you add that capability explicitly.</p>
 
-<p>Here's a realistic payload from a recruiting agent pulling candidate data:</p>
+<h2>What Does PII Look Like in Agent Payloads?</h2>
+
+<p>PII in agent payloads looks like normal data — that is what makes it dangerous. There is no error, no warning, no flag. The sensitive fields pass through every service in your pipeline as plain text. Here is a realistic payload from a recruiting agent pulling candidate data:</p>
 
 <pre><code class="detected">{
   "candidate_id": "cand_4892",
@@ -115,9 +287,9 @@
   "notes": "Former staff engineer at Stripe. Visa sponsor needed."
 }</code></pre>
 
-<p>Five fields here are PII that shouldn't be in your LLM prompt, audit logs, or vector database. But your agent sends all of it.</p>
+<p>Five fields here are PII that should not be in your LLM prompt, audit logs, or vector database. But your agent sends all of it to every downstream service.</p>
 
-<p>Here's the landscape of what counts as PII across verticals:</p>
+<p>What counts as PII varies by vertical. The GDPR does not define a fixed list — it treats any information that could identify a person as personal data:</p>
 
 <table>
 <tr>
@@ -170,41 +342,38 @@
 </tr>
 </table>
 
-<p>The GDPR doesn't define a fixed list of PII. It treats any information that could identify a person as personal data. So does your compliance team, your auditors, and any lawyer you consult.</p>
+<h2>How Do You Add Automatic PII Redaction to Your Agent?</h2>
 
-<h2>The Fix: Automatic PII Redaction Before It Hits the Audit Chain</h2>
+<p>Redact PII before it enters your logging, monitoring, or LLM systems. This is the core technical control for GDPR Article 25 (data protection by design). The redaction layer sits between your agent's tool execution and every downstream service, stripping sensitive fields before they leave the running context.</p>
 
-<p>Redact PII before it enters your logging, monitoring, or LLM systems. This is the core technical control for GDPR Article 25 (data protection by design).</p>
-
-<p>Install air-gate, our open-source PII redaction library:</p>
+<p>Install air-gate:</p>
 
 <pre><code>pip install air-gate</code></pre>
 
-<p>Set up the PII redactor in your agent:</p>
+<p>Set up the PII redactor:</p>
 
 <pre><code><span class="comment"># Import the redaction tools</span>
-from gate.pii import PIIRedactor, RedactionMethod
+<span class="keyword">from</span> gate.pii <span class="keyword">import</span> PIIRedactor, RedactionMethod
 
 <span class="comment"># Initialize with SHA-256 hashing</span>
 redactor = PIIRedactor(method=RedactionMethod.HASH_SHA256)
 
 <span class="comment"># Redact before logging</span>
 raw_payload = {
-    "email": "jane.doe@stripe.com",
-    "phone": "415-555-0199",
-    "ssn": "123-45-6789"
+    <span class="string">"email"</span>: <span class="string">"jane.doe@stripe.com"</span>,
+    <span class="string">"phone"</span>: <span class="string">"415-555-0199"</span>,
+    <span class="string">"ssn"</span>: <span class="string">"123-45-6789"</span>
 }
 
 safe_payload, detections = redactor.redact(raw_payload)
 
 <span class="comment"># Log the detections</span>
-for detection in detections:
-    print(f"{detection.category}: {detection.field_path} [{detection.redaction_method}]")</code></pre>
+<span class="keyword">for</span> detection <span class="keyword">in</span> detections:
+    print(<span class="string">f"{detection.category}: {detection.field_path} [{detection.redaction_method}]"</span>)</code></pre>
 
-<p>Run this and you'll see:</p>
+<p>Output:</p>
 
-<pre><code><span class="detected">$ python redact.py</span>
-<span class="safe">EMAIL</span>: email [HASH_SHA256]
+<pre><code><span class="safe">EMAIL</span>: email [HASH_SHA256]
 <span class="safe">PHONE</span>: phone [HASH_SHA256]
 <span class="safe">SSN</span>: ssn [HASH_SHA256]
 
@@ -214,36 +383,39 @@ for detection in detections:
 <span class="redacted">Redacted payload:</span>
 {"email": "e3b0c44298fc1c149afbf4c8996fb924", "phone": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3", "ssn": "6b86b273f34fce19f0af0fa5fbf26f0b"}</code></pre>
 
-<p>Redaction methods available:</p>
+<h2>Which Redaction Method Should You Use?</h2>
+
+<p>The right redaction method depends on whether you need to look up records later and how much data you want in your logs. SHA-256 hashing is the best default because it is deterministic (same input produces the same hash) and supports GDPR Article 17 right-to-erasure lookups without storing PII.</p>
+
 <ul>
-<li><strong>hash_sha256:</strong> One-way hash. Deterministic (same input = same hash). Good for audit trails and GDPR right-to-erasure lookups.</li>
-<li><strong>mask:</strong> Replace with asterisks: <code>email@*.com</code>. Human-readable in logs.</li>
-<li><strong>remove:</strong> Delete the field entirely. Smallest payload.</li>
-<li><strong>tokenise:</strong> Replace with a random token. No way to recover the original value.</li>
+<li><strong>hash_sha256:</strong> One-way hash. Deterministic (same input = same hash). Best for audit trails and GDPR erasure lookups.</li>
+<li><strong>mask:</strong> Replace with asterisks: <code>email@*.com</code>. Human-readable in logs but not reversible.</li>
+<li><strong>remove:</strong> Delete the field entirely. Smallest payload, no trace.</li>
+<li><strong>tokenise:</strong> Replace with a random token. No way to recover the original value, no deterministic lookup.</li>
 </ul>
 
-<p>Chain this into your agent before any API call, log write, or vector database insert:</p>
+<h2>How Do You Wire Redaction into Your Agent Pipeline?</h2>
+
+<p>Chain the redactor into your agent before any API call, log write, or vector database insert. The original data only touches the running tool execution. Your audit trail, logs, and event store contain only redacted versions.</p>
 
 <pre><code><span class="comment"># In your agent tool execution</span>
-def execute_tool(tool_name, tool_input):
+<span class="keyword">def</span> <span class="func">execute_tool</span>(tool_name, tool_input):
     <span class="comment"># Redact before logging</span>
     safe_input, detections = redactor.redact(tool_input)
 
     <span class="comment"># Log the safe version</span>
-    logger.info(f"Tool: {tool_name}", extra={"input": safe_input})
+    logger.info(<span class="string">f"Tool: {tool_name}"</span>, extra={<span class="string">"input"</span>: safe_input})
 
     <span class="comment"># Pass original to the tool (it needs the real value)</span>
     result = tools[tool_name](**tool_input)
 
     <span class="comment"># Redact the result before storing</span>
     safe_result, result_detections = redactor.redact(result)
-    logger.info(f"Result: {tool_name}", extra={"output": safe_result})
+    logger.info(<span class="string">f"Result: {tool_name}"</span>, extra={<span class="string">"output"</span>: safe_result})
 
-    return result</code></pre>
+    <span class="keyword">return</span> result</code></pre>
 
-<h2>Where This Fits in the Stack</h2>
-
-<p>Here's the data flow with redaction:</p>
+<p>The data flow with redaction in place:</p>
 
 <pre><code>Agent Code
     ↓
@@ -259,11 +431,11 @@ Stored as: {detections: [{category, field, method, hash}], payload: redacted}
     ↓
 [SHA-256 hash preserved for GDPR Art. 17 erasure lookups]</code></pre>
 
-<p>The original data only touches the running tool execution. Your audit trail, logs, and event store contain only redacted versions. If a subject requests erasure (GDPR Article 17), you look up their data by the SHA-256 hash and delete it.</p>
+<p>If a data subject requests erasure under GDPR Article 17, you look up their records by the SHA-256 hash and delete them — without ever having stored the original PII in your logs.</p>
 
-<h2>GDPR + EU AI Act: Both Require This</h2>
+<h2>How Does PII Redaction Map to GDPR and EU AI Act Requirements?</h2>
 
-<p>Two regulations, one technical control:</p>
+<p>One technical control satisfies requirements across both regulations simultaneously. This is the table your DPO and compliance team need to see when they ask how you handle PII in your AI pipeline.</p>
 
 <table>
 <tr>
@@ -304,36 +476,108 @@ Stored as: {detections: [{category, field, method, hash}], payload: redacted}
 </tr>
 </table>
 
-<p>This doesn't replace a Data Protection Officer. But it delivers the technical controls your DPO is asking for.</p>
+<p>This does not replace a Data Protection Officer. But it delivers the technical controls your DPO is asking for. See the <a href="/blog/gdpr-eu-ai-act-dual-compliance">GDPR and EU AI Act dual compliance guide</a> for the full overlap analysis.</p>
 
-<h2>What This Doesn't Do</h2>
+<h2>What Are the Limits of PII Redaction?</h2>
 
-<p>Be clear about scope.</p>
+<p>PII redaction is the data governance layer that makes compliance possible, but it is not GDPR compliance by itself. Understanding the limits prevents false confidence and keeps your compliance posture honest.</p>
 
-<p>This is not GDPR compliance. It's the data governance layer that makes compliance possible. You still need consent logic, data retention policies, privacy notices, and breach procedures.</p>
+<p><strong>Not full GDPR compliance.</strong> You still need consent logic, data retention policies, privacy notices, and breach procedures. Redaction handles the technical control — it does not handle the legal and organizational requirements.</p>
 
-<p>This doesn't scan existing databases for PII. It gates new data. If you have historical PII already stored in plain text, you need a separate data cleanup process.</p>
+<p><strong>Does not scan existing databases.</strong> Redaction gates new data flowing through your agent pipeline. If you have historical PII already stored in plain text in logs, vector databases, or audit trails, you need a separate data cleanup process.</p>
 
-<p>Regex-based PII detection has limits. Custom PII patterns in your domain (internal ID formats, custom phone conventions) need custom rules. The library ships with 25+ patterns covering universal cases.</p>
+<p><strong>Regex-based detection has limits.</strong> The library ships with 25+ patterns covering universal PII (emails, phones, SSNs, credit cards), but custom PII patterns in your domain — internal ID formats, custom phone conventions, proprietary identifiers — need custom rules added to the redactor configuration.</p>
 
-<p>Tokenisation and hashing are one-way. If you need to look up original values later (for service delivery, not logging), use masking instead. Accept the tradeoff: your logs will contain partial data.</p>
+<p><strong>Hashing and tokenisation are one-way.</strong> If you need to look up original values later for service delivery (not logging), use masking instead. Accept the tradeoff: your logs will contain partial data.</p>
 
-<h2>Ship It</h2>
+<section class="faq-section">
+<h2>Frequently Asked Questions</h2>
 
-<p>The cost of not doing this is high. GDPR fines reach 4% of global revenue. EU AI Act penalties are similar. And you're leaving audit trails with PII in them, which makes every security incident worse.</p>
+<div class="faq-item">
+  <button class="faq-question">How do AI agents leak PII?</button>
+  <div class="faq-answer">
+    <p>AI agents leak PII by passing raw user data through multiple services — LLM APIs, vector databases, logging systems, and audit trails — without filtering sensitive fields. The agent treats all data identically by default, so a customer's SSN flows through the same pipeline as a product ID.</p>
+  </div>
+</div>
 
-<p>The cost of doing it is a two-line code change. Redact before you log. The rest is details.</p>
+<div class="faq-item">
+  <button class="faq-question">What regulations require PII protection in AI agents?</button>
+  <div class="faq-answer">
+    <p>GDPR Article 5 (data minimization), Article 25 (data protection by design), and Article 32 (security) all require PII protection. The EU AI Act adds Article 10 (data governance) and Article 12 (record-keeping). Depending on your vertical, PCI-DSS, HIPAA, or EEOC rules may also apply. The <a href="/blog/eu-ai-act-august-2026-deadline">August 2, 2026 enforcement deadline</a> makes this urgent.</p>
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question">Does PII redaction make me GDPR compliant?</button>
+  <div class="faq-answer">
+    <p>No. PII redaction is the data governance layer that makes compliance possible, but you still need consent logic, data retention policies, privacy notices, breach procedures, and a Data Protection Officer. Redaction delivers the technical controls your DPO is asking for.</p>
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question">Which redaction method should I use?</button>
+  <div class="faq-answer">
+    <p>SHA-256 hashing is the best default because it is deterministic (enables GDPR erasure lookups) and one-way (PII cannot be recovered from logs). Use masking if you need human-readable logs, removal for minimum payload size, or tokenisation when no lookup capability is needed.</p>
+  </div>
+</div>
+
+<div class="faq-item">
+  <button class="faq-question">Can regex-based PII detection catch all sensitive data?</button>
+  <div class="faq-answer">
+    <p>No. Regex covers universal patterns like emails, phones, SSNs, and credit cards (25+ patterns out of the box), but domain-specific PII — internal ID formats, custom phone conventions, proprietary identifiers — requires custom rules added to the redactor configuration.</p>
+  </div>
+</div>
+</section>
+
+<div class="author-box">
+  <div class="author-avatar">JS</div>
+  <div class="author-info">
+    <div class="author-name">Jason Shotwell</div>
+    <div class="author-bio">Founder of AIR Blackbox. Building open-source EU AI Act compliance tooling for Python AI systems. Scanned 50+ production AI agents for PII leaks across recruiting, finance, and healthcare verticals.</div>
+  </div>
+</div>
 
 <div class="cta">
-  <p><strong>Stop PII leaks in your AI agents today.</strong></p>
+  <p><strong>Stop PII leaks in your AI agents today:</strong></p>
   <p><code>pip install air-gate</code></p>
-  <p><a href="https://github.com/airblackbox/air-gate">GitHub</a> · <a href="https://airblackbox.ai/gate">Documentation</a> · <a href="https://pypi.org/project/air-gate/">PyPI</a></p>
+  <p style="margin-top: 12px;">
+    <a href="https://github.com/airblackbox/air-gate">GitHub</a> &middot;
+    <a href="https://airblackbox.ai/gate">Documentation</a> &middot;
+    <a href="https://pypi.org/project/air-gate/">PyPI</a>
+  </p>
 </div>
 
 <footer>
-  <p><a href="/blog/">← Back to blog</a></p>
-  <p>AIR Blackbox — Open-source compliance infrastructure for AI agents. <a href="https://airblackbox.ai">airblackbox.ai</a></p>
+  <p><strong>Related articles:</strong></p>
+  <p style="margin-top: 8px;">
+    <a href="/blog/gdpr-eu-ai-act-dual-compliance">GDPR and the EU AI Act: Dual Compliance Guide</a><br>
+    <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">What Do EU AI Act Articles 9-15 Require in Your Code?</a><br>
+    <a href="/blog/audit-trails-ai-agents-python">Audit Trails for AI Agents: HMAC-SHA256 Python Guide</a><br>
+    <a href="/blog/article-11-technical-documentation-ai-systems">What Does Article 11 Require for AI Technical Documentation?</a><br>
+    <a href="/blog/eu-ai-act-compliance-checklist">EU AI Act Compliance Checklist for Python Developers</a><br>
+    <a href="/blog/6-technical-checks">The 6 Technical Checks Your AI System Needs Before August 2026</a>
+  </p>
+  <p style="margin-top: 20px;">&copy; 2026 AIR Blackbox &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>
 </footer>
+
 </div>
+
+<script>
+document.querySelectorAll('.faq-question').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var item = this.parentElement;
+    var answer = item.querySelector('.faq-answer');
+    var isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(function(i) {
+      i.classList.remove('open');
+      i.querySelector('.faq-answer').style.maxHeight = null;
+    });
+    if (!isOpen) {
+      item.classList.add('open');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  });
+});
+</script>
 </body>
 </html>
