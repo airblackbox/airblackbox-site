@@ -161,6 +161,10 @@
       "destination": "/blog/python-agent-compliance-roadmap-august-2026.html"
     },
     {
+      "source": "/blog/agentic-ai-compliance-eu-ai-act",
+      "destination": "/blog/agentic-ai-compliance-eu-ai-act.html"
+    },
+    {
       "source": "/scan",
       "destination": "/scan/index.html"
     },
