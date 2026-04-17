@@ -63,9 +63,9 @@
 </div>
 
 <div class="post">
-  <h2><a href="/blog/proving-the-handoff">Proving the Handoff: Adding Cross-Agent Signatures to Tamper-Evident Audit Chains</a></h2>
-  <p class="meta">April 10, 2026 &middot; 10 min read</p>
-  <p>Your audit chain proves records weren't changed (integrity) and weren't dropped (completeness). But can it prove which agent sent the handoff? air-trust v0.6.0 adds Ed25519 asymmetric signatures for cross-agent identity proof. Spec v1.2 with handoff protocol and threat model.</p>
+  <h2><a href="/blog/proving-the-handoff">How Do You Prove Which AI Agent Sent a Handoff? Cross-Agent Signatures Explained</a></h2>
+  <p class="meta">April 10, 2026 &middot; Jason Shotwell &middot; 10 min read</p>
+  <p>HMAC proves integrity but not identity. In multi-agent workflows, you need to prove which agent sent a task, which acknowledged it, and whether the payload was swapped. air-trust v0.6.0 adds Ed25519 signed handoff records with a three-record protocol, verifier, and threat model.</p>
 </div>
 
 <div class="post">
