@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Agentic AI systems face strict compliance requirements under the EU AI Act. Learn what auditors check, how to build tamper-evident audit trails, and how to scan your Python agent for compliance gaps before the August 2026 deadline.">
+    <meta name="keywords" content="agentic ai, ai compliance, eu ai act, ai governance, ai risk management, ai audit, agentic ai compliance, ai governance tools, ai agent compliance">
+    <meta name="author" content="Jason Shotwell">
+    <link rel="canonical" href="https://airblackbox.ai/blog/agentic-ai-compliance-eu-ai-act">
+
+    <!-- OG Tags -->
+    <meta property="og:title" content="How Do You Audit an Agentic AI System? A Compliance Guide for 2026">
+    <meta property="og:description" content="Agentic AI systems must comply with EU AI Act Articles 9-15 by August 2, 2026. This guide covers what auditors check and how to prepare your Python agents.">
+    <meta property="og:url" content="https://airblackbox.ai/blog/agentic-ai-compliance-eu-ai-act">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://airblackbox.ai/og-image.svg">
+    <meta property="article:published_time" content="2026-04-17">
+    <meta property="article:modified_time" content="2026-04-17">
+    <meta property="article:author" content="Jason Shotwell">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How Do You Audit an Agentic AI System? A Compliance Guide for 2026">
+    <meta name="twitter:description" content="Agentic AI compliance under the EU AI Act: what auditors check, tamper-evident audit trails, and automated scanning for Python agents.">
+    <meta name="twitter:image" content="https://airblackbox.ai/og-image.svg">
+
+    <!-- Structured Data: Article -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "How Do You Audit an Agentic AI System? A Compliance Guide for 2026",
+      "description": "Agentic AI systems face strict compliance requirements under the EU AI Act. Learn what auditors check, how to build tamper-evident audit trails, and how to scan your Python agent for compliance gaps.",
+      "image": "https://airblackbox.ai/og-image.svg",
+      "datePublished": "2026-04-17",
+      "dateModified": "2026-04-17",
+      "author": {
+        "@type": "Person",
+        "name": "Jason Shotwell",
+        "url": "https://github.com/jshotwell",
+        "jobTitle": "Creator of AIR Blackbox",
+        "description": "Builder of open-source AI governance tooling. Creator of AIR Blackbox, the flight recorder for autonomous AI agents."
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "AIR Blackbox",
+        "url": "https://airblackbox.ai",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://airblackbox.ai/logo.png"
+        }
+      },
+      "mainEntityOfPage": "https://airblackbox.ai/blog/agentic-ai-compliance-eu-ai-act",
+      "keywords": ["agentic ai", "ai compliance", "eu ai act", "ai governance", "ai risk management", "ai audit trail", "python ai agent"]
+    }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is agentic AI compliance?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Agentic AI compliance means ensuring that autonomous AI agents meet regulatory requirements for record-keeping, transparency, human oversight, and risk management. Under the EU AI Act, agentic AI systems that make decisions affecting health, finance, employment, or insurance are classified as high-risk and must maintain tamper-evident audit trails, provide human override mechanisms, and document their capabilities and limitations."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the EU AI Act apply to agentic AI systems?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The EU AI Act applies to any AI system that makes or influences decisions in high-risk domains listed in Annex III, including employment, credit scoring, insurance, healthcare, and law enforcement. Agentic AI systems that operate autonomously in these domains face the strictest requirements under Articles 9 through 15, covering risk management, data governance, record-keeping, transparency, human oversight, and accuracy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the EU AI Act deadline for high-risk AI systems?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The EU AI Act enforcement deadline for high-risk AI systems is August 2, 2026. After this date, organizations deploying high-risk AI systems without compliant audit trails, risk management processes, and transparency documentation face fines up to 35 million euros or 7% of global annual turnover, whichever is higher."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you audit an agentic AI system?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Auditing an agentic AI system requires verifying three things: identity continuity (proving the agent running today is the same one that was approved), behavioral reproducibility (proving it produces consistent outputs across hardware), and decision transparency (proving a human can understand why the agent made each decision). Tools like AIR Blackbox can automate these checks by scanning your Python codebase and generating compliance reports mapped to EU AI Act articles."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What tools can scan for EU AI Act compliance?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AIR Blackbox is an open-source compliance scanner that checks Python AI projects against 51+ EU AI Act requirements across Articles 9 through 15. It runs locally, requires no API keys, and maps findings to ISO 42001, NIST AI RMF, and Colorado SB 24-205 simultaneously. Install with pip install air-blackbox and run air-blackbox comply --scan . to get a compliance report in under 10 seconds."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Structured Data: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://airblackbox.ai"},
+        {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://airblackbox.ai/blog/"},
+        {"@type": "ListItem", "position": 3, "name": "How Do You Audit an Agentic AI System?", "item": "https://airblackbox.ai/blog/agentic-ai-compliance-eu-ai-act"}
+      ]
+    }
+    </script>
+
+    <!-- Structured Data: HowTo -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to scan an agentic AI system for EU AI Act compliance",
+      "description": "Step-by-step guide to scanning your Python AI agent for EU AI Act compliance gaps using AIR Blackbox.",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Install AIR Blackbox",
+          "text": "Run pip install air-blackbox to install the compliance scanner."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Run the compliance scan",
+          "text": "Run air-blackbox comply --scan . -v in your project directory to check against 51+ EU AI Act requirements."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Review findings by article",
+          "text": "Review the PASS, WARN, and FAIL results grouped by EU AI Act Articles 9 through 15."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Fix flagged issues",
+          "text": "Each FAIL and WARN includes a fix hint with the specific code location and regulatory clause."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Export evidence bundle",
+          "text": "Run air-blackbox export to generate a signed evidence package for auditors."
+        }
+      ],
+      "tool": {
+        "@type": "SoftwareApplication",
+        "name": "AIR Blackbox",
+        "url": "https://pypi.org/project/air-blackbox/"
+      }
+    }
+    </script>
+
+    <title>How Do You Audit an Agentic AI System? | AIR Blackbox</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #080b14;
+            --bg-secondary: #0f1419;
+            --bg-tertiary: #16202a;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --accent: #58a6ff;
+            --accent-muted: rgba(88, 166, 255, 0.1);
+            --border: #30363d;
+            --green: #3fb950;
+            --yellow: #d29922;
+            --red: #f85149;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Sora", sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            padding: 4rem 0 2rem;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--accent-muted);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        code {
+            font-family: "JetBrains Mono", "Courier New", monospace;
+            background-color: var(--bg-tertiary);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-size: 0.9em;
+            color: var(--accent);
+        }
+
+        pre {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            font-family: "JetBrains Mono", "Courier New", monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        .highlight {
+            background-color: var(--accent-muted);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 4px;
+        }
+
+        .highlight strong {
+            color: var(--accent);
+        }
+
+        .deadline-box {
+            background-color: rgba(248, 81, 73, 0.08);
+            border-left: 4px solid var(--red);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 4px;
+        }
+
+        .deadline-box strong {
+            color: var(--red);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background-color: var(--bg-tertiary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: var(--bg-secondary);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .key-takeaways {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .key-takeaways h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+
+        .key-takeaways li {
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-item {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .faq-toggle {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .faq-item.open .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            display: none;
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+
+        .author-box {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .author-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        .author-info .author-title {
+            color: var(--accent);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .author-info p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(88, 166, 255, 0.1), rgba(63, 185, 80, 0.05));
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .cta-box h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+
+        .cta-box pre {
+            text-align: left;
+            max-width: 500px;
+            margin: 1rem auto;
+        }
+
+        footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 6rem;
+            padding: 3rem 0;
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            .container { padding: 0 1rem; }
+            .author-box { flex-direction: column; }
+            .article-meta { gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav style="background:#080b14;border-bottom:1px solid #21262d;padding:16px 0;">
+      <div style="max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+        <a href="/" style="color:#e6edf3;font-weight:700;font-size:18px;text-decoration:none;">AIR <span style="color:#58a6ff;">Blackbox</span></a>
+        <span style="display:flex;gap:20px;">
+          <a href="/" style="color:#8b949e;text-decoration:none;">Home</a>
+          <a href="/compliance-mapping" style="color:#8b949e;text-decoration:none;">Docs</a>
+          <a href="/blog/" style="color:#58a6ff;text-decoration:none;">Blog</a>
+          <a href="https://github.com/airblackbox/airblackbox" style="color:#8b949e;text-decoration:none;">GitHub</a>
+          <a href="https://pypi.org/project/air-blackbox/" style="color:#8b949e;text-decoration:none;">PyPI</a>
+        </span>
+      </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="article-meta">
+                <span>Published April 17, 2026</span>
+                <span>12 min read</span>
+                <span>By <a href="https://github.com/jshotwell">Jason Shotwell</a></span>
+            </div>
+            <h1>How Do You Audit an Agentic AI System? A Compliance Guide for 2026</h1>
+            <p class="subtitle">Agentic AI is the fastest-growing category in software (500K monthly searches, up 900% year over year). The EU AI Act is the fastest-approaching compliance deadline. This guide covers where those two collide and what to do about it before August 2, 2026.</p>
+        </header>
+
+        <!-- Key Takeaways for AEO extraction -->
+        <div class="key-takeaways">
+            <h3>Key Takeaways</h3>
+            <ul>
+                <li>Agentic AI systems that make decisions in healthcare, finance, HR, or insurance are classified as high-risk under the EU AI Act and must comply by <strong>August 2, 2026</strong>.</li>
+                <li>Auditors will check three things: agent identity continuity, behavioral reproducibility, and decision transparency.</li>
+                <li>Standard application logs do not satisfy Article 12. You need tamper-evident, HMAC-chained audit trails.</li>
+                <li>You can scan your Python AI project today with <code>pip install air-blackbox && air-blackbox comply --scan . -v</code> to find gaps across all seven articles.</li>
+            </ul>
+        </div>
+
+        <!-- Section 1: What is agentic AI compliance? -->
+        <section>
+            <h2>What Is Agentic AI Compliance?</h2>
+
+            <p>Agentic AI compliance is the process of ensuring autonomous AI agents meet regulatory requirements for record-keeping, transparency, human oversight, and risk management. Under the EU AI Act (Regulation 2024/1689), any AI system that makes or influences decisions in high-risk domains must prove it was built and operated according to specific technical standards.</p>
+
+            <p>This matters now because agentic AI is no longer experimental. Agents are writing code, approving loans, screening resumes, triaging support tickets, and routing insurance claims in production. Every one of those use cases falls under the EU AI Act's high-risk classification in <a href="https://artificialintelligenceact.eu/annex/3/">Annex III</a>. The enforcement deadline is 107 days away.</p>
+
+            <p>The difference between agentic AI and a traditional ML model is autonomy. An agent makes decisions in a loop, calls tools, modifies its environment, and persists state across sessions. That autonomy is exactly what makes compliance harder: you cannot simply log a single prediction and call it auditable. You need to record the entire decision chain, prove the agent's identity was consistent, and demonstrate that a human can intervene at any point.</p>
+        </section>
+
+        <!-- Section 2: Does the EU AI Act apply? -->
+        <section>
+            <h2>Does the EU AI Act Apply to Agentic AI?</h2>
+
+            <p>Yes. The EU AI Act applies to any AI system deployed in the EU or affecting EU citizens, regardless of where the developer is based. Agentic AI systems that operate in Annex III domains are classified as high-risk and face the strictest requirements. This includes agents that screen job applicants, assess creditworthiness, triage medical symptoms, calculate insurance premiums, or make any decision that materially affects a person's rights or opportunities.</p>
+
+            <div class="deadline-box">
+                <p><strong>Deadline: August 2, 2026.</strong> After this date, deploying a high-risk AI system without compliant audit trails, risk management processes, and transparency documentation carries fines up to 35 million euros or 7% of global annual turnover.</p>
+            </div>
+
+            <p>The regulation does not use the word "agent" explicitly. It uses "AI system" broadly, defined as a machine-based system that generates outputs such as predictions, recommendations, decisions, or content. An autonomous agent that calls APIs, writes to databases, and makes sequential decisions easily meets this definition.</p>
+
+            <h3>Which articles apply to agentic AI?</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Article</th>
+                        <th>Requirement</th>
+                        <th>Why it matters for agents</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Article 9</td>
+                        <td>Risk management</td>
+                        <td>Agents introduce compounding risk through sequential decisions. Each step can amplify errors from the previous one.</td>
+                    </tr>
+                    <tr>
+                        <td>Article 10</td>
+                        <td>Data governance</td>
+                        <td>Agents consume and generate data continuously. Training data, tool outputs, and memory stores all need governance.</td>
+                    </tr>
+                    <tr>
+                        <td>Article 11</td>
+                        <td>Technical documentation</td>
+                        <td>An agent's architecture, tool integrations, and decision logic must be documented before deployment.</td>
+                    </tr>
+                    <tr>
+                        <td>Article 12</td>
+                        <td>Record-keeping</td>
+                        <td>Every decision in the agent loop must be recorded in tamper-evident logs for the system's lifetime.</td>
+                    </tr>
+                    <tr>
+                        <td>Article 13</td>
+                        <td>Transparency</td>
+                        <td>Users must know they are interacting with AI. The agent's capabilities, limitations, and reasoning must be accessible.</td>
+                    </tr>
+                    <tr>
+                        <td>Article 14</td>
+                        <td>Human oversight</td>
+                        <td>A human must be able to override or stop the agent at any point in its decision loop.</td>
+                    </tr>
+                    <tr>
+                        <td>Article 15</td>
+                        <td>Accuracy and robustness</td>
+                        <td>The agent must produce reproducible outputs and handle hardware or environment changes without silent behavioral drift.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 3: Three things auditors check -->
+        <section>
+            <h2>What Do Auditors Check in an Agentic AI System?</h2>
+
+            <p>An EU AI Act conformity assessment for agentic AI comes down to three questions. Every technical requirement in Articles 9 through 15 maps to one of these. If your agent can answer all three with evidence, you pass. If it cannot, the gaps become findings in the audit report.</p>
+
+            <h3>1. Is this the same agent that was approved?</h3>
+
+            <p>An agent running a continuous decision loop, whether on a cron schedule, a tick-based pattern, or a <code>while True</code> loop, restarts processes, reloads memory, and reconnects to tools. A regulator needs to know the agent producing today's loan denial is the same agent that passed last month's conformity assessment. This is the <strong>agent identity continuity</strong> problem.</p>
+
+            <p>The <a href="https://www.federalregister.gov/documents/2026/01/08/2026-00206/request-for-information-regarding-security-considerations-for-artificial-intelligence-agents">NIST RFI on AI Agent Security (Docket NIST-2025-0035)</a> names this explicitly. Three open standards exist today to solve it:</p>
+
+            <ul>
+                <li><strong>air-trust:</strong> Ed25519 agent identity keys with HMAC-SHA256 audit chains that persist across restarts.</li>
+                <li><strong>AAR (Agent Action Receipt):</strong> Per-action Ed25519 signing designed by the open-source community.</li>
+                <li><strong>SCC (Session Continuity Certificate):</strong> Session-level identity with Merkle memory roots and capability hash lineage.</li>
+            </ul>
+
+            <p>If your agent has no stable cryptographic identity binding, the scanner reports:</p>
+
+<pre><code>Article 12 -- Record-Keeping
+  FAIL  Agent identity binding
+        Autonomous agent detected in 3 file(s)
+        but no stable cryptographic identity found.
+        Checked for: air-trust, AAR, SCC.</code></pre>
+
+            <h3>2. Will it behave the same way tomorrow?</h3>
+
+            <p>Same model, same seed, same input, different GPU: different output. cuDNN picks different kernels based on hardware capabilities. TensorFlow ops behave the same way. This is not theoretical. Run the same PyTorch model on an A100 and an H100 with identical software versions and the outputs will differ. That is an Article 15 robustness violation.</p>
+
+            <p>Three checks catch this:</p>
+
+            <ul>
+                <li><strong>RNG seeds:</strong> Are seeds set for Python random, NumPy, PyTorch CPU, PyTorch CUDA, TensorFlow, and JAX?</li>
+                <li><strong>Deterministic algorithm flags:</strong> Is <code>torch.use_deterministic_algorithms(True)</code> set? Is <code>cudnn.benchmark</code> disabled?</li>
+                <li><strong>Hardware abstraction:</strong> Is the device selection abstracted (<code>cuda if available else cpu</code>) or hardcoded?</li>
+            </ul>
+
+<pre><code>Article 15 -- Accuracy, Robustness, and Cybersecurity
+  FAIL  RNG seed determinism
+        torch detected but no seed set.
+  FAIL  Deterministic algorithm flags
+        cudnn.benchmark not disabled.
+  WARN  Hardware abstraction
+        Hardcoded .to("cuda") in 2 files.</code></pre>
+
+            <h3>3. Can someone understand why it made this decision?</h3>
+
+            <p>Article 13 requires that users can understand the agent's outputs. An agent returning a boolean <code>approved</code> / <code>denied</code> without a confidence score, reasoning trace, or rationale fails this requirement. Six sub-checks cover it: AI disclosure to users, capability and limitation documentation, instructions for use, provider identity, output interpretation support, and change logging.</p>
+
+<pre><code>Article 13 -- Transparency
+  PASS  AI disclosure to users
+  FAIL  Capability and limitation documentation
+        No MODEL_CARD.md, SYSTEM_CARD.md, or capability docs found.
+  WARN  Output interpretation support
+        No confidence scores, rationale, or explanation patterns detected.</code></pre>
+
+            <p>The fix is structural. Return decisions with reasoning:</p>
+
+<pre><code>def predict_creditworthiness(applicant):
+    prediction = model.predict(applicant)
+    confidence = model.predict_proba(applicant).max()
+    reasoning = generate_reasoning_trace(applicant, prediction)
+    return {
+        "decision": prediction,
+        "confidence_score": confidence,
+        "rationale": reasoning,
+    }</code></pre>
+        </section>
+
+        <!-- Section 4: Why standard logging fails -->
+        <section>
+            <h2>Why Do Standard Logs Fail EU AI Act Compliance?</h2>
+
+            <p>Standard application logs (Datadog, Splunk, CloudWatch) do not satisfy Article 12 because they lack three properties the regulation requires: tamper-evidence, completeness, and structured auditability.</p>
+
+            <p><strong>Tamper-evidence:</strong> Anyone with write access to a log store can alter a record. Article 12 requires logs that are resistant to modification. HMAC-SHA256 chains solve this: each record's hash includes the previous record's hash, so altering one record breaks every record after it.</p>
+
+            <p><strong>Completeness:</strong> Most logging captures responses but misses the full prompt context, tool calls, intermediate reasoning, and memory state. An auditor reconstructing an incident needs the complete episode, not a status code.</p>
+
+            <p><strong>Structured auditability:</strong> Raw log lines in JSON do not map to regulatory articles. An auditor needs to know which log entries satisfy which requirement. Evidence bundles that map findings to specific article clauses do this automatically.</p>
+
+            <div class="highlight">
+                <p><strong>What Article 12 actually requires:</strong> "High-risk AI systems shall technically allow for the automatic recording of events (logs) over the lifetime of the system." The logs must be tamper-resistant, time-stamped, and structured enough for a conformity assessment body to verify compliance.</p>
+            </div>
+        </section>
+
+        <!-- Section 5: How to scan today -->
+        <section>
+            <h2>How Do You Scan Your AI Agent for Compliance Today?</h2>
+
+            <p><a href="https://github.com/airblackbox/airblackbox">AIR Blackbox</a> is an open-source compliance scanner that checks Python AI projects against 51+ EU AI Act requirements. It runs locally, needs no API keys, and finishes a full scan in under 10 seconds. Install it and run your first scan with two commands:</p>
+
+<pre><code>pip install air-blackbox
+air-blackbox comply --scan . -v</code></pre>
+
+            <p>The output groups findings by EU AI Act article:</p>
+
+<pre><code>Article 9  -- Risk Management              PASS (3/3 checks)
+Article 10 -- Data Governance              WARN (2/3 checks)
+Article 11 -- Technical Documentation      PASS (4/4 checks)
+Article 12 -- Record-Keeping               FAIL (2/5 checks)
+Article 13 -- Transparency                 WARN (4/6 checks)
+Article 14 -- Human Oversight              PASS (3/3 checks)
+Article 15 -- Accuracy and Robustness      FAIL (3/6 checks)
+
+Score: 22 pass / 7 warn / 5 fail
+Audit-ready: 65%</code></pre>
+
+            <p>Every FAIL and WARN includes a fix hint that points to the specific code location and the specific regulatory clause. The same scan maps to ISO 42001, NIST AI RMF, and Colorado SB 24-205 simultaneously, so you get four compliance frameworks from one command.</p>
+
+            <p>When you are ready for an auditor review, export the evidence bundle:</p>
+
+<pre><code>air-blackbox export</code></pre>
+
+            <p>This packages the audit chain, scan results, and ML-DSA-65 signatures into a self-verifying <code>.air-evidence</code> ZIP. An auditor runs <code>python verify.py</code> inside the ZIP and gets PASS or FAIL in two seconds. No pip install needed on their end.</p>
+
+            <div class="cta-box">
+                <h3>Scan your project now</h3>
+                <p>Find out where your agentic AI system stands before an auditor does.</p>
+<pre><code>pip install air-blackbox
+air-blackbox comply --scan . -v</code></pre>
+                <p><a href="https://github.com/airblackbox/airblackbox">View on GitHub</a> &middot; <a href="https://pypi.org/project/air-blackbox/">PyPI</a> &middot; <a href="https://airblackbox.ai">Docs</a></p>
+            </div>
+        </section>
+
+        <!-- Section 6: Which industries are affected -->
+        <section>
+            <h2>Which Industries Need Agentic AI Compliance?</h2>
+
+            <p>Every industry where AI agents make decisions that affect people falls under the EU AI Act's high-risk classification. The pattern is the same across all of them: a traditionally analog process goes digital, AI gets embedded in the decision layer, and nobody audits the AI for compliance until a deadline forces the issue.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Industry</th>
+                        <th>Agentic AI use case</th>
+                        <th>EU AI Act classification</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Financial services</td>
+                        <td>Credit underwriting, fraud detection, trading signals</td>
+                        <td>Annex III high-risk</td>
+                    </tr>
+                    <tr>
+                        <td>Healthcare</td>
+                        <td>Clinical triage, diagnostic support, treatment recommendations</td>
+                        <td>Annex III high-risk</td>
+                    </tr>
+                    <tr>
+                        <td>HR and recruitment</td>
+                        <td>Resume screening, interview scoring, candidate ranking</td>
+                        <td>Annex III high-risk (explicit)</td>
+                    </tr>
+                    <tr>
+                        <td>Insurance</td>
+                        <td>Underwriting, claims processing, risk scoring</td>
+                        <td>Annex III high-risk</td>
+                    </tr>
+                    <tr>
+                        <td>Legal</td>
+                        <td>Contract review, case prediction, document generation</td>
+                        <td>Annex III high-risk</td>
+                    </tr>
+                    <tr>
+                        <td>Real estate</td>
+                        <td>Property valuation, mortgage qualification, tenant screening</td>
+                        <td>Annex III high-risk</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>Search volume confirms the urgency. "AI compliance" searches are up 900% quarter over quarter. "AI risk management" is up 900%. "AI governance tools" grew 900% year over year. The market is looking for solutions right now.</p>
+        </section>
+
+        <!-- FAQ Section -->
+        <section>
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What is agentic AI compliance?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Agentic AI compliance means ensuring that autonomous AI agents meet regulatory requirements for record-keeping, transparency, human oversight, and risk management. Under the EU AI Act, agentic AI systems in high-risk domains must maintain tamper-evident audit trails, provide human override mechanisms, and document their capabilities and limitations.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Does the EU AI Act apply to agentic AI systems?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes. The EU AI Act applies to any AI system that makes or influences decisions in high-risk domains listed in Annex III, including employment, credit scoring, insurance, healthcare, and law enforcement. Agentic AI systems that operate autonomously in these domains face the strictest requirements under Articles 9 through 15.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What is the EU AI Act deadline for high-risk AI systems?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>The enforcement deadline for high-risk AI systems is August 2, 2026. After this date, organizations face fines up to 35 million euros or 7% of global annual turnover for non-compliance.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How do you audit an agentic AI system?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Auditing an agentic AI system requires verifying three things: identity continuity (proving the agent is the same one that was approved), behavioral reproducibility (consistent outputs across hardware), and decision transparency (humans can understand the reasoning). Tools like AIR Blackbox automate these checks across 51+ requirements.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What tools can scan for EU AI Act compliance?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p>AIR Blackbox is an open-source compliance scanner that checks Python AI projects against 51+ EU AI Act requirements across Articles 9 through 15. It runs locally, requires no API keys, and maps findings to ISO 42001, NIST AI RMF, and Colorado SB 24-205 simultaneously. Install with <code>pip install air-blackbox</code>.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Author Box -->
+        <div class="author-box">
+            <div class="author-info">
+                <h4>Jason Shotwell</h4>
+                <div class="author-title">Creator of AIR Blackbox</div>
+                <p>Builder of open-source AI governance tooling. AIR Blackbox has 14,000+ PyPI downloads and has been validated by deepset (Haystack) and Ludwig maintainers. Jason builds compliance infrastructure for the teams shipping AI agents into production.</p>
+            </div>
+        </div>
+
+        <!-- Last Updated -->
+        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 2rem;">Last updated: April 17, 2026. This article is reviewed and updated monthly to reflect the latest regulatory developments and scanner capabilities.</p>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://github.com/airblackbox/airblackbox">GitHub</a>
+                <a href="https://pypi.org/project/air-blackbox/">PyPI</a>
+                <a href="https://airblackbox.ai/terms">Terms of Service</a>
+                <a href="https://airblackbox.ai/privacy">Privacy Policy</a>
+            </div>
+            <div class="footer-copyright">
+                Copyright 2026 AIR Blackbox. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- FAQ Interactivity -->
+    <script>
+        document.querySelectorAll('.faq-item').forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                item.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

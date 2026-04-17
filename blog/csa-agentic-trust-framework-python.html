@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSA Agentic Trust Framework for Python AI Agents</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="description" content="How to check CSA Agentic Trust Framework (ATF) conformance for Python AI agents with air-trust v0.4.0. Identity Core Elements I-1 to I-5, Intern to Principal maturity levels, local-first.">
+<meta name="keywords" content="csa agentic trust framework, atf conformance python, agent identity python, agentic ai governance, csa atf intern junior senior principal, python agent urn, air-trust 0.4.0, cloud security alliance ai agents">
+<meta property="og:title" content="CSA Agentic Trust Framework for Python AI Agents">
+<meta property="og:description" content="Check CSA Agentic Trust Framework (ATF) conformance for Python AI agents in one function call. Identity Core Elements I-1 to I-5, Intern to Principal maturity, local-first.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://airblackbox.ai/blog/csa-agentic-trust-framework-python">
+<link rel="canonical" href="https://airblackbox.ai/blog/csa-agentic-trust-framework-python">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CSA Agentic Trust Framework for Python AI Agents">
+<meta name="twitter:description" content="Check CSA ATF conformance for Python agents in one function call. air-trust v0.4.0.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "CSA Agentic Trust Framework for Python AI Agents",
+  "description": "How to check CSA Agentic Trust Framework (ATF) conformance for Python AI agents with air-trust v0.4.0. Identity Core Elements I-1 to I-5, Intern to Principal maturity levels, local-first.",
+  "url": "https://airblackbox.ai/blog/csa-agentic-trust-framework-python",
+  "datePublished": "2026-04-09",
+  "dateModified": "2026-04-09",
+  "author": {"@type": "Person", "name": "Jason Shotwell", "url": "https://airblackbox.ai"},
+  "publisher": {"@type": "Organization", "name": "AIR Blackbox", "url": "https://airblackbox.ai"},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://airblackbox.ai/blog/csa-agentic-trust-framework-python"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://airblackbox.ai"},
+    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://airblackbox.ai/blog/"},
+    {"@type": "ListItem", "position": 3, "name": "CSA Agentic Trust Framework for Python", "item": "https://airblackbox.ai/blog/csa-agentic-trust-framework-python"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the CSA Agentic Trust Framework?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The CSA Agentic Trust Framework (ATF) is a Cloud Security Alliance specification that defines how AI agents should prove identity, declare purpose, and earn progressively more trust through a four-stage maturity model (Intern, Junior, Senior, Principal). The v0.9.1 public review draft focuses on five Identity Core Elements (I-1 through I-5) that every autonomous agent should satisfy before it takes actions on behalf of a user or organization."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does CSA ATF relate to the EU AI Act?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The EU AI Act tells you what your AI system must do (risk management, audit trails, human oversight, transparency). The CSA Agentic Trust Framework tells you how each individual agent should identify itself and earn trust. They layer. An EU AI Act Article 14 audit trail with ATF-conformant agent identities is strictly stronger than either standard alone, and satisfies both regimes at once."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the five ATF Identity Core Elements?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "I-1 Unique Identifier (a persistent URN for the agent), I-2 Credential Binding (a cryptographic fingerprint tying the agent to its code and owner), I-3 Ownership Chain (a human or organization who is accountable), I-4 Purpose Declaration (what the agent is for), and I-5 Capability Manifest (what the agent is allowed to do). At Intern level, I-1, I-3 and I-4 are MUST and I-2 and I-5 are SHOULD."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to pick a side between ATF and EU AI Act compliance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The two frameworks solve different problems and are designed to compose. air-trust v0.4.0 emits the same audit events that feed EU AI Act Article 12 logging and adds an atf.conformance() check for each agent identity. One install, both regimes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I check ATF conformance in Python?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Install air-trust v0.4.0, build an AgentIdentity with purpose and capabilities fields, then call air_trust.atf.conformance(identity) for the per-requirement result, air_trust.atf.level_compliant(identity, 'intern') for a level check, or air_trust.atf.conformance_statement(identity) for a human-readable auditor report. A CLI (python -m air_trust atf) is also included."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; color: #e6edf3; background: #080b14; }
+  .container { max-width: 720px; margin: 0 auto; padding: 40px 20px; }
+  h1 { font-size: 2.2em; line-height: 1.2; margin-bottom: 16px; letter-spacing: -0.02em; color: #e6edf3; }
+  h2 { font-size: 1.4em; margin-top: 48px; margin-bottom: 16px; color: #e6edf3; }
+  h3 { font-size: 1.1em; margin-top: 32px; margin-bottom: 12px; color: #e6edf3; }
+  p { margin-bottom: 20px; color: #c9d1d9; }
+  .meta { color: #8b949e; font-size: 14px; margin-bottom: 40px; }
+  code { background: #0d1117; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; color: #e6edf3; }
+  pre { background: #0d1117; color: #e6edf3; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #21262d; color: #c9d1d9; }
+  th { font-weight: 600; background: #0d1117; color: #e6edf3; }
+  blockquote { border-left: 3px solid #58a6ff; padding-left: 16px; margin: 24px 0; font-style: italic; color: #8b949e; }
+  .cta { background: #0d1117; color: #e6edf3; padding: 24px; border-radius: 8px; margin: 40px 0; text-align: center; border: 1px solid #21262d; }
+  .cta code { background: #1a1a1a; color: #e6edf3; }
+  .cta a { color: #58a6ff; }
+  footer { border-top: 1px solid #21262d; padding-top: 20px; margin-top: 60px; color: #8b949e; font-size: 13px; }
+  footer a { color: #58a6ff; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { color: #79c0ff; }
+  ul, ol { margin: 0 0 20px 24px; color: #c9d1d9; }
+  li { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<nav style="background:#080b14;border-bottom:1px solid #21262d;padding:16px 0;">
+  <div style="max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="/" style="color:#e6edf3;font-weight:700;font-size:18px;text-decoration:none;">AIR <span style="color:#58a6ff;">Blackbox</span></a>
+    <span style="display:flex;gap:20px;">
+      <a href="/" style="color:#8b949e;text-decoration:none;">Home</a>
+      <a href="/compliance-mapping" style="color:#8b949e;text-decoration:none;">Docs</a>
+      <a href="/blog/" style="color:#58a6ff;text-decoration:none;">Blog</a>
+      <a href="https://github.com/airblackbox/airblackbox" style="color:#8b949e;text-decoration:none;">GitHub</a>
+      <a href="https://pypi.org/project/air-trust/" style="color:#8b949e;text-decoration:none;">PyPI</a>
+    </span>
+  </div>
+</nav>
+
+<div class="container">
+
+<h1>CSA Agentic Trust Framework for Python AI Agents</h1>
+<p class="meta">April 9, 2026 &middot; Jason Shotwell &middot; 11 min read</p>
+
+<p>The <strong>Cloud Security Alliance Agentic Trust Framework</strong> (ATF) is the first industry standard that asks a question regulators keep dodging: <em>how do you know an AI agent is who it says it is?</em> Version 0.9.1 of the public review draft landed earlier this year and is already being referenced in enterprise procurement checklists. We shipped native ATF conformance support in <code>air-trust</code> v0.4.0 this week. This post walks through what the framework is, what it asks of Python agents, and how to prove conformance with a single function call.</p>
+
+<h2>What the CSA Agentic Trust Framework Actually Is</h2>
+
+<p>The ATF is a specification for identifying, trusting, and progressively promoting autonomous AI agents. It answers three questions that the EU AI Act leaves open: who is the agent, what is it allowed to do, and how much autonomy has it earned? The framework sits underneath compliance regimes like the <a href="/blog/eu-ai-act-august-2026-deadline">EU AI Act</a> and ISO 42001 — it does not replace them. It tells you how to identify and promote <em>individual agents</em> so that the broader compliance machinery has something durable to attach to.</p>
+
+<p>There are two structural pieces you need to understand before you can write any code:</p>
+
+<ul>
+  <li><strong>Identity Core Elements.</strong> Five requirements, labeled I-1 through I-5, that describe the minimum identity surface every agent must expose.</li>
+  <li><strong>Maturity levels.</strong> Four progressive tiers — Intern, Junior, Senior, Principal — that gate how much autonomy an agent is trusted with. Each level raises the bar on which core elements are MUST, SHOULD, or MAY.</li>
+</ul>
+
+<p>An agent starts at <code>intern</code>, proves itself against a narrow set of MUSTs, and graduates upward. The maturity ladder is the framework's most interesting idea — it borrows directly from how human organizations grant autonomy to junior employees.</p>
+
+<h2>The Five Identity Core Elements (I-1 to I-5)</h2>
+
+<p>These are the five things every agent needs to expose before it can claim any ATF level. The air-trust implementation maps them directly to fields on the existing <code>AgentIdentity</code> dataclass we use for <a href="/blog/audit-trails-ai-agents-python">Article 14 identity binding</a> in audit chains.</p>
+
+<table>
+  <thead>
+    <tr><th>ID</th><th>Requirement</th><th>What it means in Python</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>I-1</strong></td><td>Unique Identifier</td><td>A persistent URN — e.g. <code>urn:agent:air-blackbox:search-bot:1.2.0</code></td></tr>
+    <tr><td><strong>I-2</strong></td><td>Credential Binding</td><td>SHA-256 fingerprint over <code>name:owner:version</code></td></tr>
+    <tr><td><strong>I-3</strong></td><td>Ownership Chain</td><td>A human owner and optional organization</td></tr>
+    <tr><td><strong>I-4</strong></td><td>Purpose Declaration</td><td>A short string describing what the agent is for</td></tr>
+    <tr><td><strong>I-5</strong></td><td>Capability Manifest</td><td>A list of actions the agent is allowed to take</td></tr>
+  </tbody>
+</table>
+
+<p>Notice that I-4 and I-5 are new — the other three already existed in air-trust 0.3.0 to support <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">EU AI Act Article 14</a> identity binding. Adding purpose and capabilities took about twenty lines of dataclass code and zero new dependencies. This is the cheapest compliance upgrade you will ever ship.</p>
+
+<h2>The Four Maturity Levels</h2>
+
+<p>The ATF maturity ladder is where things get interesting. Each level raises the bar on which of the five core elements you have to satisfy.</p>
+
+<table>
+  <thead>
+    <tr><th>Level</th><th>Description</th><th>MUST</th><th>SHOULD</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Intern</strong></td><td>Supervised, narrow task scope</td><td>I-1, I-3, I-4</td><td>I-2, I-5</td></tr>
+    <tr><td><strong>Junior</strong></td><td>Limited autonomy, human-in-the-loop</td><td>I-1, I-2, I-3, I-4</td><td>I-5</td></tr>
+    <tr><td><strong>Senior</strong></td><td>Full core element set, broader scope</td><td>I-1, I-2, I-3, I-4, I-5</td><td>&mdash;</td></tr>
+    <tr><td><strong>Principal</strong></td><td>Strict: every core element is mandatory</td><td>I-1, I-2, I-3, I-4, I-5</td><td>&mdash;</td></tr>
+  </tbody>
+</table>
+
+<p>The promotion logic in the v0.9.1 draft is effectively: you cannot claim a higher level than the most restrictive set of MUSTs you satisfy. An agent that is missing a Purpose Declaration (I-4) cannot even be an Intern. An agent that only has identifiers and an owner but no capability manifest is stuck at Intern. This is deliberate — it forces operators to write down what an agent does before trusting it with bigger jobs.</p>
+
+<h2>Implementing ATF Conformance in air-trust v0.4.0</h2>
+
+<p>Here is the minimal code path for an Intern-level agent in the new <code>air_trust</code> release.</p>
+
+<pre><code>from air_trust import AgentIdentity
+from air_trust.atf import conformance_statement, level_compliant
+
+identity = AgentIdentity(
+    agent_name="customer-search",
+    owner="jason@airblackbox.ai",
+    agent_version="1.0.0",
+    org="AIR Blackbox",
+    purpose="Answer customer questions from product documentation",
+    capabilities=["search:docs", "llm:respond"],
+    atf_level="intern",
+)
+
+print(conformance_statement(identity))
+print("Intern compliant:", level_compliant(identity, "intern"))</code></pre>
+
+<p>Running that prints a full auditor-ready report and a pass/fail summary. The URN is auto-generated from <code>org + name + version</code>. The SHA-256 credential fingerprint is computed in <code>__post_init__</code>. You do not have to think about I-1, I-2, or I-3 at all — they are derived for you. You only have to write down I-4 and I-5.</p>
+
+<h2>Stricter Levels Are the Same Function, Different Argument</h2>
+
+<p>Promoting an agent to a higher level does not require new APIs. You change the <code>atf_level</code> field and re-run the conformance check.</p>
+
+<pre><code>identity.atf_level = "principal"
+
+if not level_compliant(identity, "principal"):
+    from air_trust.atf import gaps
+    for req_id, reason in gaps(identity, "principal"):
+        print(f"  {req_id}: {reason}")</code></pre>
+
+<p>The <code>gaps()</code> helper is the important one. It returns a list of tuples like <code>("I-5", "Capability Manifest missing")</code> so you know exactly what to fix before promotion. This is how you wire ATF checks into a CI pipeline: gate a deployment on <code>gaps(identity, target_level) == []</code>. If it fails, the log tells developers exactly which core element to add.</p>
+
+<h2>The CLI</h2>
+
+<p>For operations teams who do not want to write Python, air-trust v0.4.0 ships a new subcommand. It accepts either explicit flags or a JSON config file and emits either a human-readable statement or JSON.</p>
+
+<pre><code>python -m air_trust atf \
+    --name customer-search \
+    --owner jason@airblackbox.ai \
+    --org "AIR Blackbox" \
+    --purpose "Answer customer questions from product docs" \
+    --capabilities "search:docs,llm:respond" \
+    --level intern</code></pre>
+
+<p>Sample output (trimmed):</p>
+
+<pre><code>CSA Agentic Trust Framework (ATF) Conformance Statement
+============================================================
+Agent:        customer-search
+URN:          urn:agent:air-blackbox:customer-search:0.0.0
+Target level: intern
+Actual level: principal
+
+  I-1  Unique Identifier      [MUST  ]  PASS
+  I-2  Credential Binding     [SHOULD]  PASS
+  I-3  Ownership Chain        [MUST  ]  PASS
+  I-4  Purpose Declaration    [MUST  ]  PASS
+  I-5  Capability Manifest    [SHOULD]  PASS
+
+All MUST requirements for 'intern' level are satisfied.</code></pre>
+
+<p>Pipe it through <code>--format json</code> to feed the result into a compliance dashboard or a <a href="/blog/article-11-technical-documentation-ai-systems">Technical Documentation</a> bundle. The exit code is zero on a pass and one on a fail, so the same command works as a CI gate.</p>
+
+<h2>ATF and the EU AI Act Layer Together</h2>
+
+<p>This is the question I got from the first developer who saw the release: do I have to choose between CSA ATF and the EU AI Act? The short answer is no. They solve different problems and are explicitly designed to compose.</p>
+
+<p>The EU AI Act tells you what your <em>system</em> must do: run risk management (Article 9), govern data (Article 10), keep technical documentation (Article 11), log decisions (Article 12), provide transparency (Article 13), enable human oversight (Article 14), and stay robust (Article 15). The ATF tells you how each individual <em>agent</em> inside that system should identify itself and earn progressively more trust. An EU AI Act Article 14 audit trail where every entry carries an ATF-conformant agent identity is strictly stronger than either standard alone, and satisfies both at once.</p>
+
+<p>In air-trust v0.4.0, the same <code>AgentIdentity</code> object that feeds the HMAC-SHA256 audit chain also carries the ATF fields. One object, two regimes. If you already had the Article 14 wiring in place from an earlier version, you get ATF conformance almost for free — just add <code>purpose</code> and <code>capabilities</code> to the identity you were already building.</p>
+
+<h2>External Identity Providers</h2>
+
+<p>The framework explicitly allows external identity binding — a local URN plus a pointer to an external registry that can attest to the agent. air-trust v0.4.0 exposes this as the <code>external_id</code> field on <code>AgentIdentity</code>. It can hold any string the registry uses as a handle.</p>
+
+<pre><code>identity = AgentIdentity(
+    agent_name="research-bot",
+    owner="jason@airblackbox.ai",
+    org="AIR Blackbox",
+    purpose="Summarize academic papers",
+    capabilities=["search:arxiv", "llm:summarize"],
+    external_id="research-bot@agentlair.dev",  # external registry handle
+    atf_level="junior",
+)</code></pre>
+
+<p>The design is intentionally provider-agnostic. AgentLair-style handles work, <code>did:web:</code> URIs work, and so do custom HTTP registries. A provider adapter module is on the roadmap, but the core conformance check does not care where the external ID resolves — it only cares that one is declared.</p>
+
+<h2>Why This Is Worth Implementing Now</h2>
+
+<p>ATF v0.9.1 is still a public review draft, which is exactly why this is the right time to implement it. Three reasons:</p>
+
+<ul>
+  <li><strong>The core elements are stable.</strong> I-1 through I-5 have been present since the earliest drafts. The review process is unlikely to change what a unique identifier or an ownership chain looks like.</li>
+  <li><strong>Conformance claims mature with the framework.</strong> A library that implements the draft today will have running code the day v1.0 lands. Libraries that wait until v1.0 will ship a quarter late.</li>
+  <li><strong>Enterprise procurement teams are already asking.</strong> I had three different buyers reference ATF maturity levels in January alone. Having a conformance statement you can attach to an <a href="/blog/article-11-technical-documentation-ai-systems">Article 11 technical documentation bundle</a> shortens the sales cycle.</li>
+</ul>
+
+<p>None of this requires a cloud service or a subscription. The entire conformance module is local, deterministic, and open source under the same Apache 2.0 license as the rest of air-trust.</p>
+
+<h2>What Was Not Implemented (Yet)</h2>
+
+<p>Honest about limitations up front: v0.4.0 implements the Identity core element only. The broader ATF draft also covers Agent Actions, Agent Tools, Agent Governance, and the promotion gate machinery. Those are on the roadmap for v0.5.0 and v0.6.0. If you need them today, open an issue on the repo and I will prioritize whichever piece is blocking you. The Identity element is the right place to start because every other element of the framework assumes a stable agent identity exists first.</p>
+
+<h2>Get Started</h2>
+
+<p>The full v0.4.0 release is on PyPI.</p>
+
+<pre><code>pip install --upgrade air-trust</code></pre>
+
+<p>From there, add <code>purpose</code> and <code>capabilities</code> to your existing <code>AgentIdentity</code> objects, call <code>air_trust.atf.conformance_statement(identity)</code>, and attach the output to your compliance bundle. If you are starting from zero, the <a href="/blog/python-agent-compliance-roadmap-august-2026">Python Agent Compliance Roadmap</a> walks through the full EU AI Act implementation, and ATF now slots in as a layer above identity binding.</p>
+
+<h2>FAQ</h2>
+
+<h3>What is the CSA Agentic Trust Framework?</h3>
+<p>The CSA Agentic Trust Framework (ATF) is a Cloud Security Alliance specification that defines how AI agents should prove identity, declare purpose, and earn progressively more trust through a four-stage maturity model. The v0.9.1 public review draft focuses on five Identity Core Elements (I-1 through I-5) that every autonomous agent should satisfy before it takes actions on behalf of a user or organization. It is not a regulation — it is a framework that plugs into existing regulatory regimes like the EU AI Act and ISO 42001.</p>
+
+<h3>How does CSA ATF relate to the EU AI Act?</h3>
+<p>The EU AI Act tells you what your AI system must do (risk management, audit trails, human oversight, transparency). The ATF tells you how each individual agent inside that system should identify itself and earn trust. They layer. An EU AI Act Article 14 audit trail with ATF-conformant agent identities is strictly stronger than either standard alone and satisfies both regimes at once. In air-trust v0.4.0 the same <code>AgentIdentity</code> object serves both purposes.</p>
+
+<h3>What are the five ATF Identity Core Elements?</h3>
+<p>I-1 Unique Identifier (a persistent URN for the agent), I-2 Credential Binding (a cryptographic fingerprint tying the agent to its code and owner), I-3 Ownership Chain (a human or organization who is accountable), I-4 Purpose Declaration (what the agent is for), and I-5 Capability Manifest (what the agent is allowed to do). At Intern level I-1, I-3 and I-4 are MUST and I-2 and I-5 are SHOULD. Senior and Principal levels make all five MUST.</p>
+
+<h3>Do I need to pick a side between ATF and EU AI Act compliance?</h3>
+<p>No. The two frameworks solve different problems and are designed to compose. air-trust v0.4.0 emits the same audit events that feed EU AI Act <a href="/blog/audit-trails-ai-agents-python">Article 12 logging</a> and adds an <code>atf.conformance()</code> check for each agent identity. One install, both regimes. You do not need a second library, a second service, or a second data model.</p>
+
+<h3>How do I check ATF conformance in Python?</h3>
+<p>Install air-trust v0.4.0, build an <code>AgentIdentity</code> with <code>purpose</code> and <code>capabilities</code> fields, then call <code>air_trust.atf.conformance(identity)</code> for the per-requirement result, <code>air_trust.atf.level_compliant(identity, "intern")</code> for a level check, or <code>air_trust.atf.conformance_statement(identity)</code> for a human-readable auditor report. A CLI (<code>python -m air_trust atf</code>) is also included for non-Python workflows.</p>
+
+<h3>Is this an official CSA implementation?</h3>
+<p>No. air-trust is an independent open-source implementation of the public review draft. It is not endorsed by the Cloud Security Alliance. We track the spec closely and will update conformance semantics as the draft moves toward v1.0. If you are using air-trust for a regulated audit, pair the conformance statement with a direct reading of the current ATF draft — the library output is a starting point, not a substitute for reading the spec.</p>
+
+<div class="cta">
+  <p><strong>Ship ATF conformance for your Python agents today:</strong></p>
+  <p><code>pip install --upgrade air-trust</code></p>
+  <p style="margin-top: 12px;">
+    <a href="/quickstart">Get Started</a> &middot;
+    <a href="/blog/audit-trails-ai-agents-python">Audit Trails Guide</a> &middot;
+    <a href="/blog/python-agent-compliance-roadmap-august-2026">Compliance Roadmap</a> &middot;
+    <a href="/compliance-mapping">Compliance Mapping</a>
+  </p>
+</div>
+
+<footer>
+  <p><strong>Related articles:</strong></p>
+  <p style="margin-top: 8px;">
+    <a href="/blog/audit-trails-ai-agents-python">Audit Trails for AI Agents: HMAC-SHA256 Python Guide</a><br>
+    <a href="/blog/article-11-technical-documentation-ai-systems">Article 11 Technical Docs for AI Systems: Python Guide</a><br>
+    <a href="/blog/python-agent-compliance-roadmap-august-2026">Python AI Agent Compliance Roadmap: August 2026</a><br>
+    <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">EU AI Act Articles 9-15: Technical Requirements Explained</a><br>
+    <a href="/blog/6-technical-checks">The 6 Technical Checks Your AI System Needs Before August 2026</a><br>
+    <a href="/blog/langchain-eu-ai-act-compliance">LangChain EU AI Act Compliance Guide</a><br>
+    <a href="/blog/oauth-ai-agents-delegation-scan">OAuth for AI Agents: Delegation Scan</a><br>
+    <a href="/blog/gdpr-eu-ai-act-dual-compliance">GDPR + EU AI Act: Dual Compliance for Python Teams</a><br>
+  </p>
+  <p style="margin-top: 20px;">&copy; 2026 AIR Blackbox &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>
+</footer>
+
+</div>
+</body>
+</html>

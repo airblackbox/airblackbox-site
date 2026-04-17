@@ -156,7 +156,7 @@ function renderPage(record, id) {
       They do not certify or guarantee regulatory compliance. Consult a qualified attorney
       for binding legal guidance.<br><br>
       <a href="https://airblackbox.ai">airblackbox.ai</a> &middot;
-      <a href="https://github.com/airblackbox/gateway">GitHub</a> &middot;
+      <a href="https://github.com/airblackbox/airblackbox">GitHub</a> &middot;
       <a href="https://pypi.org/project/air-blackbox/">PyPI</a>
     </div>
   </div>

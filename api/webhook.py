@@ -312,7 +312,7 @@ set -e
 curl -fsSL https://get.docker.com | sh
 
 # Clone the gateway repo
-git clone https://github.com/airblackbox/gateway.git /opt/airblackbox
+git clone https://github.com/airblackbox/airblackbox.git /opt/airblackbox
 cd /opt/airblackbox
 
 # Generate keys

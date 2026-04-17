@@ -18,7 +18,7 @@ Enterprise governance platforms (Credo AI, Holistic AI, OneTrust) audit after th
 ## Key Links
 
 - [Homepage](https://airblackbox.ai)
-- [GitHub](https://github.com/airblackbox/gateway)
+- [GitHub](https://github.com/airblackbox/airblackbox)
 - [PyPI](https://pypi.org/project/air-blackbox/)
 - [Audit Chain Specification (Open Standard v1.0.0)](https://airblackbox.ai/spec)
 - [CI/CD Integration Guide](https://airblackbox.ai/ci-cd)
