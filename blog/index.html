@@ -69,9 +69,9 @@
 </div>
 
 <div class="post">
-  <h2><a href="/blog/integrity-is-not-completeness">Integrity Is Not Completeness: Adding Gap Detection to Tamper-Evident Audit Chains</a></h2>
-  <p class="meta">April 10, 2026 &middot; 9 min read</p>
-  <p>Your audit chain proves records weren't changed. Does it prove records weren't dropped? air-trust v0.5.0 adds session-scoped completeness detection with monotonic sequence numbers, gap detection, and lifecycle validation. Spec v1.1 with threat model included.</p>
+  <h2><a href="/blog/integrity-is-not-completeness">Can Your Audit Chain Prove Records Were Not Dropped? Integrity vs. Completeness Explained</a></h2>
+  <p class="meta">April 10, 2026 &middot; Jason Shotwell &middot; 9 min read</p>
+  <p>HMAC proves records were not changed. It does not prove records were not deleted. If someone removes record #103, the remaining chain still verifies. air-trust v0.5.0 adds monotonic sequence numbers and gap detection to catch silently dropped records.</p>
 </div>
 
 <div class="post">
