@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIR Blackbox Gate — AI Action Firewall for EU AI Act Article 12</title>
+    <title>AIR Gate — Bilateral Receipts for AI Agent Actions | EU AI Act Articles 12 &amp; 14</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <meta name="description" content="AIR Blackbox Gate — automated compliance gateway for CI/CD pipelines. Block non-compliant AI code before deployment.">
-    <meta name="keywords" content="AI agent action gating, human-in-the-loop AI, HMAC-SHA256 audit chain, AI tool approval workflow, EU AI Act Article 12, Article 14 human oversight, AI agent firewall, Slack AI approval, tamper-evident AI logging">
+    <meta name="description" content="AIR Gate governs what AI agents are allowed to do and proves what they actually did. Covenant-based policy, Ed25519 bilateral receipts, delegation chains, HMAC audit trails.">
+    <meta name="keywords" content="AI agent policy enforcement, bilateral receipts, Ed25519 AI signing, covenant DSL, AI delegation chain, human-in-the-loop AI, HMAC-SHA256 audit chain, EU AI Act Article 12, Article 14 human oversight, AI agent firewall, tamper-evident AI logging, pre-execution policy">
     <link rel="canonical" href="https://airblackbox.ai/gate">
-    <meta property="og:title" content="AIR Blackbox Gate">
-    <meta property="og:description" content="AIR Blackbox Gate — automated compliance gateway for CI/CD pipelines. Block non-compliant AI code before deployment.">
+    <meta property="og:title" content="AIR Gate — Bilateral Receipts for AI Agent Actions">
+    <meta property="og:description" content="Pre-execution policy enforcement with cryptographic proof. Covenants declare what's allowed. Receipts prove what happened. Ed25519 signed. HMAC chained.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://airblackbox.ai/gate">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="AIR Blackbox Gate">
-    <meta name="twitter:description" content="AIR Blackbox Gate — automated compliance gateway for CI/CD pipelines. Block non-compliant AI code before deployment.">
+    <meta name="twitter:title" content="AIR Gate — Bilateral Receipts for AI Agents">
+    <meta name="twitter:description" content="Pre-execution policy enforcement with cryptographic proof. Covenants + Ed25519 bilateral receipts + HMAC audit chains.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -36,6 +36,7 @@
             --red: #ef4444;
             --yellow: #eab308;
             --blue: #3b82f6;
+            --purple: #a855f7;
         }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -44,7 +45,6 @@
             line-height: 1.6;
             overflow-x: hidden;
         }
-        /* Nav */
         nav {
             position: fixed; top: 0; width: 100%; z-index: 100;
             background: rgba(8, 11, 20, 0.92);
@@ -63,7 +63,7 @@
         .nav-links a:hover { color: var(--text); }
         .nav-cta { background: var(--accent) !important; color: var(--bg) !important; padding: 8px 20px !important; border-radius: 8px; font-weight: 600 !important; }
         .nav-cta:hover { background: var(--accent-hover) !important; }
-        /* Hero */
+
         .hero { padding: 160px 24px 80px; text-align: center; max-width: 900px; margin: 0 auto; }
         .hero-badge {
             display: inline-flex; align-items: center; gap: 8px;
@@ -72,28 +72,29 @@
         }
         .hero h1 { font-size: clamp(40px, 6vw, 64px); font-weight: 900; line-height: 1.1; margin-bottom: 24px; }
         .hero h1 .highlight { color: var(--accent); display: block; }
-        .hero p { font-size: 18px; color: var(--text-muted); max-width: 640px; margin: 0 auto 48px; line-height: 1.7; }
+        .hero p { font-size: 18px; color: var(--text-muted); max-width: 680px; margin: 0 auto 48px; line-height: 1.7; }
         .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
         .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: var(--bg); padding: 14px 28px; border-radius: 10px; font-weight: 700; font-size: 15px; text-decoration: none; transition: background 0.2s; }
         .btn-primary:hover { background: var(--accent-hover); }
         .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--text); padding: 14px 28px; border-radius: 10px; border: 1px solid var(--border); font-weight: 600; font-size: 15px; text-decoration: none; transition: all 0.2s; }
         .btn-secondary:hover { background: var(--bg-card); border-color: var(--text-dim); }
-        /* Section */
+
         section { max-width: 1200px; margin: 0 auto; padding: 80px 24px; }
         .section-label { font-size: 13px; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 12px; text-align: center; }
         .section-title { font-size: clamp(28px, 4vw, 40px); font-weight: 800; text-align: center; margin-bottom: 16px; }
-        .section-sub { font-size: 17px; color: var(--text-muted); text-align: center; max-width: 640px; margin: 0 auto 56px; }
+        .section-sub { font-size: 17px; color: var(--text-muted); text-align: center; max-width: 680px; margin: 0 auto 56px; }
 
-        /* Flow */
-        .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-bottom: 64px; }
-        .flow-step { background: var(--bg-card); border: 1px solid var(--border); padding: 32px 24px; text-align: center; position: relative; }
-        .flow-step:first-child { border-radius: 16px 0 0 16px; }
-        .flow-step:last-child { border-radius: 0 16px 16px 0; }
-        .flow-num { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-glow); border: 1px solid rgba(88, 166, 255, 0.3); color: var(--accent); font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; }
-        .flow-step h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-        .flow-step p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-        .flow-arrow { position: absolute; right: -14px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 20px; z-index: 2; }
-        /* Feature Cards */
+        /* Architecture diagram */
+        .arch-flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-bottom: 64px; }
+        .arch-step { background: var(--bg-card); border: 1px solid var(--border); padding: 28px 16px; text-align: center; position: relative; }
+        .arch-step:first-child { border-radius: 16px 0 0 16px; }
+        .arch-step:last-child { border-radius: 0 16px 16px 0; }
+        .arch-num { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-glow); border: 1px solid rgba(88, 166, 255, 0.3); color: var(--accent); font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+        .arch-step h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .arch-step p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+        .arch-arrow { position: absolute; right: -14px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 20px; z-index: 2; }
+
+        /* Feature cards */
         .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; transition: border-color 0.2s; }
         .feature-card:hover { border-color: var(--text-dim); }
@@ -110,33 +111,24 @@
         .terminal-title { font-size: 13px; color: var(--text-dim); margin-left: 8px; font-family: 'JetBrains Mono', monospace; }
         .terminal-body { padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; }
         .t-comment { color: var(--text-dim); } .t-green { color: var(--green); } .t-red { color: var(--red); }
-        .t-yellow { color: var(--yellow); } .t-blue { color: var(--blue); } .t-accent { color: var(--accent); } .t-muted { color: var(--text-muted); }
-        /* Slack Preview */
-        .slack-preview { background: #1a1d21; border: 1px solid #2c2d30; border-radius: 16px; max-width: 560px; margin: 0 auto; overflow: hidden; }
-        .slack-header { padding: 16px 20px; border-bottom: 1px solid #2c2d30; display: flex; align-items: center; gap: 8px; }
-        .slack-channel { font-size: 15px; font-weight: 700; color: #d1d2d3; }
-        .slack-hash { color: #9a9b9d; font-size: 18px; }
-        .slack-body { padding: 20px; }
-        .slack-msg { display: flex; gap: 12px; margin-bottom: 16px; }
-        .slack-avatar { width: 36px; height: 36px; border-radius: 6px; background: linear-gradient(135deg, var(--accent), #0969da); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: white; flex-shrink: 0; }
-        .slack-content { flex: 1; }
-        .slack-sender { font-weight: 700; font-size: 14px; color: #d1d2d3; margin-bottom: 4px; }
-        .slack-sender span { font-weight: 400; font-size: 12px; color: #9a9b9d; margin-left: 8px; }
-        .slack-text { font-size: 14px; color: #d1d2d3; line-height: 1.5; }
-        .slack-attachment { border-left: 4px solid var(--accent); padding: 12px 16px; margin-top: 8px; background: rgba(255,255,255,0.03); border-radius: 0 8px 8px 0; }
-        .slack-field { margin-bottom: 8px; }
-        .slack-field-label { font-size: 12px; font-weight: 700; color: #9a9b9d; text-transform: uppercase; letter-spacing: 0.5px; }
-        .slack-field-value { font-size: 14px; color: #d1d2d3; }
-        .slack-buttons { display: flex; gap: 8px; margin-top: 12px; }
-        .slack-btn { padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; }
-        .slack-btn-approve { background: #007a5a; color: white; }
-        .slack-btn-reject { background: #4a154b; color: white; }
+        .t-yellow { color: var(--yellow); } .t-blue { color: var(--blue); } .t-accent { color: var(--accent); } .t-muted { color: var(--text-muted); } .t-purple { color: var(--purple); }
+
         /* Two-col layout */
         .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
         .two-col-text h3 { font-size: 28px; font-weight: 800; margin-bottom: 16px; }
         .two-col-text p { font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
 
-        /* CTA & Footer */
+        /* Receipt visual */
+        .receipt-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7; }
+        .receipt-header { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .receipt-phase { display: inline-block; padding: 2px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+        .receipt-phase.auth { background: rgba(34, 197, 94, 0.15); color: var(--green); border: 1px solid rgba(34, 197, 94, 0.3); }
+        .receipt-phase.seal { background: rgba(168, 85, 247, 0.15); color: var(--purple); border: 1px solid rgba(168, 85, 247, 0.3); }
+        .receipt-field { color: var(--text-muted); }
+        .receipt-value { color: var(--text); }
+        .receipt-sig { color: var(--yellow); word-break: break-all; }
+
+        /* CTA */
         .final-cta { text-align: center; padding: 80px 24px 120px; max-width: 800px; margin: 0 auto; }
         .final-cta h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; margin-bottom: 16px; }
         .final-cta p { font-size: 17px; color: var(--text-muted); margin-bottom: 40px; }
@@ -144,22 +136,20 @@
         footer a { color: var(--text-muted); text-decoration: none; margin: 0 12px; }
         footer a:hover { color: var(--text); }
 
-        /* Responsive */
         @media (max-width: 768px) {
-            .flow { grid-template-columns: 1fr; }
-            .flow-step { border-radius: 0; }
-            .flow-step:first-child { border-radius: 16px 16px 0 0; }
-            .flow-step:last-child { border-radius: 0 0 16px 16px; }
-            .flow-arrow { display: none; }
+            .arch-flow { grid-template-columns: 1fr; }
+            .arch-step { border-radius: 0; }
+            .arch-step:first-child { border-radius: 16px 16px 0 0; }
+            .arch-step:last-child { border-radius: 0 0 16px 16px; }
+            .arch-arrow { display: none; }
             .features-grid { grid-template-columns: 1fr; }
             .nav-links { display: none; }
             .two-col { grid-template-columns: 1fr; }
-            section > div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
         }
     </style>
 </head>
 <body>
-<!-- Nav -->
+
 <nav>
     <div class="nav-inner">
         <a href="/" class="nav-logo">AIR <span>Blackbox</span></a>
@@ -175,306 +165,298 @@
 
 <!-- Hero -->
 <section class="hero">
-    <div class="hero-badge">EU AI Act Article 12 &middot; Record-Keeping</div>
-    <h1>Every AI action.<span class="highlight">Gated. Signed. Auditable.</span></h1>
-    <p>Gate is an AI action firewall that intercepts every tool call your agents make, checks it against policy, routes sensitive actions to humans via Slack, and signs everything with tamper-evident HMAC-SHA256 chains.</p>
+    <div class="hero-badge">EU AI Act Articles 12 &amp; 14 &middot; Bilateral Receipts</div>
+    <h1>What agents can do.<span class="highlight">What agents did do.</span></h1>
+    <p>Gate is a pre-execution policy engine with bilateral receipts. Covenants declare what's allowed. Ed25519 signatures prove what happened. Every action is authorized, executed, sealed, and chained into a tamper-evident audit trail.</p>
     <div class="hero-buttons">
-        <a href="https://pypi.org/project/air-gate/" target="_blank" class="btn-primary">pip install air-gate</a>
-        <a href="https://github.com/airblackbox/air-gate" target="_blank" class="btn-secondary">View on GitHub</a>
+        <a href="https://pypi.org/project/air-blackbox/" target="_blank" class="btn-primary">pip install air-blackbox[gate]</a>
+        <a href="https://github.com/airblackbox/airblackbox" target="_blank" class="btn-secondary">View on GitHub</a>
     </div>
 </section>
-<!-- GIF Demo -->
-<section style="max-width: 900px; margin: 0 auto; padding: 0 24px 40px;">
-    <div class="section-label">See It Work</div>
-    <h2 class="section-title">Gate in 8 seconds</h2>
-    <p class="section-sub">Auto-allow, PII redaction, human approval, blocking, and tamper-evident audit chain — all in one run.</p>
-    <div style="border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-card);">
-        <img src="https://raw.githubusercontent.com/airblackbox/air-gate/main/demo.gif" alt="AIR Gate demo — auto-allow, PII redaction, approval, block, audit chain verification" style="width: 100%; display: block;" loading="lazy">
-    </div>
-</section>
-<!-- Video Demo -->
-<section style="max-width: 900px; margin: 0 auto; padding: 0 24px 80px;">
-    <div class="section-label">Full Walkthrough</div>
-    <h2 class="section-title">Gate in 60 seconds</h2>
-    <p class="section-sub">See Gate intercept an agent action, route it to Slack for human approval, and sign the audit chain — live.</p>
-    <div style="border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-card);">
-        <div style="padding:64.03% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/1168536641?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="AIR Blackbox Gate Demo"></iframe></div>
-    </div>
-</section>
-<script src="https://player.vimeo.com/api/player.js"></script>
 
-<!-- How it works -->
-<section id="how-it-works">
-    <div class="section-label">How It Works</div>
-    <h2 class="section-title">Four steps. Every action covered.</h2>
-    <p class="section-sub">Gate sits between your AI agent and the outside world. Nothing gets through without being checked, approved, and signed.</p>
-    <div class="flow">
-        <div class="flow-step">
-            <div class="flow-num">1</div>
-            <h3>Intercept</h3>
-            <p>Agent sends an action (email, API call, file write) to Gate's proxy endpoint.</p>
-            <span class="flow-arrow">&rarr;</span>
+<!-- Architecture flow -->
+<section id="architecture">
+    <div class="section-label">Architecture</div>
+    <h2 class="section-title">Five steps. Every action covered.</h2>
+    <p class="section-sub">Gate sits between your agent and the actions it takes. Nothing executes without a covenant check, a signed authorization, and a sealed result.</p>
+    <div class="arch-flow">
+        <div class="arch-step">
+            <div class="arch-num">1</div>
+            <h3>Covenant</h3>
+            <p>YAML policy declares permit, forbid, and require_approval rules before the agent runs.</p>
+            <span class="arch-arrow">&rarr;</span>
         </div>
-        <div class="flow-step">
-            <div class="flow-num">2</div>
-            <h3>Evaluate</h3>
-            <p>Policy engine checks the action against rules: auto-allow, require approval, or block.</p>
-            <span class="flow-arrow">&rarr;</span>
+        <div class="arch-step">
+            <div class="arch-num">2</div>
+            <h3>Authorize</h3>
+            <p>Agent requests an action. Gate evaluates the covenant and signs an authorization receipt.</p>
+            <span class="arch-arrow">&rarr;</span>
         </div>
-        <div class="flow-step">
-            <div class="flow-num">3</div>
-            <h3>Approve</h3>
-            <p>Sensitive actions go to Slack with Approve/Reject buttons. Humans stay in control.</p>
-            <span class="flow-arrow">&rarr;</span>
+        <div class="arch-step">
+            <div class="arch-num">3</div>
+            <h3>Execute</h3>
+            <p>If authorized, the action runs. If require_approval, a human callback decides first.</p>
+            <span class="arch-arrow">&rarr;</span>
         </div>
-        <div class="flow-step">
-            <div class="flow-num">4</div>
-            <h3>Sign</h3>
-            <p>Every event gets HMAC-SHA256 signed and chained. Tamper with one, break the whole chain.</p>
+        <div class="arch-step">
+            <div class="arch-num">4</div>
+            <h3>Seal</h3>
+            <p>Execution result is hashed and sealed into the receipt with a second Ed25519 signature.</p>
+            <span class="arch-arrow">&rarr;</span>
         </div>
-    </div>
-</section>
-<!-- Terminal Demo -->
-<section>
-    <div class="section-label">Live Demo</div>
-    <h2 class="section-title">See it in action</h2>
-    <p class="section-sub">A recruiting AI agent tries to send an email, delete a record, and search a database. Gate handles each differently.</p>
-    <div class="terminal">
-        <div class="terminal-bar">
-            <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
-            <span class="terminal-title">python3 demo.py</span>
-        </div>
-        <div class="terminal-body">
-<span class="t-comment"># Agent tries to search candidates (low risk)</span>
-<br><span class="t-muted">POST /actions</span> &nbsp; <span class="t-blue">tool: search_candidates</span>
-<br><span class="t-green">&#10003; AUTO-ALLOWED</span> <span class="t-muted">— matched rule: allow-read-only</span>
-<br><br>
-<span class="t-comment"># Agent tries to send an email (needs approval)</span>
-<br><span class="t-muted">POST /actions</span> &nbsp; <span class="t-blue">tool: send_email</span>
-<br><span class="t-yellow">&#9679; PENDING APPROVAL</span> <span class="t-muted">— sent to #ai-approvals on Slack</span>
-<br><span class="t-green">&#10003; APPROVED</span> <span class="t-muted">by jason via Slack (12s)</span>
-<br><br>
-<span class="t-comment"># Agent tries to delete a record (blocked by policy)</span>
-<br><span class="t-muted">POST /actions</span> &nbsp; <span class="t-blue">tool: delete_record</span>
-<br><span class="t-red">&#10007; BLOCKED</span> <span class="t-muted">— matched rule: block-delete</span>
-<br><br>
-<span class="t-comment"># Verify the audit chain</span>
-<br><span class="t-muted">GET /verify</span>
-<br><span class="t-green">&#10003; Chain intact</span> <span class="t-muted">— 3 events, 0 tampered, HMAC-SHA256</span>
+        <div class="arch-step">
+            <div class="arch-num">5</div>
+            <h3>Chain</h3>
+            <p>The sealed receipt is chained into the HMAC-SHA256 audit trail. Tamper-evident from here.</p>
         </div>
     </div>
 </section>
-<!-- Slack Integration -->
+
+<!-- Covenant section -->
 <section>
     <div class="two-col">
         <div class="two-col-text">
-            <div class="section-label" style="text-align:left">Human-in-the-Loop</div>
-            <h3>Approvals land in Slack</h3>
-            <p>When an agent tries something sensitive, Gate doesn't just log it. It pauses the action and sends a rich message to your Slack channel with full context: what agent, what action, what payload.</p>
-            <p>Your team clicks Approve or Reject. The decision is recorded in the tamper-evident chain. Regulators can verify that a human was in the loop.</p>
-            <div class="feature-tag">Article 14 — Human Oversight</div>
+            <div class="section-label" style="text-align:left">Covenants</div>
+            <h3>Policy as code. Before anything runs.</h3>
+            <p>A covenant is a YAML file that declares exactly what an agent is allowed to do. Three rule types: <code style="color:var(--green)">permit</code>, <code style="color:var(--red)">forbid</code>, and <code style="color:var(--yellow)">require_approval</code>. Add conditions with <code>when</code> and <code>unless</code> clauses.</p>
+            <p>The covenant is SHA-256 hashed, and that hash is embedded in every receipt. Change a single rule, and every subsequent receipt carries a different covenant hash. An auditor can verify exactly which policy was active for any action.</p>
+            <div class="feature-tag">Article 9 &mdash; Risk Management</div>
         </div>
-        <div>
-            <div class="slack-preview">
-                <div class="slack-header">
-                    <span class="slack-hash">#</span>
-                    <span class="slack-channel">ai-approvals</span>
-                </div>
-                <div class="slack-body">
-                    <div class="slack-msg">
-                        <div class="slack-avatar">G</div>
-                        <div class="slack-content">
-                            <div class="slack-sender">Gate <span>11:42 AM</span></div>
-                            <div class="slack-text">Action requires approval</div>
-                            <div class="slack-attachment">
-                                <div class="slack-field"><div class="slack-field-label">Agent</div><div class="slack-field-value">recruiting-agent-v2</div></div>
-                                <div class="slack-field"><div class="slack-field-label">Action</div><div class="slack-field-value">send_email</div></div>
-                                <div class="slack-field"><div class="slack-field-label">To</div><div class="slack-field-value">hiring-manager@company.com</div></div>
-                                <div class="slack-buttons">
-                                    <button class="slack-btn slack-btn-approve">Approve</button>
-                                    <button class="slack-btn slack-btn-reject">Reject</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Features -->
-<section id="features">
-    <div class="section-label">Capabilities</div>
-    <h2 class="section-title">Built for compliance. Ready for production.</h2>
-    <p class="section-sub">Everything you need to prove your AI agents are governed, auditable, and human-supervised.</p>
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon" style="background: rgba(34, 197, 94, 0.1);">&#x1F512;</div>
-            <h3>HMAC-SHA256 Audit Chains</h3>
-            <p>Every event is cryptographically signed and chained to the previous one. Tamper with a single entry and the entire chain breaks. Regulators can mathematically verify integrity.</p>
-            <div class="feature-tag">Article 12</div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon" style="background: rgba(234, 179, 8, 0.1);">&#x26A0;&#xFE0F;</div>
-            <h3>Policy Engine</h3>
-            <p>YAML-configured rules that classify every action: auto-allow safe reads, require approval for writes, block destructive operations. First-match-wins with rate limiting.</p>
-            <div class="feature-tag">Article 9</div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon" style="background: rgba(249, 115, 22, 0.1);">&#x1F514;</div>
-            <h3>Slack Approvals</h3>
-            <p>Rich Block Kit messages with agent name, action type, full payload, and one-click Approve/Reject buttons. Every decision timestamped and signed into the chain.</p>
-            <div class="feature-tag">Article 14</div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon" style="background: rgba(59, 130, 246, 0.1);">&#x1F4CA;</div>
-            <h3>Compliance Reports</h3>
-            <p>Generate HTML, Markdown, or JSON reports with executive summary, action breakdown, human oversight stats, anomaly detection, and chain integrity verification.</p>
-            <div class="feature-tag">Article 11</div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon" style="background: rgba(239, 68, 68, 0.1);">&#x1F6AB;</div>
-            <h3>Anomaly Detection</h3>
-            <p>Flags off-hours activity, unusual block rates, high rejection rates, and volume spikes. Surfaces patterns that indicate agents operating outside expected bounds.</p>
-            <div class="feature-tag">Article 15</div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon" style="background: rgba(168, 85, 247, 0.1);">&#x26A1;</div>
-            <h3>FastAPI Proxy</h3>
-            <p>High-performance async proxy that sits in front of any AI agent. REST API with full CRUD on events, verification endpoints, and Slack webhook integration.</p>
-            <div class="feature-tag">Framework Agnostic</div>
-        </div>
-    </div>
-</section>
-<!-- PII Redaction -->
-<section>
-    <div class="two-col">
         <div>
             <div class="terminal">
                 <div class="terminal-bar">
                     <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
-                    <span class="terminal-title">PII Redaction</span>
+                    <span class="terminal-title">browser-agent.covenant.yaml</span>
                 </div>
                 <div class="terminal-body">
-<span class="t-comment"># Agent sends payload with PII</span>
-<br><span class="t-muted">POST /actions</span>
-<br><span class="t-muted">{</span>
-<br>&nbsp;&nbsp;<span class="t-accent">"to"</span>: <span class="t-green">"jane.doe@company.com"</span>,
-<br>&nbsp;&nbsp;<span class="t-accent">"ssn"</span>: <span class="t-green">"123-45-6789"</span>,
-<br>&nbsp;&nbsp;<span class="t-accent">"body"</span>: <span class="t-green">"Call me at 415-555-0123"</span>
-<br><span class="t-muted">}</span>
-<br><br>
-<span class="t-comment"># What enters the audit chain</span>
-<br><span class="t-muted">{</span>
-<br>&nbsp;&nbsp;<span class="t-accent">"to"</span>: <span class="t-yellow">"[REDACTED:sha256:a1b2c3d4...]"</span>,
-<br>&nbsp;&nbsp;<span class="t-accent">"ssn"</span>: <span class="t-yellow">"[REDACTED:sha256:e5f6a7b8...]"</span>,
-<br>&nbsp;&nbsp;<span class="t-accent">"body"</span>: <span class="t-green">"Call me at </span><span class="t-yellow">[REDACTED:sha256:9c0d1e2f...]</span><span class="t-green">"</span>
-<br><span class="t-muted">}</span>
-<br><br><span class="t-green">&#10003; 3 PII fields redacted</span>
-<br><span class="t-green">&#10003; GDPR Art. 17 erasure hashes preserved</span>
+<span class="t-accent">agent</span>: browser-agent
+<br><span class="t-accent">version</span>: <span class="t-green">"1.0"</span>
+<br>
+<br><span class="t-accent">rules</span>:
+<br>&nbsp;&nbsp;<span class="t-comment"># Navigation &mdash; always permitted</span>
+<br>&nbsp;&nbsp;- <span class="t-green">permit</span>: navigate
+<br>&nbsp;&nbsp;- <span class="t-green">permit</span>: scroll
+<br>&nbsp;&nbsp;- <span class="t-green">permit</span>: read_page
+<br>
+<br>&nbsp;&nbsp;<span class="t-comment"># Forms &mdash; human must approve</span>
+<br>&nbsp;&nbsp;- <span class="t-yellow">require_approval</span>: fill_form
+<br>&nbsp;&nbsp;- <span class="t-yellow">require_approval</span>: submit_form
+<br>&nbsp;&nbsp;- <span class="t-yellow">require_approval</span>: purchase
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-muted">when</span>: <span class="t-green">"amount > 0"</span>
+<br>
+<br>&nbsp;&nbsp;<span class="t-comment"># Dangerous &mdash; always blocked</span>
+<br>&nbsp;&nbsp;- <span class="t-red">forbid</span>: download_executable
+<br>&nbsp;&nbsp;- <span class="t-red">forbid</span>: install_extension
+<br>&nbsp;&nbsp;- <span class="t-red">forbid</span>: grant_permissions
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bilateral Receipt section -->
+<section>
+    <div class="two-col">
+        <div>
+            <div class="receipt-card">
+                <div class="receipt-header">Bilateral Receipt <span class="receipt-phase auth">PHASE 1: AUTH</span> <span class="receipt-phase seal">PHASE 2: SEAL</span></div>
+<span class="receipt-field">receipt_id:</span> <span class="receipt-value">a7f3c...</span>
+<br><span class="receipt-field">agent_id:</span> <span class="receipt-value">loan-processor</span>
+<br><span class="receipt-field">action:</span> <span class="receipt-value">approve_loan</span>
+<br><span class="receipt-field">covenant_hash:</span> <span class="receipt-value">26c5b0cc...</span>
+<br><span class="receipt-field">payload_hash:</span> <span class="receipt-value">sha256:9f8e1d...</span>
+<br><span class="receipt-field">decision:</span> <span class="t-yellow">require_approval</span>
+<br><span class="receipt-field">authorized:</span> <span class="t-green">true</span> <span class="t-muted">(human approved)</span>
+<br><br><span class="t-comment">--- Phase 1: Authorization ---</span>
+<br><span class="receipt-field">auth_sig:</span> <span class="receipt-sig">ed25519:3a8f7b2c...</span>
+<br><span class="receipt-field">created_at:</span> <span class="receipt-value">2026-04-19T23:42:01Z</span>
+<br><br><span class="t-comment">--- Phase 2: Seal ---</span>
+<br><span class="receipt-field">result_hash:</span> <span class="receipt-value">sha256:b4d2e7...</span>
+<br><span class="receipt-field">result_status:</span> <span class="t-green">success</span>
+<br><span class="receipt-field">seal_sig:</span> <span class="receipt-sig">ed25519:7c1d9e4a...</span>
+<br><span class="receipt-field">sealed_at:</span> <span class="receipt-value">2026-04-19T23:42:01Z</span>
+<br><br><span class="t-comment">--- Audit Chain ---</span>
+<br><span class="receipt-field">chain_hash:</span> <span class="receipt-value">hmac-sha256:f2a1...</span>
             </div>
         </div>
         <div class="two-col-text">
-            <div class="section-label" style="text-align:left">Automatic PII Protection</div>
-            <h3>25+ PII categories. Zero config.</h3>
-            <p>Gate scans every payload before it enters the audit chain and redacts emails, phone numbers, SSNs, credit cards, medical records, LinkedIn URLs, and more. The original values never touch storage.</p>
-            <p>SHA-256 hashes of redacted values are preserved for GDPR Article 17 erasure lookups. Covers GDPR, HIPAA, PCI-DSS, and EEOC requirements across recruiting, finance, healthcare, and legal verticals.</p>
-            <div class="feature-tag">GDPR Art. 25 &middot; Data Protection by Design</div>
+            <div class="section-label" style="text-align:left">Bilateral Receipts</div>
+            <h3>Two phases. One tamper-proof record.</h3>
+            <p><strong>Phase 1 (Authorization):</strong> Gate checks the covenant, makes a decision, and signs the authorization with Ed25519. The payload is SHA-256 hashed &mdash; raw data never enters the receipt.</p>
+            <p><strong>Phase 2 (Seal):</strong> After execution, the result is hashed and sealed into the same receipt with a second signature. The seal covers the authorization signature, so the entire lifecycle is cryptographically bound.</p>
+            <p>A third party can verify any receipt with just the public key. No shared secret needed. Non-repudiation built in.</p>
+            <div class="feature-tag">Article 12 &mdash; Record-Keeping</div>
         </div>
     </div>
 </section>
 
-<!-- SDK & Framework Integrations -->
+<!-- Code example -->
 <section>
-    <div class="section-label">Developer SDK</div>
-    <h2 class="section-title">Three lines to add Gate to any agent</h2>
-    <p class="section-sub">Use Gate as a library, a server, or a framework wrapper. No architecture changes required.</p>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px;">
-        <div class="terminal">
-            <div class="terminal-bar">
-                <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
-                <span class="terminal-title">Library Mode</span>
-            </div>
-            <div class="terminal-body">
-<span class="t-accent">from</span> gate <span class="t-accent">import</span> GateClient
-<br><br>gate = GateClient() <span class="t-comment"># zero config</span>
-<br><br>result = gate.check(
-<br>&nbsp;&nbsp;<span class="t-green">"my-agent"</span>, <span class="t-green">"email"</span>,
-<br>&nbsp;&nbsp;<span class="t-green">"send_email"</span>,
-<br>&nbsp;&nbsp;payload={<span class="t-green">"to"</span>: <span class="t-green">"jane@co.com"</span>}
-<br>)
-<br><br><span class="t-accent">if</span> result[<span class="t-green">"decision"</span>] == <span class="t-green">"auto_allowed"</span>:
-<br>&nbsp;&nbsp;send_the_email()
-            </div>
+    <div class="section-label">Code</div>
+    <h2 class="section-title">10 lines to gate any agent</h2>
+    <p class="section-sub">Load a covenant. Authorize actions. Seal results. Verify receipts. All in standard Python.</p>
+    <div class="terminal">
+        <div class="terminal-bar">
+            <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
+            <span class="terminal-title">gate_example.py</span>
         </div>
-        <div class="terminal">
-            <div class="terminal-bar">
-                <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
-                <span class="terminal-title">LangChain Integration</span>
-            </div>
-            <div class="terminal-body">
-<span class="t-accent">from</span> gate.integrations.langchain <span class="t-accent">import</span> GatedTool
-<br><br><span class="t-comment"># Wrap any LangChain tool</span>
-<br>gated = GatedTool(
-<br>&nbsp;&nbsp;tool=my_search_tool,
-<br>&nbsp;&nbsp;agent_id=<span class="t-green">"research-agent"</span>,
+        <div class="terminal-body">
+<span class="t-accent">from</span> air_blackbox.gate <span class="t-accent">import</span> Gate, Covenant
+<br>
+<br><span class="t-comment"># Load policy</span>
+<br>covenant = Covenant.from_yaml(<span class="t-green">"covenant.yaml"</span>)
+<br>gate = Gate(covenant=covenant)
+<br>
+<br><span class="t-comment"># Phase 1: Authorize the action</span>
+<br>receipt = gate.authorize(
+<br>&nbsp;&nbsp;agent_id=<span class="t-green">"loan-processor"</span>,
+<br>&nbsp;&nbsp;action_name=<span class="t-green">"approve_loan"</span>,
+<br>&nbsp;&nbsp;payload={<span class="t-green">"applicant"</span>: <span class="t-green">"jane@example.com"</span>, <span class="t-green">"amount"</span>: <span class="t-blue">75000</span>},
+<br>&nbsp;&nbsp;context={<span class="t-green">"amount"</span>: <span class="t-blue">75000</span>},
 <br>)
-<br><br><span class="t-comment"># Every call goes through Gate</span>
-<br><span class="t-comment"># Policy checked + audit signed</span>
-<br>agent.tools = [gated]
+<br>
+<br><span class="t-accent">if</span> receipt.authorized:
+<br>&nbsp;&nbsp;result = process_loan(...)
+<br>
+<br>&nbsp;&nbsp;<span class="t-comment"># Phase 2: Seal the receipt with execution result</span>
+<br>&nbsp;&nbsp;gate.seal(receipt, result=result, status=<span class="t-green">"success"</span>)
+<br><span class="t-accent">else</span>:
+<br>&nbsp;&nbsp;print(<span class="t-green">f"Blocked: </span>{receipt.decision}<span class="t-green">"</span>)
+<br>
+<br><span class="t-comment"># Verify &mdash; third party can do this with just the public key</span>
+<br>report = gate.verify(receipt)
+<br>print(report[<span class="t-green">"overall"</span>])  <span class="t-comment"># True</span>
+        </div>
+    </div>
+</section>
+
+<!-- Delegation chains -->
+<section>
+    <div class="two-col">
+        <div class="two-col-text">
+            <div class="section-label" style="text-align:left">Delegation Chains</div>
+            <h3>Multi-agent traceability</h3>
+            <p>When an orchestrator delegates to a sub-agent, the child's receipt links back to the parent via <code style="color:var(--accent)">parent_receipt_id</code>. Walk the chain from any receipt back to the root authorization.</p>
+            <p>Every receipt in the chain is independently verifiable. If a child agent misbehaves, the delegation chain shows exactly who authorized what, and when.</p>
+            <div class="feature-tag">Article 14 &mdash; Human Oversight</div>
+        </div>
+        <div>
+            <div class="terminal">
+                <div class="terminal-bar">
+                    <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
+                    <span class="terminal-title">delegation.py</span>
+                </div>
+                <div class="terminal-body">
+<span class="t-comment"># Parent agent gets authorized</span>
+<br>parent = gate.authorize(
+<br>&nbsp;&nbsp;<span class="t-green">"orchestrator"</span>, <span class="t-green">"delegate_task"</span>,
+<br>&nbsp;&nbsp;payload={<span class="t-green">"task"</span>: <span class="t-green">"send confirmation"</span>}
+<br>)
+<br>
+<br><span class="t-comment"># Child links back to parent</span>
+<br>child = gate.authorize(
+<br>&nbsp;&nbsp;<span class="t-green">"notifier-agent"</span>, <span class="t-green">"send_email"</span>,
+<br>&nbsp;&nbsp;payload={<span class="t-green">"to"</span>: <span class="t-green">"jane@co.com"</span>},
+<br>&nbsp;&nbsp;parent_receipt=parent,
+<br>)
+<br>
+<br><span class="t-comment"># Walk the full chain</span>
+<br>chain = gate.walk_delegation_chain(child)
+<br><span class="t-comment"># [orchestrator, notifier] &mdash; root first</span>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Quick Start -->
+<!-- Features grid -->
+<section id="features">
+    <div class="section-label">Capabilities</div>
+    <h2 class="section-title">What Gate covers</h2>
+    <p class="section-sub">Pre-execution policy, cryptographic proof, human oversight, and audit-ready record-keeping in one library.</p>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon" style="background: rgba(34, 197, 94, 0.1);">&#x1F512;</div>
+            <h3>Ed25519 Signatures</h3>
+            <p>Asymmetric signing with Ed25519 for non-repudiation. Third parties verify receipts with just the public key. HMAC-SHA256 fallback when cryptography isn't installed.</p>
+            <div class="feature-tag">Non-Repudiation</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background: rgba(234, 179, 8, 0.1);">&#x26A0;&#xFE0F;</div>
+            <h3>Covenant DSL</h3>
+            <p>YAML-based policy with permit, forbid, and require_approval rules. Supports conditional logic with <code>when</code> and <code>unless</code> clauses. SHA-256 hashed for integrity.</p>
+            <div class="feature-tag">Article 9</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background: rgba(168, 85, 247, 0.1);">&#x1F4DD;</div>
+            <h3>Bilateral Receipts</h3>
+            <p>Two-phase proof: authorization decision + execution result in a single cryptographically bound record. Seal covers auth, auth covers covenant.</p>
+            <div class="feature-tag">Article 12</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background: rgba(59, 130, 246, 0.1);">&#x1F517;</div>
+            <h3>HMAC Audit Chains</h3>
+            <p>Every receipt is chained into an HMAC-SHA256 audit trail. Tamper with one record, break every record after it. Cryptographically verifiable integrity.</p>
+            <div class="feature-tag">Article 12</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background: rgba(249, 115, 22, 0.1);">&#x1F514;</div>
+            <h3>Human Approval Callbacks</h3>
+            <p>When a covenant rule says require_approval, Gate pauses and calls your callback. Slack, email, CLI prompt &mdash; you decide the interface. Decision is signed into the receipt.</p>
+            <div class="feature-tag">Article 14</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background: rgba(239, 68, 68, 0.1);">&#x1F6E1;&#xFE0F;</div>
+            <h3>Delegation Chains</h3>
+            <p>Multi-agent workflows produce linked receipt chains. Walk from any child receipt back to the root authorization. Every hop independently verifiable.</p>
+            <div class="feature-tag">Multi-Agent</div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick start -->
 <section>
     <div class="section-label">Get Started</div>
     <h2 class="section-title">Running in 60 seconds</h2>
-    <p class="section-sub">Install from PyPI. Works as a library or as a server with Slack.</p>
+    <p class="section-sub">Install from PyPI. Write a covenant. Gate your first action.</p>
     <div class="terminal">
         <div class="terminal-bar">
             <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
             <span class="terminal-title">terminal</span>
         </div>
         <div class="terminal-body">
-<span class="t-comment"># Install from PyPI</span>
-<br><span class="t-green">$</span> pip install air-gate
-<br><br>
-<span class="t-comment"># Run the interactive demo (no server needed)</span>
-<br><span class="t-green">$</span> air-gate demo
-<br><br>
-<span class="t-comment"># Or start the full server with Slack approvals</span>
-<br><span class="t-green">$</span> pip install air-gate[server]
-<br><span class="t-green">$</span> uvicorn gate.proxy:app --reload
-<br><span class="t-blue">INFO</span>: &nbsp; Uvicorn running on <span class="t-accent">http://127.0.0.1:8000</span>
-<br><br>
-<span class="t-comment"># Submit an action</span>
-<br><span class="t-green">$</span> curl -X POST http://localhost:8000/actions \
-<br>&nbsp;&nbsp;-H "Content-Type: application/json" \
-<br>&nbsp;&nbsp;-d '{"agent_id": "my-agent", "action_type": "email", "tool_name": "send_email"}'
+<span class="t-comment"># Install with Ed25519 support</span>
+<br><span class="t-green">$</span> pip install air-blackbox[gate]
+<br>
+<br><span class="t-comment"># Or without optional crypto (uses HMAC-SHA256 fallback)</span>
+<br><span class="t-green">$</span> pip install air-blackbox
+<br>
+<br><span class="t-comment"># Quick test &mdash; 58 tests, all passing</span>
+<br><span class="t-green">$</span> python test_gate.py
+<br><span class="t-green">RESULTS: 58 passed, 0 failed out of 58 tests</span>
+<br><span class="t-green">&#10003; All tests passed.</span>
+<br>
+<br><span class="t-comment"># Performance: 9,000+ authorizations/sec, 3,500+ full lifecycles/sec</span>
         </div>
     </div>
 </section>
 
 <!-- Final CTA -->
 <div class="final-cta">
-    <h2>Stop trusting. Start verifying.</h2>
-    <p>Every AI agent action your company takes should be gated, signed, and auditable. Gate makes it happen in one afternoon.</p>
+    <h2>Declare what's allowed. Prove what happened.</h2>
+    <p>Every AI agent action should be policy-checked, signed, and audit-ready. Gate makes it happen with one import.</p>
     <div class="hero-buttons">
-        <a href="https://pypi.org/project/air-gate/" target="_blank" class="btn-primary">pip install air-gate</a>
-        <a href="https://github.com/airblackbox/air-gate" target="_blank" class="btn-secondary">Star on GitHub</a>
+        <a href="https://pypi.org/project/air-blackbox/" target="_blank" class="btn-primary">pip install air-blackbox[gate]</a>
+        <a href="https://github.com/airblackbox/airblackbox" target="_blank" class="btn-secondary">Star on GitHub</a>
     </div>
 </div>
 
-<!-- Footer -->
 <footer>
     <a href="https://github.com/airblackbox" target="_blank">GitHub</a>
-    <a href="https://pypi.org/search/?q=air-blackbox" target="_blank">PyPI</a>
+    <a href="https://pypi.org/project/air-blackbox/" target="_blank">PyPI</a>
     <a href="mailto:jason@airblackbox.ai">Contact</a>
     <br><br>
-    Apache 2.0 &middot; Built on OpenTelemetry &middot; &copy; 2026 AIR Blackbox
+    Apache 2.0 &middot; Built for EU AI Act compliance &middot; &copy; 2026 AIR Blackbox
 </footer>
 
 <script>
