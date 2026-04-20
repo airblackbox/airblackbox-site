@@ -65,6 +65,10 @@
       "destination": "/demo/before-after.html"
     },
     {
+      "source": "/demo/gate",
+      "destination": "/demo/gate.html"
+    },
+    {
       "source": "/vaultmind",
       "destination": "/vaultmind/index.html"
     },
