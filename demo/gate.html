@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIR Gate Demo — Bilateral Receipts for AI Agent Actions</title>
+<meta name="description" content="Interactive demo: see how AIR Gate enforces covenants, generates Ed25519 bilateral receipts, and builds tamper-evident audit chains for AI agent actions.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --surface: #1a1a2e;
+  --surface2: #16213e;
+  --border: #2a2a4a;
+  --text: #e0e0f0;
+  --dim: #6a6a8a;
+  --green: #4ade80;
+  --red: #f87171;
+  --yellow: #fbbf24;
+  --cyan: #22d3ee;
+  --purple: #a78bfa;
+  --blue: #60a5fa;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.nav {
+  background: #080b14;
+  border-bottom: 1px solid #21262d;
+  padding: 14px 0;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  backdrop-filter: blur(12px);
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  color: #e6edf3;
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+}
+.nav-logo span { color: var(--cyan); }
+.nav-links { display: flex; gap: 20px; align-items: center; }
+.nav-links a { color: var(--dim); text-decoration: none; font-size: 13px; }
+.nav-links a:hover { color: var(--text); }
+
+.hero {
+  text-align: center;
+  padding: 48px 24px 32px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.hero h1 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+.hero h1 span { color: var(--cyan); }
+.hero p {
+  color: var(--dim);
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.demo-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+}
+
+/* Left panel — covenant + actions */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.panel-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--dim);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.panel-body { padding: 18px; }
+
+/* Covenant display */
+.covenant-rule {
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-size: 12px;
+  padding: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rule-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 64px;
+  text-align: center;
+}
+.rule-permit { background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
+.rule-approval { background: rgba(251,191,36,0.15); color: var(--yellow); border: 1px solid rgba(251,191,36,0.3); }
+.rule-forbid { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+.rule-condition { color: var(--dim); font-size: 11px; }
+.rule-target { color: var(--text); }
+
+.covenant-hash {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: rgba(96,165,250,0.08);
+  border: 1px solid rgba(96,165,250,0.2);
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--blue);
+  word-break: break-all;
+}
+
+/* Action buttons */
+.actions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  color: var(--text);
+  font-family: inherit;
+}
+.action-btn:hover { border-color: var(--cyan); background: rgba(34,211,238,0.05); }
+.action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.action-btn:disabled:hover { border-color: var(--border); background: var(--surface2); }
+.action-icon { font-size: 20px; flex-shrink: 0; }
+.action-info { flex: 1; }
+.action-name { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+.action-desc { font-size: 11px; color: var(--dim); }
+
+.reset-btn {
+  margin-top: 12px;
+  padding: 10px;
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--dim);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* Right panel — receipts + chain */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Receipt display */
+.receipt {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  animation: slideIn 0.4s ease-out;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.receipt-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.receipt-title {
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.receipt-status {
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.status-authorized { background: rgba(74,222,128,0.15); color: var(--green); }
+.status-denied { background: rgba(248,113,113,0.15); color: var(--red); }
+.status-sealed { background: rgba(167,139,250,0.15); color: var(--purple); }
+.status-pending { background: rgba(251,191,36,0.15); color: var(--yellow); }
+
+.receipt-body {
+  padding: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.receipt-field { color: var(--dim); }
+.receipt-value { color: var(--text); }
+.receipt-sig { color: var(--yellow); word-break: break-all; font-size: 11px; }
+.receipt-phase-label {
+  display: inline-block;
+  margin: 12px 0 6px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.phase-auth { background: rgba(74,222,128,0.12); color: var(--green); }
+.phase-seal { background: rgba(167,139,250,0.12); color: var(--purple); }
+
+/* Approval modal */
+.approval-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  animation: fadeIn 0.2s;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.approval-card {
+  background: #1a1d21;
+  border: 1px solid #2c2d30;
+  border-radius: 16px;
+  max-width: 440px;
+  width: 90%;
+  overflow: hidden;
+}
+.approval-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #2c2d30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #d1d2d3;
+}
+.approval-body { padding: 20px; }
+.approval-field { margin-bottom: 10px; }
+.approval-label { font-size: 11px; font-weight: 700; color: #9a9b9d; text-transform: uppercase; letter-spacing: 0.5px; }
+.approval-val { font-size: 14px; color: #d1d2d3; margin-top: 2px; }
+.approval-buttons { display: flex; gap: 10px; margin-top: 20px; }
+.approval-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn-approve { background: #007a5a; color: white; }
+.btn-approve:hover { background: #00694d; }
+.btn-reject { background: #4a154b; color: white; }
+.btn-reject:hover { background: #3d1140; }
+
+/* Audit chain */
+.chain-entry {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 10px;
+  align-items: start;
+  animation: slideIn 0.3s ease-out;
+}
+.chain-entry:last-child { border-bottom: none; }
+.chain-num { color: var(--dim); text-align: right; }
+.chain-hash { color: var(--cyan); word-break: break-all; }
+.chain-meta { color: var(--dim); font-size: 10px; margin-top: 2px; }
+.chain-link { color: var(--purple); font-size: 10px; }
+
+/* Verify section */
+.verify-result {
+  padding: 18px;
+  animation: slideIn 0.3s ease-out;
+}
+.verify-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+}
+.verify-label { color: var(--dim); }
+.verify-pass { color: var(--green); font-weight: 700; }
+.verify-fail { color: var(--red); font-weight: 700; }
+
+/* Empty state */
+.empty-state {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--dim);
+  font-size: 14px;
+}
+.empty-state .icon { font-size: 32px; margin-bottom: 12px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .demo-layout { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .hero h1 { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">AIR <span>Blackbox</span></a>
+    <div class="nav-links">
+      <a href="/demo/hub.html">All Demos</a>
+      <a href="/gate">Gate Docs</a>
+      <a href="https://github.com/airblackbox/airblackbox" target="_blank">GitHub</a>
+      <a href="https://pypi.org/project/air-blackbox/" target="_blank">PyPI</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Gate <span>Live Demo</span></h1>
+  <p>A loan processor agent tries four actions against its covenant. Watch receipts generate in real-time, approve or reject sensitive actions, and see the tamper-evident audit chain build.</p>
+</div>
+
+<div class="demo-layout">
+  <!-- Left Panel -->
+  <div>
+    <!-- Covenant -->
+    <div class="panel">
+      <div class="panel-header">&#x1F4DC; Covenant</div>
+      <div class="panel-body">
+        <div class="covenant-rule"><span class="rule-badge rule-permit">permit</span><span class="rule-target">read_credit_score</span></div>
+        <div class="covenant-rule"><span class="rule-badge rule-permit">permit</span><span class="rule-target">calculate_risk</span></div>
+        <div class="covenant-rule">
+          <span class="rule-badge rule-permit">permit</span><span class="rule-target">approve_loan</span>
+        </div>
+        <div class="covenant-rule" style="padding-left: 76px;"><span class="rule-condition">when: amount &le; 50000</span></div>
+        <div class="covenant-rule">
+          <span class="rule-badge rule-approval">approval</span><span class="rule-target">approve_loan</span>
+        </div>
+        <div class="covenant-rule" style="padding-left: 76px;"><span class="rule-condition">when: amount &gt; 50000</span></div>
+        <div class="covenant-rule"><span class="rule-badge rule-forbid">forbid</span><span class="rule-target">delete_records</span></div>
+        <div class="covenant-rule"><span class="rule-badge rule-forbid">forbid</span><span class="rule-target">modify_credit_score</span></div>
+        <div class="covenant-hash" id="covenantHash"></div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="panel" style="margin-top: 16px;">
+      <div class="panel-header">&#x26A1; Agent Actions</div>
+      <div class="panel-body">
+        <div class="actions-grid">
+          <button class="action-btn" id="btn-read" onclick="runAction('read_credit_score')">
+            <span class="action-icon">&#x1F50D;</span>
+            <div class="action-info">
+              <div class="action-name">Read Credit Score</div>
+              <div class="action-desc">Low risk — should be permitted</div>
+            </div>
+          </button>
+          <button class="action-btn" id="btn-small" onclick="runAction('approve_loan_small')">
+            <span class="action-icon">&#x2705;</span>
+            <div class="action-info">
+              <div class="action-name">Approve $30K Loan</div>
+              <div class="action-desc">Under threshold — auto-permitted</div>
+            </div>
+          </button>
+          <button class="action-btn" id="btn-large" onclick="runAction('approve_loan_large')">
+            <span class="action-icon">&#x1F6A8;</span>
+            <div class="action-info">
+              <div class="action-name">Approve $75K Loan</div>
+              <div class="action-desc">Over threshold — requires human approval</div>
+            </div>
+          </button>
+          <button class="action-btn" id="btn-delete" onclick="runAction('delete_records')">
+            <span class="action-icon">&#x1F6AB;</span>
+            <div class="action-info">
+              <div class="action-name">Delete Records</div>
+              <div class="action-desc">Forbidden by covenant — always blocked</div>
+            </div>
+          </button>
+        </div>
+        <button class="reset-btn" onclick="resetDemo()">Reset Demo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="right-panel">
+    <!-- Receipts -->
+    <div class="panel">
+      <div class="panel-header">&#x1F4DD; Bilateral Receipts</div>
+      <div id="receiptsContainer">
+        <div class="empty-state">
+          <div class="icon">&#x1F4CB;</div>
+          Click an action to generate a receipt
+        </div>
+      </div>
+    </div>
+
+    <!-- Audit Chain -->
+    <div class="panel">
+      <div class="panel-header">&#x1F517; HMAC-SHA256 Audit Chain</div>
+      <div id="chainContainer">
+        <div class="empty-state">
+          <div class="icon">&#x26D3;</div>
+          Chain entries appear here as receipts are generated
+        </div>
+      </div>
+    </div>
+
+    <!-- Verification -->
+    <div class="panel">
+      <div class="panel-header">&#x1F50D; Verification</div>
+      <div id="verifyContainer">
+        <div class="empty-state">
+          <div class="icon">&#x2705;</div>
+          Verification runs automatically after each action
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Approval Modal (hidden) -->
+<div class="approval-overlay" id="approvalModal" style="display:none;">
+  <div class="approval-card">
+    <div class="approval-header">&#x1F6A8; Action Requires Human Approval</div>
+    <div class="approval-body">
+      <div class="approval-field"><div class="approval-label">Agent</div><div class="approval-val">loan-processor</div></div>
+      <div class="approval-field"><div class="approval-label">Action</div><div class="approval-val">approve_loan</div></div>
+      <div class="approval-field"><div class="approval-label">Amount</div><div class="approval-val">$75,000</div></div>
+      <div class="approval-field"><div class="approval-label">Applicant</div><div class="approval-val">jane@example.com</div></div>
+      <div class="approval-field"><div class="approval-label">Reason</div><div class="approval-val" style="color:var(--yellow);">Covenant requires approval when amount &gt; $50,000</div></div>
+      <div class="approval-buttons">
+        <button class="approval-btn btn-approve" onclick="resolveApproval(true)">&#x2705; Approve</button>
+        <button class="approval-btn btn-reject" onclick="resolveApproval(false)">&#x274C; Reject</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Simulated crypto helpers
+function randomHex(len) {
+  const chars = '0123456789abcdef';
+  let s = '';
+  for (let i = 0; i < len; i++) s += chars[Math.floor(Math.random() * 16)];
+  return s;
+}
+function sha256Mock(input) { return randomHex(64); }
+function ed25519Mock() { return 'ed25519:' + randomHex(128); }
+function hmacMock(prev) { return 'hmac-sha256:' + randomHex(64); }
+
+// State
+let receipts = [];
+let chainEntries = [];
+let receiptCounter = 0;
+let approvalResolve = null;
+const covenantHash = sha256Mock('covenant');
+
+document.getElementById('covenantHash').textContent = 'SHA-256: ' + covenantHash;
+
+// Action definitions
+const ACTIONS = {
+  read_credit_score: {
+    name: 'read_credit_score',
+    decision: 'permit',
+    payload: { applicant: 'jane@example.com', bureau: 'equifax' },
+    result: { score: 742, status: 'good' },
+  },
+  approve_loan_small: {
+    name: 'approve_loan',
+    decision: 'permit',
+    payload: { applicant: 'jane@example.com', amount: 30000 },
+    context: { amount: 30000 },
+    result: { approved: true, rate: '6.2%', term: '60 months' },
+  },
+  approve_loan_large: {
+    name: 'approve_loan',
+    decision: 'require_approval',
+    payload: { applicant: 'jane@example.com', amount: 75000 },
+    context: { amount: 75000 },
+    result: { approved: true, rate: '5.8%', term: '120 months' },
+  },
+  delete_records: {
+    name: 'delete_records',
+    decision: 'forbid',
+    payload: { target: 'applicant_records', scope: 'all' },
+    result: null,
+  },
+};
+
+async function runAction(actionKey) {
+  const action = ACTIONS[actionKey];
+  const btnId = {
+    read_credit_score: 'btn-read',
+    approve_loan_small: 'btn-small',
+    approve_loan_large: 'btn-large',
+    delete_records: 'btn-delete',
+  }[actionKey];
+
+  // Disable button
+  document.getElementById(btnId).disabled = true;
+
+  receiptCounter++;
+  const receiptId = randomHex(8);
+  const payloadHash = 'sha256:' + sha256Mock(JSON.stringify(action.payload));
+  const createdAt = new Date().toISOString().replace(/\.\d+/, '') + 'Z';
+  let authorized = false;
+  let status = 'DENIED';
+  let humanApproved = false;
+
+  if (action.decision === 'permit') {
+    authorized = true;
+    status = 'AUTHORIZED';
+  } else if (action.decision === 'require_approval') {
+    status = 'PENDING_APPROVAL';
+    // Show approval modal
+    document.getElementById('approvalModal').style.display = 'flex';
+    const approved = await new Promise(resolve => { approvalResolve = resolve; });
+    if (approved) {
+      authorized = true;
+      status = 'AUTHORIZED';
+      humanApproved = true;
+    } else {
+      status = 'DENIED';
+    }
+  }
+
+  // Phase 1: Authorization
+  const authSig = ed25519Mock();
+  let sealSig = '';
+  let resultHash = '';
+  let sealedAt = '';
+  let finalStatus = status;
+
+  // Phase 2: Seal (if authorized)
+  if (authorized && action.result) {
+    resultHash = 'sha256:' + sha256Mock(JSON.stringify(action.result));
+    sealSig = ed25519Mock();
+    sealedAt = new Date().toISOString().replace(/\.\d+/, '') + 'Z';
+    finalStatus = 'SEALED';
+  }
+
+  // Build chain entry
+  const prevHash = chainEntries.length > 0 ? chainEntries[chainEntries.length - 1].hash : '0'.repeat(64);
+  const chainHash = hmacMock(prevHash);
+  chainEntries.push({ hash: chainHash, action: action.name, decision: action.decision, receiptId });
+
+  // Store receipt
+  const receipt = {
+    id: receiptId,
+    agentId: 'loan-processor',
+    actionName: action.name,
+    payloadHash,
+    covenantHash,
+    decision: action.decision,
+    authorized,
+    humanApproved,
+    authSig,
+    resultHash,
+    resultStatus: authorized ? 'success' : '',
+    sealSig,
+    chainHash,
+    status: finalStatus,
+    createdAt,
+    sealedAt,
+  };
+  receipts.push(receipt);
+
+  renderReceipt(receipt);
+  renderChainEntry(chainEntries.length - 1);
+  renderVerification(receipt);
+}
+
+function resolveApproval(approved) {
+  document.getElementById('approvalModal').style.display = 'none';
+  if (approvalResolve) {
+    approvalResolve(approved);
+    approvalResolve = null;
+  }
+}
+
+function renderReceipt(r) {
+  const container = document.getElementById('receiptsContainer');
+  if (container.querySelector('.empty-state')) container.innerHTML = '';
+
+  const statusClass = r.status === 'SEALED' ? 'status-sealed' : r.status === 'AUTHORIZED' ? 'status-authorized' : r.status === 'PENDING_APPROVAL' ? 'status-pending' : 'status-denied';
+  const statusLabel = r.status === 'SEALED' ? '&#x1F7E3; SEALED' : r.status === 'AUTHORIZED' ? '&#x1F7E2; AUTHORIZED' : r.status === 'PENDING_APPROVAL' ? '&#x1F7E1; PENDING' : '&#x1F534; DENIED';
+
+  let html = `<div class="receipt">
+    <div class="receipt-header">
+      <div class="receipt-title">Receipt #${r.id}</div>
+      <span class="receipt-status ${statusClass}">${statusLabel}</span>
+    </div>
+    <div class="receipt-body">
+      <span class="receipt-field">agent_id:</span> <span class="receipt-value">${r.agentId}</span><br>
+      <span class="receipt-field">action:</span> <span class="receipt-value">${r.actionName}</span><br>
+      <span class="receipt-field">covenant_hash:</span> <span class="receipt-value">${r.covenantHash.substring(0, 16)}...</span><br>
+      <span class="receipt-field">payload_hash:</span> <span class="receipt-value">${r.payloadHash.substring(0, 24)}...</span><br>
+      <span class="receipt-field">decision:</span> <span class="receipt-value" style="color:${r.decision === 'permit' ? 'var(--green)' : r.decision === 'forbid' ? 'var(--red)' : 'var(--yellow)'}">${r.decision}</span><br>
+      <span class="receipt-field">authorized:</span> <span class="receipt-value" style="color:${r.authorized ? 'var(--green)' : 'var(--red)'}">${r.authorized}</span>`;
+
+  if (r.humanApproved) {
+    html += `<span style="color:var(--dim);font-size:11px;"> (human approved)</span>`;
+  }
+
+  html += `<br><br><span class="receipt-phase-label phase-auth">Phase 1: Authorization</span><br>
+      <span class="receipt-field">auth_sig:</span> <span class="receipt-sig">${r.authSig.substring(0, 40)}...</span><br>
+      <span class="receipt-field">created_at:</span> <span class="receipt-value">${r.createdAt}</span>`;
+
+  if (r.sealSig) {
+    html += `<br><br><span class="receipt-phase-label phase-seal">Phase 2: Seal</span><br>
+      <span class="receipt-field">result_hash:</span> <span class="receipt-value">${r.resultHash.substring(0, 24)}...</span><br>
+      <span class="receipt-field">result_status:</span> <span class="receipt-value" style="color:var(--green)">success</span><br>
+      <span class="receipt-field">seal_sig:</span> <span class="receipt-sig">${r.sealSig.substring(0, 40)}...</span><br>
+      <span class="receipt-field">sealed_at:</span> <span class="receipt-value">${r.sealedAt}</span>`;
+  }
+
+  html += `<br><br><span class="receipt-field">chain_hash:</span> <span class="receipt-value" style="color:var(--cyan)">${r.chainHash.substring(0, 32)}...</span>`;
+  html += `</div></div>`;
+
+  container.insertAdjacentHTML('afterbegin', html);
+}
+
+function renderChainEntry(idx) {
+  const container = document.getElementById('chainContainer');
+  if (container.querySelector('.empty-state')) container.innerHTML = '';
+
+  const entry = chainEntries[idx];
+  const decisionColor = entry.decision === 'permit' ? 'var(--green)' : entry.decision === 'forbid' ? 'var(--red)' : 'var(--yellow)';
+
+  const html = `<div class="chain-entry">
+    <span class="chain-num">${idx + 1}</span>
+    <div>
+      <div class="chain-hash">${entry.hash}</div>
+      <div class="chain-meta">
+        <span style="color:${decisionColor}">${entry.decision}</span> &middot;
+        ${entry.action} &middot;
+        receipt:${entry.receiptId}
+      </div>
+      ${idx > 0 ? `<div class="chain-link">&#x2934; prev: ${chainEntries[idx-1].hash.substring(0, 32)}...</div>` : '<div class="chain-link">&#x2934; genesis (no previous entry)</div>'}
+    </div>
+  </div>`;
+
+  container.insertAdjacentHTML('beforeend', html);
+}
+
+function renderVerification(r) {
+  const container = document.getElementById('verifyContainer');
+  container.innerHTML = `<div class="verify-result">
+    <div class="verify-row"><span class="verify-label">Receipt</span><span class="receipt-value">#${r.id}</span></div>
+    <div class="verify-row"><span class="verify-label">Signing Method</span><span class="receipt-value">Ed25519</span></div>
+    <div class="verify-row"><span class="verify-label">Authorization Signature</span><span class="verify-pass">&#x2713; VALID</span></div>
+    <div class="verify-row"><span class="verify-label">Seal Signature</span>${r.sealSig ? '<span class="verify-pass">&#x2713; VALID</span>' : '<span class="verify-label">N/A (not sealed)</span>'}</div>
+    <div class="verify-row"><span class="verify-label">Covenant Hash Match</span><span class="verify-pass">&#x2713; MATCH</span></div>
+    <div class="verify-row"><span class="verify-label">Chain Integrity</span><span class="verify-pass">&#x2713; INTACT (${chainEntries.length} entries)</span></div>
+    <div class="verify-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">
+      <span class="verify-label" style="font-weight:700;color:var(--text);">Overall</span>
+      <span class="verify-pass" style="font-size:15px;">&#x2713; VERIFIED</span>
+    </div>
+  </div>`;
+}
+
+function resetDemo() {
+  receipts = [];
+  chainEntries = [];
+  receiptCounter = 0;
+  document.getElementById('receiptsContainer').innerHTML = '<div class="empty-state"><div class="icon">&#x1F4CB;</div>Click an action to generate a receipt</div>';
+  document.getElementById('chainContainer').innerHTML = '<div class="empty-state"><div class="icon">&#x26D3;</div>Chain entries appear here as receipts are generated</div>';
+  document.getElementById('verifyContainer').innerHTML = '<div class="empty-state"><div class="icon">&#x2705;</div>Verification runs automatically after each action</div>';
+  document.querySelectorAll('.action-btn').forEach(b => b.disabled = false);
+}
+</script>
+</body>
+</html>
