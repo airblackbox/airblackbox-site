@@ -203,6 +203,14 @@
     {
       "source": "/attest",
       "destination": "/attest.html"
+    },
+    {
+      "source": "/console",
+      "destination": "/console.html"
+    },
+    {
+      "source": "/console/scan",
+      "destination": "/console/scan.html"
     }
   ],
   "headers": [

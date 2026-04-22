@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIR Blackbox Console - Scan</title>
+    <meta name="robots" content="noindex">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #080b14;
+            --bg-card: #0d1117;
+            --bg-elevated: #161b22;
+            --border: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-dim: #484f58;
+            --accent: #fbbf24;
+            --green: #3fb950;
+            --red: #f85149;
+            --yellow: #d29922;
+            --blue: #58a6ff;
+            --purple: #a78bfa;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Sora', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--sans); background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; min-height: 100vh; }
+        a { color: var(--blue); text-decoration: none; }
+        code, .mono { font-family: var(--mono); }
+
+        /* Layout */
+        .app { display: grid; grid-template-columns: 260px 1fr; grid-template-rows: 56px 1fr; min-height: 100vh; }
+        .topbar { grid-column: 1 / -1; background: rgba(8,11,20,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; backdrop-filter: blur(12px); z-index: 10; }
+        .topbar-logo { font-family: var(--mono); font-weight: 700; font-size: 0.95rem; color: var(--text-primary); }
+        .topbar-logo span { color: var(--accent); }
+        .topbar-logo .badge { font-size: 0.55rem; background: var(--accent); color: var(--bg-deep); padding: 0.1rem 0.4rem; border-radius: 3px; margin-left: 0.4rem; vertical-align: middle; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+        .topbar-right { display: flex; align-items: center; gap: 1rem; }
+        .topbar-plan { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); background: var(--accent-glow, rgba(251,191,36,0.1)); padding: 0.2rem 0.6rem; border-radius: 4px; }
+        .topbar-user { width: 28px; height: 28px; border-radius: 50%; background: var(--bg-elevated); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--text-secondary); }
+
+        .sidebar { background: var(--bg-card); border-right: 1px solid var(--border); padding: 1.5rem 0; overflow-y: auto; }
+        .sidebar-section { padding: 0 1rem; margin-bottom: 1.5rem; }
+        .sidebar-label { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.6rem; padding: 0 0.5rem; }
+        .sidebar-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.8rem; border-radius: 6px; font-size: 0.82rem; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; margin-bottom: 0.2rem; }
+        .sidebar-item:hover { background: var(--bg-elevated); color: var(--text-primary); }
+        .sidebar-item.active { background: rgba(251,191,36,0.08); color: var(--accent); }
+        .sidebar-item .icon { width: 18px; text-align: center; font-size: 0.9rem; }
+        .sidebar-divider { border: none; border-top: 1px solid var(--border); margin: 1rem 1.5rem; }
+
+        .main { padding: 2rem; overflow-y: auto; }
+
+        /* Input Panel */
+        .input-panel { max-width: 800px; }
+        .input-panel h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .input-panel p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 2rem; }
+
+        .input-tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+        .input-tab { padding: 0.7rem 1.5rem; font-size: 0.85rem; font-weight: 600; color: var(--text-dim); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .input-tab:hover { color: var(--text-secondary); }
+        .input-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Paste Tab */
+        .code-input { width: 100%; min-height: 300px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; font-family: var(--mono); font-size: 0.82rem; color: var(--green); line-height: 1.8; resize: vertical; outline: none; transition: border-color 0.2s; }
+        .code-input:focus { border-color: var(--accent); }
+        .code-input::placeholder { color: var(--text-dim); }
+
+        /* Upload Tab */
+        .upload-zone { border: 2px dashed var(--border); border-radius: 12px; padding: 3rem 2rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .upload-zone:hover { border-color: var(--accent); background: rgba(251,191,36,0.03); }
+        .upload-zone.dragging { border-color: var(--accent); background: rgba(251,191,36,0.06); }
+        .upload-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+        .upload-zone h3 { font-size: 1rem; margin-bottom: 0.3rem; }
+        .upload-zone p { color: var(--text-dim); font-size: 0.82rem; }
+        .upload-zone input { display: none; }
+
+        /* GitHub Tab */
+        .github-connect { text-align: center; padding: 3rem 2rem; }
+        .github-connect .gh-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .github-connect p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+        .gh-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; background: #238636; color: white; border-radius: 8px; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; transition: background 0.2s; }
+        .gh-btn:hover { background: #2ea043; }
+        .gh-lock { color: var(--text-dim); font-size: 0.75rem; margin-top: 1rem; }
+
+        /* Scan Button */
+        .scan-actions { margin-top: 1.5rem; display: flex; gap: 1rem; align-items: center; }
+        .scan-btn { padding: 0.85rem 2.5rem; background: var(--accent); color: var(--bg-deep); border: none; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; font-family: var(--sans); }
+        .scan-btn:hover { opacity: 0.85; }
+        .scan-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .scan-hint { color: var(--text-dim); font-size: 0.78rem; }
+
+        /* Scanning Animation */
+        .scanning-overlay { display: none; position: fixed; inset: 0; background: rgba(8,11,20,0.92); z-index: 100; justify-content: center; align-items: center; flex-direction: column; }
+        .scanning-overlay.active { display: flex; }
+        .scan-spinner { width: 60px; height: 60px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 1.5rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .scan-status { font-family: var(--mono); font-size: 0.85rem; color: var(--text-secondary); text-align: center; }
+        .scan-status .current { color: var(--accent); }
+        .scan-checks { margin-top: 1.5rem; text-align: left; max-width: 350px; }
+        .scan-check-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.3rem 0; font-family: var(--mono); font-size: 0.78rem; color: var(--text-dim); }
+        .scan-check-item.done { color: var(--green); }
+        .scan-check-item.active { color: var(--accent); }
+        .scan-check-item .check-icon { width: 16px; text-align: center; }
+
+        /* Results Panel */
+        .results-panel { display: none; max-width: 900px; }
+        .results-panel.active { display: block; }
+
+        .results-header { display: flex; align-items: flex-start; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .score-ring { position: relative; width: 140px; height: 140px; flex-shrink: 0; }
+        .score-ring svg { width: 140px; height: 140px; transform: rotate(-90deg); }
+        .score-ring .bg { fill: none; stroke: var(--bg-elevated); stroke-width: 8; }
+        .score-ring .fg { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1.5s ease; }
+        .score-ring .score-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .score-ring .score-number { font-size: 2.8rem; font-weight: 800; line-height: 1; }
+        .score-ring .score-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.2rem; }
+
+        .results-meta { flex: 1; min-width: 250px; }
+        .results-meta h2 { font-size: 1.3rem; margin-bottom: 0.3rem; }
+        .results-meta .meta-line { color: var(--text-secondary); font-size: 0.82rem; margin-bottom: 0.3rem; }
+        .results-actions { display: flex; gap: 0.8rem; margin-top: 1rem; }
+        .results-actions button { padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text-primary); font-family: var(--sans); transition: all 0.2s; }
+        .results-actions button:hover { border-color: var(--accent); }
+
+        /* Article Bars */
+        .article-bars { display: grid; gap: 0.8rem; margin-bottom: 2.5rem; }
+        .article-bar { display: flex; align-items: center; gap: 1rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1.2rem; cursor: pointer; transition: border-color 0.2s; }
+        .article-bar:hover { border-color: var(--accent); }
+        .article-bar.active { border-color: var(--accent); }
+        .ab-label { font-family: var(--mono); font-size: 0.75rem; color: var(--text-secondary); width: 160px; flex-shrink: 0; }
+        .ab-track { flex: 1; height: 10px; background: var(--bg-elevated); border-radius: 5px; overflow: hidden; }
+        .ab-fill { height: 100%; border-radius: 5px; transition: width 1s ease; }
+        .ab-value { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; width: 45px; text-align: right; }
+        .ab-status { font-family: var(--mono); font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600; }
+
+        /* Findings */
+        .findings-section { margin-top: 2rem; }
+        .findings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .findings-header h3 { font-size: 1rem; }
+        .findings-filter { display: flex; gap: 0.5rem; }
+        .filter-btn { padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.72rem; font-family: var(--mono); cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); transition: all 0.15s; }
+        .filter-btn:hover, .filter-btn.active { border-color: var(--accent); color: var(--accent); }
+
+        .finding-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.8rem; overflow: hidden; transition: border-color 0.2s; }
+        .finding-card:hover { border-color: var(--accent); }
+        .finding-card-header { padding: 1rem 1.2rem; cursor: pointer; display: flex; align-items: center; gap: 0.8rem; }
+        .finding-sev { font-family: var(--mono); font-size: 0.6rem; padding: 0.15rem 0.5rem; border-radius: 3px; font-weight: 700; text-transform: uppercase; flex-shrink: 0; }
+        .finding-sev.high { background: rgba(248,81,73,0.15); color: var(--red); }
+        .finding-sev.medium { background: rgba(210,153,34,0.15); color: var(--yellow); }
+        .finding-sev.low { background: rgba(63,185,80,0.15); color: var(--green); }
+        .finding-name { font-size: 0.88rem; font-weight: 600; flex: 1; }
+        .finding-art { font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); }
+        .finding-chevron { color: var(--text-dim); transition: transform 0.2s; font-size: 0.8rem; }
+        .finding-card.open .finding-chevron { transform: rotate(90deg); }
+
+        .finding-body { display: none; padding: 0 1.2rem 1.2rem; border-top: 1px solid var(--border); }
+        .finding-card.open .finding-body { display: block; padding-top: 1rem; }
+        .finding-section { margin-bottom: 1rem; }
+        .finding-section-label { font-family: var(--mono); font-size: 0.68rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem; }
+        .finding-section p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; }
+        .finding-code { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1rem; font-family: var(--mono); font-size: 0.78rem; color: var(--green); line-height: 1.7; overflow-x: auto; margin-top: 0.5rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .main { padding: 1.5rem; }
+            .results-header { flex-direction: column; align-items: center; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app">
+    <!-- Top Bar -->
+    <div class="topbar">
+        <a href="/console" class="topbar-logo" style="text-decoration:none;">AIR<span>.</span>Blackbox <span class="badge">Console</span></a>
+        <div class="topbar-right">
+            <span class="topbar-plan">FREE TIER</span>
+            <div class="topbar-user">JS</div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Scan</div>
+            <div class="sidebar-item active" onclick="showPanel('input')">
+                <span class="icon">&#9654;</span> New Scan
+            </div>
+            <div class="sidebar-item" onclick="showPanel('results')" id="nav-results" style="opacity:0.4; pointer-events:none;">
+                <span class="icon">&#9776;</span> Results
+            </div>
+        </div>
+        <hr class="sidebar-divider">
+        <div class="sidebar-section">
+            <div class="sidebar-label">History</div>
+            <div class="sidebar-item" style="opacity:0.4;">
+                <span class="icon">&#128338;</span> Past Scans
+                <span style="margin-left:auto; font-size:0.65rem; color:var(--text-dim);">PRO</span>
+            </div>
+        </div>
+        <hr class="sidebar-divider">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Repos</div>
+            <div class="sidebar-item" style="opacity:0.4;">
+                <span class="icon">&#128279;</span> GitHub Connect
+                <span style="margin-left:auto; font-size:0.65rem; color:var(--text-dim);">PRO</span>
+            </div>
+        </div>
+        <hr class="sidebar-divider">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Export</div>
+            <div class="sidebar-item" style="opacity:0.4;">
+                <span class="icon">&#128196;</span> PDF Report
+                <span style="margin-left:auto; font-size:0.65rem; color:var(--text-dim);">PRO</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+
+        <!-- Input Panel -->
+        <div class="input-panel" id="panel-input">
+            <h2>Scan Your AI Code</h2>
+            <p>Paste Python code, upload a file, or connect a GitHub repo. The scanner checks 51+ EU AI Act requirements across 6 articles.</p>
+
+            <div class="input-tabs">
+                <div class="input-tab active" data-tab="paste">Paste Code</div>
+                <div class="input-tab" data-tab="upload">Upload File</div>
+                <div class="input-tab" data-tab="github">GitHub Repo</div>
+            </div>
+
+            <!-- Paste -->
+            <div class="tab-content active" id="tab-paste">
+                <textarea class="code-input" id="code-textarea" placeholder="# Paste your Python AI agent code here...
+# Example: LangChain agent, OpenAI API calls, CrewAI setup, etc.
+#
+# Try pasting any Python code that uses an LLM.
+# The scanner will check for EU AI Act compliance gaps.
+
+from langchain.agents import create_openai_tools_agent
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(model='gpt-4', temperature=0)
+agent = create_openai_tools_agent(llm, tools, prompt)
+result = agent.invoke({'input': 'Process this customer request'})
+print(result)"></textarea>
+                <div class="scan-actions">
+                    <button class="scan-btn" onclick="startScan()">Scan for Compliance</button>
+                    <span class="scan-hint">Free: 1 scan per month</span>
+                </div>
+            </div>
+
+            <!-- Upload -->
+            <div class="tab-content" id="tab-upload">
+                <div class="upload-zone" id="upload-zone">
+                    <div class="upload-icon">&#128194;</div>
+                    <h3>Drop a .py file here</h3>
+                    <p>or click to browse. Max 500KB for free tier.</p>
+                    <input type="file" id="file-input" accept=".py,.ipynb">
+                </div>
+                <div class="scan-actions" style="margin-top:1.5rem;">
+                    <button class="scan-btn" disabled id="upload-scan-btn" onclick="startScan()">Scan for Compliance</button>
+                </div>
+            </div>
+
+            <!-- GitHub -->
+            <div class="tab-content" id="tab-github">
+                <div class="github-connect">
+                    <div class="gh-icon">&#128025;</div>
+                    <h3>Connect Your GitHub Repos</h3>
+                    <p>Link a repository for continuous compliance scanning. Available on Pro and Team plans.</p>
+                    <button class="gh-btn" onclick="alert('GitHub OAuth coming in June 2026! Join the waitlist at airblackbox.ai/console')">
+                        &#128279; Connect GitHub
+                    </button>
+                    <p class="gh-lock">&#128274; Read-only access. Code scanned in memory, never stored.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="results-panel" id="panel-results">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+</div>
+
+<!-- Scanning Overlay -->
+<div class="scanning-overlay" id="scanning-overlay">
+    <div class="scan-spinner"></div>
+    <div class="scan-status">
+        <div class="current" id="scan-status-text">Initializing scan...</div>
+    </div>
+    <div class="scan-checks" id="scan-checks">
+        <div class="scan-check-item" data-check="parse"><span class="check-icon">&#9711;</span> Parsing code structure</div>
+        <div class="scan-check-item" data-check="art9"><span class="check-icon">&#9711;</span> Article 9: Risk Management</div>
+        <div class="scan-check-item" data-check="art10"><span class="check-icon">&#9711;</span> Article 10: Data Governance</div>
+        <div class="scan-check-item" data-check="art11"><span class="check-icon">&#9711;</span> Article 11: Technical Documentation</div>
+        <div class="scan-check-item" data-check="art12"><span class="check-icon">&#9711;</span> Article 12: Record-Keeping</div>
+        <div class="scan-check-item" data-check="art14"><span class="check-icon">&#9711;</span> Article 14: Human Oversight</div>
+        <div class="scan-check-item" data-check="art15"><span class="check-icon">&#9711;</span> Article 15: Robustness</div>
+        <div class="scan-check-item" data-check="pii"><span class="check-icon">&#9711;</span> PII + Injection Scanning</div>
+        <div class="scan-check-item" data-check="report"><span class="check-icon">&#9711;</span> Generating report</div>
+    </div>
+</div>
+
+<script>
+// Tab switching
+document.querySelectorAll('.input-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.input-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+});
+
+// Upload zone
+const uploadZone = document.getElementById('upload-zone');
+const fileInput = document.getElementById('file-input');
+uploadZone.addEventListener('click', () => fileInput.click());
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragging'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragging'));
+uploadZone.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragging');
+    if (e.dataTransfer.files.length) {
+        handleFile(e.dataTransfer.files[0]);
+    }
+});
+fileInput.addEventListener('change', () => {
+    if (fileInput.files.length) handleFile(fileInput.files[0]);
+});
+
+function handleFile(file) {
+    // Validate file size (500KB max for free tier)
+    if (file.size > 512000) {
+        alert('File too large. Free tier limit is 500KB.');
+        return;
+    }
+    // Validate file type (only .py and .ipynb)
+    if (!file.name.endsWith('.py') && !file.name.endsWith('.ipynb')) {
+        alert('Only .py and .ipynb files are supported.');
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+        document.getElementById('code-textarea').value = reader.result;
+        document.getElementById('upload-scan-btn').disabled = false;
+        // Sanitize filename before rendering
+        const safeName = file.name.replace(/[<>"'&]/g, '');
+        const safeSize = (file.size / 1024).toFixed(1);
+        uploadZone.textContent = '';
+        const iconDiv = document.createElement('div');
+        iconDiv.className = 'upload-icon';
+        iconDiv.textContent = '\u2705';
+        const nameH3 = document.createElement('h3');
+        nameH3.textContent = safeName;
+        const sizeP = document.createElement('p');
+        sizeP.textContent = safeSize + ' KB loaded';
+        uploadZone.appendChild(iconDiv);
+        uploadZone.appendChild(nameH3);
+        uploadZone.appendChild(sizeP);
+    };
+    reader.readAsText(file);
+}
+
+// Panels
+function showPanel(name) {
+    document.getElementById('panel-input').style.display = name === 'input' ? 'block' : 'none';
+    document.getElementById('panel-results').style.display = name === 'results' ? 'block' : 'none';
+    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+    if (name === 'results') {
+        document.getElementById('nav-results').classList.add('active');
+    } else {
+        document.querySelector('.sidebar-item').classList.add('active');
+    }
+}
+
+// HTML sanitizer -- escapes user-controlled strings before rendering
+function esc(str) {
+    const d = document.createElement('div');
+    d.appendChild(document.createTextNode(str));
+    return d.innerHTML;
+}
+
+// Simulated scan
+const SCAN_FINDINGS = [
+    {
+        severity: 'high', name: 'No tamper-evident audit trail', article: 'Art. 12',
+        meaning: 'Your AI agent makes LLM calls but none are logged in a tamper-evident way. If a regulator asks "what did your AI system do last Tuesday?", you cannot reconstruct the answer. EU AI Act Article 12 requires automatic recording of events with tamper-evident guarantees.',
+        fix: 'Route your LLM calls through the AIR Gateway (swap one URL) or add the AIR trust layer to your framework. This creates HMAC-SHA256 chained, ML-DSA-65 signed records of every AI action automatically.',
+        code: '# Before (no audit trail)\nclient = OpenAI()\n\n# After (full audit trail, 1 line change)\nclient = OpenAI(base_url="http://localhost:8080/v1")'
+    },
+    {
+        severity: 'high', name: 'No human override mechanism', article: 'Art. 14',
+        meaning: 'Your agent executes actions (API calls, data processing) with no way for a human to intervene before execution. Article 14 requires that humans can effectively oversee the AI system and intervene when necessary, including stopping the system.',
+        fix: 'Add air-gate to your pipeline. It intercepts agent actions, checks them against a YAML policy, and routes risky actions to a human approver via Slack before the agent executes them.',
+        code: 'from air_gate import GateClient\ngate = GateClient()\n\nresult = gate.check(\n    agent_id="my-agent",\n    action_type="email",\n    action="send_email",\n    payload={"to": "customer@example.com"}\n)\n\nif result["decision"] == "auto_allowed":\n    send_the_email()'
+    },
+    {
+        severity: 'high', name: 'No risk classification documented', article: 'Art. 9',
+        meaning: 'There is no risk assessment or classification in your project. The EU AI Act requires that high-risk AI systems have a documented risk management process that identifies and mitigates risks throughout the system lifecycle.',
+        fix: 'Add a RISK_ASSESSMENT.md to your project root. AIR Blackbox can generate a template based on what it found in your code: run air-blackbox export to get started.',
+        code: '# Generate risk assessment template\nair-blackbox export --format risk-assessment'
+    },
+    {
+        severity: 'medium', name: 'Missing technical documentation', article: 'Art. 11',
+        meaning: 'Your project lacks the technical documentation required by Article 11. This includes: system description, design specifications, development methodology, data requirements, and monitoring procedures. Auditors will ask for these documents.',
+        fix: 'Run air-blackbox export to auto-generate documentation templates. The scanner populates what it can from code analysis. You fill in the business context.',
+        code: '# Generate all compliance documents\nair-blackbox export --all\n\n# Generates:\n# - TECHNICAL_DOCUMENTATION.md\n# - RISK_ASSESSMENT.md  \n# - DATA_GOVERNANCE.md\n# - MONITORING_PLAN.md'
+    },
+    {
+        severity: 'medium', name: 'No input validation on LLM prompts', article: 'Art. 15',
+        meaning: 'User inputs are passed directly to the LLM without validation or sanitization. This exposes the system to prompt injection attacks, where a malicious input can override the system prompt and make the AI behave in unintended ways.',
+        fix: 'The AIR Gateway includes a PII + injection scanner that checks prompts before they reach the model. 20 weighted patterns across 5 attack categories. Configurable sensitivity with auto-blocking.',
+        code: '# AIR Gateway scans every prompt automatically\n# Or scan manually:\nfrom air_blackbox import scan_injection\n\nresult = scan_injection(user_input)\nif result.blocked:\n    return "Input rejected for safety reasons"'
+    },
+    {
+        severity: 'medium', name: 'No data governance documentation', article: 'Art. 10',
+        meaning: 'There is no documentation about what training data your system uses, how it was collected, or what quality measures are in place. Article 10 requires data governance practices including quality criteria, bias examination, and documentation of data provenance.',
+        fix: 'Create a DATA_GOVERNANCE.md documenting your training data sources, quality measures, and bias testing methodology. Run air-blackbox scan-bias to check for 6 common bias patterns.',
+        code: '# Check for bias patterns\nair-blackbox scan-bias .\n\n# Generate data governance template\nair-blackbox export --format data-governance'
+    },
+    {
+        severity: 'low', name: 'No model card found', article: 'Art. 11',
+        meaning: 'A model card documents the capabilities, limitations, and intended use of your AI model. While part of Article 11 technical documentation, model cards are increasingly expected by the AI community and by auditors as a standalone document.',
+        fix: 'Create a MODEL_CARD.md in your project root. Include: model name and version, intended use, out-of-scope use, performance metrics, training data summary, and ethical considerations.',
+        code: '# Generate model card template\nair-blackbox export --format model-card'
+    },
+    {
+        severity: 'low', name: 'No automated monitoring detected', article: 'Art. 9',
+        meaning: 'Your system does not appear to have automated monitoring or alerting for when the AI system behaves unexpectedly. Article 9 requires ongoing risk management including post-deployment monitoring.',
+        fix: 'Add air-controls to your pipeline. It provides live agent visibility with action timelines, cost tracking, risk scoring, and a kill switch. Same audit chain as air-blackbox.',
+        code: 'from air_controls import ControlsCallback\n\ncb = ControlsCallback(agent_name="my-agent")\nchain.invoke({"input": "..."}, config={"callbacks": [cb]})\n\n# Then check status:\n# air-controls status'
+    }
+];
+
+async function startScan() {
+    // Validate input length
+    const code = document.getElementById('code-textarea').value;
+    if (!code.trim()) {
+        alert('Paste some Python code first.');
+        return;
+    }
+    if (code.length > 500000) {
+        alert('Code too large. Free tier limit is 500KB. Upgrade to Pro for larger repos.');
+        return;
+    }
+
+    const overlay = document.getElementById('scanning-overlay');
+    const checks = document.querySelectorAll('.scan-check-item');
+    const statusText = document.getElementById('scan-status-text');
+
+    overlay.classList.add('active');
+
+    // Reset all checks
+    checks.forEach(c => { c.classList.remove('done', 'active'); c.querySelector('.check-icon').textContent = '\u25CB'; });
+
+    const checkNames = ['parse', 'art9', 'art10', 'art11', 'art12', 'art14', 'art15', 'pii', 'report'];
+    const statusMessages = [
+        'Parsing code structure...',
+        'Checking Article 9: Risk Management...',
+        'Checking Article 10: Data Governance...',
+        'Checking Article 11: Technical Documentation...',
+        'Checking Article 12: Record-Keeping...',
+        'Checking Article 14: Human Oversight...',
+        'Checking Article 15: Robustness...',
+        'Scanning for PII and prompt injection...',
+        'Generating compliance report...'
+    ];
+
+    for (let i = 0; i < checkNames.length; i++) {
+        const item = document.querySelector(`[data-check="${checkNames[i]}"]`);
+        item.classList.add('active');
+        item.querySelector('.check-icon').textContent = '\u25CF';
+        statusText.textContent = statusMessages[i];
+
+        await sleep(400 + Math.random() * 300);
+
+        item.classList.remove('active');
+        item.classList.add('done');
+        item.querySelector('.check-icon').textContent = '\u2713';
+    }
+
+    await sleep(300);
+    overlay.classList.remove('active');
+    renderResults();
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function renderResults() {
+    const panel = document.getElementById('panel-results');
+    const articles = [
+        { id: 'art9', label: 'Art. 9 Risk Management', score: 42, color: 'var(--red)' },
+        { id: 'art10', label: 'Art. 10 Data Governance', score: 55, color: 'var(--yellow)' },
+        { id: 'art11', label: 'Art. 11 Technical Docs', score: 38, color: 'var(--red)' },
+        { id: 'art12', label: 'Art. 12 Record-Keeping', score: 15, color: 'var(--red)' },
+        { id: 'art14', label: 'Art. 14 Human Oversight', score: 20, color: 'var(--red)' },
+        { id: 'art15', label: 'Art. 15 Robustness', score: 60, color: 'var(--yellow)' }
+    ];
+
+    const overallScore = Math.round(articles.reduce((sum, a) => sum + a.score, 0) / articles.length);
+    const circumference = 2 * Math.PI * 58;
+    const offset = circumference - (overallScore / 100) * circumference;
+    const scoreColor = overallScore >= 70 ? 'var(--green)' : overallScore >= 50 ? 'var(--yellow)' : 'var(--red)';
+
+    let findingsHtml = SCAN_FINDINGS.map((f, i) => `
+        <div class="finding-card" data-severity="${esc(f.severity)}">
+            <div class="finding-card-header" onclick="this.parentElement.classList.toggle('open')">
+                <span class="finding-sev ${esc(f.severity)}">${esc(f.severity)}</span>
+                <span class="finding-name">${esc(f.name)}</span>
+                <span class="finding-art">${esc(f.article)}</span>
+                <span class="finding-chevron">&#9654;</span>
+            </div>
+            <div class="finding-body">
+                <div class="finding-section">
+                    <div class="finding-section-label">What This Means</div>
+                    <p>${esc(f.meaning)}</p>
+                </div>
+                <div class="finding-section">
+                    <div class="finding-section-label">How to Fix It</div>
+                    <p>${esc(f.fix)}</p>
+                    <div class="finding-code"><pre>${esc(f.code)}</pre></div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    panel.innerHTML = `
+        <div class="results-header">
+            <div class="score-ring">
+                <svg viewBox="0 0 140 140">
+                    <circle class="bg" cx="70" cy="70" r="58"/>
+                    <circle class="fg" cx="70" cy="70" r="58"
+                        stroke="${scoreColor}"
+                        stroke-dasharray="${circumference}"
+                        stroke-dashoffset="${offset}"/>
+                </svg>
+                <div class="score-text">
+                    <div class="score-number" style="color:${scoreColor}">${overallScore}</div>
+                    <div class="score-label">Compliance</div>
+                </div>
+            </div>
+            <div class="results-meta">
+                <h2>Scan Complete</h2>
+                <div class="meta-line">Scanned just now &middot; ${SCAN_FINDINGS.length} findings across 6 articles</div>
+                <div class="meta-line" style="color:var(--red); font-weight:600;">3 high severity &middot; 3 medium &middot; 2 low</div>
+                <div class="results-actions">
+                    <button onclick="showPanel('input')">&#9654; New Scan</button>
+                    <button onclick="alert('PDF export available on Pro plan ($49/mo)')">&#128196; Export PDF</button>
+                    <button onclick="alert('Scan history available on Pro plan ($49/mo)')">&#128338; Save to History</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="article-bars">
+            ${articles.map(a => `
+                <div class="article-bar">
+                    <span class="ab-label">${a.label}</span>
+                    <div class="ab-track"><div class="ab-fill" style="width:${a.score}%; background:${a.color};"></div></div>
+                    <span class="ab-value" style="color:${a.color}">${a.score}%</span>
+                </div>
+            `).join('')}
+        </div>
+
+        <div class="findings-section">
+            <div class="findings-header">
+                <h3>Findings</h3>
+                <div class="findings-filter">
+                    <button class="filter-btn active" onclick="filterFindings('all', this)">All (${SCAN_FINDINGS.length})</button>
+                    <button class="filter-btn" onclick="filterFindings('high', this)">High (3)</button>
+                    <button class="filter-btn" onclick="filterFindings('medium', this)">Medium (3)</button>
+                    <button class="filter-btn" onclick="filterFindings('low', this)">Low (2)</button>
+                </div>
+            </div>
+            ${findingsHtml}
+        </div>
+    `;
+
+    // Enable results nav
+    const navResults = document.getElementById('nav-results');
+    navResults.style.opacity = '1';
+    navResults.style.pointerEvents = 'auto';
+
+    showPanel('results');
+}
+
+function filterFindings(severity, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.finding-card').forEach(card => {
+        if (severity === 'all' || card.dataset.severity === severity) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+</script>
+
+</body>
+</html>

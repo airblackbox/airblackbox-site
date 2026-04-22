@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIR Blackbox Console — See What Your AI Is Actually Doing</title>
+    <meta name="description" content="Connect your AI codebase. Get a compliance score in 60 seconds. Every finding explained in plain English. Free to start. No terminal required.">
+    <meta property="og:title" content="AIR Blackbox Console — AI Compliance Without the Terminal">
+    <meta property="og:description" content="Connect your GitHub repo or paste code. See your EU AI Act compliance score with plain-English explanations. From $0/month.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://airblackbox.ai/console">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #080b14;
+            --bg-card: #0d1117;
+            --bg-elevated: #161b22;
+            --border: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-dim: #484f58;
+            --accent: #fbbf24;
+            --accent-glow: rgba(251, 191, 36, 0.15);
+            --green: #3fb950;
+            --red: #f85149;
+            --yellow: #d29922;
+            --blue: #58a6ff;
+            --purple: #a78bfa;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Sora', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--sans); background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
+        a { color: var(--blue); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code, .mono { font-family: var(--mono); }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        /* Header */
+        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(8,11,20,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text-primary); text-decoration: none; }
+        .logo span { color: var(--accent); }
+        .logo .console-badge { font-size: 0.6rem; background: var(--accent); color: var(--bg-deep); padding: 0.15rem 0.5rem; border-radius: 4px; margin-left: 0.5rem; vertical-align: middle; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--accent); text-decoration: none; }
+        .nav-cta { background: var(--accent) !important; color: var(--bg-deep) !important; padding: 0.4rem 1rem; border-radius: 6px; font-weight: 600 !important; font-size: 0.8rem; }
+
+        /* Hero */
+        .hero { padding: 10rem 0 5rem; text-align: center; position: relative; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(251,191,36,0.06) 0%, transparent 70%); pointer-events: none; }
+        .hero h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 1.2rem; }
+        .hero h1 .highlight { background: linear-gradient(135deg, var(--accent), #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero .subtitle { color: var(--text-secondary); font-size: 1.15rem; max-width: 620px; margin: 0 auto 2rem; line-height: 1.8; }
+        .deadline { display: inline-block; background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); color: var(--red); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 2rem; letter-spacing: 0.5px; }
+        .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
+        .btn { display: inline-block; padding: 0.85rem 2rem; border-radius: 8px; font-weight: 700; font-size: 0.95rem; transition: all 0.2s; cursor: pointer; border: none; text-decoration: none; }
+        .btn:hover { text-decoration: none; }
+        .btn-primary { background: var(--accent); color: var(--bg-deep); }
+        .btn-primary:hover { opacity: 0.85; }
+        .btn-secondary { border: 1px solid var(--border); color: var(--text-primary); background: transparent; }
+        .btn-secondary:hover { border-color: var(--accent); }
+        .btn-ghost { background: transparent; color: var(--text-secondary); border: 1px solid transparent; padding: 0.85rem 1.5rem; }
+        .btn-ghost:hover { color: var(--accent); }
+
+        /* Social proof */
+        .social-proof { text-align: center; padding: 2rem 0 4rem; }
+        .social-proof p { color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 1rem; }
+        .proof-items { display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap; align-items: center; }
+        .proof-item { color: var(--text-secondary); font-size: 0.85rem; font-weight: 600; }
+        .proof-item span { color: var(--accent); font-family: var(--mono); }
+
+        /* Sections */
+        section { padding: 5rem 0; }
+        .section-label { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; }
+        .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; letter-spacing: -1px; margin-bottom: 1rem; }
+        .section-desc { color: var(--text-secondary); max-width: 600px; margin-bottom: 3rem; }
+        .section-center { text-align: center; }
+        .section-center .section-desc { margin-left: auto; margin-right: auto; }
+
+        /* Dashboard Preview */
+        .preview-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; max-width: 900px; margin: 0 auto; }
+        .preview-topbar { background: var(--bg-elevated); padding: 0.8rem 1.5rem; display: flex; align-items: center; gap: 0.6rem; border-bottom: 1px solid var(--border); }
+        .preview-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .preview-url { color: var(--text-dim); font-family: var(--mono); font-size: 0.72rem; margin-left: 1rem; }
+        .preview-body { padding: 2rem; }
+        .preview-score-row { display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .preview-score { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+        .preview-score .number { font-size: 2.5rem; font-weight: 800; color: var(--accent); line-height: 1; }
+        .preview-score .label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.2rem; }
+        .preview-meta { flex: 1; min-width: 200px; }
+        .preview-meta h3 { font-size: 1.1rem; margin-bottom: 0.3rem; }
+        .preview-meta p { color: var(--text-secondary); font-size: 0.85rem; }
+        .preview-bars { display: grid; gap: 0.8rem; margin-top: 1rem; }
+        .preview-bar { display: flex; align-items: center; gap: 0.8rem; }
+        .preview-bar-label { font-family: var(--mono); font-size: 0.72rem; color: var(--text-secondary); width: 140px; flex-shrink: 0; }
+        .preview-bar-track { flex: 1; height: 8px; background: var(--bg-elevated); border-radius: 4px; overflow: hidden; }
+        .preview-bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+        .preview-bar-value { font-family: var(--mono); font-size: 0.72rem; color: var(--text-secondary); width: 40px; text-align: right; }
+        .fill-green { background: var(--green); }
+        .fill-yellow { background: var(--yellow); }
+        .fill-red { background: var(--red); }
+        .preview-findings { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem; }
+        .preview-findings h4 { font-size: 0.85rem; margin-bottom: 1rem; color: var(--text-secondary); }
+        .finding-row { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; margin-bottom: 0.6rem; cursor: pointer; transition: border-color 0.2s; }
+        .finding-row:hover { border-color: var(--accent); }
+        .finding-header { display: flex; align-items: center; gap: 0.6rem; }
+        .finding-severity { font-family: var(--mono); font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600; text-transform: uppercase; }
+        .sev-high { background: rgba(248,81,73,0.15); color: var(--red); }
+        .sev-medium { background: rgba(210,153,34,0.15); color: var(--yellow); }
+        .sev-low { background: rgba(63,185,80,0.15); color: var(--green); }
+        .finding-title { font-size: 0.85rem; font-weight: 600; }
+        .finding-article { font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); margin-left: auto; }
+        .finding-explain { color: var(--text-secondary); font-size: 0.82rem; margin-top: 0.6rem; line-height: 1.6; display: none; }
+        .finding-row.open .finding-explain { display: block; }
+        .finding-row.open { border-color: var(--accent); }
+
+        /* How It Works */
+        .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+        .step { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 1.5rem; text-align: center; position: relative; }
+        .step-num { font-family: var(--mono); font-size: 2rem; font-weight: 800; color: var(--accent); opacity: 0.3; margin-bottom: 0.8rem; }
+        .step-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+        .step h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.6rem; }
+        .step p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; }
+
+        /* For Who */
+        .persona-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .persona-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: border-color 0.3s; }
+        .persona-card:hover { border-color: var(--accent); }
+        .persona-role { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.5rem; }
+        .persona-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; }
+        .persona-card p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; }
+
+        /* Pricing */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 960px; margin: 0 auto; }
+        .price-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem 2rem; transition: border-color 0.3s, transform 0.3s; }
+        .price-card:hover { transform: translateY(-4px); }
+        .price-card.featured { border-color: var(--accent); position: relative; }
+        .price-card.featured::before { content: 'Most Popular'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: var(--bg-deep); font-size: 0.7rem; font-weight: 700; padding: 0.2rem 1rem; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .price-tier { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; }
+        .price-amount { font-size: 2.8rem; font-weight: 800; margin-bottom: 0.2rem; }
+        .price-amount .currency { font-size: 1.2rem; vertical-align: super; color: var(--text-secondary); }
+        .price-amount .period { font-size: 0.85rem; color: var(--text-dim); font-weight: 400; }
+        .price-desc { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.6; }
+        .price-features { list-style: none; margin-bottom: 2rem; }
+        .price-features li { color: var(--text-secondary); font-size: 0.85rem; padding: 0.4rem 0; padding-left: 1.5rem; position: relative; }
+        .price-features li::before { content: ''; position: absolute; left: 0; top: 0.7rem; width: 8px; height: 8px; border-radius: 50%; }
+        .price-features .included::before { background: var(--green); }
+        .price-features .excluded::before { background: var(--text-dim); opacity: 0.3; }
+        .price-features .excluded { color: var(--text-dim); }
+        .price-btn { display: block; width: 100%; text-align: center; padding: 0.85rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem; border: none; cursor: pointer; transition: all 0.2s; }
+        .price-btn-primary { background: var(--accent); color: var(--bg-deep); }
+        .price-btn-primary:hover { opacity: 0.85; text-decoration: none; }
+        .price-btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-primary); }
+        .price-btn-secondary:hover { border-color: var(--accent); text-decoration: none; }
+        .annual-note { text-align: center; margin-top: 1.5rem; color: var(--text-dim); font-size: 0.8rem; }
+
+        /* Comparison */
+        .comparison { max-width: 800px; margin: 3rem auto 0; }
+        .comparison table { width: 100%; border-collapse: collapse; }
+        .comparison th, .comparison td { padding: 0.8rem 1rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+        .comparison th { color: var(--text-dim); font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; }
+        .comparison td:first-child { color: var(--text-secondary); }
+        .comparison .check { color: var(--green); }
+        .comparison .cross { color: var(--text-dim); }
+
+        /* FAQ */
+        .faq-list { max-width: 700px; margin: 0 auto; }
+        .faq-item { border-bottom: 1px solid var(--border); }
+        .faq-q { padding: 1.2rem 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.95rem; }
+        .faq-q::after { content: '+'; font-family: var(--mono); color: var(--accent); font-size: 1.2rem; transition: transform 0.2s; }
+        .faq-item.open .faq-q::after { transform: rotate(45deg); }
+        .faq-a { color: var(--text-secondary); font-size: 0.88rem; line-height: 1.7; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; }
+        .faq-item.open .faq-a { max-height: 300px; padding-bottom: 1.2rem; }
+
+        /* CTA */
+        .cta-section { text-align: center; padding: 6rem 0; position: relative; }
+        .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; height: 500px; background: radial-gradient(circle, rgba(251,191,36,0.06) 0%, transparent 70%); pointer-events: none; }
+        .cta-section h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; margin-bottom: 1rem; }
+        .cta-section p { color: var(--text-secondary); max-width: 500px; margin: 0 auto 2rem; }
+
+        /* Footer */
+        footer { border-top: 1px solid var(--border); padding: 3rem 0; text-align: center; }
+        footer p { color: var(--text-dim); font-size: 0.8rem; }
+        footer a { color: var(--text-secondary); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { gap: 0.8rem; }
+            .preview-score-row { flex-direction: column; align-items: flex-start; }
+            .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+            .hero { padding: 8rem 0 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <a href="/" class="logo">AIR<span>.</span>Blackbox <span class="console-badge">Console</span></a>
+        <div class="nav-links">
+            <a href="#how-it-works">How it Works</a>
+            <a href="#pricing">Pricing</a>
+            <a href="/">Open Source CLI</a>
+            <a href="https://github.com/airblackbox" target="_blank">GitHub</a>
+            <a href="#pricing" class="nav-cta">Start Free Scan</a>
+        </div>
+    </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="container">
+        <div class="deadline">102 DAYS UNTIL EU AI ACT DEADLINE</div>
+        <h1>See what your AI<br>is <span class="highlight">actually doing</span></h1>
+        <p class="subtitle">Connect your codebase. Get a compliance score in 60 seconds. Every finding explained in plain English. No terminal required.</p>
+        <div class="hero-actions">
+            <a href="#pricing" class="btn btn-primary">Start Free Scan</a>
+            <a href="#demo-preview" class="btn btn-secondary">See the Dashboard</a>
+        </div>
+    </div>
+</section>
+
+<!-- Social Proof -->
+<div class="social-proof container">
+    <p>Trusted by teams preparing for August 2026</p>
+    <div class="proof-items">
+        <div class="proof-item"><span>51+</span> compliance checks</div>
+        <div class="proof-item"><span>7</span> framework integrations</div>
+        <div class="proof-item"><span>4</span> regulatory frameworks</div>
+        <div class="proof-item"><span>Apache 2.0</span> open source core</div>
+    </div>
+</div>
+
+<!-- Dashboard Preview -->
+<section id="demo-preview">
+    <div class="container">
+        <div class="section-center">
+            <div class="section-label">Live Preview</div>
+            <h2 class="section-title">Your compliance score, explained</h2>
+            <p class="section-desc">This is what you see after connecting your repo. Every finding links to the specific EU AI Act article and tells you exactly what to fix.</p>
+        </div>
+        <div class="preview-container">
+            <div class="preview-topbar">
+                <div class="preview-dot" style="background:#f85149;"></div>
+                <div class="preview-dot" style="background:#d29922;"></div>
+                <div class="preview-dot" style="background:#3fb950;"></div>
+                <span class="preview-url">console.airblackbox.ai/scan/acme-ai-agent</span>
+            </div>
+            <div class="preview-body">
+                <div class="preview-score-row">
+                    <div class="preview-score">
+                        <div class="number">68</div>
+                        <div class="label">Score</div>
+                    </div>
+                    <div class="preview-meta">
+                        <h3>acme-ai-agent</h3>
+                        <p>Last scanned 2 minutes ago &middot; 47 files analyzed &middot; 6 articles checked</p>
+                        <div class="preview-bars">
+                            <div class="preview-bar">
+                                <span class="preview-bar-label">Art. 9 Risk Mgmt</span>
+                                <div class="preview-bar-track"><div class="preview-bar-fill fill-green" style="width:85%;"></div></div>
+                                <span class="preview-bar-value">85%</span>
+                            </div>
+                            <div class="preview-bar">
+                                <span class="preview-bar-label">Art. 10 Data Gov</span>
+                                <div class="preview-bar-track"><div class="preview-bar-fill fill-green" style="width:78%;"></div></div>
+                                <span class="preview-bar-value">78%</span>
+                            </div>
+                            <div class="preview-bar">
+                                <span class="preview-bar-label">Art. 11 Tech Docs</span>
+                                <div class="preview-bar-track"><div class="preview-bar-fill fill-yellow" style="width:60%;"></div></div>
+                                <span class="preview-bar-value">60%</span>
+                            </div>
+                            <div class="preview-bar">
+                                <span class="preview-bar-label">Art. 12 Logging</span>
+                                <div class="preview-bar-track"><div class="preview-bar-fill fill-red" style="width:35%;"></div></div>
+                                <span class="preview-bar-value">35%</span>
+                            </div>
+                            <div class="preview-bar">
+                                <span class="preview-bar-label">Art. 14 Oversight</span>
+                                <div class="preview-bar-track"><div class="preview-bar-fill fill-green" style="width:90%;"></div></div>
+                                <span class="preview-bar-value">90%</span>
+                            </div>
+                            <div class="preview-bar">
+                                <span class="preview-bar-label">Art. 15 Robustness</span>
+                                <div class="preview-bar-track"><div class="preview-bar-fill fill-yellow" style="width:55%;"></div></div>
+                                <span class="preview-bar-value">55%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="preview-findings">
+                    <h4>Top Findings (click to expand)</h4>
+                    <div class="finding-row open">
+                        <div class="finding-header">
+                            <span class="finding-severity sev-high">High</span>
+                            <span class="finding-title">No audit trail for LLM calls</span>
+                            <span class="finding-article">Art. 12</span>
+                        </div>
+                        <div class="finding-explain" style="display:block;">
+                            <strong>What this means:</strong> Your AI agent makes calls to OpenAI but none of those calls are being logged in a way that's tamper-evident. If a regulator asks "what did your AI do on March 15th?", you can't answer that question.
+                            <br><br>
+                            <strong>How to fix it:</strong> Add the AIR trust layer (3 lines of code) or route calls through the AIR Gateway. This creates a signed, verifiable log of every AI action automatically.
+                        </div>
+                    </div>
+                    <div class="finding-row">
+                        <div class="finding-header">
+                            <span class="finding-severity sev-high">High</span>
+                            <span class="finding-title">No human override mechanism detected</span>
+                            <span class="finding-article">Art. 14</span>
+                        </div>
+                        <div class="finding-explain">
+                            <strong>What this means:</strong> Your AI can take actions (sending emails, making decisions) with no way for a human to intervene or override. The EU AI Act requires that humans can stop the system at any point.
+                            <br><br>
+                            <strong>How to fix it:</strong> Add air-gate to your pipeline. It pauses risky actions and routes them to a human via Slack before the AI executes them. Takes about 15 minutes to set up.
+                        </div>
+                    </div>
+                    <div class="finding-row">
+                        <div class="finding-header">
+                            <span class="finding-severity sev-medium">Medium</span>
+                            <span class="finding-title">Missing technical documentation</span>
+                            <span class="finding-article">Art. 11</span>
+                        </div>
+                        <div class="finding-explain">
+                            <strong>What this means:</strong> Your project doesn't have a model card, data governance doc, or risk assessment. Auditors expect to see these documents alongside your code.
+                            <br><br>
+                            <strong>How to fix it:</strong> Run <code>air-blackbox export</code> to auto-generate documentation templates based on what the scanner found in your code. Fill in the blanks and you're covered.
+                        </div>
+                    </div>
+                    <div class="finding-row">
+                        <div class="finding-header">
+                            <span class="finding-severity sev-low">Low</span>
+                            <span class="finding-title">No bias testing framework found</span>
+                            <span class="finding-article">Art. 10</span>
+                        </div>
+                        <div class="finding-explain">
+                            <strong>What this means:</strong> The scanner didn't find any bias or fairness testing in your codebase. While not always required, having documented bias checks strengthens your compliance posture.
+                            <br><br>
+                            <strong>How to fix it:</strong> Add fairness testing for your model outputs. AIR Blackbox includes a bias scanner (<code>air-blackbox scan-bias .</code>) that checks for 6 common bias patterns.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section id="how-it-works">
+    <div class="container">
+        <div class="section-center">
+            <div class="section-label">How It Works</div>
+            <h2 class="section-title">Three steps. Sixty seconds.</h2>
+            <p class="section-desc">No installation. No terminal. No CLI flags. Just connect and scan.</p>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">01</div>
+                <div class="step-icon">&#128279;</div>
+                <h3>Connect Your Code</h3>
+                <p>Link a GitHub repo (Pro/Team) or paste a code snippet (Free). We only need read access. Your code is scanned in memory and never stored.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">02</div>
+                <div class="step-icon">&#128269;</div>
+                <h3>Get Your Score</h3>
+                <p>51+ checks run across 6 EU AI Act articles, plus ISO 42001, NIST AI RMF, and Colorado SB 24-205 crosswalks. Results in under 60 seconds.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">03</div>
+                <div class="step-icon">&#128221;</div>
+                <h3>Read the Explanation</h3>
+                <p>Every finding is explained in plain English. What it means for your business. What to fix. How long it takes. No jargon. No guesswork.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">04</div>
+                <div class="step-icon">&#128196;</div>
+                <h3>Export the Report</h3>
+                <p>Download a PDF report you can hand to your compliance team, board, or regulator. Includes remediation roadmap with time estimates.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Who Is This For -->
+<section>
+    <div class="container">
+        <div class="section-center">
+            <div class="section-label">Built For</div>
+            <h2 class="section-title">You shouldn't need to be a developer<br>to know if your AI is compliant</h2>
+        </div>
+        <div class="persona-grid">
+            <div class="persona-card">
+                <div class="persona-role">CTO / VP Engineering</div>
+                <h3>"The board wants an AI compliance update by Friday"</h3>
+                <p>Connect your repos, get a score, export a PDF. Send it to the board with a remediation timeline. Done before lunch.</p>
+            </div>
+            <div class="persona-card">
+                <div class="persona-role">AI Governance Lead</div>
+                <h3>"I need to audit 12 AI systems across 4 teams"</h3>
+                <p>Scan every repo from one dashboard. Track compliance scores over time. Prioritize the highest-risk gaps first.</p>
+            </div>
+            <div class="persona-card">
+                <div class="persona-role">Recruiter / HR Tech</div>
+                <h3>"We built an AI screening tool. Is it legal?"</h3>
+                <p>AI in hiring is explicitly classified as high-risk under the EU AI Act. Scan your tool now. Know exactly where you stand before enforcement begins.</p>
+            </div>
+            <div class="persona-card">
+                <div class="persona-role">Compliance Manager</div>
+                <h3>"I handle SOC2 and ISO but now they want AI too"</h3>
+                <p>AIR Blackbox maps to ISO 42001, NIST AI RMF, and Colorado SB 24-205. Same audit structure you already know, applied to AI systems.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing">
+    <div class="container">
+        <div class="section-center">
+            <div class="section-label">Pricing</div>
+            <h2 class="section-title">Start free. Scale when ready.</h2>
+            <p class="section-desc">The open-source CLI is always free. Console adds the UI, GitHub integration, and plain-English explanations that make compliance accessible to your whole team.</p>
+        </div>
+        <div class="pricing-grid">
+            <!-- Free -->
+            <div class="price-card">
+                <div class="price-tier">Free</div>
+                <div class="price-amount"><span class="currency">$</span>0<span class="period">/month</span></div>
+                <p class="price-desc">Try the scanner. Paste code or upload a file. See what it finds.</p>
+                <ul class="price-features">
+                    <li class="included">1 scan per month</li>
+                    <li class="included">Paste or upload code</li>
+                    <li class="included">Compliance score + top findings</li>
+                    <li class="included">Plain-English explanations</li>
+                    <li class="excluded">GitHub repo connect</li>
+                    <li class="excluded">Scan history</li>
+                    <li class="excluded">PDF report export</li>
+                    <li class="excluded">Team dashboard</li>
+                </ul>
+                <a href="#waitlist" class="price-btn price-btn-secondary">Start Free Scan</a>
+            </div>
+            <!-- Pro -->
+            <div class="price-card featured">
+                <div class="price-tier">Pro</div>
+                <div class="price-amount"><span class="currency">$</span>49<span class="period">/month</span></div>
+                <p class="price-desc">Full scanning power. Connect repos. Track progress. Export reports.</p>
+                <ul class="price-features">
+                    <li class="included">Unlimited scans</li>
+                    <li class="included">GitHub repo connect</li>
+                    <li class="included">Full scan history</li>
+                    <li class="included">Plain-English explanations</li>
+                    <li class="included">PDF report export</li>
+                    <li class="included">Compliance score tracking over time</li>
+                    <li class="included">Email support</li>
+                    <li class="excluded">Team dashboard (up to 5 seats)</li>
+                </ul>
+                <a href="#waitlist" class="price-btn price-btn-primary">Get Early Access</a>
+            </div>
+            <!-- Team -->
+            <div class="price-card">
+                <div class="price-tier">Team</div>
+                <div class="price-amount"><span class="currency">$</span>199<span class="period">/month</span></div>
+                <p class="price-desc">For teams shipping AI to production. Shared dashboard. Priority support.</p>
+                <ul class="price-features">
+                    <li class="included">Everything in Pro</li>
+                    <li class="included">Up to 5 team seats</li>
+                    <li class="included">Team compliance dashboard</li>
+                    <li class="included">Multi-repo scanning</li>
+                    <li class="included">Priority email support</li>
+                    <li class="included">Custom compliance policies</li>
+                    <li class="included">Quarterly compliance review call</li>
+                    <li class="included">Invoice billing</li>
+                </ul>
+                <a href="#waitlist" class="price-btn price-btn-secondary">Contact Us</a>
+            </div>
+        </div>
+        <p class="annual-note">Annual plans: 2 months free. Pro $490/yr. Team $1,990/yr.</p>
+    </div>
+</section>
+
+<!-- vs Alternatives -->
+<section>
+    <div class="container">
+        <div class="section-center">
+            <div class="section-label">Why Console</div>
+            <h2 class="section-title">How it compares</h2>
+        </div>
+        <div class="comparison">
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>AIR Console</th>
+                        <th>Enterprise Platforms</th>
+                        <th>Doc Generators</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Scans actual code</td>
+                        <td class="check">&#10003;</td>
+                        <td class="check">&#10003;</td>
+                        <td class="cross">&#10005;</td>
+                    </tr>
+                    <tr>
+                        <td>Plain-English findings</td>
+                        <td class="check">&#10003;</td>
+                        <td class="cross">Jargon-heavy</td>
+                        <td class="cross">N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Scanning in 60 seconds</td>
+                        <td class="check">&#10003;</td>
+                        <td class="cross">Weeks to deploy</td>
+                        <td class="check">&#10003;</td>
+                    </tr>
+                    <tr>
+                        <td>Post-quantum signatures</td>
+                        <td class="check">ML-DSA-65</td>
+                        <td class="cross">&#10005;</td>
+                        <td class="cross">&#10005;</td>
+                    </tr>
+                    <tr>
+                        <td>Open-source core</td>
+                        <td class="check">Apache 2.0</td>
+                        <td class="cross">Proprietary</td>
+                        <td class="check">Some</td>
+                    </tr>
+                    <tr>
+                        <td>Starting price</td>
+                        <td class="check">$0/month</td>
+                        <td class="cross">$50,000+/year</td>
+                        <td class="check">$0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section>
+    <div class="container">
+        <div class="section-center">
+            <div class="section-label">FAQ</div>
+            <h2 class="section-title">Questions</h2>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-q">Do you store my code?</div>
+                <div class="faq-a">No. Code is scanned in memory and discarded immediately. We store the scan results (scores and findings) so you can track progress, but never the source code itself. For paste/upload scans, the code is processed and deleted within seconds.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">What GitHub permissions do you need?</div>
+                <div class="faq-a">Read-only access to repository contents. We use GitHub OAuth with the minimum required scope. You can revoke access anytime from your GitHub settings.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Is the open-source CLI going away?</div>
+                <div class="faq-a">Never. The CLI (<code>pip install air-blackbox</code>) is Apache 2.0 licensed and always will be. Console is a UI layer on top of the same scanner. If you prefer the terminal, nothing changes for you.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Does a passing score mean I'm legally compliant?</div>
+                <div class="faq-a">No. AIR Blackbox checks technical requirements from the EU AI Act. Legal compliance also requires organizational measures, documentation, and potentially conformity assessments. Think of the scanner as a starting point that identifies gaps, not a legal certification.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">What languages and frameworks do you support?</div>
+                <div class="faq-a">The scanner analyzes Python AI projects and has specific integrations for LangChain, CrewAI, OpenAI SDK, Claude Agent SDK, Google ADK, AutoGen, and Haystack. It also detects common patterns in any Python AI code regardless of framework.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Can I scan private repos?</div>
+                <div class="faq-a">Yes. Pro and Team plans support private GitHub repos. After connecting via OAuth, you select which repos to scan. We only access repos you explicitly authorize.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Waitlist CTA -->
+<section class="cta-section" id="waitlist">
+    <div class="container">
+        <h2>Console launches <span style="color:var(--accent);">June 2026</span></h2>
+        <p>Get early access. First 100 signups get Pro free for 3 months.</p>
+        <div style="max-width:440px; margin:0 auto;">
+            <form id="waitlist-form" style="display:flex; gap:0.5rem;">
+                <input type="email" id="waitlist-email" placeholder="you@company.com" required style="flex:1; padding:0.85rem 1rem; border-radius:8px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-primary); font-family:var(--sans); font-size:0.9rem; outline:none;">
+                <button type="submit" class="btn btn-primary" style="white-space:nowrap;">Get Early Access</button>
+            </form>
+            <p id="waitlist-success" style="display:none; color:var(--green); font-size:0.85rem; margin-top:0.8rem; text-align:center;">You're on the list. We'll reach out before launch.</p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <p style="margin-bottom:0.5rem;"><a href="/">AIR Blackbox</a> &middot; <a href="/gate">Gate</a> &middot; <a href="/controls">Controls</a> &middot; <a href="/demo">Demos</a> &middot; <a href="https://github.com/airblackbox">GitHub</a></p>
+        <p>Apache 2.0 &middot; <a href="https://airblackbox.ai">airblackbox.ai</a></p>
+    </div>
+</footer>
+
+<script>
+// FAQ toggles
+document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+        q.parentElement.classList.toggle('open');
+    });
+});
+
+// Finding row toggles
+document.querySelectorAll('.finding-row').forEach(row => {
+    row.addEventListener('click', () => {
+        row.classList.toggle('open');
+    });
+});
+
+// Waitlist form
+document.getElementById('waitlist-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.getElementById('waitlist-email').value;
+    // Store in localStorage for now, replace with real backend later
+    console.log('Waitlist signup:', email);
+    this.style.display = 'none';
+    document.getElementById('waitlist-success').style.display = 'block';
+});
+
+// Animate bars on scroll
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.querySelectorAll('.preview-bar-fill').forEach(bar => {
+                bar.style.width = bar.style.width; // trigger reflow
+            });
+        }
+    });
+}, { threshold: 0.3 });
+
+const preview = document.querySelector('.preview-container');
+if (preview) observer.observe(preview);
+
+// Dynamic deadline countdown
+(function() {
+    const deadline = new Date('2026-08-02T00:00:00Z');
+    const now = new Date();
+    const days = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24));
+    const el = document.querySelector('.deadline');
+    if (el && days > 0) {
+        el.textContent = days + ' DAYS UNTIL EU AI ACT DEADLINE';
+    }
+})();
+</script>
+
+</body>
+</html>
