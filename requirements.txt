@@ -1,1 +1,1 @@
-stripe>=8.0.0
+# No external dependencies — all API functions use Python stdlib only

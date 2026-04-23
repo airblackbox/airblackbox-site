@@ -2,55 +2,84 @@
 AIR Blackbox Console — Stripe Checkout
 
 Creates a Stripe Checkout Session for the Pro plan ($49/month).
-Redirects the user to Stripe's hosted checkout page.
-
-GET /api/checkout  → redirects to Stripe Checkout
+Uses stdlib only (no stripe package) for maximum compatibility.
 """
 
 import json
 import os
+import ssl
+import urllib.request
+import urllib.parse
+import urllib.error
 from http.server import BaseHTTPRequestHandler
 
-import stripe
-
-stripe.api_key = os.environ.get("STRIPE_SECRET_KEY", "")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
 STRIPE_PRICE_ID = os.environ.get("STRIPE_PRICE_ID", "")
-BASE_URL = os.environ.get("BASE_URL", "https://airblackbox.ai")
+BASE_URL = "https://airblackbox.ai"
 
 
 class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
-        if not stripe.api_key or not STRIPE_PRICE_ID:
-            self._json(500, {
-                "error": "Stripe not configured",
-                "detail": "STRIPE_SECRET_KEY or STRIPE_PRICE_ID env var missing"
-            })
+        # Debug: check if env vars are loaded
+        if not STRIPE_SECRET_KEY:
+            self._json(500, {"error": "STRIPE_SECRET_KEY not set in environment"})
+            return
+        if not STRIPE_PRICE_ID:
+            self._json(500, {"error": "STRIPE_PRICE_ID not set in environment"})
             return
 
         try:
-            session = stripe.checkout.Session.create(
-                mode="subscription",
-                line_items=[{"price": STRIPE_PRICE_ID, "quantity": 1}],
-                success_url=BASE_URL + "/console/success?session_id={CHECKOUT_SESSION_ID}",
-                cancel_url=BASE_URL + "/console/scan",
-                allow_promotion_codes=True,
-                billing_address_collection="auto",
-            )
+            # Build form data for Stripe API
+            params = {
+                "mode": "subscription",
+                "line_items[0][price]": STRIPE_PRICE_ID,
+                "line_items[0][quantity]": "1",
+                "success_url": BASE_URL + "/console/success?session_id={CHECKOUT_SESSION_ID}",
+                "cancel_url": BASE_URL + "/console/scan",
+            }
+            data = urllib.parse.urlencode(params).encode("utf-8")
 
-            # Redirect to Stripe Checkout
+            # Create SSL context
+            ctx = ssl.create_default_context()
+
+            req = urllib.request.Request(
+                "https://api.stripe.com/v1/checkout/sessions",
+                data=data,
+                method="POST",
+            )
+            req.add_header("Authorization", "Bearer " + STRIPE_SECRET_KEY)
+            req.add_header("Content-Type", "application/x-www-form-urlencoded")
+
+            with urllib.request.urlopen(req, timeout=15, context=ctx) as resp:
+                body = resp.read().decode("utf-8")
+                session = json.loads(body)
+
+            checkout_url = session.get("url", "")
+            if not checkout_url:
+                self._json(500, {
+                    "error": "Stripe returned no checkout URL",
+                    "session_id": session.get("id", "unknown"),
+                })
+                return
+
+            # Redirect to Stripe
             self.send_response(303)
-            self.send_header("Location", session.url)
+            self.send_header("Location", checkout_url)
             self.end_headers()
 
-        except stripe.error.AuthenticationError as e:
-            self._json(401, {"error": "Stripe authentication failed. Check API key.", "detail": str(e)[:200]})
-
-        except stripe.error.InvalidRequestError as e:
-            self._json(400, {"error": "Stripe invalid request. Check price ID.", "detail": str(e)[:200]})
+        except urllib.error.HTTPError as e:
+            error_body = e.read().decode("utf-8", errors="replace")[:500]
+            self._json(400, {
+                "error": "Stripe API returned " + str(e.code),
+                "detail": error_body,
+            })
 
         except Exception as e:
-            self._json(500, {"error": "Checkout failed", "detail": str(e)[:200]})
+            self._json(500, {
+                "error": "Checkout failed: " + type(e).__name__,
+                "detail": str(e)[:300],
+            })
 
     def do_OPTIONS(self):
         self.send_response(200)
