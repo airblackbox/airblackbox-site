@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Pro — AIR Blackbox Console</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #080b14;
+            --bg-card: #0d1117;
+            --border: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-dim: #484f58;
+            --accent: #fbbf24;
+            --green: #3fb950;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Sora', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--sans); background: var(--bg-deep); color: var(--text-primary); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 3rem; max-width: 520px; text-align: center; }
+        .check { font-size: 3.5rem; margin-bottom: 1rem; }
+        h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; }
+        h1 span { color: var(--accent); }
+        p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.5rem; }
+        .features { text-align: left; margin-bottom: 2rem; }
+        .feature { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0; font-size: 0.88rem; color: var(--text-secondary); }
+        .feature .icon { color: var(--green); font-size: 1rem; }
+        .btn { display: inline-block; padding: 0.85rem 2rem; background: var(--accent); color: var(--bg-deep); border-radius: 8px; font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: opacity 0.2s; }
+        .btn:hover { opacity: 0.85; text-decoration: none; }
+        .sub-link { display: block; margin-top: 1rem; color: var(--text-dim); font-size: 0.78rem; }
+        .sub-link a { color: var(--text-secondary); }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="check">&#10003;</div>
+        <h1>Welcome to <span>Pro</span></h1>
+        <p>Your subscription is active. You now have full access to AIR Blackbox Console.</p>
+        <div class="features">
+            <div class="feature"><span class="icon">&#10003;</span> Unlimited compliance scans</div>
+            <div class="feature"><span class="icon">&#10003;</span> GitHub repo connect</div>
+            <div class="feature"><span class="icon">&#10003;</span> Full scan history</div>
+            <div class="feature"><span class="icon">&#10003;</span> PDF report export</div>
+            <div class="feature"><span class="icon">&#10003;</span> Plain-English explanations</div>
+            <div class="feature"><span class="icon">&#10003;</span> Compliance score tracking over time</div>
+            <div class="feature"><span class="icon">&#10003;</span> Email support</div>
+        </div>
+        <a href="/console/scan" class="btn">Start Scanning</a>
+        <div class="sub-link">Manage your subscription in <a href="https://billing.stripe.com/p/login/test" target="_blank">Stripe billing portal</a></div>
+    </div>
+</body>
+</html>

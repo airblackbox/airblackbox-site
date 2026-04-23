@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/scan",
+      "destination": "/console/scan",
+      "statusCode": 301
+    },
+    {
       "source": "/blog/6-checks-agents",
       "destination": "/blog/6-technical-checks",
       "statusCode": 301
@@ -211,6 +216,10 @@
     {
       "source": "/console/scan",
       "destination": "/console/scan.html"
+    },
+    {
+      "source": "/console/success",
+      "destination": "/console/success.html"
     }
   ],
   "headers": [
@@ -234,6 +243,9 @@
   "functions": {
     "api/scan.py": {
       "maxDuration": 30
+    },
+    "api/checkout.py": {
+      "maxDuration": 15
     },
     "api/webhook.py": {
       "maxDuration": 120

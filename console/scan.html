@@ -202,25 +202,25 @@
         <hr class="sidebar-divider">
         <div class="sidebar-section">
             <div class="sidebar-label">History</div>
-            <div class="sidebar-item" style="opacity:0.4;">
+            <div class="sidebar-item" style="opacity:0.6; cursor:pointer;" onclick="window.location.href='/api/checkout'">
                 <span class="icon">&#128338;</span> Past Scans
-                <span style="margin-left:auto; font-size:0.65rem; color:var(--text-dim);">PRO</span>
+                <span style="margin-left:auto; font-size:0.6rem; background:var(--accent); color:var(--bg-deep); padding:0.1rem 0.4rem; border-radius:3px; font-weight:700;">PRO</span>
             </div>
         </div>
         <hr class="sidebar-divider">
         <div class="sidebar-section">
             <div class="sidebar-label">Repos</div>
-            <div class="sidebar-item" style="opacity:0.4;">
+            <div class="sidebar-item" style="opacity:0.6; cursor:pointer;" onclick="window.location.href='/api/checkout'">
                 <span class="icon">&#128279;</span> GitHub Connect
-                <span style="margin-left:auto; font-size:0.65rem; color:var(--text-dim);">PRO</span>
+                <span style="margin-left:auto; font-size:0.6rem; background:var(--accent); color:var(--bg-deep); padding:0.1rem 0.4rem; border-radius:3px; font-weight:700;">PRO</span>
             </div>
         </div>
         <hr class="sidebar-divider">
         <div class="sidebar-section">
             <div class="sidebar-label">Export</div>
-            <div class="sidebar-item" style="opacity:0.4;">
+            <div class="sidebar-item" style="opacity:0.6; cursor:pointer;" onclick="window.location.href='/api/checkout'">
                 <span class="icon">&#128196;</span> PDF Report
-                <span style="margin-left:auto; font-size:0.65rem; color:var(--text-dim);">PRO</span>
+                <span style="margin-left:auto; font-size:0.6rem; background:var(--accent); color:var(--bg-deep); padding:0.1rem 0.4rem; border-radius:3px; font-weight:700;">PRO</span>
             </div>
         </div>
     </div>
@@ -279,8 +279,8 @@ print(result)"></textarea>
                     <div class="gh-icon">&#128025;</div>
                     <h3>Connect Your GitHub Repos</h3>
                     <p>Link a repository for continuous compliance scanning. Available on Pro and Team plans.</p>
-                    <button class="gh-btn" onclick="alert('GitHub OAuth coming in June 2026! Join the waitlist at airblackbox.ai/console')">
-                        &#128279; Connect GitHub
+                    <button class="gh-btn" onclick="window.location.href='/api/checkout'">
+                        &#128279; Upgrade to Pro to Connect GitHub
                     </button>
                     <p class="gh-lock">&#128274; Read-only access. Code scanned in memory, never stored.</p>
                 </div>
@@ -535,8 +535,8 @@ function renderResults(data) {
                 '<div class="meta-line" style="color:var(--red); font-weight:600;">' + highCount + ' high &middot; ' + medCount + ' medium &middot; ' + lowCount + ' low</div>' +
                 '<div class="results-actions">' +
                     '<button onclick="showPanel(\'input\')">&#9654; New Scan</button>' +
-                    '<button onclick="alert(\'PDF export available on Pro plan ($49/mo)\')">&#128196; Export PDF</button>' +
-                    '<button onclick="alert(\'Scan history available on Pro plan ($49/mo)\')">&#128338; Save to History</button>' +
+                    '<button onclick="window.location.href=\'/api/checkout\'">&#128196; Export PDF (Pro)</button>' +
+                    '<button onclick="window.location.href=\'/api/checkout\'">&#128338; Save to History (Pro)</button>' +
                 '</div>' +
             '</div>' +
         '</div>' +
