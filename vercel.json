@@ -232,6 +232,9 @@
     }
   ],
   "functions": {
+    "api/scan.py": {
+      "maxDuration": 30
+    },
     "api/webhook.py": {
       "maxDuration": 120
     },

@@ -393,60 +393,12 @@ function esc(str) {
     return d.innerHTML;
 }
 
-// Simulated scan
-const SCAN_FINDINGS = [
-    {
-        severity: 'high', name: 'No tamper-evident audit trail', article: 'Art. 12',
-        meaning: 'Your AI agent makes LLM calls but none are logged in a tamper-evident way. If a regulator asks "what did your AI system do last Tuesday?", you cannot reconstruct the answer. EU AI Act Article 12 requires automatic recording of events with tamper-evident guarantees.',
-        fix: 'Route your LLM calls through the AIR Gateway (swap one URL) or add the AIR trust layer to your framework. This creates HMAC-SHA256 chained, ML-DSA-65 signed records of every AI action automatically.',
-        code: '# Before (no audit trail)\nclient = OpenAI()\n\n# After (full audit trail, 1 line change)\nclient = OpenAI(base_url="http://localhost:8080/v1")'
-    },
-    {
-        severity: 'high', name: 'No human override mechanism', article: 'Art. 14',
-        meaning: 'Your agent executes actions (API calls, data processing) with no way for a human to intervene before execution. Article 14 requires that humans can effectively oversee the AI system and intervene when necessary, including stopping the system.',
-        fix: 'Add air-gate to your pipeline. It intercepts agent actions, checks them against a YAML policy, and routes risky actions to a human approver via Slack before the agent executes them.',
-        code: 'from air_gate import GateClient\ngate = GateClient()\n\nresult = gate.check(\n    agent_id="my-agent",\n    action_type="email",\n    action="send_email",\n    payload={"to": "customer@example.com"}\n)\n\nif result["decision"] == "auto_allowed":\n    send_the_email()'
-    },
-    {
-        severity: 'high', name: 'No risk classification documented', article: 'Art. 9',
-        meaning: 'There is no risk assessment or classification in your project. The EU AI Act requires that high-risk AI systems have a documented risk management process that identifies and mitigates risks throughout the system lifecycle.',
-        fix: 'Add a RISK_ASSESSMENT.md to your project root. AIR Blackbox can generate a template based on what it found in your code: run air-blackbox export to get started.',
-        code: '# Generate risk assessment template\nair-blackbox export --format risk-assessment'
-    },
-    {
-        severity: 'medium', name: 'Missing technical documentation', article: 'Art. 11',
-        meaning: 'Your project lacks the technical documentation required by Article 11. This includes: system description, design specifications, development methodology, data requirements, and monitoring procedures. Auditors will ask for these documents.',
-        fix: 'Run air-blackbox export to auto-generate documentation templates. The scanner populates what it can from code analysis. You fill in the business context.',
-        code: '# Generate all compliance documents\nair-blackbox export --all\n\n# Generates:\n# - TECHNICAL_DOCUMENTATION.md\n# - RISK_ASSESSMENT.md  \n# - DATA_GOVERNANCE.md\n# - MONITORING_PLAN.md'
-    },
-    {
-        severity: 'medium', name: 'No input validation on LLM prompts', article: 'Art. 15',
-        meaning: 'User inputs are passed directly to the LLM without validation or sanitization. This exposes the system to prompt injection attacks, where a malicious input can override the system prompt and make the AI behave in unintended ways.',
-        fix: 'The AIR Gateway includes a PII + injection scanner that checks prompts before they reach the model. 20 weighted patterns across 5 attack categories. Configurable sensitivity with auto-blocking.',
-        code: '# AIR Gateway scans every prompt automatically\n# Or scan manually:\nfrom air_blackbox import scan_injection\n\nresult = scan_injection(user_input)\nif result.blocked:\n    return "Input rejected for safety reasons"'
-    },
-    {
-        severity: 'medium', name: 'No data governance documentation', article: 'Art. 10',
-        meaning: 'There is no documentation about what training data your system uses, how it was collected, or what quality measures are in place. Article 10 requires data governance practices including quality criteria, bias examination, and documentation of data provenance.',
-        fix: 'Create a DATA_GOVERNANCE.md documenting your training data sources, quality measures, and bias testing methodology. Run air-blackbox scan-bias to check for 6 common bias patterns.',
-        code: '# Check for bias patterns\nair-blackbox scan-bias .\n\n# Generate data governance template\nair-blackbox export --format data-governance'
-    },
-    {
-        severity: 'low', name: 'No model card found', article: 'Art. 11',
-        meaning: 'A model card documents the capabilities, limitations, and intended use of your AI model. While part of Article 11 technical documentation, model cards are increasingly expected by the AI community and by auditors as a standalone document.',
-        fix: 'Create a MODEL_CARD.md in your project root. Include: model name and version, intended use, out-of-scope use, performance metrics, training data summary, and ethical considerations.',
-        code: '# Generate model card template\nair-blackbox export --format model-card'
-    },
-    {
-        severity: 'low', name: 'No automated monitoring detected', article: 'Art. 9',
-        meaning: 'Your system does not appear to have automated monitoring or alerting for when the AI system behaves unexpectedly. Article 9 requires ongoing risk management including post-deployment monitoring.',
-        fix: 'Add air-controls to your pipeline. It provides live agent visibility with action timelines, cost tracking, risk scoring, and a kill switch. Same audit chain as air-blackbox.',
-        code: 'from air_controls import ControlsCallback\n\ncb = ControlsCallback(agent_name="my-agent")\nchain.invoke({"input": "..."}, config={"callbacks": [cb]})\n\n# Then check status:\n# air-controls status'
-    }
-];
+// Real scan — calls /api/scan backend
+let lastScanData = null;
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 async function startScan() {
-    // Validate input length
     const code = document.getElementById('code-textarea').value;
     if (!code.trim()) {
         alert('Paste some Python code first.');
@@ -462,8 +414,6 @@ async function startScan() {
     const statusText = document.getElementById('scan-status-text');
 
     overlay.classList.add('active');
-
-    // Reset all checks
     checks.forEach(c => { c.classList.remove('done', 'active'); c.querySelector('.check-icon').textContent = '\u25CB'; });
 
     const checkNames = ['parse', 'art9', 'art10', 'art11', 'art12', 'art14', 'art15', 'pii', 'report'];
@@ -479,120 +429,135 @@ async function startScan() {
         'Generating compliance report...'
     ];
 
+    // Start animation and API call in parallel
+    const apiPromise = fetch('/api/scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code })
+    }).then(r => r.json());
+
+    // Animate check items while waiting
     for (let i = 0; i < checkNames.length; i++) {
-        const item = document.querySelector(`[data-check="${checkNames[i]}"]`);
+        const item = document.querySelector('[data-check="' + checkNames[i] + '"]');
         item.classList.add('active');
         item.querySelector('.check-icon').textContent = '\u25CF';
         statusText.textContent = statusMessages[i];
-
-        await sleep(400 + Math.random() * 300);
-
+        await sleep(300 + Math.random() * 200);
         item.classList.remove('active');
         item.classList.add('done');
         item.querySelector('.check-icon').textContent = '\u2713';
     }
 
-    await sleep(300);
-    overlay.classList.remove('active');
-    renderResults();
+    // Wait for API response
+    try {
+        const data = await apiPromise;
+        if (data.error) {
+            overlay.classList.remove('active');
+            alert('Scan error: ' + data.error);
+            return;
+        }
+        lastScanData = data;
+        overlay.classList.remove('active');
+        renderResults(data);
+    } catch (err) {
+        overlay.classList.remove('active');
+        alert('Scan failed. Please try again. Error: ' + err.message);
+    }
 }
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-function renderResults() {
+function renderResults(data) {
     const panel = document.getElementById('panel-results');
-    const articles = [
-        { id: 'art9', label: 'Art. 9 Risk Management', score: 42, color: 'var(--red)' },
-        { id: 'art10', label: 'Art. 10 Data Governance', score: 55, color: 'var(--yellow)' },
-        { id: 'art11', label: 'Art. 11 Technical Docs', score: 38, color: 'var(--red)' },
-        { id: 'art12', label: 'Art. 12 Record-Keeping', score: 15, color: 'var(--red)' },
-        { id: 'art14', label: 'Art. 14 Human Oversight', score: 20, color: 'var(--red)' },
-        { id: 'art15', label: 'Art. 15 Robustness', score: 60, color: 'var(--yellow)' }
-    ];
+    const overallScore = data.score;
+    const findings = data.findings || [];
+    const articles = data.articles || [];
+    const meta = data.meta || {};
 
-    const overallScore = Math.round(articles.reduce((sum, a) => sum + a.score, 0) / articles.length);
     const circumference = 2 * Math.PI * 58;
     const offset = circumference - (overallScore / 100) * circumference;
     const scoreColor = overallScore >= 70 ? 'var(--green)' : overallScore >= 50 ? 'var(--yellow)' : 'var(--red)';
 
-    let findingsHtml = SCAN_FINDINGS.map((f, i) => `
-        <div class="finding-card" data-severity="${esc(f.severity)}">
-            <div class="finding-card-header" onclick="this.parentElement.classList.toggle('open')">
-                <span class="finding-sev ${esc(f.severity)}">${esc(f.severity)}</span>
-                <span class="finding-name">${esc(f.name)}</span>
-                <span class="finding-art">${esc(f.article)}</span>
-                <span class="finding-chevron">&#9654;</span>
-            </div>
-            <div class="finding-body">
-                <div class="finding-section">
-                    <div class="finding-section-label">What This Means</div>
-                    <p>${esc(f.meaning)}</p>
-                </div>
-                <div class="finding-section">
-                    <div class="finding-section-label">How to Fix It</div>
-                    <p>${esc(f.fix)}</p>
-                    <div class="finding-code"><pre>${esc(f.code)}</pre></div>
-                </div>
-            </div>
-        </div>
-    `).join('');
+    const highCount = meta.high_severity || 0;
+    const medCount = meta.medium_severity || 0;
+    const lowCount = meta.low_severity || 0;
 
-    panel.innerHTML = `
-        <div class="results-header">
-            <div class="score-ring">
-                <svg viewBox="0 0 140 140">
-                    <circle class="bg" cx="70" cy="70" r="58"/>
-                    <circle class="fg" cx="70" cy="70" r="58"
-                        stroke="${scoreColor}"
-                        stroke-dasharray="${circumference}"
-                        stroke-dashoffset="${offset}"/>
-                </svg>
-                <div class="score-text">
-                    <div class="score-number" style="color:${scoreColor}">${overallScore}</div>
-                    <div class="score-label">Compliance</div>
-                </div>
-            </div>
-            <div class="results-meta">
-                <h2>Scan Complete</h2>
-                <div class="meta-line">Scanned just now &middot; ${SCAN_FINDINGS.length} findings across 6 articles</div>
-                <div class="meta-line" style="color:var(--red); font-weight:600;">3 high severity &middot; 3 medium &middot; 2 low</div>
-                <div class="results-actions">
-                    <button onclick="showPanel('input')">&#9654; New Scan</button>
-                    <button onclick="alert('PDF export available on Pro plan ($49/mo)')">&#128196; Export PDF</button>
-                    <button onclick="alert('Scan history available on Pro plan ($49/mo)')">&#128338; Save to History</button>
-                </div>
-            </div>
-        </div>
+    let findingsHtml = findings.map(f => {
+        const meaning = f.meaning || f.evidence || '';
+        const fix = f.fix || f.fix_hint || '';
+        const timeEst = f.time_estimate ? ' Estimated time: ' + f.time_estimate + '.' : '';
+        return '<div class="finding-card" data-severity="' + esc(f.severity) + '">' +
+            '<div class="finding-card-header" onclick="this.parentElement.classList.toggle(\'open\')">' +
+                '<span class="finding-sev ' + esc(f.severity) + '">' + esc(f.severity) + '</span>' +
+                '<span class="finding-name">' + esc(f.name) + '</span>' +
+                '<span class="finding-art">Art. ' + esc(String(f.article)) + '</span>' +
+                '<span class="finding-chevron">&#9654;</span>' +
+            '</div>' +
+            '<div class="finding-body">' +
+                '<div class="finding-section">' +
+                    '<div class="finding-section-label">What This Means</div>' +
+                    '<p>' + esc(meaning) + '</p>' +
+                '</div>' +
+                (fix ? '<div class="finding-section">' +
+                    '<div class="finding-section-label">How to Fix It</div>' +
+                    '<p>' + esc(fix) + esc(timeEst) + '</p>' +
+                '</div>' : '') +
+            '</div>' +
+        '</div>';
+    }).join('');
 
-        <div class="article-bars">
-            ${articles.map(a => `
-                <div class="article-bar">
-                    <span class="ab-label">${a.label}</span>
-                    <div class="ab-track"><div class="ab-fill" style="width:${a.score}%; background:${a.color};"></div></div>
-                    <span class="ab-value" style="color:${a.color}">${a.score}%</span>
-                </div>
-            `).join('')}
-        </div>
+    let articleBarsHtml = articles.map(a => {
+        const color = a.score >= 70 ? 'var(--green)' : a.score >= 50 ? 'var(--yellow)' : 'var(--red)';
+        return '<div class="article-bar">' +
+            '<span class="ab-label">Art. ' + esc(String(a.number)) + ' ' + esc(a.title) + '</span>' +
+            '<div class="ab-track"><div class="ab-fill" style="width:' + a.score + '%; background:' + color + ';"></div></div>' +
+            '<span class="ab-value" style="color:' + color + '">' + a.score + '%</span>' +
+        '</div>';
+    }).join('');
 
-        <div class="findings-section">
-            <div class="findings-header">
-                <h3>Findings</h3>
-                <div class="findings-filter">
-                    <button class="filter-btn active" onclick="filterFindings('all', this)">All (${SCAN_FINDINGS.length})</button>
-                    <button class="filter-btn" onclick="filterFindings('high', this)">High (3)</button>
-                    <button class="filter-btn" onclick="filterFindings('medium', this)">Medium (3)</button>
-                    <button class="filter-btn" onclick="filterFindings('low', this)">Low (2)</button>
-                </div>
-            </div>
-            ${findingsHtml}
-        </div>
-    `;
+    const fwText = meta.frameworks_detected && meta.frameworks_detected.length > 0
+        ? 'Frameworks: ' + meta.frameworks_detected.join(', ') + ' &middot; '
+        : '';
+
+    panel.innerHTML =
+        '<div class="results-header">' +
+            '<div class="score-ring">' +
+                '<svg viewBox="0 0 140 140">' +
+                    '<circle class="bg" cx="70" cy="70" r="58"/>' +
+                    '<circle class="fg" cx="70" cy="70" r="58" stroke="' + scoreColor + '" stroke-dasharray="' + circumference + '" stroke-dashoffset="' + offset + '"/>' +
+                '</svg>' +
+                '<div class="score-text">' +
+                    '<div class="score-number" style="color:' + scoreColor + '">' + overallScore + '</div>' +
+                    '<div class="score-label">Compliance</div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="results-meta">' +
+                '<h2>Scan Complete</h2>' +
+                '<div class="meta-line">' + fwText + meta.code_lines + ' lines analyzed &middot; ' + findings.length + ' findings &middot; ' + (meta.scan_duration_ms || 0) + 'ms</div>' +
+                '<div class="meta-line" style="color:var(--red); font-weight:600;">' + highCount + ' high &middot; ' + medCount + ' medium &middot; ' + lowCount + ' low</div>' +
+                '<div class="results-actions">' +
+                    '<button onclick="showPanel(\'input\')">&#9654; New Scan</button>' +
+                    '<button onclick="alert(\'PDF export available on Pro plan ($49/mo)\')">&#128196; Export PDF</button>' +
+                    '<button onclick="alert(\'Scan history available on Pro plan ($49/mo)\')">&#128338; Save to History</button>' +
+                '</div>' +
+            '</div>' +
+        '</div>' +
+        '<div class="article-bars">' + articleBarsHtml + '</div>' +
+        '<div class="findings-section">' +
+            '<div class="findings-header">' +
+                '<h3>Findings</h3>' +
+                '<div class="findings-filter">' +
+                    '<button class="filter-btn active" onclick="filterFindings(\'all\', this)">All (' + findings.length + ')</button>' +
+                    '<button class="filter-btn" onclick="filterFindings(\'high\', this)">High (' + highCount + ')</button>' +
+                    '<button class="filter-btn" onclick="filterFindings(\'medium\', this)">Medium (' + medCount + ')</button>' +
+                    '<button class="filter-btn" onclick="filterFindings(\'low\', this)">Low (' + lowCount + ')</button>' +
+                '</div>' +
+            '</div>' +
+            findingsHtml +
+        '</div>';
 
     // Enable results nav
     const navResults = document.getElementById('nav-results');
     navResults.style.opacity = '1';
     navResults.style.pointerEvents = 'auto';
-
     showPanel('results');
 }
 
