@@ -1,1 +1,1 @@
-# No external dependencies — webhook uses Python stdlib only
+stripe>=8.0.0
