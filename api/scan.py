@@ -95,11 +95,11 @@ ERROR_HANDLING_PATTERNS = [
 ]
 
 LOGGING_PATTERNS = [
-    r"import logging",
     r"logging\.getLogger",
-    r"logger\s*=",
-    r"log\s*=\s*logging",
+    r"logging\.basicConfig",
+    r"logger\s*=\s*logging\.getLogger",
     r"structlog",
+    r"logging\.(?:debug|info|warning|error|critical)\(",
 ]
 
 TRACING_PATTERNS = [
@@ -124,13 +124,19 @@ HITL_PATTERNS = [
 ]
 
 INPUT_VALIDATION_PATTERNS = [
+    r"field_validator",
+    r"json_schema",
+    r"jsonschema\.validate",
+]
+
+# These patterns only count as input validation if LLM calls
+# are also present in the code. A Pydantic BaseModel for a
+# database schema is NOT AI input validation.
+INPUT_VALIDATION_LLM_CONTEXT_PATTERNS = [
     r"pydantic",
     r"BaseModel",
     r"Field\(",
     r"validator\(",
-    r"field_validator",
-    r"json_schema",
-    r"jsonschema\.validate",
 ]
 
 OUTPUT_VALIDATION_PATTERNS = [
@@ -144,13 +150,14 @@ OUTPUT_VALIDATION_PATTERNS = [
 
 PII_PATTERNS = [
     r"pii_detect",
-    r"redact",
-    r"anonymize",
+    r"redact.*(?:pii|ssn|email|phone|name|address|personal)",
+    r"anonymize.*(?:data|user|pii|record)",
     r"mask_pii",
     r"detect_pii",
     r"scrub_pii",
     r"presidio",
     r"from air_blackbox\.injection",
+    r"(?:pii|personal).*(?:redact|filter|remove|strip|mask)",
 ]
 
 INJECTION_DEFENSE_PATTERNS = [
@@ -160,8 +167,11 @@ INJECTION_DEFENSE_PATTERNS = [
     r"prompt_guard",
     r"NeMoGuardrails",
     r"from nemoguardrails",
-    r"sanitize.*input",
-    r"injection.*detect",
+    r"sanitize.*prompt",
+    r"sanitize.*llm",
+    r"prompt.*injection",
+    r"prompt.*sanitiz",
+    r"input.*filter.*(?:llm|prompt|model|agent)",
 ]
 
 RETRY_PATTERNS = [
@@ -182,14 +192,16 @@ RATE_LIMIT_PATTERNS = [
 ]
 
 AUDIT_TRAIL_PATTERNS = [
-    r"audit_log",
-    r"audit_trail",
-    r"event_log",
-    r"emit_event",
+    r"audit_log\s*[\.\(=]",
+    r"audit_trail\s*[\.\(=]",
+    r"event_log\s*[\.\(=]",
+    r"emit_event\s*\(",
     r"agent_events",
     r"crew_events",
-    r"air_blackbox",
+    r"from air_blackbox",
+    r"air_blackbox\.\w+\(",
     r"\.air\.json",
+    r"GateClient\(",
 ]
 
 DOC_PATTERNS = {
@@ -218,8 +230,10 @@ def _detect_patterns(code: str, patterns: list) -> list:
 # in a relevant context, not just anywhere in the file.
 # ============================================================
 
-# Lines within this window of a match are checked for context
-_CONTEXT_WINDOW = 5
+# Lines within this window of a match are checked for context.
+# 15 lines covers most function/class bodies where a pattern
+# might appear far from its framework constructor.
+_CONTEXT_WINDOW = 15
 
 # Patterns that look like compliance features but are often
 # something else entirely. Each entry maps a trigger pattern
@@ -373,7 +387,13 @@ def scan_code_string(code: str) -> List[CodeFinding]:
         fix_hint="" if pii else "Add PII detection and redaction before sending data to LLMs (e.g., presidio, or AIR Gateway PII scanner)"))
 
     # Input validation
+    # Strong patterns (jsonschema, field_validator) always count.
+    # Weak patterns (BaseModel, Field) only count if LLM calls
+    # are also present -- a BaseModel for a database schema is
+    # NOT AI input validation.
     iv = _detect_patterns(code, INPUT_VALIDATION_PATTERNS)
+    if not iv and has_llm:
+        iv = _detect_patterns(code, INPUT_VALIDATION_LLM_CONTEXT_PATTERNS)
     findings.append(CodeFinding(
         article=10, name="Input validation", status="pass" if iv else "warn",
         evidence="Input validation patterns detected (pydantic/schema)" if iv else "No structured input validation found",
