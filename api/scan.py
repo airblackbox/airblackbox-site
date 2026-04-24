@@ -118,7 +118,6 @@ HITL_PATTERNS = [
     r"approval_required",
     r"human_review",
     r"confirmation_strategy",
-    r"allow_delegation\s*=\s*True",
     r"interrupt_before",
     r"air_gate",
     r"GateClient",
@@ -210,6 +209,101 @@ def _detect_patterns(code: str, patterns: list) -> list:
         if re.search(p, code, re.MULTILINE | re.IGNORECASE):
             found.append(p)
     return found
+
+
+# ============================================================
+# Context-aware pattern matching
+# Prevents false positives by checking surrounding code context
+# before flagging a match. A pattern only counts if it appears
+# in a relevant context, not just anywhere in the file.
+# ============================================================
+
+# Lines within this window of a match are checked for context
+_CONTEXT_WINDOW = 5
+
+# Patterns that look like compliance features but are often
+# something else entirely. Each entry maps a trigger pattern
+# to a list of nearby-context patterns that CANCEL the match
+# (i.e., if the context pattern is found near the trigger,
+# the trigger is a false positive and should be skipped).
+CONTEXT_EXCLUSIONS = {
+    # allow_delegation=True in CrewAI is agent-to-agent delegation,
+    # NOT human oversight. Only count it if there is NO CrewAI
+    # Agent/Task constructor nearby.
+    r"allow_delegation\s*=\s*True": [
+        r"Agent\(",
+        r"Task\(",
+        r"from crewai",
+        r"import crewai",
+    ],
+    # max_age in config is almost always cache TTL, not token
+    # revocation. Skip if near cache/config/TTL context.
+    r"max_age": [
+        r"cache",
+        r"ttl",
+        r"Cache-Control",
+        r"max_age\s*=\s*\d+",
+        r"config",
+        r"session",
+    ],
+    # user_id in telemetry/logging/analytics is not OAuth
+    # delegation. Skip if near analytics/telemetry context.
+    r"user_id": [
+        r"telemetry",
+        r"analytics",
+        r"log",
+        r"metric",
+        r"event_track",
+        r"stats",
+    ],
+}
+
+
+def _get_line_context(code: str, match_pos: int, window: int = _CONTEXT_WINDOW) -> str:
+    """Get surrounding lines around a match position for context checking."""
+    lines = code.split("\n")
+    char_count = 0
+    match_line = 0
+    for i, line in enumerate(lines):
+        char_count += len(line) + 1  # +1 for newline
+        if char_count > match_pos:
+            match_line = i
+            break
+    start = max(0, match_line - window)
+    end = min(len(lines), match_line + window + 1)
+    return "\n".join(lines[start:end])
+
+
+def _detect_with_context(code: str, pattern: str) -> bool:
+    """
+    Check if a pattern matches in the code, but filter out false
+    positives by checking surrounding context. Returns True only
+    if the match appears in a relevant (non-excluded) context.
+    """
+    if pattern not in CONTEXT_EXCLUSIONS:
+        # No exclusion rules for this pattern, use simple match
+        return bool(re.search(pattern, code, re.MULTILINE | re.IGNORECASE))
+
+    exclusion_patterns = CONTEXT_EXCLUSIONS[pattern]
+    matches = list(re.finditer(pattern, code, re.MULTILINE | re.IGNORECASE))
+    if not matches:
+        return False
+
+    # Check each match location -- if ANY match is in a valid
+    # (non-excluded) context, the pattern counts as found
+    for m in matches:
+        context = _get_line_context(code, m.start())
+        excluded = False
+        for exc in exclusion_patterns:
+            if re.search(exc, context, re.IGNORECASE):
+                excluded = True
+                break
+        if not excluded:
+            # Found a match that is NOT in an excluded context
+            return True
+
+    # All matches were in excluded contexts -- false positive
+    return False
 
 
 def _detect_frameworks(code: str) -> list:
@@ -331,6 +425,11 @@ def scan_code_string(code: str) -> List[CodeFinding]:
 
     # --- Article 14: Human Oversight ---
     hitl = _detect_patterns(code, HITL_PATTERNS)
+    # Context-aware check: allow_delegation=True only counts as
+    # human oversight if it's NOT inside a CrewAI Agent/Task
+    # constructor (where it means agent-to-agent delegation)
+    if not hitl and _detect_with_context(code, r"allow_delegation\s*=\s*True"):
+        hitl = [r"allow_delegation\s*=\s*True"]
     findings.append(CodeFinding(
         article=14, name="Human-in-the-loop mechanism", status="pass" if hitl else "fail",
         evidence="Human oversight patterns detected" if hitl else "No human-in-the-loop mechanism found",
