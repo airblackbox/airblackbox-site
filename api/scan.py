@@ -339,6 +339,61 @@ def _has_llm_calls(code: str) -> bool:
     return False
 
 
+# ============================================================
+# Hiring AI Compliance (US jurisdictions)
+# These checks only fire when hiring/employment AI context is
+# detected in the code. No false positives on general-purpose code.
+# ============================================================
+
+HIRING_CONTEXT_PATTERNS = [
+    r"candidate", r"applicant", r"hiring", r"screening",
+    r"resume", r"interview", r"recruitment", r"job_posting",
+    r"job_application", r"talent_acquisition", r"ats\b",
+    r"applicant_tracking", r"shortlist", r"reject.*candidate",
+    r"rank.*candidate", r"score.*candidate", r"evaluate.*candidate",
+]
+
+# Illinois HB 3773: ZIP code used as proxy for protected characteristics
+ZIP_PROXY_PATTERNS = [
+    r"zip_code", r"zipcode", r"zip_prefix", r"postal_code",
+    r"zip\s*[\[=]",  # zip used as variable/key, not the built-in function
+]
+
+ZIP_SCORING_CONTEXT = [
+    r"score", r"rank", r"weight", r"predict", r"feature",
+    r"model\.", r"classifier", r"decision", r"filter",
+]
+
+# NYC Local Law 144: Bias audit requirement for AEDT
+BIAS_AUDIT_PATTERNS = [
+    r"bias_audit", r"disparate_impact", r"adverse_impact",
+    r"four_fifths_rule", r"selection_rate", r"demographic_parity",
+    r"impact_ratio", r"fairness_metric", r"protected_class",
+    r"equal_opportunity", r"statistical_parity",
+    r"aequitas", r"fairlearn", r"ai_fairness_360",
+]
+
+# California FEHA: 4-year data retention for hiring AI decisions
+RETENTION_PATTERNS = [
+    r"retention_period", r"retention_policy", r"data_retention",
+    r"record_retention", r"archive.*(?:year|day|month)",
+    r"retention.*(?:year|day|month)", r"keep.*record.*(?:year|day)",
+    r"(?:1460|1461)\s*day", r"4\s*year.*retain", r"retain.*4\s*year",
+    r"purge_after", r"ttl.*(?:year|day)",
+]
+
+
+def _has_hiring_context(code: str) -> bool:
+    """Check if code is related to hiring/employment AI."""
+    matches = 0
+    for p in HIRING_CONTEXT_PATTERNS:
+        if re.search(p, code, re.IGNORECASE):
+            matches += 1
+            if matches >= 2:  # require at least 2 hiring signals
+                return True
+    return False
+
+
 def scan_code_string(code: str) -> List[CodeFinding]:
     """
     Scan a code string for EU AI Act compliance patterns.
@@ -470,6 +525,65 @@ def scan_code_string(code: str) -> List[CodeFinding]:
         evidence="Output validation patterns detected" if ov else "No structured output validation found",
         fix_hint="" if ov else "Validate LLM outputs with pydantic models or output parsers before acting on them"))
 
+    # --- Article 16: Hiring AI Compliance (US) ---
+    # These checks only fire when the code looks like a hiring/employment AI system.
+    # No false positives on general-purpose code.
+    is_hiring = _has_hiring_context(code)
+    if is_hiring:
+        # Illinois HB 3773: ZIP code as proxy for protected characteristics
+        zip_found = _detect_patterns(code, ZIP_PROXY_PATTERNS)
+        zip_in_scoring = False
+        if zip_found:
+            # Only flag if ZIP is used in a scoring/ranking/prediction context
+            zip_in_scoring = bool(_detect_patterns(code, ZIP_SCORING_CONTEXT))
+        if zip_found and zip_in_scoring:
+            findings.append(CodeFinding(
+                article=16, name="Illinois HB 3773: ZIP code as proxy",
+                status="fail",
+                evidence="ZIP/postal code used as a feature in candidate scoring or ranking. Illinois HB 3773 prohibits using ZIP code as a proxy for protected characteristics in AI hiring decisions.",
+                fix_hint="Remove ZIP code from scoring features or add a documented disparity analysis showing ZIP is not proxying for race, ethnicity, or other protected classes"))
+        elif zip_found:
+            findings.append(CodeFinding(
+                article=16, name="Illinois HB 3773: ZIP code as proxy",
+                status="warn",
+                evidence="ZIP/postal code referenced in hiring context. Verify it is not used as a scoring feature.",
+                fix_hint="Audit whether ZIP code influences candidate ranking. If it does, remove it or document a disparity analysis"))
+        else:
+            findings.append(CodeFinding(
+                article=16, name="Illinois HB 3773: ZIP code as proxy",
+                status="pass",
+                evidence="No ZIP/postal code usage detected in hiring scoring context"))
+
+        # NYC Local Law 144: Bias audit for automated employment decision tools
+        bias_audit = _detect_patterns(code, BIAS_AUDIT_PATTERNS)
+        if bias_audit:
+            findings.append(CodeFinding(
+                article=16, name="NYC LL144: Bias audit framework",
+                status="pass",
+                evidence="Bias audit or fairness metrics detected in hiring AI code",
+                fix_hint=""))
+        else:
+            findings.append(CodeFinding(
+                article=16, name="NYC LL144: Bias audit framework",
+                status="fail",
+                evidence="No bias audit framework detected. NYC Local Law 144 requires an annual bias audit by an independent auditor for any automated employment decision tool (AEDT) used in NYC.",
+                fix_hint="Add bias auditing with disparate impact analysis (e.g., fairlearn, aequitas, or AI Fairness 360). Must calculate selection rates and impact ratios across race/ethnicity and sex categories"))
+
+        # California FEHA: 4-year data retention for hiring AI decisions
+        retention = _detect_patterns(code, RETENTION_PATTERNS)
+        if retention:
+            findings.append(CodeFinding(
+                article=16, name="California FEHA: Data retention",
+                status="pass",
+                evidence="Data retention policy detected in hiring AI code",
+                fix_hint=""))
+        else:
+            findings.append(CodeFinding(
+                article=16, name="California FEHA: Data retention",
+                status="fail",
+                evidence="No data retention policy detected. California FEHA amendments require AI hiring vendors to retain application and decision data for a minimum of 4 years.",
+                fix_hint="Add a retention_policy config with a minimum 4-year (1460-day) retention period for all candidate evaluation data and AI-generated recommendations"))
+
     # Assign severity
     for f in findings:
         if f.status == "fail":
@@ -477,10 +591,12 @@ def scan_code_string(code: str) -> List[CodeFinding]:
                 f.severity = "high"
             elif f.article in (9, 15):  # Risk and robustness are high if fail
                 f.severity = "high"
+            elif f.article == 16:  # Hiring compliance violations are high
+                f.severity = "high"
             else:
                 f.severity = "medium"
         elif f.status == "warn":
-            f.severity = "medium" if f.article in (9, 12) else "low"
+            f.severity = "medium" if f.article in (9, 12, 16) else "low"
         else:
             f.severity = "low"
 
@@ -572,6 +688,32 @@ EXPLANATIONS = {
             "time": "20 minutes to add output parsing",
         },
     },
+    "Illinois HB 3773: ZIP code as proxy": {
+        "fail": {
+            "meaning": "Your hiring AI uses ZIP or postal code as a feature in candidate scoring. Illinois HB 3773 (effective January 2026) prohibits AI hiring tools from using ZIP code as a proxy for race, ethnicity, or other protected characteristics. This applies to any employer using AI to evaluate candidates for positions in Illinois.",
+            "fix": "Remove ZIP code from your scoring model's feature set. If ZIP is needed for logistics (work location eligibility), separate it from the scoring pipeline. If you keep it, you must conduct and document a statistical disparity analysis proving ZIP is not proxying for protected classes.",
+            "time": "1-2 hours to audit feature pipeline and remove or isolate ZIP",
+        },
+        "warn": {
+            "meaning": "ZIP or postal code is referenced in your hiring code but may not be used in scoring. Illinois HB 3773 prohibits using ZIP as a proxy for protected characteristics. Verify ZIP is not influencing candidate ranking.",
+            "fix": "Audit your code to confirm ZIP code does not flow into any scoring, ranking, or filtering logic. Document the audit.",
+            "time": "30 minutes to audit",
+        },
+    },
+    "NYC LL144: Bias audit framework": {
+        "fail": {
+            "meaning": "Your hiring AI has no bias audit framework. NYC Local Law 144 (in effect since July 2023) requires any employer or employment agency using an automated employment decision tool (AEDT) in New York City to have an independent bias audit conducted within one year before use. The audit must calculate selection rates and impact ratios for race/ethnicity and sex categories.",
+            "fix": "Integrate a fairness metrics library (fairlearn, aequitas, or AI Fairness 360) to calculate disparate impact ratios. You need: selection rate by race/ethnicity, selection rate by sex, and impact ratios (must pass the four-fifths rule: no group's selection rate below 80% of the highest group). Publish a summary of audit results on your website.",
+            "time": "2-4 hours for initial fairness pipeline, plus annual independent auditor engagement",
+        },
+    },
+    "California FEHA: Data retention": {
+        "fail": {
+            "meaning": "Your hiring AI has no data retention policy. California FEHA amendments require AI hiring vendors to retain all application materials, candidate evaluation data, and AI-generated recommendations for a minimum of 4 years. This protects candidates' ability to file discrimination complaints within the statute of limitations.",
+            "fix": "Add a retention_policy configuration with a minimum 1460-day (4-year) retention period. Store: candidate data submitted, AI scores/rankings generated, model version used, features evaluated, and final recommendation. Use append-only storage or tamper-evident logs for auditability.",
+            "time": "1-2 hours to add retention config and storage logic",
+        },
+    },
 }
 
 
@@ -597,9 +739,10 @@ ARTICLE_NAMES = {
     12: "Record-Keeping",
     14: "Human Oversight",
     15: "Accuracy, Robustness & Cybersecurity",
+    16: "Hiring AI Compliance (US)",
 }
 
-ARTICLE_WEIGHTS = {9: 1.0, 10: 1.0, 11: 0.8, 12: 1.2, 14: 1.2, 15: 1.0}
+ARTICLE_WEIGHTS = {9: 1.0, 10: 1.0, 11: 0.8, 12: 1.2, 14: 1.2, 15: 1.0, 16: 1.0}
 
 
 def calculate_score(findings: List[CodeFinding]) -> dict:
