@@ -8,27 +8,23 @@ POST /api/keys   — Generate a new API key (requires email)
 GET  /api/keys   — Check key status (requires Authorization header)
 DELETE /api/keys — Revoke a key (requires Authorization header)
 
-Storage: Vercel KV (Upstash Redis) via REST API (no SDK needed).
-Set KV_REST_API_URL and KV_REST_API_TOKEN in Vercel environment.
+Storage: Standard Redis via REDIS_URL environment variable.
 """
 
 import hashlib
 import json
 import os
 import secrets
-import ssl
 import time
-import urllib.error
-import urllib.parse
-import urllib.request
 from http.server import BaseHTTPRequestHandler
+
+import redis as redis_lib
 
 # ============================================================
 # Config
 # ============================================================
 
-KV_URL = os.environ.get("KV_REST_API_URL", "")
-KV_TOKEN = os.environ.get("KV_REST_API_TOKEN", "")
+REDIS_URL = os.environ.get("REDIS_URL", "")
 
 KEY_PREFIX = "airbb_sk_"
 FREE_TIER_SCANS = 25  # per month, no key needed
@@ -44,75 +40,94 @@ PRICING = {
 
 
 # ============================================================
-# Vercel KV (Upstash Redis) — HTTP wrapper
+# Redis Connection
 # ============================================================
 
-def _kv_request(command: list) -> dict:
-    """Send a command to Vercel KV via REST API.
+_redis_client = None
 
-    Args:
-        command: Redis command as a list, e.g. ["SET", "key", "value"]
-
-    Returns:
-        Parsed JSON response from KV.
-    """
-    if not KV_URL or not KV_TOKEN:
-        return {"error": "KV_REST_API_URL and KV_REST_API_TOKEN not configured"}
-
-    url = KV_URL
-    ctx = ssl.create_default_context()
-    data = json.dumps(command).encode("utf-8")
-    req = urllib.request.Request(url, data=data, method="POST")
-    req.add_header("Authorization", f"Bearer {KV_TOKEN}")
-    req.add_header("Content-Type", "application/json")
-
-    try:
-        with urllib.request.urlopen(req, context=ctx, timeout=5) as resp:
-            return json.loads(resp.read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
-        body = e.read().decode("utf-8", errors="replace")
-        return {"error": f"KV error {e.code}: {body[:200]}"}
-    except Exception as e:
-        return {"error": f"KV request failed: {str(e)[:200]}"}
+def _get_redis():
+    """Get a Redis client, reusing the connection across calls."""
+    global _redis_client
+    if _redis_client is None:
+        if not REDIS_URL:
+            return None
+        _redis_client = redis_lib.from_url(
+            REDIS_URL,
+            decode_responses=True,
+            socket_timeout=5,
+            socket_connect_timeout=5,
+        )
+    return _redis_client
 
 
 def _kv_set(key: str, value: str, ex: int = None) -> bool:
-    """Set a key in KV. Optional expiry in seconds."""
-    cmd = ["SET", key, value]
-    if ex:
-        cmd += ["EX", str(ex)]
-    result = _kv_request(cmd)
-    return result.get("result") == "OK"
+    """Set a key in Redis. Optional expiry in seconds."""
+    r = _get_redis()
+    if not r:
+        return False
+    try:
+        if ex:
+            r.set(key, value, ex=ex)
+        else:
+            r.set(key, value)
+        return True
+    except Exception:
+        return False
 
 
 def _kv_get(key: str) -> str:
-    """Get a value from KV. Returns None if not found."""
-    result = _kv_request(["GET", key])
-    return result.get("result")
+    """Get a value from Redis. Returns None if not found."""
+    r = _get_redis()
+    if not r:
+        return None
+    try:
+        return r.get(key)
+    except Exception:
+        return None
 
 
 def _kv_incr(key: str) -> int:
-    """Increment a counter in KV. Returns new value."""
-    result = _kv_request(["INCR", key])
-    return result.get("result", 0)
+    """Increment a counter in Redis. Returns new value."""
+    r = _get_redis()
+    if not r:
+        return 0
+    try:
+        return r.incr(key)
+    except Exception:
+        return 0
 
 
 def _kv_expire(key: str, seconds: int) -> bool:
     """Set expiry on a key."""
-    result = _kv_request(["EXPIRE", key, str(seconds)])
-    return result.get("result") == 1
+    r = _get_redis()
+    if not r:
+        return False
+    try:
+        return r.expire(key, seconds)
+    except Exception:
+        return False
 
 
 def _kv_del(key: str) -> bool:
     """Delete a key."""
-    result = _kv_request(["DEL", key])
-    return result.get("result", 0) >= 1
+    r = _get_redis()
+    if not r:
+        return False
+    try:
+        return r.delete(key) >= 1
+    except Exception:
+        return False
 
 
 def _kv_ttl(key: str) -> int:
     """Get TTL of a key in seconds. -1 = no expiry, -2 = key doesn't exist."""
-    result = _kv_request(["TTL", key])
-    return result.get("result", -2)
+    r = _get_redis()
+    if not r:
+        return -2
+    try:
+        return r.ttl(key)
+    except Exception:
+        return -2
 
 
 # ============================================================
@@ -277,7 +292,7 @@ class handler(BaseHTTPRequestHandler):
         """Generate a new API key."""
         try:
             # Check KV is configured
-            if not KV_URL or not KV_TOKEN:
+            if not REDIS_URL:
                 return self._error(503, "API key service is not yet configured. Coming soon.")
 
             content_length = int(self.headers.get("Content-Length", 0))
@@ -341,7 +356,7 @@ class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         """Check API key status and usage."""
         try:
-            if not KV_URL or not KV_TOKEN:
+            if not REDIS_URL:
                 return self._error(503, "API key service is not yet configured. Coming soon.")
 
             api_key = self._get_bearer_token()
@@ -381,7 +396,7 @@ class handler(BaseHTTPRequestHandler):
     def do_DELETE(self):
         """Revoke an API key."""
         try:
-            if not KV_URL or not KV_TOKEN:
+            if not REDIS_URL:
                 return self._error(503, "API key service is not yet configured. Coming soon.")
 
             api_key = self._get_bearer_token()

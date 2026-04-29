@@ -40,18 +40,15 @@ from http.server import BaseHTTPRequestHandler
 
 import hashlib
 import secrets
-import ssl
-import urllib.error
-import urllib.parse
-import urllib.request
+
+import redis as redis_lib
 
 
 # ============================================================
-# Config & KV Storage
+# Config & Redis Storage
 # ============================================================
 
-KV_URL = os.environ.get("KV_REST_API_URL", "")
-KV_TOKEN = os.environ.get("KV_REST_API_TOKEN", "")
+REDIS_URL = os.environ.get("REDIS_URL", "")
 MAX_TEXT_SIZE = 50_000  # 50KB
 FREE_TIER_SCANS = 25   # per month, no key needed
 KEY_PREFIX = "airbb_sk_"
@@ -76,38 +73,55 @@ CONTEXT_ALIASES = {
 
 
 # ============================================================
-# KV helpers (duplicated from keys.py -- Vercel can't share
+# Redis helpers (duplicated from keys.py -- Vercel can't share
 # modules between serverless functions without a build step)
 # ============================================================
 
-def _kv_request(command: list) -> dict:
-    """Send a command to Vercel KV via REST API."""
-    if not KV_URL or not KV_TOKEN:
-        return {"error": "KV not configured"}
-    ctx = ssl.create_default_context()
-    data = json.dumps(command).encode("utf-8")
-    req = urllib.request.Request(KV_URL, data=data, method="POST")
-    req.add_header("Authorization", f"Bearer {KV_TOKEN}")
-    req.add_header("Content-Type", "application/json")
-    try:
-        with urllib.request.urlopen(req, context=ctx, timeout=5) as resp:
-            return json.loads(resp.read().decode("utf-8"))
-    except Exception as e:
-        return {"error": str(e)[:200]}
+_redis_client = None
+
+def _get_redis():
+    """Get a Redis client, reusing the connection across calls."""
+    global _redis_client
+    if _redis_client is None:
+        if not REDIS_URL:
+            return None
+        _redis_client = redis_lib.from_url(
+            REDIS_URL,
+            decode_responses=True,
+            socket_timeout=5,
+            socket_connect_timeout=5,
+        )
+    return _redis_client
 
 
 def _kv_get(key: str):
-    result = _kv_request(["GET", key])
-    return result.get("result")
+    r = _get_redis()
+    if not r:
+        return None
+    try:
+        return r.get(key)
+    except Exception:
+        return None
 
 
 def _kv_incr(key: str) -> int:
-    result = _kv_request(["INCR", key])
-    return result.get("result", 0)
+    r = _get_redis()
+    if not r:
+        return 0
+    try:
+        return r.incr(key)
+    except Exception:
+        return 0
 
 
 def _kv_expire(key: str, seconds: int):
-    _kv_request(["EXPIRE", key, str(seconds)])
+    r = _get_redis()
+    if not r:
+        return
+    try:
+        r.expire(key, seconds)
+    except Exception:
+        pass
 
 
 def _current_month() -> str:
@@ -152,7 +166,7 @@ def _track_usage(key_hash: str) -> int:
 
 def _check_free_tier(client_ip: str) -> dict:
     """Check if free tier IP has scans remaining."""
-    if not KV_URL:
+    if not REDIS_URL:
         return {"allowed": True, "used": 0, "limit": FREE_TIER_SCANS, "fallback": True}
     month = _current_month()
     counter_key = f"free:{client_ip}:{month}"
@@ -163,7 +177,7 @@ def _check_free_tier(client_ip: str) -> dict:
 
 def _increment_free_tier(client_ip: str) -> int:
     """Increment free tier counter for IP."""
-    if not KV_URL:
+    if not REDIS_URL:
         return 0
     month = _current_month()
     counter_key = f"free:{client_ip}:{month}"

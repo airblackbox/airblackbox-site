@@ -1,1 +1,1 @@
-# No external dependencies — all API functions use Python stdlib only
+redis>=5.0.0
