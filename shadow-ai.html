@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow AI Detection — AIR Blackbox</title>
+    <meta name="description" content="Detect AI-generated recruiter evaluations and screening notes. Catch unsanctioned LLM usage in hiring workflows before regulators do.">
+    <meta property="og:title" content="Shadow AI Detection — Catch Unsanctioned AI in Hiring">
+    <meta property="og:description" content="Paste recruiter text. Get a confidence score in seconds. Know if your hiring team is using AI without governance.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://airblackbox.ai/shadow-ai">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #080b14;
+            --bg-card: #0d1117;
+            --bg-elevated: #161b22;
+            --border: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-dim: #484f58;
+            --accent: #fbbf24;
+            --accent-glow: rgba(251, 191, 36, 0.15);
+            --green: #3fb950;
+            --red: #f85149;
+            --yellow: #d29922;
+            --blue: #58a6ff;
+            --purple: #a78bfa;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Sora', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--sans); background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; }
+        a { color: var(--blue); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code, .mono { font-family: var(--mono); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+
+        /* Header */
+        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(8,11,20,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; color: var(--text-primary); text-decoration: none; }
+        .logo span { color: var(--accent); }
+        .logo .badge { font-size: 0.55rem; background: var(--red); color: #fff; padding: 0.15rem 0.5rem; border-radius: 4px; margin-left: 0.5rem; vertical-align: middle; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; }
+        .nav-links a:hover { color: var(--accent); text-decoration: none; }
+
+        /* Hero */
+        .hero { padding: 8rem 0 3rem; text-align: center; }
+        .hero h1 { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -1px; margin-bottom: 1rem; }
+        .hero h1 .highlight { background: linear-gradient(135deg, var(--red), #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero p { color: var(--text-secondary); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+
+        /* Scanner */
+        .scanner-section { padding: 2rem 0 4rem; }
+        .scanner-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .scanner-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .scanner-header h3 { font-size: 0.9rem; font-weight: 600; }
+        .scanner-header .context-select { background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary); padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.8rem; font-family: var(--sans); }
+        .scanner-body { padding: 1.5rem; }
+        .text-input { width: 100%; min-height: 200px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); padding: 1rem; font-family: var(--sans); font-size: 0.9rem; line-height: 1.6; resize: vertical; }
+        .text-input:focus { outline: none; border-color: var(--accent); }
+        .text-input::placeholder { color: var(--text-dim); }
+        .scanner-actions { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .word-count { color: var(--text-dim); font-size: 0.8rem; font-family: var(--mono); }
+        .btn { display: inline-block; padding: 0.7rem 1.8rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; border: none; text-decoration: none; transition: all 0.2s; }
+        .btn-scan { background: var(--red); color: #fff; }
+        .btn-scan:hover { opacity: 0.85; }
+        .btn-scan:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* Results */
+        .results { display: none; margin-top: 2rem; }
+        .results.visible { display: block; }
+
+        /* Score Ring */
+        .score-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; text-align: center; margin-bottom: 1.5rem; }
+        .score-ring-container { position: relative; width: 160px; height: 160px; margin: 0 auto 1.5rem; }
+        .score-ring-container svg { transform: rotate(-90deg); }
+        .score-number { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2.5rem; font-weight: 800; font-family: var(--mono); }
+        .verdict { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; }
+        .verdict.ai { color: var(--red); }
+        .verdict.human { color: var(--green); }
+        .verdict.unknown { color: var(--yellow); }
+        .score-subtitle { color: var(--text-secondary); font-size: 0.85rem; }
+
+        /* Signals */
+        .signals-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
+        .signals-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 0.9rem; }
+        .signal-row { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .signal-row:last-child { border-bottom: none; }
+        .signal-name { font-weight: 600; font-size: 0.85rem; }
+        .signal-detail { color: var(--text-secondary); font-size: 0.8rem; margin-top: 0.2rem; }
+        .signal-score { font-family: var(--mono); font-weight: 700; font-size: 0.85rem; padding: 0.2rem 0.6rem; border-radius: 4px; }
+        .signal-score.high { background: rgba(248,81,73,0.15); color: var(--red); }
+        .signal-score.med { background: rgba(210,153,34,0.15); color: var(--yellow); }
+        .signal-score.low { background: rgba(63,185,80,0.15); color: var(--green); }
+
+        /* Regulatory */
+        .regulatory-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
+        .regulatory-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 0.9rem; color: var(--red); }
+        .reg-row { padding: 0.8rem 1.5rem; border-bottom: 1px solid var(--border); }
+        .reg-row:last-child { border-bottom: none; }
+        .reg-law { font-weight: 600; font-size: 0.85rem; }
+        .reg-risk { color: var(--text-secondary); font-size: 0.8rem; }
+        .reg-status { font-family: var(--mono); font-size: 0.7rem; color: var(--yellow); text-transform: uppercase; }
+
+        /* API section */
+        .api-section { padding: 2rem 0 4rem; }
+        .api-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
+        .api-card h3 { font-size: 1.1rem; margin-bottom: 1rem; }
+        .api-card p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .code-block { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; font-family: var(--mono); font-size: 0.8rem; overflow-x: auto; white-space: pre; color: var(--text-secondary); line-height: 1.6; }
+        .code-block .comment { color: var(--text-dim); }
+        .code-block .string { color: var(--green); }
+        .code-block .key { color: var(--blue); }
+
+        /* Footer */
+        footer { padding: 2rem 0; border-top: 1px solid var(--border); text-align: center; }
+        footer p { color: var(--text-dim); font-size: 0.8rem; }
+
+        /* Loading */
+        .loading { display: none; text-align: center; padding: 2rem; }
+        .loading.visible { display: block; }
+        .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--red); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading p { color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.8rem; }
+
+        @media (max-width: 640px) {
+            .scanner-header { flex-direction: column; gap: 0.8rem; align-items: flex-start; }
+            .scanner-actions { flex-direction: column; gap: 0.8rem; }
+            .btn { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo">AIR <span>Blackbox</span> <span class="badge">Shadow AI</span></a>
+            <div class="nav-links">
+                <a href="/console">Code Scanner</a>
+                <a href="/blog">Blog</a>
+                <a href="https://github.com/airblackbox" target="_blank">GitHub</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Detect <span class="highlight">Shadow AI</span> in Hiring</h1>
+                <p>Paste recruiter screening notes or candidate evaluations. Get a confidence score for AI-generated content in seconds. Catch unsanctioned LLM usage before regulators do.</p>
+            </div>
+        </section>
+
+        <section class="scanner-section">
+            <div class="container">
+                <div class="scanner-card">
+                    <div class="scanner-header">
+                        <h3>Text Analysis</h3>
+                        <select class="context-select" id="context">
+                            <option value="screening_note">Screening Note</option>
+                            <option value="candidate_evaluation">Candidate Evaluation</option>
+                            <option value="interview_feedback">Interview Feedback</option>
+                            <option value="rejection_reason">Rejection Reason</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="scanner-body">
+                        <textarea class="text-input" id="textInput" placeholder="Paste recruiter text here...&#10;&#10;Examples of what to analyze:&#10;- Screening notes from your ATS&#10;- Candidate evaluation summaries&#10;- Interview feedback writeups&#10;- Rejection reason documentation"></textarea>
+                    </div>
+                    <div class="scanner-actions">
+                        <span class="word-count" id="wordCount">0 words</span>
+                        <button class="btn btn-scan" id="scanBtn" onclick="runDetection()">Detect AI</button>
+                    </div>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing text patterns...</p>
+                </div>
+
+                <div class="results" id="results">
+                    <!-- Score Ring -->
+                    <div class="score-card">
+                        <div class="score-ring-container">
+                            <svg width="160" height="160" viewBox="0 0 160 160">
+                                <circle cx="80" cy="80" r="70" fill="none" stroke="#21262d" stroke-width="8"/>
+                                <circle id="scoreArc" cx="80" cy="80" r="70" fill="none" stroke="#f85149" stroke-width="8" stroke-linecap="round" stroke-dasharray="0 440"/>
+                            </svg>
+                            <div class="score-number" id="scoreNumber">--</div>
+                        </div>
+                        <div class="verdict" id="verdict">--</div>
+                        <div class="score-subtitle" id="scoreSubtitle">--</div>
+                    </div>
+
+                    <!-- Signals -->
+                    <div class="signals-card">
+                        <div class="signals-header">Detection Signals</div>
+                        <div id="signalsList"></div>
+                    </div>
+
+                    <!-- Regulatory -->
+                    <div class="regulatory-card" id="regulatoryCard" style="display:none;">
+                        <div class="regulatory-header">Regulatory Exposure</div>
+                        <div id="regulatoryList"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- API Section -->
+        <section class="api-section">
+            <div class="container">
+                <div class="api-card">
+                    <h3>API Access for HR Tech Vendors</h3>
+                    <p>Integrate shadow AI detection into your ATS, recruiting platform, or compliance tool. One endpoint, real-time results.</p>
+                    <div class="code-block"><span class="comment"># Detect AI-generated text via API</span>
+curl -X POST https://airblackbox.ai/api/detect \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{"text": "Candidate demonstrates strong competency...", "context": "screening_note"}'</span>
+
+<span class="comment"># Response</span>
+{
+  <span class="key">"score"</span>: 0.82,
+  <span class="key">"verdict"</span>: <span class="string">"very_likely_ai"</span>,
+  <span class="key">"signals"</span>: [...],
+  <span class="key">"regulatory_exposure"</span>: [...]
+}</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>AIR Blackbox &mdash; AI compliance infrastructure. Not legal advice.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Word count
+        const textInput = document.getElementById('textInput');
+        const wordCount = document.getElementById('wordCount');
+        textInput.addEventListener('input', () => {
+            const words = textInput.value.trim().split(/\s+/).filter(w => w.length > 0);
+            wordCount.textContent = words.length + ' words';
+        });
+
+        async function runDetection() {
+            const text = textInput.value.trim();
+            if (!text) return;
+
+            const btn = document.getElementById('scanBtn');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+
+            btn.disabled = true;
+            btn.textContent = 'Analyzing...';
+            loading.classList.add('visible');
+            results.classList.remove('visible');
+
+            try {
+                const resp = await fetch('/api/detect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: text,
+                        context: document.getElementById('context').value,
+                    }),
+                });
+
+                const data = await resp.json();
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                renderResults(data);
+            } catch (err) {
+                alert('Detection failed: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Detect AI';
+                loading.classList.remove('visible');
+            }
+        }
+
+        function renderResults(data) {
+            const results = document.getElementById('results');
+            results.classList.add('visible');
+
+            // Score ring
+            const score = Math.round(data.score * 100);
+            const circumference = 2 * Math.PI * 70; // 439.8
+            const offset = circumference * (1 - data.score);
+            const arc = document.getElementById('scoreArc');
+            arc.style.strokeDasharray = circumference;
+            arc.style.strokeDashoffset = circumference;
+
+            // Color based on verdict
+            let color;
+            if (data.score >= 0.6) color = '#f85149';
+            else if (data.score >= 0.4) color = '#d29922';
+            else color = '#3fb950';
+            arc.setAttribute('stroke', color);
+
+            // Animate
+            setTimeout(() => {
+                arc.style.transition = 'stroke-dashoffset 1s ease';
+                arc.style.strokeDashoffset = offset;
+            }, 100);
+
+            document.getElementById('scoreNumber').textContent = score;
+
+            // Verdict
+            const verdictEl = document.getElementById('verdict');
+            const verdictMap = {
+                'very_likely_ai': 'Very Likely AI-Generated',
+                'likely_ai': 'Likely AI-Generated',
+                'inconclusive': 'Inconclusive',
+                'likely_human': 'Likely Human-Written',
+                'very_likely_human': 'Human-Written',
+                'insufficient_text': 'Not Enough Text',
+            };
+            verdictEl.textContent = verdictMap[data.verdict] || data.verdict;
+            verdictEl.className = 'verdict ' + (data.score >= 0.6 ? 'ai' : data.score >= 0.4 ? 'unknown' : 'human');
+
+            document.getElementById('scoreSubtitle').textContent = data.word_count + ' words analyzed';
+
+            // Signals
+            const signalsList = document.getElementById('signalsList');
+            signalsList.innerHTML = '';
+            if (data.signals && data.signals.length > 0) {
+                data.signals.forEach(sig => {
+                    const scoreClass = sig.score >= 0.6 ? 'high' : sig.score >= 0.3 ? 'med' : 'low';
+                    const row = document.createElement('div');
+                    row.className = 'signal-row';
+                    row.innerHTML = `
+                        <div>
+                            <div class="signal-name">${sig.name}</div>
+                            <div class="signal-detail">${sig.detail}</div>
+                        </div>
+                        <div class="signal-score ${scoreClass}">${Math.round(sig.score * 100)}%</div>
+                    `;
+                    signalsList.appendChild(row);
+                });
+            } else {
+                signalsList.innerHTML = '<div class="signal-row"><div class="signal-detail">No strong signals detected</div></div>';
+            }
+
+            // Regulatory exposure
+            const regCard = document.getElementById('regulatoryCard');
+            const regList = document.getElementById('regulatoryList');
+            if (data.regulatory_exposure && data.regulatory_exposure.length > 0) {
+                regCard.style.display = 'block';
+                regList.innerHTML = '';
+                data.regulatory_exposure.forEach(reg => {
+                    const row = document.createElement('div');
+                    row.className = 'reg-row';
+                    row.innerHTML = `
+                        <div class="reg-law">${reg.law}</div>
+                        <div class="reg-risk">${reg.risk}</div>
+                        <div class="reg-status">${reg.status.replace(/_/g, ' ')}</div>
+                    `;
+                    regList.appendChild(row);
+                });
+            } else {
+                regCard.style.display = 'none';
+            }
+
+            // Smooth scroll to results
+            results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+</html>

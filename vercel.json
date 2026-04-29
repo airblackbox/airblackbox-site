@@ -210,6 +210,10 @@
       "destination": "/attest.html"
     },
     {
+      "source": "/shadow-ai",
+      "destination": "/shadow-ai.html"
+    },
+    {
       "source": "/console",
       "destination": "/console.html"
     },
@@ -249,6 +253,9 @@
     },
     "api/webhook.py": {
       "maxDuration": 120
+    },
+    "api/detect.py": {
+      "maxDuration": 30
     },
     "api/attest.js": {
       "maxDuration": 10
