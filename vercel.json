@@ -263,6 +263,9 @@
     "api/policy.py": {
       "maxDuration": 10
     },
+    "api/admin.py": {
+      "maxDuration": 15
+    },
     "api/attest.js": {
       "maxDuration": 10
     },

@@ -293,6 +293,48 @@ def increment_free_tier(client_ip: str) -> int:
     return count
 
 
+def _log_signup(email: str, key_hash: str):
+    """Log a new API key signup to a Redis list for admin tracking."""
+    r = _get_redis()
+    if not r:
+        return
+    try:
+        entry = json.dumps({
+            "email": email,
+            "key_hash": key_hash[:12] + "...",
+            "timestamp": int(time.time()),
+            "date": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime()),
+        })
+        r.lpush("signups", entry)
+        # Keep last 500 signups
+        r.ltrim("signups", 0, 499)
+    except Exception:
+        pass
+
+
+def _get_signups(limit: int = 50) -> list:
+    """Get recent signups from Redis."""
+    r = _get_redis()
+    if not r:
+        return []
+    try:
+        raw_list = r.lrange("signups", 0, limit - 1)
+        return [json.loads(item) for item in raw_list]
+    except Exception:
+        return []
+
+
+def _get_total_keys() -> int:
+    """Count total API keys ever created (approximate via signups list length)."""
+    r = _get_redis()
+    if not r:
+        return 0
+    try:
+        return r.llen("signups")
+    except Exception:
+        return 0
+
+
 # ============================================================
 # HTTP Handler
 # ============================================================
@@ -340,6 +382,9 @@ class handler(BaseHTTPRequestHandler):
 
             if not stored:
                 return self._error(500, "Failed to store API key. Please try again.")
+
+            # Log the signup for admin tracking
+            _log_signup(email, hash_key(api_key))
 
             self._json_response(201, {
                 "api_key": api_key,
