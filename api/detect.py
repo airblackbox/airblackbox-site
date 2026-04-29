@@ -164,6 +164,34 @@ def _track_usage(key_hash: str) -> int:
     return count
 
 
+def _get_credit_balance(key_hash: str) -> int:
+    """Get remaining prepaid scan credits for a key."""
+    r = _get_redis()
+    if not r:
+        return 0
+    try:
+        val = r.get(f"credits:{key_hash}")
+        return int(val) if val else 0
+    except Exception:
+        return 0
+
+
+def _deduct_credit(key_hash: str) -> int:
+    """Deduct one scan credit. Returns new balance (or -1 if none left)."""
+    r = _get_redis()
+    if not r:
+        return -1
+    try:
+        new_val = r.decr(f"credits:{key_hash}")
+        if new_val < 0:
+            # Went negative, restore and reject
+            r.incr(f"credits:{key_hash}")
+            return -1
+        return new_val
+    except Exception:
+        return -1
+
+
 def _check_free_tier(client_ip: str) -> dict:
     """Check if free tier IP has scans remaining."""
     if not REDIS_URL:
@@ -902,11 +930,25 @@ class handler(BaseHTTPRequestHandler):
                 if not validation["valid"]:
                     return self._error(401, f"Invalid API key: {validation['reason']}. Get a key at POST /api/keys.")
 
-                scan_count = _track_usage(validation["key_hash"])
+                key_hash = validation["key_hash"]
+                credits = _get_credit_balance(key_hash)
+
+                if credits <= 0:
+                    return self._error(402,
+                        "No scan credits remaining. "
+                        "Buy more at /api/checkout?pack=500&key=YOUR_KEY or /shadow-ai"
+                    )
+
+                remaining = _deduct_credit(key_hash)
+                if remaining < 0:
+                    return self._error(402, "No scan credits remaining.")
+
+                scan_count = _track_usage(key_hash)
                 auth_info = {
                     "authenticated": True,
                     "tier": validation["tier"],
                     "scans_this_month": scan_count,
+                    "credits_remaining": remaining,
                     "email": validation["email"],
                 }
             else:

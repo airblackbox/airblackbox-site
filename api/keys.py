@@ -253,6 +253,18 @@ def get_usage(key_hash: str) -> dict:
     }
 
 
+def get_credit_balance(key_hash: str) -> int:
+    """Get remaining prepaid scan credits."""
+    r = _get_redis()
+    if not r:
+        return 0
+    try:
+        val = r.get(f"credits:{key_hash}")
+        return int(val) if val else 0
+    except Exception:
+        return 0
+
+
 def track_free_tier(client_ip: str) -> dict:
     """Track free tier usage by IP address.
 
@@ -367,22 +379,21 @@ class handler(BaseHTTPRequestHandler):
             if not validation["valid"]:
                 return self._error(401, f"Invalid API key: {validation['reason']}")
 
-            # Get usage stats
+            # Get usage stats and credit balance
             usage = get_usage(validation["key_hash"])
+            credits = get_credit_balance(validation["key_hash"])
             tier = validation["tier"]
             tier_info = PRICING.get(tier, PRICING["starter"])
-            monthly_limit = tier_info["monthly_limit"]
 
             self._json_response(200, {
                 "status": "active",
                 "email": validation["email"],
                 "tier": tier,
                 "created": validation["created"],
+                "credits_remaining": credits,
                 "usage": {
                     "month": usage["month"],
                     "scans_used": usage["scans_used"],
-                    "monthly_limit": monthly_limit,
-                    "scans_remaining": (monthly_limit - usage["scans_used"]) if monthly_limit else "unlimited",
                 },
                 "pricing": {
                     "per_scan": f"${tier_info['per_scan']:.2f}",

@@ -18,9 +18,12 @@ import urllib.parse
 import urllib.request
 import urllib.error
 
+import redis as redis_lib
+
 # ── Environment variables (set in Vercel dashboard) ──────────────
 STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
+REDIS_URL = os.environ.get("REDIS_URL", "")
 DO_API_TOKEN = os.environ.get("DO_API_TOKEN", "")
 CLOUDFLARE_API_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN", "")
 CLOUDFLARE_ZONE_ID = os.environ.get("CLOUDFLARE_ZONE_ID", "")
@@ -31,6 +34,68 @@ DO_REGION = "nyc1"
 DO_SIZE = "s-2vcpu-4gb"  # 4GB RAM — enough for Ollama + gateway stack
 DO_IMAGE = "ubuntu-22-04-x64"
 DOMAIN = "airblackbox.ai"
+
+
+# ── Redis connection (for scan credit fulfillment) ──────────────
+
+_redis_client = None
+
+def _get_redis():
+    """Get a Redis client, reusing the connection."""
+    global _redis_client
+    if _redis_client is None:
+        if not REDIS_URL:
+            return None
+        _redis_client = redis_lib.from_url(
+            REDIS_URL,
+            decode_responses=True,
+            socket_timeout=5,
+            socket_connect_timeout=5,
+        )
+    return _redis_client
+
+
+def handle_scan_credit_purchase(session):
+    """Credit scan credits to a customer's API key in Redis.
+
+    Reads metadata set by checkout.py:
+      - product: "scan_credits"
+      - pack_size: "500" | "2000" | "10000"
+      - key_hash: SHA-256 hash of the customer's API key
+    """
+    metadata = session.get("metadata", {})
+    pack_size = int(metadata.get("pack_size", "0"))
+    key_hash = metadata.get("key_hash", "")
+
+    if not pack_size or not key_hash:
+        print(f"[WEBHOOK] Missing scan credit metadata: pack={pack_size}, hash={key_hash[:12]}...")
+        return {"status": "error", "message": "Missing metadata"}
+
+    r = _get_redis()
+    if not r:
+        print("[WEBHOOK] REDIS_URL not configured, cannot credit scans")
+        return {"status": "error", "message": "Redis not configured"}
+
+    # Credit key: credits:{key_hash} -- running total, no expiry
+    credit_key = f"credits:{key_hash}"
+    try:
+        new_balance = r.incrby(credit_key, pack_size)
+        # Log the purchase
+        purchase_log = json.dumps({
+            "pack_size": pack_size,
+            "amount_cents": session.get("amount_total", 0),
+            "stripe_session": session.get("id", ""),
+            "customer_email": session.get("customer_details", {}).get("email", ""),
+            "timestamp": int(time.time()),
+        })
+        r.rpush(f"purchases:{key_hash}", purchase_log)
+
+        print(f"[WEBHOOK] Credited {pack_size} scans to {key_hash[:12]}... New balance: {new_balance}")
+        return {"status": "credited", "scans_added": pack_size, "new_balance": new_balance}
+
+    except Exception as e:
+        print(f"[WEBHOOK] Redis error crediting scans: {e}")
+        return {"status": "error", "message": str(e)[:200]}
 
 
 class handler(BaseHTTPRequestHandler):
@@ -56,7 +121,12 @@ class handler(BaseHTTPRequestHandler):
 
         # Route events
         if event_type == "checkout.session.completed":
-            result = handle_checkout(event)
+            session = event["data"]["object"]
+            product = session.get("metadata", {}).get("product", "")
+            if product == "scan_credits":
+                result = handle_scan_credit_purchase(session)
+            else:
+                result = handle_checkout(event)
         elif event_type == "customer.subscription.deleted":
             result = handle_cancellation(event)
         else:
