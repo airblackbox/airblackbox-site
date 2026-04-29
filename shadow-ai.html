@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shadow AI Detection — AIR Blackbox</title>
-    <meta name="description" content="Detect AI-generated recruiter evaluations and screening notes. Catch unsanctioned LLM usage in hiring workflows before regulators do.">
-    <meta property="og:title" content="Shadow AI Detection — Catch Unsanctioned AI in Hiring">
-    <meta property="og:description" content="Paste recruiter text. Get a confidence score in seconds. Know if your hiring team is using AI without governance.">
+    <meta name="description" content="Detect AI-generated text across any industry. Catch unsanctioned LLM usage in hiring, legal, finance, healthcare, and more before regulators do.">
+    <meta property="og:title" content="Shadow AI Detection — Catch Unsanctioned AI in Any Workflow">
+    <meta property="og:description" content="Paste any professional text. Get a confidence score in seconds. Know if your team is using AI without governance.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://airblackbox.ai/shadow-ai">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -109,14 +109,52 @@
         .reg-status { font-family: var(--mono); font-size: 0.7rem; color: var(--yellow); text-transform: uppercase; }
 
         /* API section */
-        .api-section { padding: 2rem 0 4rem; }
-        .api-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
+        .api-section { padding: 2rem 0 2rem; }
+        .api-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; }
         .api-card h3 { font-size: 1.1rem; margin-bottom: 1rem; }
         .api-card p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem; }
         .code-block { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; font-family: var(--mono); font-size: 0.8rem; overflow-x: auto; white-space: pre; color: var(--text-secondary); line-height: 1.6; }
         .code-block .comment { color: var(--text-dim); }
         .code-block .string { color: var(--green); }
         .code-block .key { color: var(--blue); }
+
+        /* API Key Management */
+        .keygen-section { padding: 0 0 2rem; }
+        .keygen-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
+        .keygen-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .keygen-card p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .keygen-form { display: flex; gap: 0.8rem; margin-bottom: 1rem; }
+        .keygen-input { flex: 1; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); padding: 0.7rem 1rem; font-family: var(--sans); font-size: 0.9rem; }
+        .keygen-input:focus { outline: none; border-color: var(--accent); }
+        .keygen-input::placeholder { color: var(--text-dim); }
+        .btn-keygen { background: var(--accent); color: #000; font-weight: 700; }
+        .btn-keygen:hover { opacity: 0.85; }
+        .key-result { display: none; background: var(--bg-elevated); border: 1px solid var(--green); border-radius: 8px; padding: 1.2rem; margin-top: 1rem; }
+        .key-result.visible { display: block; }
+        .key-result .key-label { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .key-result .key-value { font-family: var(--mono); font-size: 0.85rem; color: var(--green); word-break: break-all; background: var(--bg-deep); padding: 0.6rem; border-radius: 4px; margin-bottom: 0.8rem; cursor: pointer; }
+        .key-result .key-warning { font-size: 0.8rem; color: var(--yellow); }
+        .key-error { display: none; color: var(--red); font-size: 0.85rem; margin-top: 0.8rem; }
+        .key-error.visible { display: block; }
+
+        /* Usage Stats */
+        .usage-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; display: none; }
+        .usage-card.visible { display: block; }
+        .usage-card h3 { font-size: 1.1rem; margin-bottom: 1rem; }
+        .usage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+        .usage-stat { background: var(--bg-elevated); border-radius: 8px; padding: 1rem; text-align: center; }
+        .usage-stat .stat-value { font-family: var(--mono); font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+        .usage-stat .stat-label { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.3rem; }
+
+        /* Pricing */
+        .pricing-section { padding: 0 0 4rem; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+        .pricing-tier { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; }
+        .pricing-tier.featured { border-color: var(--accent); }
+        .pricing-tier h4 { font-size: 1rem; margin-bottom: 0.3rem; }
+        .pricing-tier .price { font-family: var(--mono); font-size: 1.8rem; font-weight: 800; color: var(--accent); margin: 0.5rem 0; }
+        .pricing-tier .price-unit { font-size: 0.8rem; color: var(--text-secondary); }
+        .pricing-tier .tier-detail { color: var(--text-secondary); font-size: 0.8rem; margin-top: 0.8rem; line-height: 1.5; }
 
         /* Footer */
         footer { padding: 2rem 0; border-top: 1px solid var(--border); text-align: center; }
@@ -151,8 +189,8 @@
     <main>
         <section class="hero">
             <div class="container">
-                <h1>Detect <span class="highlight">Shadow AI</span> in Hiring</h1>
-                <p>Paste recruiter screening notes or candidate evaluations. Get a confidence score for AI-generated content in seconds. Catch unsanctioned LLM usage before regulators do.</p>
+                <h1>Detect <span class="highlight">Shadow AI</span> Anywhere</h1>
+                <p>Paste any professional text. Get a confidence score for AI-generated content in seconds. Catch unsanctioned LLM usage across hiring, legal, finance, healthcare, and more.</p>
             </div>
         </section>
 
@@ -162,15 +200,18 @@
                     <div class="scanner-header">
                         <h3>Text Analysis</h3>
                         <select class="context-select" id="context">
-                            <option value="screening_note">Screening Note</option>
-                            <option value="candidate_evaluation">Candidate Evaluation</option>
-                            <option value="interview_feedback">Interview Feedback</option>
-                            <option value="rejection_reason">Rejection Reason</option>
-                            <option value="other">Other</option>
+                            <option value="general">General / Professional</option>
+                            <option value="hiring">Hiring & Recruiting</option>
+                            <option value="legal">Legal & Compliance</option>
+                            <option value="finance">Finance & Analyst</option>
+                            <option value="healthcare">Healthcare & Clinical</option>
+                            <option value="insurance">Insurance & Claims</option>
+                            <option value="customer_support">Customer Support</option>
+                            <option value="education">Education & Academic</option>
                         </select>
                     </div>
                     <div class="scanner-body">
-                        <textarea class="text-input" id="textInput" placeholder="Paste recruiter text here...&#10;&#10;Examples of what to analyze:&#10;- Screening notes from your ATS&#10;- Candidate evaluation summaries&#10;- Interview feedback writeups&#10;- Rejection reason documentation"></textarea>
+                        <textarea class="text-input" id="textInput" placeholder="Paste any professional text here...&#10;&#10;Examples of what to analyze:&#10;- Recruiter screening notes or candidate evaluations&#10;- Legal briefs, memos, or contract analysis&#10;- Financial analyst reports or risk assessments&#10;- Clinical notes or patient summaries&#10;- Insurance claims assessments&#10;- Customer support responses&#10;- Any workplace text that may be AI-generated"></textarea>
                     </div>
                     <div class="scanner-actions">
                         <span class="word-count" id="wordCount">0 words</span>
@@ -212,23 +253,122 @@
             </div>
         </section>
 
-        <!-- API Section -->
+        <!-- API Key Generation -->
+        <section class="keygen-section">
+            <div class="container">
+                <div class="keygen-card">
+                    <h3>Get Your API Key</h3>
+                    <p>25 free scans per month, no key needed. Generate a key for metered access with volume pricing across all industry contexts.</p>
+                    <div class="keygen-form">
+                        <input type="email" class="keygen-input" id="keygenEmail" placeholder="you@company.com">
+                        <button class="btn btn-keygen" onclick="generateKey()">Generate Key</button>
+                    </div>
+                    <div class="key-result" id="keyResult">
+                        <div class="key-label">Your API Key</div>
+                        <div class="key-value" id="keyValue" onclick="copyKey()" title="Click to copy">--</div>
+                        <div class="key-warning">Save this key now. It will not be shown again.</div>
+                    </div>
+                    <div class="key-error" id="keyError"></div>
+                </div>
+
+                <!-- Usage Stats (shown after key lookup) -->
+                <div class="usage-card" id="usageCard">
+                    <h3>Usage This Month</h3>
+                    <div class="usage-grid">
+                        <div class="usage-stat">
+                            <div class="stat-value" id="usageScans">--</div>
+                            <div class="stat-label">Scans Used</div>
+                        </div>
+                        <div class="usage-stat">
+                            <div class="stat-value" id="usageRemaining">--</div>
+                            <div class="stat-label">Remaining</div>
+                        </div>
+                        <div class="usage-stat">
+                            <div class="stat-value" id="usageBill">--</div>
+                            <div class="stat-label">Estimated Bill</div>
+                        </div>
+                        <div class="usage-stat">
+                            <div class="stat-value" id="usageTier">--</div>
+                            <div class="stat-label">Tier</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing -->
+        <section class="pricing-section">
+            <div class="container">
+                <div class="pricing-grid">
+                    <div class="pricing-tier">
+                        <h4>Free</h4>
+                        <div class="price">$0</div>
+                        <div class="price-unit">25 scans/month</div>
+                        <div class="tier-detail">No key required. Try the API instantly. Perfect for evaluation.</div>
+                    </div>
+                    <div class="pricing-tier featured">
+                        <h4>Starter</h4>
+                        <div class="price">$0.03</div>
+                        <div class="price-unit">per scan</div>
+                        <div class="tier-detail">Up to 5,000 scans/month. API key required. Volume pricing above 5K.</div>
+                    </div>
+                    <div class="pricing-tier">
+                        <h4>Growth</h4>
+                        <div class="price">$0.02</div>
+                        <div class="price-unit">per scan</div>
+                        <div class="tier-detail">5,001 to 100,000 scans/month. Automatic volume discount.</div>
+                    </div>
+                    <div class="pricing-tier">
+                        <h4>Enterprise</h4>
+                        <div class="price">$0.01</div>
+                        <div class="price-unit">per scan</div>
+                        <div class="tier-detail">100,000+ scans/month. Custom SLAs, on-device options available.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- API Documentation -->
         <section class="api-section">
             <div class="container">
                 <div class="api-card">
-                    <h3>API Access for HR Tech Vendors</h3>
-                    <p>Integrate shadow AI detection into your ATS, recruiting platform, or compliance tool. One endpoint, real-time results.</p>
-                    <div class="code-block"><span class="comment"># Detect AI-generated text via API</span>
+                    <h3>API Reference</h3>
+                    <p>Integrate shadow AI detection into any platform. One endpoint, real-time results, context-aware regulatory mapping.</p>
+                    <div class="code-block"><span class="comment"># 1. Generate an API key</span>
+curl -X POST https://airblackbox.ai/api/keys \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{"email": "you@company.com"}'</span>
+
+<span class="comment"># 2. Detect AI-generated text (set context to your industry)</span>
 curl -X POST https://airblackbox.ai/api/detect \
   -H <span class="string">"Content-Type: application/json"</span> \
-  -d <span class="string">'{"text": "Candidate demonstrates strong competency...", "context": "screening_note"}'</span>
+  -H <span class="string">"Authorization: Bearer airbb_sk_your_key_here"</span> \
+  -d <span class="string">'{"text": "The analysis demonstrates...", "context": "legal"}'</span>
 
-<span class="comment"># Response</span>
-{
+<span class="comment"># Supported contexts:</span>
+<span class="comment"># hiring, legal, finance, healthcare, insurance,</span>
+<span class="comment"># customer_support, education, general</span>
+
+<span class="comment"># 3. Check usage</span>
+curl https://airblackbox.ai/api/keys \
+  -H <span class="string">"Authorization: Bearer airbb_sk_your_key_here"</span></div>
+                </div>
+                <div class="api-card">
+                    <h3>Response Format</h3>
+                    <div class="code-block">{
   <span class="key">"score"</span>: 0.82,
   <span class="key">"verdict"</span>: <span class="string">"very_likely_ai"</span>,
+  <span class="key">"context"</span>: <span class="string">"legal"</span>,
   <span class="key">"signals"</span>: [...],
-  <span class="key">"regulatory_exposure"</span>: [...]
+  <span class="key">"regulatory_exposure"</span>: [
+    {<span class="key">"law"</span>: <span class="string">"ABA Model Rule 1.1"</span>, <span class="key">"risk"</span>: <span class="string">"..."</span>},
+    {<span class="key">"law"</span>: <span class="string">"EU AI Act Art. 50"</span>, <span class="key">"risk"</span>: <span class="string">"..."</span>}
+  ],
+  <span class="key">"auth"</span>: {
+    <span class="key">"authenticated"</span>: true,
+    <span class="key">"tier"</span>: <span class="string">"starter"</span>,
+    <span class="key">"scans_this_month"</span>: 142
+  }
 }</div>
                 </div>
             </div>
@@ -375,6 +515,87 @@ curl -X POST https://airblackbox.ai/api/detect \
             // Smooth scroll to results
             results.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+
+        // ── API Key Management ──────────────────────────────
+        async function generateKey() {
+            const email = document.getElementById('keygenEmail').value.trim();
+            if (!email || !email.includes('@')) {
+                showKeyError('Please enter a valid email address.');
+                return;
+            }
+
+            const keyResult = document.getElementById('keyResult');
+            const keyError = document.getElementById('keyError');
+            keyResult.classList.remove('visible');
+            keyError.classList.remove('visible');
+
+            try {
+                const resp = await fetch('/api/keys', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email }),
+                });
+                const data = await resp.json();
+
+                if (data.error) {
+                    showKeyError(data.error);
+                    return;
+                }
+
+                document.getElementById('keyValue').textContent = data.api_key;
+                keyResult.classList.add('visible');
+
+                // Store key in session for usage checks
+                sessionStorage.setItem('airbb_key', data.api_key);
+            } catch (err) {
+                showKeyError('Failed to generate key: ' + err.message);
+            }
+        }
+
+        function showKeyError(msg) {
+            const el = document.getElementById('keyError');
+            el.textContent = msg;
+            el.classList.add('visible');
+        }
+
+        function copyKey() {
+            const keyText = document.getElementById('keyValue').textContent;
+            navigator.clipboard.writeText(keyText).then(() => {
+                const el = document.getElementById('keyValue');
+                const original = el.textContent;
+                el.textContent = 'Copied!';
+                setTimeout(() => { el.textContent = original; }, 1500);
+            });
+        }
+
+        async function checkUsage(apiKey) {
+            try {
+                const resp = await fetch('/api/keys', {
+                    method: 'GET',
+                    headers: { 'Authorization': 'Bearer ' + apiKey },
+                });
+                const data = await resp.json();
+                if (data.error) return;
+
+                const card = document.getElementById('usageCard');
+                card.classList.add('visible');
+                document.getElementById('usageScans').textContent = data.usage.scans_used.toLocaleString();
+                document.getElementById('usageRemaining').textContent =
+                    data.usage.scans_remaining === 'unlimited' ? 'Unlimited' : data.usage.scans_remaining.toLocaleString();
+                document.getElementById('usageBill').textContent = data.pricing.estimated_bill;
+                document.getElementById('usageTier').textContent = data.tier.charAt(0).toUpperCase() + data.tier.slice(1);
+            } catch (err) {
+                // silently fail
+            }
+        }
+
+        // Check usage on page load if key is stored
+        (function() {
+            const storedKey = sessionStorage.getItem('airbb_key');
+            if (storedKey) {
+                checkUsage(storedKey);
+            }
+        })();
     </script>
 </body>
 </html>

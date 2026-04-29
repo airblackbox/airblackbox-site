@@ -257,6 +257,9 @@
     "api/detect.py": {
       "maxDuration": 30
     },
+    "api/keys.py": {
+      "maxDuration": 10
+    },
     "api/attest.js": {
       "maxDuration": 10
     },
