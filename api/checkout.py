@@ -21,11 +21,11 @@ STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
 STRIPE_PRICE_ID = os.environ.get("STRIPE_PRICE_ID", "")
 BASE_URL = "https://airblackbox.ai"
 
-# Scan credit packs: pack_size -> (price_cents, display_name, per_scan_price)
+# API credit packs: pack_size -> (price_cents, display_name, per_call_price)
 SCAN_PACKS = {
-    "500":   (1500,  "500 Scans",    "$0.030"),
-    "2000":  (5000,  "2,000 Scans",  "$0.025"),
-    "10000": (15000, "10,000 Scans", "$0.015"),
+    "500":   (1500,  "500 API Credits",    "$0.030"),
+    "2000":  (5000,  "2,000 API Credits",  "$0.025"),
+    "10000": (15000, "10,000 API Credits", "$0.015"),
 }
 
 
@@ -71,7 +71,7 @@ class handler(BaseHTTPRequestHandler):
                 "line_items[0][price_data][currency]": "usd",
                 "line_items[0][price_data][unit_amount]": str(price_cents),
                 "line_items[0][price_data][product_data][name]": f"AIR Blackbox - {display_name}",
-                "line_items[0][price_data][product_data][description]": f"Shadow AI Detection scan credits ({per_scan}/scan)",
+                "line_items[0][price_data][product_data][description]": f"API credits for Detect, Policy, and Scan ({per_scan}/call)",
                 "line_items[0][quantity]": "1",
                 "metadata[product]": "scan_credits",
                 "metadata[pack_size]": pack,

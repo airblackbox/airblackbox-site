@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shadow AI Detection — AIR Blackbox</title>
-    <meta name="description" content="Detect AI-generated text across any industry. Catch unsanctioned LLM usage in hiring, legal, finance, healthcare, and more before regulators do.">
-    <meta property="og:title" content="Shadow AI Detection — Catch Unsanctioned AI in Any Workflow">
-    <meta property="og:description" content="Paste any professional text. Get a confidence score in seconds. Know if your team is using AI without governance.">
+    <title>AI Governance APIs — AIR Blackbox</title>
+    <meta name="description" content="Three APIs for AI governance: Shadow AI detection, policy verification, and EU AI Act compliance scanning. One API key, one credit balance.">
+    <meta property="og:title" content="AI Governance APIs — Shadow AI Detection, Policy Verification, Compliance Scanning">
+    <meta property="og:description" content="Three APIs, one key. Detect AI-generated text, enforce AI policies, and scan code for EU AI Act compliance.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://airblackbox.ai/shadow-ai">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -179,9 +179,10 @@
 <body>
     <header>
         <nav>
-            <a href="/" class="logo">AIR <span>Blackbox</span> <span class="badge">Shadow AI</span></a>
+            <a href="/" class="logo">AIR <span>Blackbox</span> <span class="badge">API</span></a>
             <div class="nav-links">
                 <a href="/console">Code Scanner</a>
+                <a href="/shadow-ai">APIs</a>
                 <a href="/blog">Blog</a>
                 <a href="https://github.com/airblackbox" target="_blank">GitHub</a>
             </div>
@@ -260,7 +261,7 @@
             <div class="container">
                 <div class="keygen-card">
                     <h3>Get Your API Key</h3>
-                    <p>25 free scans per month, no key needed. Generate a key for metered access with volume pricing across all industry contexts.</p>
+                    <p>One key for all three APIs: Shadow AI Detection, Policy Verification, and Compliance Scanning. 25 free calls/month without a key.</p>
                     <div class="keygen-form">
                         <input type="email" class="keygen-input" id="keygenEmail" placeholder="you@company.com">
                         <button class="btn btn-keygen" onclick="generateKey()">Generate Key</button>
@@ -279,11 +280,11 @@
                     <div class="usage-grid">
                         <div class="usage-stat">
                             <div class="stat-value" id="usageScans">--</div>
-                            <div class="stat-label">Scans Used</div>
+                            <div class="stat-label">API Calls Used</div>
                         </div>
                         <div class="usage-stat">
                             <div class="stat-value" id="usageRemaining">--</div>
-                            <div class="stat-label">Remaining</div>
+                            <div class="stat-label">Credits Left</div>
                         </div>
                         <div class="usage-stat">
                             <div class="stat-value" id="usageBill">--</div>
@@ -301,35 +302,35 @@
         <!-- Pricing -->
         <section class="pricing-section">
             <div class="container">
-                <h3 style="font-size: 1.3rem; margin-bottom: 1.2rem; text-align: center;">Buy Scan Credits</h3>
-                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">Prepaid credits never expire. Generate an API key above first, then buy a pack.</p>
+                <h3 style="font-size: 1.3rem; margin-bottom: 1.2rem; text-align: center;">Buy API Credits</h3>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">One credit = one API call across all three APIs (Detect, Policy, Scan). Credits never expire. Generate an API key above first.</p>
                 <div class="pricing-grid">
                     <div class="pricing-tier">
                         <h4>Free Tier</h4>
                         <div class="price">$0</div>
-                        <div class="price-unit">25 scans/month</div>
-                        <div class="tier-detail">No key required. Try the API instantly.</div>
+                        <div class="price-unit">25 calls/month</div>
+                        <div class="tier-detail">No key required. Try all 3 APIs instantly.</div>
                     </div>
                     <div class="pricing-tier">
-                        <h4>500 Scans</h4>
+                        <h4>500 Credits</h4>
                         <div class="price">$15</div>
-                        <div class="price-unit">$0.03 per scan</div>
-                        <div class="tier-detail">Great for testing integration and small teams.</div>
-                        <button class="buy-btn" onclick="buyScans('500')">Buy 500 Scans</button>
+                        <div class="price-unit">$0.03 per call</div>
+                        <div class="tier-detail">Great for testing integration across Detect, Policy, and Scan.</div>
+                        <button class="buy-btn" onclick="buyScans('500')">Buy 500 Credits</button>
                     </div>
                     <div class="pricing-tier featured">
-                        <h4>2,000 Scans</h4>
+                        <h4>2,000 Credits</h4>
                         <div class="price">$50</div>
-                        <div class="price-unit">$0.025 per scan</div>
-                        <div class="tier-detail">Best value for production workloads.</div>
-                        <button class="buy-btn" onclick="buyScans('2000')">Buy 2,000 Scans</button>
+                        <div class="price-unit">$0.025 per call</div>
+                        <div class="tier-detail">Best value for production workloads. Use across any API.</div>
+                        <button class="buy-btn" onclick="buyScans('2000')">Buy 2,000 Credits</button>
                     </div>
                     <div class="pricing-tier">
-                        <h4>10,000 Scans</h4>
+                        <h4>10,000 Credits</h4>
                         <div class="price">$150</div>
-                        <div class="price-unit">$0.015 per scan</div>
-                        <div class="tier-detail">Enterprise volume. 50% savings.</div>
-                        <button class="buy-btn" onclick="buyScans('10000')">Buy 10,000 Scans</button>
+                        <div class="price-unit">$0.015 per call</div>
+                        <div class="tier-detail">Enterprise volume. 50% savings across all APIs.</div>
+                        <button class="buy-btn" onclick="buyScans('10000')">Buy 10,000 Credits</button>
                     </div>
                 </div>
             </div>
@@ -338,45 +339,67 @@
         <!-- API Documentation -->
         <section class="api-section">
             <div class="container">
-                <div class="api-card">
-                    <h3>API Reference</h3>
-                    <p>Integrate shadow AI detection into any platform. One endpoint, real-time results, context-aware regulatory mapping.</p>
-                    <div class="code-block"><span class="comment"># 1. Generate an API key</span>
-curl -X POST https://airblackbox.ai/api/keys \
-  -H <span class="string">"Content-Type: application/json"</span> \
-  -d <span class="string">'{"email": "you@company.com"}'</span>
+                <h3 style="font-size: 1.3rem; margin-bottom: 1.2rem; text-align: center;">Three APIs, One Key</h3>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9rem;">Generate a key, buy credits, and use them across all three endpoints. Every call costs 1 credit.</p>
 
-<span class="comment"># 2. Detect AI-generated text (set context to your industry)</span>
+                <div class="api-card">
+                    <h3>API 1: Shadow AI Detection <span style="font-size:0.7rem;color:var(--green);font-weight:600;margin-left:0.5rem;">LIVE</span></h3>
+                    <p>Detect AI-generated text across 8 industries with context-aware regulatory mapping.</p>
+                    <div class="code-block"><span class="comment"># Detect AI-generated text</span>
 curl -X POST https://airblackbox.ai/api/detect \
   -H <span class="string">"Content-Type: application/json"</span> \
   -H <span class="string">"Authorization: Bearer airbb_sk_your_key_here"</span> \
   -d <span class="string">'{"text": "The analysis demonstrates...", "context": "legal"}'</span>
 
-<span class="comment"># Supported contexts:</span>
-<span class="comment"># hiring, legal, finance, healthcare, insurance,</span>
-<span class="comment"># customer_support, education, general</span>
+<span class="comment"># Returns: score (0-1), verdict, signals, regulatory_exposure</span>
+<span class="comment"># Contexts: hiring, legal, finance, healthcare, insurance,</span>
+<span class="comment">#           customer_support, education, general</span></div>
+                </div>
 
-<span class="comment"># 3. Check usage</span>
+                <div class="api-card">
+                    <h3>API 2: Policy Verification <span style="font-size:0.7rem;color:var(--green);font-weight:600;margin-left:0.5rem;">LIVE</span></h3>
+                    <p>Check if an AI action is allowed by your company policy. Approve, deny, or flag for human review.</p>
+                    <div class="code-block"><span class="comment"># Check if an AI action is allowed</span>
+curl -X POST https://airblackbox.ai/api/policy \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -H <span class="string">"Authorization: Bearer airbb_sk_your_key_here"</span> \
+  -d <span class="string">'{"action": "delete_user", "model": "gpt-4o", "provider": "openai"}'</span>
+
+<span class="comment"># Returns: decision (approve/deny/flag), risk_level, matched_rules</span>
+<span class="comment"># Default policy checks: provider allowlist, model blocklist,</span>
+<span class="comment"># high-risk actions, PII patterns, framework allowlist</span>
+<span class="comment"># Pass your own policy object to customize rules</span></div>
+                </div>
+
+                <div class="api-card">
+                    <h3>API 3: Compliance Scan <span style="font-size:0.7rem;color:var(--green);font-weight:600;margin-left:0.5rem;">LIVE</span></h3>
+                    <p>Scan Python AI code for EU AI Act compliance. Checks Articles 9, 10, 11, 12, 14, 15 plus US hiring laws.</p>
+                    <div class="code-block"><span class="comment"># Scan Python code for EU AI Act compliance</span>
+curl -X POST https://airblackbox.ai/api/scan \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -H <span class="string">"Authorization: Bearer airbb_sk_your_key_here"</span> \
+  -d <span class="string">'{"code": "from openai import OpenAI\nclient = OpenAI()..."}'</span>
+
+<span class="comment"># Returns: score (0-100), articles, findings with fix hints</span>
+<span class="comment"># Checks: error handling, PII, logging, tracing, audit trails,</span>
+<span class="comment"># human oversight, injection defense, output validation</span>
+<span class="comment"># Also: Illinois HB 3773, NYC LL144, California FEHA (hiring AI)</span></div>
+                </div>
+
+                <div class="api-card">
+                    <h3>Getting Started</h3>
+                    <p>Three steps to integrate AI governance into your workflow.</p>
+                    <div class="code-block"><span class="comment"># 1. Generate an API key</span>
+curl -X POST https://airblackbox.ai/api/keys \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{"email": "you@company.com"}'</span>
+
+<span class="comment"># 2. Use any of the three APIs with your key</span>
+<span class="comment"># (25 free calls/month without a key)</span>
+
+<span class="comment"># 3. Check your usage and credit balance</span>
 curl https://airblackbox.ai/api/keys \
   -H <span class="string">"Authorization: Bearer airbb_sk_your_key_here"</span></div>
-                </div>
-                <div class="api-card">
-                    <h3>Response Format</h3>
-                    <div class="code-block">{
-  <span class="key">"score"</span>: 0.82,
-  <span class="key">"verdict"</span>: <span class="string">"very_likely_ai"</span>,
-  <span class="key">"context"</span>: <span class="string">"legal"</span>,
-  <span class="key">"signals"</span>: [...],
-  <span class="key">"regulatory_exposure"</span>: [
-    {<span class="key">"law"</span>: <span class="string">"ABA Model Rule 1.1"</span>, <span class="key">"risk"</span>: <span class="string">"..."</span>},
-    {<span class="key">"law"</span>: <span class="string">"EU AI Act Art. 50"</span>, <span class="key">"risk"</span>: <span class="string">"..."</span>}
-  ],
-  <span class="key">"auth"</span>: {
-    <span class="key">"authenticated"</span>: true,
-    <span class="key">"tier"</span>: <span class="string">"starter"</span>,
-    <span class="key">"scans_this_month"</span>: 142
-  }
-}</div>
                 </div>
             </div>
         </section>
@@ -599,7 +622,7 @@ curl https://airblackbox.ai/api/keys \
         function buyScans(pack) {
             const apiKey = sessionStorage.getItem('airbb_key');
             if (!apiKey) {
-                alert('Generate an API key first (scroll up to the "Get Your API Key" section), then come back to buy credits.');
+                alert('Generate an API key first (scroll up), then come back to buy credits.');
                 return;
             }
             window.location.href = '/api/checkout?pack=' + pack + '&key=' + encodeURIComponent(apiKey);
@@ -612,7 +635,7 @@ curl https://airblackbox.ai/api/keys \
             if (purchased) {
                 const banner = document.createElement('div');
                 banner.style.cssText = 'position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#3fb950;color:#000;padding:0.8rem 1.5rem;border-radius:8px;font-weight:700;z-index:200;font-size:0.9rem;';
-                banner.textContent = purchased + ' scan credits added to your account!';
+                banner.textContent = purchased + ' API credits added! Use across Detect, Policy, and Scan.';
                 document.body.appendChild(banner);
                 setTimeout(() => banner.remove(), 5000);
                 window.history.replaceState({}, '', '/shadow-ai');
