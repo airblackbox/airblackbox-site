@@ -260,6 +260,9 @@
     "api/keys.py": {
       "maxDuration": 10
     },
+    "api/policy.py": {
+      "maxDuration": 10
+    },
     "api/attest.js": {
       "maxDuration": 10
     },

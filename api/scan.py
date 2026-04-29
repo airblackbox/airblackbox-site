@@ -20,15 +20,135 @@ from dataclasses import dataclass, field
 from typing import List
 from http.server import BaseHTTPRequestHandler
 
+import redis as redis_lib
+
 
 # ============================================================
-# Rate limiting (in-memory, resets on cold start)
-# Production: replace with Vercel KV or Redis
+# Config & Redis
 # ============================================================
-_SCAN_LOG = {}  # ip -> [timestamp, ...]
-FREE_SCANS_PER_MONTH = 3  # generous for beta
-RATE_WINDOW = 30 * 24 * 3600  # 30 days in seconds
+
+REDIS_URL = os.environ.get("REDIS_URL", "")
+KEY_PREFIX = "airbb_sk_"
+FREE_TIER_SCANS = 25
 MAX_CODE_SIZE = 512_000  # 500KB
+
+_redis_client = None
+
+def _get_redis():
+    global _redis_client
+    if _redis_client is None:
+        if not REDIS_URL:
+            return None
+        _redis_client = redis_lib.from_url(
+            REDIS_URL, decode_responses=True,
+            socket_timeout=5, socket_connect_timeout=5,
+        )
+    return _redis_client
+
+
+# ============================================================
+# Auth helpers (same as detect.py and policy.py)
+# ============================================================
+
+def _validate_api_key(api_key):
+    if not api_key or not api_key.startswith(KEY_PREFIX):
+        return {"valid": False, "reason": "Invalid key format"}
+    key_hash = hashlib.sha256(api_key.encode("utf-8")).hexdigest()
+    r = _get_redis()
+    if not r:
+        return {"valid": False, "reason": "Service unavailable"}
+    try:
+        raw = r.get(f"apikey:{key_hash}")
+    except Exception:
+        return {"valid": False, "reason": "Service unavailable"}
+    if not raw:
+        return {"valid": False, "reason": "Key not found"}
+    try:
+        metadata = json.loads(raw)
+    except json.JSONDecodeError:
+        return {"valid": False, "reason": "Corrupted key data"}
+    if not metadata.get("active", False):
+        return {"valid": False, "reason": "Key has been revoked"}
+    return {
+        "valid": True,
+        "email": metadata.get("email", ""),
+        "tier": metadata.get("tier", "starter"),
+        "key_hash": key_hash,
+    }
+
+
+def _deduct_credit(key_hash):
+    r = _get_redis()
+    if not r:
+        return -1
+    try:
+        new_val = r.decr(f"credits:{key_hash}")
+        if new_val < 0:
+            r.incr(f"credits:{key_hash}")
+            return -1
+        return new_val
+    except Exception:
+        return -1
+
+
+def _get_credit_balance(key_hash):
+    r = _get_redis()
+    if not r:
+        return 0
+    try:
+        val = r.get(f"credits:{key_hash}")
+        return int(val) if val else 0
+    except Exception:
+        return 0
+
+
+def _current_month():
+    return time.strftime("%Y-%m", time.gmtime())
+
+
+def _check_free_tier(client_ip):
+    if not REDIS_URL:
+        return {"allowed": True, "used": 0, "limit": FREE_TIER_SCANS, "fallback": True}
+    r = _get_redis()
+    if not r:
+        return {"allowed": True, "used": 0, "limit": FREE_TIER_SCANS, "fallback": True}
+    try:
+        month = _current_month()
+        raw = r.get(f"free:{client_ip}:{month}")
+        current = int(raw) if raw else 0
+        return {"allowed": current < FREE_TIER_SCANS, "used": current, "limit": FREE_TIER_SCANS}
+    except Exception:
+        return {"allowed": True, "used": 0, "limit": FREE_TIER_SCANS, "fallback": True}
+
+
+def _increment_free_tier(client_ip):
+    r = _get_redis()
+    if not r:
+        return 0
+    try:
+        month = _current_month()
+        key = f"free:{client_ip}:{month}"
+        count = r.incr(key)
+        if count == 1:
+            r.expire(key, 45 * 24 * 3600)
+        return count
+    except Exception:
+        return 0
+
+
+def _track_usage(key_hash):
+    r = _get_redis()
+    if not r:
+        return 0
+    try:
+        month = _current_month()
+        key = f"usage:{key_hash}:{month}"
+        count = r.incr(key)
+        if count == 1:
+            r.expire(key, 90 * 24 * 3600)
+        return count
+    except Exception:
+        return 0
 
 
 # ============================================================
@@ -820,16 +940,43 @@ class handler(BaseHTTPRequestHandler):
             if len(code) > MAX_CODE_SIZE:
                 return self._error(413, f"Code too large. Maximum size is {MAX_CODE_SIZE // 1024}KB.")
 
-            # Rate limiting (basic, in-memory)
+            # Auth & credits (same pattern as detect.py and policy.py)
+            auth_header = self.headers.get("Authorization", "")
+            api_key = auth_header[7:].strip() if auth_header.startswith("Bearer ") else ""
             client_ip = self.headers.get("X-Forwarded-For", "unknown").split(",")[0].strip()
-            now = time.time()
-            if client_ip in _SCAN_LOG:
-                _SCAN_LOG[client_ip] = [t for t in _SCAN_LOG[client_ip] if now - t < RATE_WINDOW]
-                if len(_SCAN_LOG[client_ip]) >= FREE_SCANS_PER_MONTH:
-                    return self._error(429, f"Free tier limit reached ({FREE_SCANS_PER_MONTH} scans per month). Upgrade to Pro for unlimited scans.")
+
+            auth_info = {}
+            if api_key:
+                validation = _validate_api_key(api_key)
+                if not validation["valid"]:
+                    return self._error(401, f"Invalid API key: {validation['reason']}")
+
+                key_hash = validation["key_hash"]
+                credits = _get_credit_balance(key_hash)
+                if credits <= 0:
+                    return self._error(402, "No scan credits remaining. Buy more at /shadow-ai")
+
+                remaining = _deduct_credit(key_hash)
+                if remaining < 0:
+                    return self._error(402, "No scan credits remaining.")
+
+                scan_count = _track_usage(key_hash)
+                auth_info = {
+                    "authenticated": True,
+                    "tier": validation["tier"],
+                    "credits_remaining": remaining,
+                }
             else:
-                _SCAN_LOG[client_ip] = []
-            _SCAN_LOG[client_ip].append(now)
+                free_check = _check_free_tier(client_ip)
+                if not free_check["allowed"]:
+                    return self._error(429,
+                        f"Free tier limit reached ({FREE_TIER_SCANS}/month). Get an API key at /shadow-ai")
+                _increment_free_tier(client_ip)
+                auth_info = {
+                    "authenticated": False,
+                    "tier": "free",
+                    "scans_remaining": FREE_TIER_SCANS - free_check["used"] - 1,
+                }
 
             # Run scan
             start = time.time()
@@ -896,6 +1043,7 @@ class handler(BaseHTTPRequestHandler):
                     "scanner_version": "1.0.0",
                     "engine": "air-blackbox-console",
                 },
+                "auth": auth_info,
             }
 
             self._json_response(200, response)
@@ -920,7 +1068,7 @@ class handler(BaseHTTPRequestHandler):
         self._json_response(status, {"error": message})
 
     def _cors_headers(self):
-        self.send_header("Access-Control-Allow-Origin", "https://airblackbox.ai")
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
         self.send_header("Access-Control-Max-Age", "86400")
