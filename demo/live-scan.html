@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AIR Blackbox — Live Scan</title>
+<title>AIR Blackbox - Live Scan</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
 * {
@@ -609,7 +609,7 @@ footer {
     <li><a href="/scan">Scan</a></li>
     <li><a href="/demo">Demos</a></li>
     <li><a href="/blog/">Blog</a></li>
-    <li><a href="https://github.com/airblackbox" target="_blank">GitHub</a></li>
+    <li><a href="https://github.com/airblackbox/airblackbox" target="_blank">GitHub</a></li>
     <li><a href="https://pypi.org/project/air-blackbox/" target="_blank">PyPI</a></li>
   </ul>
 </nav>
@@ -676,7 +676,7 @@ footer {
     <button class="copy-btn" onclick="copyToClipboard()">📋 Copy</button>
   </div>
   <ul class="footer-links">
-    <li><a href="https://github.com/airblackbox" target="_blank">GitHub</a></li>
+    <li><a href="https://github.com/airblackbox/airblackbox" target="_blank">GitHub</a></li>
     <li><a href="https://airblackbox.ai" target="_blank">airblackbox.ai</a></li>
   </ul>
 </footer>
@@ -800,7 +800,7 @@ const CHECKS = [
 ];
 
 const TRUST_LAYER_PATTERNS = [
-  /air_blackbox\.trust|AirLangchainTrust|AirCrewAITrust|AirOpenAITrust|AirAutoGenTrust|AirTrust/i
+  /air_blackbox\.trust|AirTrust|air_blackbox import AirTrust|trust\.attach/i
 ];
 
 let scanning = false;
@@ -930,13 +930,13 @@ async function runScan() {
 
   if (failed === 0 && warned === 0) {
     banner.className = 'compliance-banner show banner-compliant';
-    banner.innerHTML = '✓ Technical requirements covered — pair with organizational compliance';
+    banner.innerHTML = '✓ Technical requirements covered. Pair with organizational compliance';
   } else if (failed === 0) {
     banner.className = 'compliance-banner show banner-partial';
-    banner.innerHTML = '⚠ Partial coverage — some patterns missing, review Article 11';
+    banner.innerHTML = '⚠ Partial coverage: some patterns missing, review Article 11';
   } else {
     banner.className = 'compliance-banner show banner-non-compliant';
-    banner.innerHTML = `✗ Not compliant with EU AI Act — ${failed} article(s) failing`;
+    banner.innerHTML = `✗ Not compliant with EU AI Act: ${failed} article(s) failing`;
   }
 
   coverageBar.style.display = 'block';

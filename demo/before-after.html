@@ -873,12 +873,12 @@ agent = AgentExecutor(
 result = agent.invoke({
     "input": "Find users from 2024"
 })`,
-                with: `<span class="highlight">from air_blackbox.trust.langchain import AirLangchainTrust</span>
+                with: `<span class="highlight">from air_blackbox import AirTrust</span>
 from langchain.agents import AgentExecutor
 from langchain_openai import ChatOpenAI
 from langchain.tools import Tool
 
-<span class="highlight">air = AirLangchainTrust()</span>
+<span class="highlight">trust = AirTrust()</span>
 
 llm = ChatOpenAI(model="gpt-4")
 tools = [
@@ -889,7 +889,7 @@ tools = [
     )
 ]
 
-agent = <span class="highlight">air.wrap(AgentExecutor(</span>
+agent = <span class="highlight">trust.attach(AgentExecutor(</span>
     agent=llm,
     tools=tools,
     verbose=True
@@ -898,11 +898,12 @@ agent = <span class="highlight">air.wrap(AgentExecutor(</span>
 result = agent.invoke({
     "input": "Find users from 2024"
 })`,
-                diff: `  from air_blackbox.trust.langchain import AirLangchainTrust
+                diff: `+ from air_blackbox import AirTrust
   from langchain.agents import AgentExecutor
   from langchain_openai import ChatOpenAI
   from langchain.tools import Tool
 
++ trust = AirTrust()
   llm = ChatOpenAI(model="gpt-4")
   tools = [
       Tool(
@@ -912,7 +913,7 @@ result = agent.invoke({
       )
   ]
 
-+ agent = air.wrap(AgentExecutor(
++ agent = trust.attach(AgentExecutor(
     agent=llm,
     tools=tools,
     verbose=True
@@ -948,11 +949,11 @@ crew = Crew(
 )
 
 result = crew.kickoff()`,
-                with: `<span class="highlight">from air_blackbox.trust.crewai import AirCrewAITrust</span>
+                with: `<span class="highlight">from air_blackbox import AirTrust</span>
 from crewai import Agent, Task, Crew
 from crewai_tools import tool
 
-<span class="highlight">air = AirCrewAITrust()</span>
+<span class="highlight">trust = AirTrust()</span>
 
 @tool
 def search_database(query: str):
@@ -970,17 +971,17 @@ task = Task(
     agent=analyst
 )
 
-crew = <span class="highlight">air.wrap(Crew(</span>
+crew = <span class="highlight">trust.attach(Crew(</span>
     agents=[analyst],
     tasks=[task]
 <span class="highlight">))</span>
 
 result = crew.kickoff()`,
-                diff: `+ from air_blackbox.trust.crewai import AirCrewAITrust
+                diff: `+ from air_blackbox import AirTrust
   from crewai import Agent, Task, Crew
   from crewai_tools import tool
 
-+ air = AirCrewAITrust()
++ trust = AirTrust()
 
   @tool
   def search_database(query: str):
@@ -998,7 +999,7 @@ result = crew.kickoff()`,
       agent=analyst
   )
 
-+ crew = air.wrap(Crew(
++ crew = trust.attach(Crew(
     agents=[analyst],
     tasks=[task]
 + ))
@@ -1030,13 +1031,13 @@ response = client.chat.completions.create(
     ],
     tools=tools
 )`,
-                with: `<span class="highlight">from air_blackbox.trust.openai import AirOpenAITrust</span>
+                with: `<span class="highlight">from air_blackbox import AirTrust</span>
 import openai
 from openai import OpenAI
 
-<span class="highlight">air = AirOpenAITrust()</span>
+<span class="highlight">trust = AirTrust()</span>
 
-client = <span class="highlight">air.wrap(OpenAI(api_key="sk-..."))</span>
+client = <span class="highlight">trust.attach(OpenAI(api_key="sk-..."))</span>
 
 tools = [
     {
@@ -1057,14 +1058,14 @@ response = client.chat.completions.create(
     ],
     tools=tools
 )`,
-                diff: `+ from air_blackbox.trust.openai import AirOpenAITrust
+                diff: `+ from air_blackbox import AirTrust
   import openai
   from openai import OpenAI
 
-+ air = AirOpenAITrust()
++ trust = AirTrust()
 
 - client = OpenAI(api_key="sk-...")
-+ client = air.wrap(OpenAI(api_key="sk-..."))
++ client = trust.attach(OpenAI(api_key="sk-..."))
 
   tools = [
       {
@@ -1107,15 +1108,15 @@ user_proxy.initiate_chat(
     assistant,
     message="Analyze this data"
 )`,
-                with: `<span class="highlight">from air_blackbox.trust.autogen import AirAutoGenTrust</span>
+                with: `<span class="highlight">from air_blackbox import AirTrust</span>
 from autogen import AssistantAgent, UserProxyAgent
 import autogen
 
-<span class="highlight">air = AirAutoGenTrust()</span>
+<span class="highlight">trust = AirTrust()</span>
 
 config_list = [{"model": "gpt-4", "api_key": "..."}]
 
-assistant = <span class="highlight">air.wrap(AssistantAgent(</span>
+assistant = <span class="highlight">trust.attach(AssistantAgent(</span>
     name="analyst",
     llm_config={"config_list": config_list}
 <span class="highlight">))</span>
@@ -1130,15 +1131,15 @@ user_proxy.initiate_chat(
     assistant,
     message="Analyze this data"
 )`,
-                diff: `+ from air_blackbox.trust.autogen import AirAutoGenTrust
+                diff: `+ from air_blackbox import AirTrust
   from autogen import AssistantAgent, UserProxyAgent
   import autogen
 
-+ air = AirAutoGenTrust()
++ trust = AirTrust()
 
   config_list = [{"model": "gpt-4", "api_key": "..."}]
 
-+ assistant = air.wrap(AssistantAgent(
++ assistant = trust.attach(AssistantAgent(
     name="analyst",
     llm_config={"config_list": config_list}
 + ))

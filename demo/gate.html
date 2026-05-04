@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AIR Gate Demo — Bilateral Receipts for AI Agent Actions</title>
+<title>AIR Gate Demo - Bilateral Receipts for AI Agent Actions</title>
 <meta name="description" content="Interactive demo: see how AIR Gate enforces covenants, generates Ed25519 bilateral receipts, and builds tamper-evident audit chains for AI agent actions.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
@@ -90,7 +90,7 @@ body {
   gap: 24px;
 }
 
-/* Left panel — covenant + actions */
+/* Left panel: covenant + actions */
 .panel {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -192,7 +192,7 @@ body {
 }
 .reset-btn:hover { border-color: var(--red); color: var(--red); }
 
-/* Right panel — receipts + chain */
+/* Right panel: receipts + chain */
 .right-panel {
   display: flex;
   flex-direction: column;
@@ -409,28 +409,28 @@ body {
             <span class="action-icon">&#x1F50D;</span>
             <div class="action-info">
               <div class="action-name">Read Credit Score</div>
-              <div class="action-desc">Low risk — should be permitted</div>
+              <div class="action-desc">Low risk, should be permitted</div>
             </div>
           </button>
           <button class="action-btn" id="btn-small" onclick="runAction('approve_loan_small')">
             <span class="action-icon">&#x2705;</span>
             <div class="action-info">
               <div class="action-name">Approve $30K Loan</div>
-              <div class="action-desc">Under threshold — auto-permitted</div>
+              <div class="action-desc">Under threshold, auto-permitted</div>
             </div>
           </button>
           <button class="action-btn" id="btn-large" onclick="runAction('approve_loan_large')">
             <span class="action-icon">&#x1F6A8;</span>
             <div class="action-info">
               <div class="action-name">Approve $75K Loan</div>
-              <div class="action-desc">Over threshold — requires human approval</div>
+              <div class="action-desc">Over threshold, requires human approval</div>
             </div>
           </button>
           <button class="action-btn" id="btn-delete" onclick="runAction('delete_records')">
             <span class="action-icon">&#x1F6AB;</span>
             <div class="action-info">
               <div class="action-name">Delete Records</div>
-              <div class="action-desc">Forbidden by covenant — always blocked</div>
+              <div class="action-desc">Forbidden by covenant, always blocked</div>
             </div>
           </button>
         </div>
