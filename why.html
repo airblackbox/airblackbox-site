@@ -18,20 +18,20 @@
     <noscript><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
     <style>
         :root {
-            --bg-deep: #080b14;
-            --bg-card: #0d1117;
-            --bg-elevated: #161b22;
-            --border: #21262d;
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
-            --text-dim: #484f58;
-            --accent: #fbbf24;
-            --accent-glow: rgba(251, 191, 36, 0.15);
-            --green: #3fb950;
-            --red: #f85149;
-            --yellow: #d29922;
-            --mono: 'JetBrains Mono', monospace;
-            --sans: 'Sora', -apple-system, sans-serif;
+           --bg-deep: #080b14;
+           --bg-card: #0d1117;
+           --bg-elevated: #161b22;
+           --border: #21262d;
+           --text-primary: #e6edf3;
+           --text-secondary: #8b949e;
+           --text-dim: #484f58;
+           --accent: #fbbf24;
+           --accent-glow: rgba(251, 191, 36, 0.15);
+           --green: #3fb950;
+           --red: #f85149;
+           --yellow: #d29922;
+           --mono: 'JetBrains Mono', monospace;
+           --sans: 'Sora', -apple-system, sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -180,12 +180,12 @@
             <div class="principle-card">
                 <div class="principle-num">02</div>
                 <h3>No API key required</h3>
-                <p><code>pip install air-blackbox</code> and you're running. No signup, no account creation, no vendor relationship. The scanner, the trust layers, the audit chains &mdash; all work without authenticating to any external service.</p>
+                <p><code>pip install air-blackbox</code> and you're running. No signup, no account creation, no vendor relationship. The scanner, the trust layers, the audit chains - all work without authenticating to any external service.</p>
             </div>
             <div class="principle-card">
                 <div class="principle-num">03</div>
                 <h3>You own the cryptography</h3>
-                <p>HMAC-SHA256 runs in your process, on your machine. The signing keys never leave your environment. You can verify the chain yourself with standard tooling &mdash; no proprietary verification endpoint needed.</p>
+                <p>HMAC-SHA256 runs in your process, on your machine. The signing keys never leave your environment. You can verify the chain yourself with standard tooling - no proprietary verification endpoint needed.</p>
             </div>
             <div class="principle-card">
                 <div class="principle-num">04</div>
@@ -263,8 +263,8 @@
                 </tr>
                 <tr>
                     <td>Works offline</td>
-                    <td class="col-air">Yes &mdash; fully functional</td>
-                    <td class="col-saas">No &mdash; requires internet</td>
+                    <td class="col-air">Yes - fully functional</td>
+                    <td class="col-saas">No - requires internet</td>
                 </tr>
                 <tr>
                     <td>Account / API key required</td>
@@ -278,12 +278,12 @@
                 </tr>
                 <tr>
                     <td>Vendor shutdown risk</td>
-                    <td class="col-air">None &mdash; self-contained</td>
+                    <td class="col-air">None - self-contained</td>
                     <td class="col-saas">Evidence pipeline breaks</td>
                 </tr>
                 <tr>
                     <td>Verify chain independently</td>
-                    <td class="col-air">Yes &mdash; standard tooling</td>
+                    <td class="col-air">Yes - standard tooling</td>
                     <td class="col-saas">Requires vendor's endpoint</td>
                 </tr>
                 <tr>
@@ -304,7 +304,7 @@
                 <tr>
                     <td>Cryptographic algorithm</td>
                     <td class="col-air">HMAC-SHA256 (NIST standard)</td>
-                    <td class="col-saas">Varies &mdash; often proprietary</td>
+                    <td class="col-saas">Varies - often proprietary</td>
                 </tr>
                 <tr>
                     <td>Price</td>
@@ -326,7 +326,7 @@
                 <h4>HMAC-SHA256 (AIR Blackbox)</h4>
                 <div class="crypto-detail">
                     <span class="crypto-label">NIST approved</span>
-                    <span class="crypto-value" style="color: var(--green);">Yes &mdash; FIPS 198-1</span>
+                    <span class="crypto-value" style="color: var(--green);">Yes - FIPS 198-1</span>
                 </div>
                 <div class="crypto-detail">
                     <span class="crypto-label">Used by</span>
@@ -380,7 +380,7 @@
 
         <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 2rem; margin-top: 1.5rem;">
             <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.8;">
-                <strong style="color: var(--text-primary);">The technical reality:</strong> HMAC-SHA256 is a symmetric construction. Grover's algorithm (the quantum threat to symmetric crypto) would require a 2<sup>128</sup> quantum search &mdash; well beyond any projected quantum computer capability. NIST's own guidance is that HMAC-SHA256 remains secure in a post-quantum world. Post-quantum <em>signature</em> schemes solve a different problem (public-key authentication) that isn't relevant to tamper-evident audit chains. Marketing post-quantum crypto for compliance logs is solving a problem that doesn't exist.
+                <strong style="color: var(--text-primary);">The technical reality:</strong> HMAC-SHA256 is a symmetric construction. Grover's algorithm (the quantum threat to symmetric crypto) would require a 2<sup>128</sup> quantum search - well beyond any projected quantum computer capability. NIST's own guidance is that HMAC-SHA256 remains secure in a post-quantum world. Post-quantum <em>signature</em> schemes solve a different problem (public-key authentication) that isn't relevant to tamper-evident audit chains. Marketing post-quantum crypto for compliance logs is solving a problem that doesn't exist.
             </p>
         </div>
     </div></section>
@@ -389,16 +389,16 @@
     <section><div class="container">
         <div class="section-label">Regulatory Reality</div>
         <div class="section-title">What auditors actually ask for</div>
-        <p class="section-desc">We've read the regulation. Here's what Articles 11 and 12 actually require &mdash; and what they don't.</p>
+        <p class="section-desc">We've read the regulation. Here's what Articles 11 and 12 actually require - and what they don't.</p>
 
         <div class="principles-grid">
             <div class="principle-card">
-                <h3>Art. 11 &mdash; Technical Documentation</h3>
+                <h3>Art. 11 - Technical Documentation</h3>
                 <p>Requires documentation of the AI system's design, development, and intended purpose. AIR Blackbox's static scanner checks your codebase against 48 requirements and generates evidence bundles. No SaaS needed.</p>
             </div>
             <div class="principle-card">
-                <h3>Art. 12 &mdash; Record-Keeping</h3>
-                <p>Requires automatic logging of events during operation, with records that enable traceability. The key word is <strong>tamper-evident</strong> &mdash; you must prove records haven't been modified. HMAC-SHA256 chains do exactly this.</p>
+                <h3>Art. 12 - Record-Keeping</h3>
+                <p>Requires automatic logging of events during operation, with records that enable traceability. The key word is <strong>tamper-evident</strong> - you must prove records haven't been modified. HMAC-SHA256 chains do exactly this.</p>
             </div>
             <div class="principle-card">
                 <h3>What's NOT required</h3>

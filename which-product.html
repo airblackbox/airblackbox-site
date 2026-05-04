@@ -218,7 +218,7 @@
     <!-- Hero -->
     <div class="hero"><div class="container">
         <h1>Which <span class="highlight">AIR Blackbox</span> product should I use?</h1>
-        <p class="subtitle">Four open-source projects. All solve AI agent compliance. They sound similar because they share the same HMAC-SHA256 audit chain at the core &mdash; but they serve different integration models. Here is the plain-English decision tree.</p>
+        <p class="subtitle">Four open-source projects. All solve AI agent compliance. They sound similar because they share the same HMAC-SHA256 audit chain at the core, but they serve different integration models. Here is the plain-English decision tree.</p>
     </div></div>
 
     <!-- 60-second TL;DR -->
@@ -238,7 +238,7 @@
                 <div class="tldr-a">&rarr; air-gate</div>
             </div>
             <div class="tldr-item">
-                <div class="tldr-q"><strong>I want the full stack</strong> &mdash; air-trust + gateway + air-gate + episode store + policy engine + Jaeger, all pre-wired and running with one command.</div>
+                <div class="tldr-q"><strong>I want the full stack:</strong> air-trust + gateway + air-gate + episode store + policy engine + Jaeger, all pre-wired and running with one command.</div>
                 <div class="tldr-a">&rarr; air-platform</div>
             </div>
             <div class="tldr-item">
@@ -253,7 +253,7 @@
     <section style="border-top: 1px solid var(--border);"><div class="container">
         <div class="section-label">The Four Products</div>
         <div class="section-title">What each one actually is</div>
-        <p class="section-desc">Three individual components and one complete stack that packages all of them together. All four share the same HMAC-SHA256 audit chain core &mdash; air-trust, gateway, and air-gate are the standalone pieces; air-platform is everything pre-wired.</p>
+        <p class="section-desc">Three individual components and one complete stack that packages all of them together. All four share the same HMAC-SHA256 audit chain core. air-trust, gateway, and air-gate are the standalone pieces; air-platform is everything pre-wired.</p>
 
         <div class="product-grid">
             <div class="product-card air-trust">
@@ -283,7 +283,7 @@
             <div class="product-card air-gate">
                 <div class="pkg">Tool approval checkpoint</div>
                 <h3>air-gate</h3>
-                <div class="tagline">Pauses agents before they execute tool calls and requires a human approval. Same HMAC chain &mdash; but it blocks, not just logs.</div>
+                <div class="tagline">Pauses agents before they execute tool calls and requires a human approval. Same HMAC chain, but it blocks, not just logs.</div>
                 <code class="install">pip install air-gate</code>
                 <div class="when-use">
                     <strong>Use when</strong>
@@ -336,7 +336,7 @@
                     <td>Standalone</td>
                     <td>Standalone</td>
                     <td>Standalone</td>
-                    <td>Yes &mdash; bundles air-trust + gateway + air-gate</td>
+                    <td>Yes (bundles air-trust + gateway + air-gate)</td>
                 </tr>
                 <tr>
                     <td>Language support</td>
@@ -441,13 +441,13 @@
 
             <div class="scenario">
                 <div class="person">Fintech with agents that move money</div>
-                <div class="situation">Your agent can initiate transactions. Logging-after-the-fact is not enough &mdash; you need a human to approve every payment before it goes through. Regulators will ask about it.</div>
+                <div class="situation">Your agent can initiate transactions. Logging-after-the-fact is not enough. You need a human to approve every payment before it goes through. Regulators will ask about it.</div>
                 <div class="answer">&rarr; <strong style="color: var(--purple);">air-gate</strong> as the approval checkpoint for the payment tool, plus <code>air-trust</code> for the rest of the agent's calls. They compose well.</div>
             </div>
 
             <div class="scenario">
                 <div class="person">Enterprise compliance team piloting AI governance</div>
-                <div class="situation">You want to show the security and compliance functions what "tamper-evident agent logs" look like without asking engineering to integrate a library. You need something a compliance analyst can spin up on a VM &mdash; with every capability turned on.</div>
+                <div class="situation">You want to show the security and compliance functions what "tamper-evident agent logs" look like without asking engineering to integrate a library. You need something a compliance analyst can spin up on a VM with every capability turned on.</div>
                 <div class="answer">&rarr; <strong style="color: var(--green);">air-platform</strong>. One <code>docker compose up</code> and the complete AIR Blackbox stack is live: air-trust for Python agents, gateway for non-Python services, air-gate for tool approvals, a policy engine, an episode store, and Jaeger tracing. All sharing one audit chain. Point any test agent at it and show the dashboard.</div>
             </div>
 
@@ -474,11 +474,11 @@
         <div class="faq-list">
             <div class="faq-item">
                 <h4>Do I need more than one of these?</h4>
-                <p>Usually no &mdash; and if you need more than one, use air-platform. For individual developers, pick the single component that matches your integration model (air-trust, gateway, or air-gate) and ship. For enterprises that want multiple integration models running together with unified auditing, use air-platform; it bundles all three plus a policy engine and tracing, so you get the full picture without wiring three separate installs together.</p>
+                <p>Usually no. If you need more than one, use air-platform. For individual developers, pick the single component that matches your integration model (air-trust, gateway, or air-gate) and ship. For enterprises that want multiple integration models running together with unified auditing, use air-platform; it bundles all three plus a policy engine and tracing, so you get the full picture without wiring three separate installs together.</p>
             </div>
             <div class="faq-item">
                 <h4>Why did you build four projects instead of one?</h4>
-                <p>Honest answer: the audit chain is the same core, but the three integration models serve very different users. A Python developer does not want to run Docker. A platform engineer does not want to import a library into every service. A compliance lead does not want to write code at all. One tool cannot be the right shape for all three &mdash; but an enterprise <em>deployment</em> often needs all three running side-by-side. That is what air-platform is for: it is not a fourth product, it is the complete stack that bundles air-trust, gateway, and air-gate together with shared auditing, an episode store, a policy engine, and Jaeger tracing.</p>
+                <p>Honest answer: the audit chain is the same core, but the three integration models serve very different users. A Python developer does not want to run Docker. A platform engineer does not want to import a library into every service. A compliance lead does not want to write code at all. One tool cannot be the right shape for all three, but an enterprise <em>deployment</em> often needs all three running side-by-side. That is what air-platform is for: it is not a fourth product, it is the complete stack that bundles air-trust, gateway, and air-gate together with shared auditing, an episode store, a policy engine, and Jaeger tracing.</p>
             </div>
             <div class="faq-item">
                 <h4>Can I migrate from one to another later?</h4>
@@ -486,11 +486,11 @@
             </div>
             <div class="faq-item">
                 <h4>Which one gets the most updates?</h4>
-                <p>air-trust is the current focus. It just shipped v0.4.0 with CSA Agentic Trust Framework conformance, and it is the package most actively developed. The others receive backports of the shared audit chain logic but do not get new features as quickly.</p>
+                <p>air-trust is the current focus. It just shipped v0.7.0 with CSA Agentic Trust Framework conformance, and it is the package most actively developed. The others receive backports of the shared audit chain logic but do not get new features as quickly.</p>
             </div>
             <div class="faq-item">
                 <h4>Is any of this certified for EU AI Act?</h4>
-                <p>No. None of these tools certify anything. The EU AI Act does not have a certification scheme for compliance tooling &mdash; certification applies to the AI system itself. AIR Blackbox products produce the <em>evidence</em> (Article 12 record-keeping, Article 11 technical documentation) that regulators or auditors will ask for. The certification decision remains with the operator of the AI system.</p>
+                <p>No. None of these tools certify anything. The EU AI Act does not have a certification scheme for compliance tooling. Certification applies to the AI system itself. AIR Blackbox products produce the <em>evidence</em> (Article 12 record-keeping, Article 11 technical documentation) that regulators or auditors will ask for. The certification decision remains with the operator of the AI system.</p>
             </div>
             <div class="faq-item">
                 <h4>What about the August 2, 2026 deadline?</h4>
@@ -502,7 +502,7 @@
     <!-- CTA -->
     <section class="cta-section"><div class="container">
         <h2>Start with the default. Graduate later.</h2>
-        <p>If you are still not sure, install air-trust. It is one command, zero dependencies, and takes 30 seconds. You can switch to gateway, air-gate, or air-platform any time &mdash; your audit records come with you.</p>
+        <p>If you are still not sure, install air-trust. It is one command, zero dependencies, and takes 30 seconds. You can switch to gateway, air-gate, or air-platform any time. Your audit records come with you.</p>
         <div class="cta-install" onclick="navigator.clipboard.writeText('pip install air-trust')">pip install air-trust</div>
         <div class="cta-links">
             <a href="/quickstart" class="btn-primary">Quickstart Guide</a>

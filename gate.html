@@ -220,7 +220,7 @@
             <h3>Policy as code. Before anything runs.</h3>
             <p>A covenant is a YAML file that declares exactly what an agent is allowed to do. Three rule types: <code style="color:var(--green)">permit</code>, <code style="color:var(--red)">forbid</code>, and <code style="color:var(--yellow)">require_approval</code>. Add conditions with <code>when</code> and <code>unless</code> clauses.</p>
             <p>The covenant is SHA-256 hashed, and that hash is embedded in every receipt. Change a single rule, and every subsequent receipt carries a different covenant hash. An auditor can verify exactly which policy was active for any action.</p>
-            <div class="feature-tag">Article 9 &mdash; Risk Management</div>
+            <div class="feature-tag">Article 9 - Risk Management</div>
         </div>
         <div>
             <div class="terminal">
@@ -233,18 +233,18 @@
 <br><span class="t-accent">version</span>: <span class="t-green">"1.0"</span>
 <br>
 <br><span class="t-accent">rules</span>:
-<br>&nbsp;&nbsp;<span class="t-comment"># Navigation &mdash; always permitted</span>
+<br>&nbsp;&nbsp;<span class="t-comment"># Navigation - always permitted</span>
 <br>&nbsp;&nbsp;- <span class="t-green">permit</span>: navigate
 <br>&nbsp;&nbsp;- <span class="t-green">permit</span>: scroll
 <br>&nbsp;&nbsp;- <span class="t-green">permit</span>: read_page
 <br>
-<br>&nbsp;&nbsp;<span class="t-comment"># Forms &mdash; human must approve</span>
+<br>&nbsp;&nbsp;<span class="t-comment"># Forms - human must approve</span>
 <br>&nbsp;&nbsp;- <span class="t-yellow">require_approval</span>: fill_form
 <br>&nbsp;&nbsp;- <span class="t-yellow">require_approval</span>: submit_form
 <br>&nbsp;&nbsp;- <span class="t-yellow">require_approval</span>: purchase
 <br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-muted">when</span>: <span class="t-green">"amount > 0"</span>
 <br>
-<br>&nbsp;&nbsp;<span class="t-comment"># Dangerous &mdash; always blocked</span>
+<br>&nbsp;&nbsp;<span class="t-comment"># Dangerous - always blocked</span>
 <br>&nbsp;&nbsp;- <span class="t-red">forbid</span>: download_executable
 <br>&nbsp;&nbsp;- <span class="t-red">forbid</span>: install_extension
 <br>&nbsp;&nbsp;- <span class="t-red">forbid</span>: grant_permissions
@@ -282,10 +282,10 @@
         <div class="two-col-text">
             <div class="section-label" style="text-align:left">Bilateral Receipts</div>
             <h3>Two phases. One tamper-proof record.</h3>
-            <p><strong>Phase 1 (Authorization):</strong> Gate checks the covenant, makes a decision, and signs the authorization with Ed25519. The payload is SHA-256 hashed &mdash; raw data never enters the receipt.</p>
+            <p><strong>Phase 1 (Authorization):</strong> Gate checks the covenant, makes a decision, and signs the authorization with Ed25519. The payload is SHA-256 hashed - raw data never enters the receipt.</p>
             <p><strong>Phase 2 (Seal):</strong> After execution, the result is hashed and sealed into the same receipt with a second signature. The seal covers the authorization signature, so the entire lifecycle is cryptographically bound.</p>
             <p>A third party can verify any receipt with just the public key. No shared secret needed. Non-repudiation built in.</p>
-            <div class="feature-tag">Article 12 &mdash; Record-Keeping</div>
+            <div class="feature-tag">Article 12 - Record-Keeping</div>
         </div>
     </div>
 </section>
@@ -323,7 +323,7 @@
 <br><span class="t-accent">else</span>:
 <br>&nbsp;&nbsp;print(<span class="t-green">f"Blocked: </span>{receipt.decision}<span class="t-green">"</span>)
 <br>
-<br><span class="t-comment"># Verify &mdash; third party can do this with just the public key</span>
+<br><span class="t-comment"># Verify - third party can do this with just the public key</span>
 <br>report = gate.verify(receipt)
 <br>print(report[<span class="t-green">"overall"</span>])  <span class="t-comment"># True</span>
         </div>
@@ -338,7 +338,7 @@
             <h3>Multi-agent traceability</h3>
             <p>When an orchestrator delegates to a sub-agent, the child's receipt links back to the parent via <code style="color:var(--accent)">parent_receipt_id</code>. Walk the chain from any receipt back to the root authorization.</p>
             <p>Every receipt in the chain is independently verifiable. If a child agent misbehaves, the delegation chain shows exactly who authorized what, and when.</p>
-            <div class="feature-tag">Article 14 &mdash; Human Oversight</div>
+            <div class="feature-tag">Article 14 - Human Oversight</div>
         </div>
         <div>
             <div class="terminal">
@@ -362,7 +362,7 @@
 <br>
 <br><span class="t-comment"># Walk the full chain</span>
 <br>chain = gate.walk_delegation_chain(child)
-<br><span class="t-comment"># [orchestrator, notifier] &mdash; root first</span>
+<br><span class="t-comment"># [orchestrator, notifier] - root first</span>
                 </div>
             </div>
         </div>
@@ -402,7 +402,7 @@
         <div class="feature-card">
             <div class="feature-icon" style="background: rgba(249, 115, 22, 0.1);">&#x1F514;</div>
             <h3>Human Approval Callbacks</h3>
-            <p>When a covenant rule says require_approval, Gate pauses and calls your callback. Slack, email, CLI prompt &mdash; you decide the interface. Decision is signed into the receipt.</p>
+            <p>When a covenant rule says require_approval, Gate pauses and calls your callback. Slack, email, CLI prompt - you decide the interface. Decision is signed into the receipt.</p>
             <div class="feature-tag">Article 14</div>
         </div>
         <div class="feature-card">
@@ -431,7 +431,7 @@
 <br><span class="t-comment"># Or without optional crypto (uses HMAC-SHA256 fallback)</span>
 <br><span class="t-green">$</span> pip install air-blackbox
 <br>
-<br><span class="t-comment"># Quick test &mdash; 58 tests, all passing</span>
+<br><span class="t-comment"># Quick test -58 tests, all passing</span>
 <br><span class="t-green">$</span> python test_gate.py
 <br><span class="t-green">RESULTS: 58 passed, 0 failed out of 58 tests</span>
 <br><span class="t-green">&#10003; All tests passed.</span>

@@ -1,11 +1,12 @@
 """
-AIR Blackbox — Admin Dashboard API
+AIR Blackbox - Admin Dashboard API
 
 Simple admin endpoint to view API key signups, usage stats,
-and credit purchases. Protected by ADMIN_SECRET env var.
+and credit purchases. Protected by ADMIN_SECRET env var via header.
 
-GET /api/admin?secret=YOUR_SECRET           — recent signups + stats
-GET /api/admin?secret=YOUR_SECRET&limit=100 — more signups
+Usage:
+  curl -H "X-Admin-Secret: YOUR_SECRET" https://airblackbox.ai/api/admin
+  curl -H "X-Admin-Secret: YOUR_SECRET" "https://airblackbox.ai/api/admin?limit=100"
 """
 
 import json
@@ -149,17 +150,17 @@ def _get_month_usage_stats():
 class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
-        # Check admin secret
+        # Check admin secret via header (never query string - secrets in URLs leak)
         if not ADMIN_SECRET:
             return self._error(503, "ADMIN_SECRET not configured. Add it as a Vercel env var.")
 
-        parsed = urllib.parse.urlparse(self.path)
-        qs = urllib.parse.parse_qs(parsed.query)
-        secret = qs.get("secret", [None])[0]
+        secret = self.headers.get("X-Admin-Secret")
 
         if secret != ADMIN_SECRET:
-            return self._error(401, "Invalid admin secret.")
+            return self._error(401, "Missing or invalid X-Admin-Secret header.")
 
+        parsed = urllib.parse.urlparse(self.path)
+        qs = urllib.parse.parse_qs(parsed.query)
         limit = int(qs.get("limit", ["50"])[0])
         if limit > 500:
             limit = 500
@@ -203,5 +204,5 @@ class handler(BaseHTTPRequestHandler):
     def _cors_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Admin-Secret")
         self.send_header("Access-Control-Max-Age", "86400")

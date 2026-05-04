@@ -130,7 +130,7 @@
 <h1>Audit Trails for AI Agents: Python HMAC-SHA256 Implementation Guide</h1>
 <p class="meta">April 8, 2026 &middot; Jason Shotwell &middot; 12 min read</p>
 
-<p>An <strong>audit trail for AI agents</strong> is a tamper-evident log of every action an autonomous agent takes &mdash; every model call, tool invocation, and data access &mdash; cryptographically chained so that modifying any historical record is immediately detectable. If you deploy AI systems in the EU, <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Article 12 of the EU AI Act</a> requires exactly this: automatic recording of events that enables traceability throughout the system's lifecycle.</p>
+<p>An <strong>audit trail for AI agents</strong> is a tamper-evident log of every action an autonomous agent takes -every model call, tool invocation, and data access -cryptographically chained so that modifying any historical record is immediately detectable. If you deploy AI systems in the EU, <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Article 12 of the EU AI Act</a> requires exactly this: automatic recording of events that enables traceability throughout the system's lifecycle.</p>
 
 <p>This guide walks through building an HMAC-SHA256 audit chain in Python from scratch, then shows how to add one to any AI agent in a single line of code using <a href="https://pypi.org/project/air-trust/">air-trust</a>.</p>
 
@@ -184,17 +184,17 @@
         self.records.append(record)
         <span class="keyword">return</span> record</code></pre>
 
-<p>That's the entire tamper-detection mechanism. Around 25 lines of Python. The complexity isn't in the cryptography &mdash; it's in making this work reliably across agent frameworks, persisting chains to durable storage, and handling concurrent writes from multi-agent systems.</p>
+<p>That's the entire tamper-detection mechanism. Around 25 lines of Python. The complexity isn't in the cryptography - it's in making this work reliably across agent frameworks, persisting chains to durable storage, and handling concurrent writes from multi-agent systems.</p>
 
 <h2>What Article 12 Requires You to Log</h2>
 
 <p>The <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">EU AI Act Article 12</a> doesn't prescribe a specific format, but it requires that high-risk AI systems have logging capabilities that enable:</p>
 
 <ol>
-  <li><strong>Traceability of system functioning</strong> &mdash; what the system did and why</li>
+  <li><strong>Traceability of system functioning</strong> - what the system did and why</li>
   <li><strong>Recording of events</strong> relevant to identifying risks and substantial modifications</li>
   <li><strong>Identification of input data</strong> that triggered specific decisions</li>
-  <li><strong>Monitoring of human-machine interaction</strong> &mdash; who initiated what and when</li>
+  <li><strong>Monitoring of human-machine interaction</strong> - who initiated what and when</li>
 </ol>
 
 <p>For AI agents specifically, that translates to logging: every LLM call (model, prompt hash, response hash, token count), every tool invocation (tool name, arguments, result), every decision point (which branch the agent took and why), and which human or system initiated the agent run.</p>
@@ -203,7 +203,7 @@
 
 <h3>Step 1: Persistence Layer</h3>
 
-<p>An in-memory chain is useless if the process crashes. You need durable storage. SQLite is the simplest option &mdash; single file, zero configuration, included in Python's standard library:</p>
+<p>An in-memory chain is useless if the process crashes. You need durable storage. SQLite is the simplest option - single file, zero configuration, included in Python's standard library:</p>
 
 <pre><code><span class="keyword">import</span> sqlite3
 
@@ -230,7 +230,7 @@
 
 <p>The HMAC signing key is the root of trust. If someone has the key, they could theoretically rewrite the entire chain. Two approaches:</p>
 
-<p><strong>Auto-generated key (development/single-machine):</strong> Generate a random key on first run and store it at a known path with restricted permissions. This is what air-trust does by default &mdash; it creates <code>~/.air-trust/signing.key</code> with <code>chmod 600</code>.</p>
+<p><strong>Auto-generated key (development/single-machine):</strong> Generate a random key on first run and store it at a known path with restricted permissions. This is what air-trust does by default - it creates <code>~/.air-trust/signing.key</code> with <code>chmod 600</code>.</p>
 
 <p><strong>Environment variable (production/CI):</strong> Set <code>AIR_TRUST_KEY</code> as an environment variable or inject it from your secrets manager. This lets you use the same key across multiple services while keeping it out of your codebase.</p>
 
@@ -282,7 +282,7 @@
 
 <h2>The One-Line Shortcut: air-trust</h2>
 
-<p>Building all of this from scratch is educational. Maintaining it across five agent frameworks is not. That's why I built <a href="https://pypi.org/project/air-trust/">air-trust</a> &mdash; a single package that handles the chain, storage, key management, framework adapters, and verification CLI.</p>
+<p>Building all of this from scratch is educational. Maintaining it across five agent frameworks is not. That's why I built <a href="https://pypi.org/project/air-trust/">air-trust</a> - a single package that handles the chain, storage, key management, framework adapters, and verification CLI.</p>
 
 <pre><code>pip install air-trust</code></pre>
 
@@ -401,7 +401,7 @@ jobs:
   </tbody>
 </table>
 
-<p>The trust layer sits between your agent framework and the LLM provider. It doesn't modify the agent's behavior &mdash; it observes and records. Your existing SIEM handles alerting and dashboards. The audit chain handles regulatory proof.</p>
+<p>The trust layer sits between your agent framework and the LLM provider. It doesn't modify the agent's behavior - it observes and records. Your existing SIEM handles alerting and dashboards. The audit chain handles regulatory proof.</p>
 
 <h2>Common Mistakes</h2>
 
