@@ -1,7 +1,7 @@
 """
-AIR Blackbox Pro — Stripe Webhook Handler
-Handles: checkout.session.completed → provision VPS
-         customer.subscription.deleted → tear down VPS
+AIR Blackbox Pro - Stripe Webhook Handler
+Handles: checkout.session.completed -> provision VPS
+         customer.subscription.deleted -> tear down VPS
 
 Deployed as a Vercel serverless function at /api/webhook
 """
@@ -375,6 +375,12 @@ def do_request(method, path, data=None):
 
 def create_droplet(slug, gateway_key):
     """Create a DigitalOcean droplet with the Pro deploy script."""
+    # Generate secrets in Python so they are interpolated correctly.
+    # SECURITY: Never use quoted heredocs ('EOF') with shell variables -
+    # the quotes suppress interpolation and write literal $VAR strings.
+    trust_key = secrets.token_hex(32)
+    minio_password = secrets.token_hex(16)
+
     user_data = f"""#!/bin/bash
 set -e
 
@@ -382,21 +388,15 @@ set -e
 curl -fsSL https://get.docker.com | sh
 
 # Clone the gateway repo
-git clone https://github.com/airblackbox/airblackbox.git /opt/airblackbox
+git clone https://github.com/airblackbox/gateway.git /opt/airblackbox
 cd /opt/airblackbox
 
-# Generate keys
-export TRUST_SIGNING_KEY=$(openssl rand -hex 32)
-export MINIO_ROOT_USER=airblackbox
-export MINIO_ROOT_PASSWORD=$(openssl rand -hex 16)
-export GATEWAY_KEY={gateway_key}
-
-# Write .env file
-cat > .env << 'ENVEOF'
-TRUST_SIGNING_KEY=$TRUST_SIGNING_KEY
-MINIO_ROOT_USER=$MINIO_ROOT_USER
-MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD
-GATEWAY_KEY=$GATEWAY_KEY
+# Write .env file (secrets generated server-side, not on the VPS)
+cat > .env <<ENVEOF
+TRUST_SIGNING_KEY={trust_key}
+MINIO_ROOT_USER=airblackbox
+MINIO_ROOT_PASSWORD={minio_password}
+GATEWAY_KEY={gateway_key}
 ENVEOF
 
 # Start the Pro stack
