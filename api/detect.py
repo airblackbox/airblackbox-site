@@ -1,5 +1,5 @@
 """
-AIR Blackbox — Shadow AI Detection API
+AIR Blackbox - Shadow AI Detection API
 
 Vercel serverless function that analyzes text for AI-generated
 content across any industry. Returns a confidence score and
@@ -10,14 +10,14 @@ Body: { "text": "...", "context": "legal_brief" }
 Returns: { "score": 0.82, "verdict": "likely_ai", "signals": [...], ... }
 
 Supported contexts:
-  hiring        — recruiter notes, candidate evaluations, screening
-  legal         — briefs, memos, contract analysis, case summaries
-  finance       — analyst reports, risk assessments, filings
-  healthcare    — clinical notes, chart documentation, referrals
-  insurance     — claims assessments, policy analysis, adjustments
-  customer_support — ticket responses, escalation notes
-  education     — student evaluations, academic assessments
-  general       — any professional text
+  hiring        - recruiter notes, candidate evaluations, screening
+  legal         - briefs, memos, contract analysis, case summaries
+  finance       - analyst reports, risk assessments, filings
+  healthcare    - clinical notes, chart documentation, referrals
+  insurance     - claims assessments, policy analysis, adjustments
+  customer_support - ticket responses, escalation notes
+  education     - student evaluations, academic assessments
+  general       - any professional text
 
 Detection approach: statistical feature extraction (no external ML
 dependencies). Catches LLM writing patterns through:

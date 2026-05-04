@@ -543,7 +543,7 @@
 
             <p>Integrity proves records were not changed after being written. Completeness proves records were not dropped or silently deleted from a session. They are independent properties: a chain can have perfect integrity (no modified records) while being incomplete (missing records that were quietly removed). For EU AI Act Article 12 compliance, you need both.</p>
 
-            <p>Imagine an AI agent that makes six tool calls in a session. Your audit chain records all six. Each record is HMAC-signed and chained to the previous one. If an auditor asks "was this log tampered with?", you can answer confidently: no, the chain is intact. But what if one of those calls — the one that accessed a customer database — was quietly removed before the auditor arrived? The remaining five records still verify. The chain is intact. The log is incomplete.</p>
+            <p>Imagine an AI agent that makes six tool calls in a session. Your audit chain records all six. Each record is HMAC-signed and chained to the previous one. If an auditor asks "was this log tampered with?", you can answer confidently: no, the chain is intact. But what if one of those calls - the one that accessed a customer database - was quietly removed before the auditor arrived? The remaining five records still verify. The chain is intact. The log is incomplete.</p>
 
             <p>For Article 12, this matters. The regulation requires that high-risk AI systems maintain logs that "enable the monitoring of the operation." Monitoring means seeing everything. If an operator can delete inconvenient records without detection, the logging requirement is satisfied in letter but not in spirit.</p>
 
@@ -571,9 +571,9 @@
             <p>A session also gets three lifecycle record types:</p>
 
             <ul>
-                <li><strong><code>session_start</code></strong> — Must be the first record in the session. Establishes the session boundary.</li>
-                <li><strong><code>checkpoint</code></strong> — Optional waypoints during the session. Useful for long-running agent loops.</li>
-                <li><strong><code>session_end</code></strong> — Should be the last record. A missing <code>session_end</code> means the session crashed or was interrupted — the verifier flags it.</li>
+                <li><strong><code>session_start</code></strong> - Must be the first record in the session. Establishes the session boundary.</li>
+                <li><strong><code>checkpoint</code></strong> - Optional waypoints during the session. Useful for long-running agent loops.</li>
+                <li><strong><code>session_end</code></strong> - Should be the last record. A missing <code>session_end</code> means the session crashed or was interrupted - the verifier flags it.</li>
             </ul>
         </section>
 
@@ -628,7 +628,7 @@
         <section>
             <h2>How Do You Add Completeness Detection to Your Agent?</h2>
 
-            <p>Install or upgrade to <code>air-trust</code> v0.5.0 with <code>pip install air-trust==0.5.0</code>. If you already use <code>air_trust.session()</code>, you get completeness for free. Every event written inside the session block automatically gets a <code>session_id</code> and sequence numbers — including adapter events from wrapped LLM clients.</p>
+            <p>Install or upgrade to <code>air-trust</code> v0.5.0 with <code>pip install air-trust==0.5.0</code>. If you already use <code>air_trust.session()</code>, you get completeness for free. Every event written inside the session block automatically gets a <code>session_id</code> and sequence numbers - including adapter events from wrapped LLM clients.</p>
 
 <pre><code>import air_trust
 
@@ -685,7 +685,7 @@ python3 -m air_trust verify --json</code></pre>
 
             <p>Session completeness closes the single-agent gap. The next frontier is <strong>cross-agent attestation</strong>: when Agent A calls Agent B, can both sides prove the handoff happened? That requires bilateral signatures (Ed25519, not HMAC), a signed envelope protocol, and a way to correlate audit records across system boundaries. <a href="/blog/proving-the-handoff">air-trust v0.6.0 adds signed handoffs</a> as the first step toward this goal.</p>
 
-            <p>If cross-agent attestation or co-attestation is something you need, <a href="https://github.com/airblackbox/air-trust/discussions">open a discussion on GitHub</a> — that signal influences the roadmap.</p>
+            <p>If cross-agent attestation or co-attestation is something you need, <a href="https://github.com/airblackbox/air-trust/discussions">open a discussion on GitHub</a> - that signal influences the roadmap.</p>
         </section>
 
         <!-- FAQ Section -->

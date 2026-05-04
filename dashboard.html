@@ -1067,7 +1067,7 @@
                 <div class="panel-header">Active Agents</div>
                 <div class="agent-list" id="agentList">
                     <div class="empty-state" style="font-size: 12px; padding: 20px;">
-                        <div class="empty-state-icon" style="font-size: 32px;">—</div>
+                        <div class="empty-state-icon" style="font-size: 32px;">-</div>
                         <div>No agents</div>
                     </div>
                 </div>
@@ -1192,10 +1192,10 @@
                 'Notion API: added task to project board'
             ],
             'api-request': [
-                'POST /api/slack/send — notified #sales channel',
-                'GET /api/hubspot/contacts/search — queried contacts',
-                'POST /api/stripe/charges — processed payment',
-                'PUT /api/crm/records/{id} — updated record'
+                'POST /api/slack/send - notified #sales channel',
+                'GET /api/hubspot/contacts/search - queried contacts',
+                'POST /api/stripe/charges - processed payment',
+                'PUT /api/crm/records/{id} - updated record'
             ],
             'email': [
                 'Sent proposal to {contact}@{company}.com (3 attachments)',
@@ -1210,7 +1210,7 @@
                 'Cached product_catalog_latest.json (156KB)'
             ],
             'database': [
-                'INSERT INTO audit_log — logged decision #{id}',
+                'INSERT INTO audit_log - logged decision #{id}',
                 'UPDATE accounts SET stage = negotiation WHERE id = {id}',
                 'SELECT * FROM interactions WHERE contact_id = {id}',
                 'DELETE old_cache WHERE expiry < NOW()'
@@ -1406,8 +1406,8 @@
             const timestamp = new Date(event.timestamp);
             const agent = AGENTS[event.agent] || { name: event.agent, className: 'agent-custom' };
 
-            const tokenStr = event.tokens ? event.tokens.toLocaleString() : '—';
-            const costStr = event.cost ? '$' + event.cost.toFixed(4) : '—';
+            const tokenStr = event.tokens ? event.tokens.toLocaleString() : '-';
+            const costStr = event.cost ? '$' + event.cost.toFixed(4) : '-';
 
             el.innerHTML = `
                 <div class="event-header">
@@ -1442,7 +1442,7 @@
             const agents = Object.values(AGENTS);
 
             if (agents.length === 0) {
-                agentList.innerHTML = '<div class="empty-state" style="font-size: 12px; padding: 20px;"><div class="empty-state-icon" style="font-size: 32px;">—</div><div>No agents</div></div>';
+                agentList.innerHTML = '<div class="empty-state" style="font-size: 12px; padding: 20px;"><div class="empty-state-icon" style="font-size: 32px;">-</div><div>No agents</div></div>';
                 return;
             }
 
@@ -1579,7 +1579,7 @@
                         id: 'kill-' + Date.now(),
                         agent: STATE.killSwitchTarget,
                         type: 'api-request',
-                        description: `Kill switch activated — agent "${STATE.killSwitchTarget}" paused`,
+                        description: `Kill switch activated - agent "${STATE.killSwitchTarget}" paused`,
                         timestamp: new Date().toISOString(),
                         risk: 'medium',
                         hash: generateHash()
@@ -1621,7 +1621,7 @@
                         document.getElementById('statChain').textContent = 'Valid';
                     } else {
                         chainStatus.className = 'chain-status invalid';
-                        chainStatus.textContent = 'Chain Broken ✗ — ' + (data.message || 'tampering detected');
+                        chainStatus.textContent = 'Chain Broken ✗ - ' + (data.message || 'tampering detected');
                         document.getElementById('statChain').textContent = 'Invalid';
                     }
                     return;
@@ -1640,7 +1640,7 @@
                 document.getElementById('statChain').textContent = 'Valid';
             } else {
                 chainStatus.className = 'chain-status invalid';
-                chainStatus.textContent = 'Chain Broken ✗ — demo mode';
+                chainStatus.textContent = 'Chain Broken ✗ - demo mode';
                 document.getElementById('statChain').textContent = 'Invalid';
             }
         }
@@ -1707,7 +1707,7 @@
                 id: 'limit-' + Date.now(),
                 agent: 'air-controls',
                 type: 'api-request',
-                description: `TOKEN LIMIT REACHED (${(STATE.tokenLimit / 1000).toFixed(0)}K) — All agents automatically stopped to prevent overcost. Total spend: $${STATE.totalCost.toFixed(2)}`,
+                description: `TOKEN LIMIT REACHED (${(STATE.tokenLimit / 1000).toFixed(0)}K) - All agents automatically stopped to prevent overcost. Total spend: $${STATE.totalCost.toFixed(2)}`,
                 timestamp: new Date().toISOString(),
                 tokens: 0,
                 cost: 0,
@@ -1837,7 +1837,7 @@
             STATE.lastSync = new Date();
             renderFilterChips();
 
-            // Demo mode is on by default — seed initial events
+            // Demo mode is on by default - seed initial events
             if (STATE.demoMode) {
                 STATE.connected = true;
                 updateConnectionStatus();

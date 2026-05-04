@@ -254,27 +254,27 @@
   <h2>Key Takeaways</h2>
   <ul>
     <li>Article 11 requires a unified technical file covering system design, risk management, testing, monitoring, and cross-references to Articles 9, 10, 12, 14, and 15.</li>
-    <li>Annex IV lists 10 specific items regulators will check — from training data provenance to incident response procedures.</li>
+    <li>Annex IV lists 10 specific items regulators will check - from training data provenance to incident response procedures.</li>
     <li>Model cards defined as Python dataclasses satisfy three Annex IV items (data, model, performance) and stay version-controlled.</li>
-    <li>Auto-generating documentation from compliance scans in CI/CD prevents documentation drift — the top reason audits fail.</li>
+    <li>Auto-generating documentation from compliance scans in CI/CD prevents documentation drift - the top reason audits fail.</li>
     <li>Regulators expect a single integrated file, not five separate documents for each article.</li>
   </ul>
 </div>
 
 <h2>What Does Article 11 Actually Require?</h2>
 
-<p>Article 11 mandates that before deployment, providers of high-risk AI systems must have technical documentation covering seven areas: system description, design specifications, development process, risk management measures, monitoring and testing plans, change history, and compliance cross-references to other articles. The documentation must be kept up to date throughout the system's operational lifetime — it is not a one-time deliverable.</p>
+<p>Article 11 mandates that before deployment, providers of high-risk AI systems must have technical documentation covering seven areas: system description, design specifications, development process, risk management measures, monitoring and testing plans, change history, and compliance cross-references to other articles. The documentation must be kept up to date throughout the system's operational lifetime - it is not a one-time deliverable.</p>
 
 <p>The specifics break down into these required elements:</p>
 
 <ol>
-  <li><strong>System description</strong> — What the system does, what problem it solves, which users it serves</li>
-  <li><strong>Design specifications</strong> — Architecture, data pipelines, model selection rationale, training data characteristics</li>
-  <li><strong>Development process</strong> — How the system was built, tested, validated, and approved for deployment</li>
-  <li><strong>Risk management measures</strong> — Tied directly to <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Article 9</a> risk assessments: what risks were identified and how you mitigated them</li>
-  <li><strong>Monitoring and testing</strong> — What you measure post-deployment, how you detect failures, what triggers alerts</li>
-  <li><strong>Changes and updates</strong> — Version control for the entire system lifecycle, including data updates, model retraining, and configuration changes</li>
-  <li><strong>Compliance cross-references</strong> — How the system satisfies Articles 9, 10, <a href="/blog/audit-trails-ai-agents-python">12</a>, 14, and 15</li>
+  <li><strong>System description</strong> - What the system does, what problem it solves, which users it serves</li>
+  <li><strong>Design specifications</strong> - Architecture, data pipelines, model selection rationale, training data characteristics</li>
+  <li><strong>Development process</strong> - How the system was built, tested, validated, and approved for deployment</li>
+  <li><strong>Risk management measures</strong> - Tied directly to <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Article 9</a> risk assessments: what risks were identified and how you mitigated them</li>
+  <li><strong>Monitoring and testing</strong> - What you measure post-deployment, how you detect failures, what triggers alerts</li>
+  <li><strong>Changes and updates</strong> - Version control for the entire system lifecycle, including data updates, model retraining, and configuration changes</li>
+  <li><strong>Compliance cross-references</strong> - How the system satisfies Articles 9, 10, <a href="/blog/audit-trails-ai-agents-python">12</a>, 14, and 15</li>
 </ol>
 
 <p>The key insight: this is not documentation about compliance. It is documentation that proves compliance. Every requirement from Articles 9 through 15 should map to a specific section in your technical file.</p>
@@ -305,7 +305,7 @@
 
 <h2>How Do You Build a Model Card in Python?</h2>
 
-<p>A model card is a structured summary of what a model does, what data trained it, and how it performs. Defining it as a Python dataclass satisfies Annex IV items 2 (data description), 3 (model architecture), and 5 (performance testing) in a single version-controlled artifact. When the model changes, the dataclass changes with it — no separate document to update.</p>
+<p>A model card is a structured summary of what a model does, what data trained it, and how it performs. Defining it as a Python dataclass satisfies Annex IV items 2 (data description), 3 (model architecture), and 5 (performance testing) in a single version-controlled artifact. When the model changes, the dataclass changes with it - no separate document to update.</p>
 
 <pre><code><span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass
 <span class="keyword">from</span> typing <span class="keyword">import</span> Optional
@@ -480,7 +480,7 @@ arch_doc = <span class="string">f"""
 
 <h2>How Do You Automate the Full Documentation Pipeline?</h2>
 
-<p>Treat documentation generation as a CI/CD step, not a quarterly chore. The most common reason Article 11 audits fail is documentation drift — the technical file says one thing and the code does another. Automating the pipeline eliminates this gap by generating documentation from authoritative sources (code, config, scan results) on every deployment.</p>
+<p>Treat documentation generation as a CI/CD step, not a quarterly chore. The most common reason Article 11 audits fail is documentation drift - the technical file says one thing and the code does another. Automating the pipeline eliminates this gap by generating documentation from authoritative sources (code, config, scan results) on every deployment.</p>
 
 <pre><code><span class="keyword">from</span> air_compliance <span class="keyword">import</span> scan_project, generate_documentation
 <span class="keyword">import</span> json
@@ -523,9 +523,9 @@ tech_file.to_pdf(
 
 <ul>
   <li><strong>Versioned in Git:</strong> Every documentation change is tracked, reviewed, and approved before deployment</li>
-  <li><strong>Tested in CI/CD:</strong> Run <code>air-compliance</code> on every commit — if code changes but documentation is not updated, the build fails</li>
-  <li><strong>Auto-generated where possible:</strong> Model cards, architecture diagrams, performance metrics, risk matrices — all derived from authoritative sources</li>
-  <li><strong>Human-written where necessary:</strong> System purpose, intended use cases, failure mitigation strategies — these are written by engineers and reviewed by auditors</li>
+  <li><strong>Tested in CI/CD:</strong> Run <code>air-compliance</code> on every commit - if code changes but documentation is not updated, the build fails</li>
+  <li><strong>Auto-generated where possible:</strong> Model cards, architecture diagrams, performance metrics, risk matrices - all derived from authoritative sources</li>
+  <li><strong>Human-written where necessary:</strong> System purpose, intended use cases, failure mitigation strategies - these are written by engineers and reviewed by auditors</li>
   <li><strong>Linked to source:</strong> Every statement in your technical file should reference the code, config, or test that backs it up</li>
 </ul>
 
@@ -533,17 +533,17 @@ tech_file.to_pdf(
 
 <h2>What Are the Most Common Documentation Gaps?</h2>
 
-<p>Five documentation gaps cause the majority of Article 11 audit failures. Each has a straightforward fix, but you need to address them before the <a href="/blog/eu-ai-act-august-2026-deadline">August 2026 deadline</a> — not after a regulator flags them.</p>
+<p>Five documentation gaps cause the majority of Article 11 audit failures. Each has a straightforward fix, but you need to address them before the <a href="/blog/eu-ai-act-august-2026-deadline">August 2026 deadline</a> - not after a regulator flags them.</p>
 
 <p><strong>No versioning.</strong> You update your model, but the technical file is still v1.0 from last year. Fix: link version numbers to Git tags and generate documentation per release.</p>
 
 <p><strong>No risk assessment linkage.</strong> Your Article 9 risk register is separate from Article 11 documentation. Regulators see the risks but not how you mitigated them in your actual system. Fix: every risk in Article 9 must have a corresponding mitigation in Article 11 (code, test, monitoring rule).</p>
 
-<p><strong>No lifecycle updates.</strong> Documentation frozen at deployment while the real system changes — data drifts, models get retrained, configs evolve. Fix: quarterly documentation reviews and automated monitoring for changes that require doc updates.</p>
+<p><strong>No lifecycle updates.</strong> Documentation frozen at deployment while the real system changes - data drifts, models get retrained, configs evolve. Fix: quarterly documentation reviews and automated monitoring for changes that require doc updates.</p>
 
 <p><strong>Performance data from dev, not production.</strong> Your accuracy is 92% in tests but 84% in production. If regulators find a gap, credibility dies. Fix: include both test-set performance and real-world performance, and explain the gap.</p>
 
-<p><strong>Monitoring plans with no implementation.</strong> You document that you will monitor accuracy drift, but nothing actually does it. Fix: documentation should link to actual monitoring code — if you say you will alert on drift &gt; 3%, show the code that does it.</p>
+<p><strong>Monitoring plans with no implementation.</strong> You document that you will monitor accuracy drift, but nothing actually does it. Fix: documentation should link to actual monitoring code - if you say you will alert on drift &gt; 3%, show the code that does it.</p>
 
 <section class="faq-section">
 <h2>Frequently Asked Questions</h2>

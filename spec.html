@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audit Chain Specification v1.0 — AIR Blackbox</title>
+    <title>Audit Chain Specification v1.0 - AIR Blackbox</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta name="description" content="Technical specification for the HMAC-SHA256 Audit Chain v1.0. Tamper-evident, cryptographically linked record structure for AI agent compliance logging. EU AI Act Article 12 record-keeping.">
     <meta name="keywords" content="HMAC-SHA256 audit chain, tamper-evident audit trail specification, AI agent logging spec, EU AI Act Article 12, cryptographic audit chain, AI compliance specification, air.json format, audit chain verification">
     <link rel="canonical" href="https://airblackbox.ai/spec">
-    <meta property="og:title" content="Audit Chain Specification v1.0 — AIR Blackbox">
+    <meta property="og:title" content="Audit Chain Specification v1.0 - AIR Blackbox">
     <meta property="og:description" content="Tamper-evident audit chain format for AI agent compliance. HMAC-SHA256 signatures and blockchain-style chain linking.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://airblackbox.ai/spec">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Audit Chain Specification v1.0 — AIR Blackbox">
+    <meta name="twitter:title" content="Audit Chain Specification v1.0 - AIR Blackbox">
     <meta name="twitter:description" content="HMAC-SHA256 audit chain specification for AIR Blackbox. Technical spec for tamper-evident AI compliance logging.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -421,7 +421,7 @@
 <!-- Overview Section -->
 <section>
     <div class="container">
-        <div class="status-badge">Open Standard — v1.0.0 — March 2026</div>
+        <div class="status-badge">Open Standard - v1.0.0 - March 2026</div>
 
         <h2 class="section-title">Overview</h2>
         <div class="content-block">
@@ -804,7 +804,7 @@ def verify_audit_chain(
     <div class="container">
         <h2 class="section-title">Comparison with Other Approaches</h2>
         <div class="content-block">
-            <p>The AIR Audit Chain Specification was developed independently and prior to the publication of AEGIS (arXiv:2603.12621, March 2026), an academic pre-execution firewall for AI agents that uses Ed25519 signatures with SHA-256 hash chaining. The convergence on similar architectural patterns — interception-layer placement, tamper-evident chain linking, and cryptographic audit trails — validates the approach as the emerging standard for AI agent governance.</p>
+            <p>The AIR Audit Chain Specification was developed independently and prior to the publication of AEGIS (arXiv:2603.12621, March 2026), an academic pre-execution firewall for AI agents that uses Ed25519 signatures with SHA-256 hash chaining. The convergence on similar architectural patterns - interception-layer placement, tamper-evident chain linking, and cryptographic audit trails - validates the approach as the emerging standard for AI agent governance.</p>
         </div>
 
         <table class="spec-table">
@@ -862,7 +862,7 @@ def verify_audit_chain(
                 </tr>
                 <tr>
                     <td>Compliance drift detection</td>
-                    <td style="color: var(--green);">48 checks in CI/CD</td>
+                    <td style="color: var(--green);">51 checks in CI/CD</td>
                     <td style="color: var(--red);">No</td>
                     <td style="color: var(--red);">No</td>
                     <td style="color: var(--red);">No</td>
@@ -902,7 +902,7 @@ def verify_audit_chain(
     <div class="container">
         <h2 class="section-title">Adopt This Specification</h2>
         <div class="content-block">
-            <p>The AIR Audit Chain Specification is available under Apache 2.0. If you implement this spec in your tool or framework, we'll list you as a compatible implementation. This is an open standard — the goal is interoperability across the AI governance ecosystem.</p>
+            <p>The AIR Audit Chain Specification is available under Apache 2.0. If you implement this spec in your tool or framework, we'll list you as a compatible implementation. This is an open standard - the goal is interoperability across the AI governance ecosystem.</p>
         </div>
         <div style="display: flex; gap: 16px; flex-wrap: wrap;">
             <a href="https://github.com/airblackbox/airblackbox" target="_blank" style="display: inline-block; background: var(--accent); color: #000; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none;">Reference Implementation on GitHub</a>

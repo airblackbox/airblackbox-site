@@ -1,5 +1,5 @@
 """
-AIR Blackbox — Policy Verification API
+AIR Blackbox - Policy Verification API
 
 Vercel serverless function that checks whether an AI action
 (tool call, model usage, provider) is allowed by a company's

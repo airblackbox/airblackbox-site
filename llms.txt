@@ -12,7 +12,7 @@ Enterprise governance platforms (Credo AI, Holistic AI, OneTrust) audit after th
 
 - **Verify** -- HMAC-SHA256 tamper-evident audit chains for decision traceability
 - **Filter** -- PII detection and prompt injection scanning in real time
-- **Stabilize** -- 48 compliance checks in CI/CD for operational drift detection
+- **Stabilize** -- 51 compliance checks in CI/CD for operational drift detection
 - **Protect** -- Human oversight attestation (Art. 14 delegation logging)
 
 ## Key Links

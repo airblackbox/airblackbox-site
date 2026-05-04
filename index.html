@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIR Blackbox — The Flight Recorder for Autonomous AI Agents</title>
+    <title>AIR Blackbox - The Flight Recorder for Autonomous AI Agents</title>
     <meta name="description" content="Open-source trust infrastructure for AI. ML-DSA-65 quantum-safe signing, HMAC-SHA256 tamper-evident audit chains, self-verifying evidence bundles. Trust layers for 7 frameworks. 48 EU AI Act + GDPR compliance checks. Prompt injection detection, GDPR scanning, bias detection, ISO 42001 + NIST AI RMF crosswalk. Article 12 Compliance Layer with static + runtime analysis. Runs locally. pip install air-blackbox.">
     <meta name="keywords" content="EU AI Act compliance, AI agent audit trail, tamper-evident logging, AI compliance scanner, Python AI governance, LangChain compliance, CrewAI compliance, OpenAI SDK compliance, Claude Agent SDK, Anthropic compliance, Google ADK, AI risk management, Article 9, Article 10, Article 11, Article 12, Article 14, Article 15, HMAC audit chain, AI agent security, prompt injection detection, PII detection, open source AI compliance, AI Act August 2026, air-blackbox, pip install air-blackbox, AI bill of materials, AIBOM, AI observability, MCP server compliance, GDPR AI compliance, AI bias detection, AI fairness scanner, ISO 42001, NIST AI RMF, agent-to-agent compliance, A2A protocol, evidence bundle, pre-commit AI compliance, standards crosswalk">
-    <meta property="og:title" content="AIR Blackbox — The Flight Recorder for Autonomous AI Agents">
+    <meta property="og:title" content="AIR Blackbox - The Flight Recorder for Autonomous AI Agents">
     <meta property="og:description" content="Record, replay, enforce, audit. Open-source flight recorder for autonomous AI agents. HMAC-SHA256 tamper-evident chains, EU AI Act gap analysis, 7 framework trust layers. Runs locally.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://airblackbox.ai">
     <meta property="og:image" content="https://airblackbox.ai/og-image.svg">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="AIR Blackbox — The Flight Recorder for Autonomous AI Agents">
+    <meta name="twitter:title" content="AIR Blackbox - The Flight Recorder for Autonomous AI Agents">
     <meta name="twitter:description" content="Record, replay, enforce, audit. Open-source flight recorder for autonomous AI agents. EU AI Act ready. 7 frameworks. Runs locally. Free.">
     <link rel="canonical" href="https://airblackbox.ai">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -23,7 +23,7 @@
       "name": "AIR Blackbox",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Cross-platform",
-      "description": "Open-source EU AI Act compliance scanner for Python AI agents. 48 checks across Articles 9-12, 14-15 + GDPR, GDPR scanning, bias detection, prompt injection detection, ISO 42001 and NIST AI RMF crosswalk. ML-DSA-65 quantum-safe signing. Self-verifying evidence bundles. Trust layers for 7 frameworks.",
+      "description": "Open-source EU AI Act compliance scanner for Python AI agents. 51 checks across Articles 9-12, 14-15 + GDPR, GDPR scanning, bias detection, prompt injection detection, ISO 42001 and NIST AI RMF crosswalk. ML-DSA-65 quantum-safe signing. Self-verifying evidence bundles. Trust layers for 7 frameworks.",
       "url": "https://airblackbox.ai",
       "downloadUrl": "https://pypi.org/project/air-blackbox/",
       "softwareVersion": "1.10.0",
@@ -50,7 +50,7 @@
       },
       "featureList": [
         "48 EU AI Act + GDPR compliance checks (Articles 9-12, 14-15)",
-        "Article 12 Compliance Layer — static + runtime analysis for tamper-evident logging",
+        "Article 12 Compliance Layer - static + runtime analysis for tamper-evident logging",
         "ML-DSA-65 (FIPS 204) quantum-safe digital signatures",
         "HMAC-SHA256 tamper-evident audit chains",
         "Self-verifying .air-evidence bundles for auditors",
@@ -104,7 +104,7 @@
           "name": "How does two-tier scoring work?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Two-tier scoring separates the 48 checks into two categories: 41 Static checks analyze code patterns, documentation, and configuration that can be verified from source code alone. 7 Runtime checks require a running gateway or trust layer to verify. This gives teams a realistic compliance score even without the full gateway deployed."
+            "text": "Two-tier scoring separates the 51 checks into two categories: 44 Static checks analyze code patterns, documentation, and configuration that can be verified from source code alone. 7 Runtime checks require a running gateway or trust layer to verify. This gives teams a realistic compliance score even without the full gateway deployed."
           }
         },
         {
@@ -120,7 +120,7 @@
           "name": "What frameworks does AIR Blackbox support?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "AIR Blackbox has trust layer integrations for 7 frameworks: LangChain, CrewAI, OpenAI Agents SDK, Google ADK, Claude Agent SDK, AutoGen, and Haystack — plus a standalone air-openai-trust SDK. 4 PyPI packages: air-blackbox, air-trust, air-openai-trust, and air-blackbox-mcp. The compliance scanner works on any Python AI code regardless of framework. There's also an MCP server for Claude Desktop and Cursor integration."
+            "text": "AIR Blackbox has trust layer integrations for 7 frameworks: LangChain, CrewAI, OpenAI Agents SDK, Google ADK, Claude Agent SDK, AutoGen, and Haystack - plus a standalone air-openai-trust SDK. 4 PyPI packages: air-blackbox, air-trust, air-openai-trust, and air-blackbox-mcp. The compliance scanner works on any Python AI code regardless of framework. There's also an MCP server for Claude Desktop and Cursor integration."
           }
         },
         {
@@ -144,7 +144,7 @@
           "name": "What is the HMAC-SHA256 audit chain?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Every AI action logged through the AIR gateway or trust layers is written as a tamper-evident .air.json record. Each record is linked to the previous one via HMAC-SHA256 cryptographic hashes — creating a blockchain-style chain without the blockchain. If anyone modifies a record after the fact, the hash chain breaks and the tampering is detectable."
+            "text": "Every AI action logged through the AIR gateway or trust layers is written as a tamper-evident .air.json record. Each record is linked to the previous one via HMAC-SHA256 cryptographic hashes - creating a blockchain-style chain without the blockchain. If anyone modifies a record after the fact, the hash chain breaks and the tampering is detectable."
           }
         }
       ]
@@ -344,7 +344,7 @@
     <header><nav>
         <div class="logo">AIR <span>Blackbox</span></div>
         <div class="nav-links">
-            <a href="/scan" style="color:#fbbf24;font-weight:600">Scan</a>
+            <a href="/console/scan" style="color:#fbbf24;font-weight:600">Scan</a>
             <a href="#features">Features</a>
             <a href="/which-product">Which Product</a>
             <a href="/blog/">Blog</a>
@@ -361,10 +361,10 @@
         <div class="deadline" id="countdown"></div>
         <script>(function(){var d=document.getElementById('countdown');var days=Math.ceil((new Date('2026-08-02')-new Date())/(1000*60*60*24));d.textContent='\u26A0 '+days+' DAYS TO EU AI ACT HIGH-RISK DEADLINE';})()</script>
         <h1>The <span class="highlight">flight recorder</span><br>for autonomous AI agents.</h1>
-        <p class="subtitle">Record. Replay. Enforce. Audit. Open-source, runs locally, ten seconds to your first scan. The tamper-evident record of every AI decision — before regulators, clients, or your board ever ask.</p>
+        <p class="subtitle">Record. Replay. Enforce. Audit. Open-source, runs locally, ten seconds to your first scan. The tamper-evident record of every AI decision - before regulators, clients, or your board ever ask.</p>
         <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox && air-blackbox comply --scan . -v').then(()=>this.textContent='Copied!')">pip install air-blackbox && air-blackbox comply --scan . -v</div>
         <div class="hero-links">
-            <a href="/scan" class="btn-primary">Run the Free Gap Scan</a>
+            <a href="/console/scan" class="btn-primary">Run the Free Gap Scan</a>
             <a href="#how-it-works" class="btn-secondary">See How It Works ↓</a>
         </div>
     </div></section>
@@ -373,17 +373,17 @@
     <section id="problem"><div class="container">
         <div class="section-label">The Real Problem</div>
         <h2 class="section-title">Nobody remembers why the AI did that.</h2>
-        <p class="section-desc">No audit trail. No replay. No evidence. When something goes wrong with an AI agent — and it will — most teams discover they have nothing to show a regulator, a client, or a board.</p>
+        <p class="section-desc">No audit trail. No replay. No evidence. When something goes wrong with an AI agent - and it will - most teams discover they have nothing to show a regulator, a client, or a board.</p>
         <div class="problem-grid">
             <div class="problem-card">
                 <div class="icon">&#x1F9E0;</div>
-                <h3>"Why did the AI recommend that?" — and nobody knows</h3>
+                <h3>"Why did the AI recommend that?" - and nobody knows</h3>
                 <p>Teams make faster decisions with weaker memory. No one remembers what the AI suggested vs. what the human chose, or what assumptions were true at the time. AIR Blackbox captures the logic path behind every AI-assisted decision.</p>
             </div>
             <div class="problem-card">
                 <div class="icon">&#x26A1;</div>
                 <h3>The AI handled something it should have handed off</h3>
-                <p>AI automates support, operations, and decisions — but failures happen when something that should have been escalated stays automated. AIR trust layers detect when AI output requires human judgment and route accordingly.</p>
+                <p>AI automates support, operations, and decisions - but failures happen when something that should have been escalated stays automated. AIR trust layers detect when AI output requires human judgment and route accordingly.</p>
             </div>
             <div class="problem-card">
                 <div class="icon">&#x1F4C9;</div>
@@ -403,7 +403,7 @@
             <div class="problem-card">
                 <div class="icon">&#x1F50D;</div>
                 <h3>The rough draft became the policy. Nobody caught it.</h3>
-                <p>AI flattens context aggressively — a rough draft becomes a policy, an internal brainstorm becomes customer-facing copy. AIR audit chains preserve the boundary between draft and final, speculative and approved.</p>
+                <p>AI flattens context aggressively - a rough draft becomes a policy, an internal brainstorm becomes customer-facing copy. AIR audit chains preserve the boundary between draft and final, speculative and approved.</p>
             </div>
         </div>
     </div></section>
@@ -412,7 +412,7 @@
     <section id="moat"><div class="container">
         <div class="section-label">Why AIR Blackbox</div>
         <h2 class="section-title">Security tools filter threats. We build the record of everything.</h2>
-        <p class="section-desc">Arthur AI, Lasso, and Lakera protect the input. When regulators audit the output — who said what, who approved it, whether anyone tampered with the log — they have nothing. AIR Blackbox does.</p>
+        <p class="section-desc">Arthur AI, Lasso, and Lakera protect the input. When regulators audit the output - who said what, who approved it, whether anyone tampered with the log - they have nothing. AIR Blackbox does.</p>
         <div class="problem-grid">
             <div class="problem-card" style="border-color: var(--accent);">
                 <div class="icon" style="font-size:1.2rem; color:var(--accent);">VERIFY</div>
@@ -422,12 +422,12 @@
             <div class="problem-card" style="border-color: var(--green);">
                 <div class="icon" style="font-size:1.2rem; color:var(--green);">FILTER</div>
                 <h3>PII &amp; Injection Scanning</h3>
-                <p>Automatically detect personal data leaking into prompts and prompt injection attempts — before they reach the model. Real-time, inside the call.</p>
+                <p>Automatically detect personal data leaking into prompts and prompt injection attempts - before they reach the model. Real-time, inside the call.</p>
             </div>
             <div class="problem-card" style="border-color: var(--yellow);">
                 <div class="icon" style="font-size:1.2rem; color:var(--yellow);">STABILIZE</div>
                 <h3>Drift Detection in CI/CD</h3>
-                <p>48 compliance checks run on every commit. Catch when your AI codebase drifts from EU AI Act, GDPR, ISO 42001, or your own policies — before it ships.</p>
+                <p>51 compliance checks run on every commit. Catch when your AI codebase drifts from EU AI Act, GDPR, ISO 42001, or your own policies - before it ships.</p>
             </div>
             <div class="problem-card" style="border-color: var(--red);">
                 <div class="icon" style="font-size:1.2rem; color:var(--red);">PROTECT</div>
@@ -512,12 +512,12 @@
             <div class="feature-card">
                 <div class="feature-category cat-trust">Trust Layer</div>
                 <h3>ML-DSA-65 Quantum-Safe Signing</h3>
-                <p>Evidence is signed with FIPS 204 ML-DSA-65 (Dilithium3) — a post-quantum digital signature algorithm. Signatures remain secure even against future quantum computers. Keys are generated locally and never leave your machine.</p>
+                <p>Evidence is signed with FIPS 204 ML-DSA-65 (Dilithium3) - a post-quantum digital signature algorithm. Signatures remain secure even against future quantum computers. Keys are generated locally and never leave your machine.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-category cat-trust">Trust Layer</div>
                 <h3>Self-Verifying Evidence Bundles</h3>
-                <p>One command generates a <code>.air-evidence</code> ZIP containing the audit chain, scan results, ML-DSA-65 signatures, and a standalone <code>verify.py</code> script. Auditor extracts, runs verify, gets pass/fail — no pip install needed.</p>
+                <p>One command generates a <code>.air-evidence</code> ZIP containing the audit chain, scan results, ML-DSA-65 signatures, and a standalone <code>verify.py</code> script. Auditor extracts, runs verify, gets pass/fail - no pip install needed.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-category cat-dx">Developer Experience</div>
@@ -571,7 +571,7 @@
     <section id="article-12"><div class="container">
         <div class="section-label">Article 12 Compliance Layer</div>
         <h2 class="section-title">One chain. One signer. One bundle. Tamper-evident logging for the EU AI Act.</h2>
-        <p class="section-desc">Article 12 requires high-risk AI systems to produce automatic logs that are tamper-evident, retained appropriately, and available for audit. AIR Blackbox doesn't just check for this — it <em>is</em> the infrastructure.</p>
+        <p class="section-desc">Article 12 requires high-risk AI systems to produce automatic logs that are tamper-evident, retained appropriately, and available for audit. AIR Blackbox doesn't just check for this - it <em>is</em> the infrastructure.</p>
         <div class="steps">
             <div class="step">
                 <div class="step-num">1</div>
@@ -586,7 +586,7 @@
             <div class="step">
                 <div class="step-num">3</div>
                 <h3>Evidence Bundle</h3>
-                <p>Everything gets packaged into a self-verifying <code>.air-evidence</code> ZIP. Auditor extracts it, runs <code>python verify.py</code> — gets PASS/FAIL in 2 seconds. No pip install needed.</p>
+                <p>Everything gets packaged into a self-verifying <code>.air-evidence</code> ZIP. Auditor extracts it, runs <code>python verify.py</code> - gets PASS/FAIL in 2 seconds. No pip install needed.</p>
             </div>
             <div class="step">
                 <div class="step-num">4</div>
@@ -652,7 +652,7 @@
             <div class="vertical-card">
                 <div class="industry">Legal</div>
                 <h3>Your associate used AI to draft the brief. Can you prove a human reviewed every line?</h3>
-                <p>Law firms using AI for contract review and brief drafting need to prove a human actually reviewed the output — not just rubber-stamped it. AIR trust layers create cryptographic human oversight attestation.</p>
+                <p>Law firms using AI for contract review and brief drafting need to prove a human actually reviewed the output - not just rubber-stamped it. AIR trust layers create cryptographic human oversight attestation.</p>
             </div>
             <div class="vertical-card">
                 <div class="industry">Enterprise AI Teams</div>
@@ -666,12 +666,12 @@
     <section id="validation"><div class="container">
         <div class="section-label">Independent Validation</div>
         <h2 class="section-title">The market is confirming this category.</h2>
-        <p class="section-desc">Three independent signals — academic research, analyst coverage, and market data — all point to the same conclusion.</p>
+        <p class="section-desc">Three independent signals - academic research, analyst coverage, and market data - all point to the same conclusion.</p>
         <div class="problem-grid">
             <div class="problem-card">
                 <div class="icon" style="font-size:0.9rem; color:var(--accent);">RESEARCH</div>
                 <h3>AEGIS (arXiv, March 2026)</h3>
-                <p>Academic researchers independently published the same interception-layer architecture for AI agent governance — pre-execution firewalls with tamper-evident audit chains. When academia converges on your approach, it validates the thesis. <a href="https://arxiv.org/abs/2603.12621" style="color:var(--accent)">Read the paper</a></p>
+                <p>Academic researchers independently published the same interception-layer architecture for AI agent governance - pre-execution firewalls with tamper-evident audit chains. When academia converges on your approach, it validates the thesis. <a href="https://arxiv.org/abs/2603.12621" style="color:var(--accent)">Read the paper</a></p>
             </div>
             <div class="problem-card">
                 <div class="icon" style="font-size:0.9rem; color:var(--green);">ANALYST</div>
@@ -702,22 +702,22 @@
             </thead>
             <tbody>
                 <tr style="border-bottom:1px solid var(--border)">
-                    <td style="padding:1rem;font-weight:600">Filter <span style="color:var(--text-dim);font-weight:400">— PII, injection, toxicity</span></td>
+                    <td style="padding:1rem;font-weight:600">Filter <span style="color:var(--text-dim);font-weight:400">- PII, injection, toxicity</span></td>
                     <td style="padding:1rem;text-align:center;color:var(--green);font-size:1.2rem">&#x2705;</td>
                     <td style="padding:1rem;text-align:center;color:var(--green);font-size:1.2rem">&#x2705;</td>
                 </tr>
                 <tr style="border-bottom:1px solid var(--border)">
-                    <td style="padding:1rem;font-weight:600">Verify <span style="color:var(--text-dim);font-weight:400">— tamper-evident decision traceability</span></td>
+                    <td style="padding:1rem;font-weight:600">Verify <span style="color:var(--text-dim);font-weight:400">- tamper-evident decision traceability</span></td>
                     <td style="padding:1rem;text-align:center;color:var(--red);font-size:1.2rem">&#x274C;</td>
                     <td style="padding:1rem;text-align:center;color:var(--green);font-size:1.2rem">&#x2705;</td>
                 </tr>
                 <tr style="border-bottom:1px solid var(--border)">
-                    <td style="padding:1rem;font-weight:600">Stabilize <span style="color:var(--text-dim);font-weight:400">— compliance drift detection in CI/CD</span></td>
+                    <td style="padding:1rem;font-weight:600">Stabilize <span style="color:var(--text-dim);font-weight:400">- compliance drift detection in CI/CD</span></td>
                     <td style="padding:1rem;text-align:center;color:var(--red);font-size:1.2rem">&#x274C;</td>
                     <td style="padding:1rem;text-align:center;color:var(--green);font-size:1.2rem">&#x2705;</td>
                 </tr>
                 <tr>
-                    <td style="padding:1rem;font-weight:600">Protect <span style="color:var(--text-dim);font-weight:400">— human oversight attestation</span></td>
+                    <td style="padding:1rem;font-weight:600">Protect <span style="color:var(--text-dim);font-weight:400">- human oversight attestation</span></td>
                     <td style="padding:1rem;text-align:center;color:var(--red);font-size:1.2rem">&#x274C;</td>
                     <td style="padding:1rem;text-align:center;color:var(--green);font-size:1.2rem">&#x2705;</td>
                 </tr>
@@ -784,7 +784,7 @@ client = OpenAI(
     <section id="commands"><div class="container">
         <div class="section-label">See It In Action</div>
         <h2 class="section-title">Four commands. Full coverage.</h2>
-        <p class="section-desc">Run this on any Python AI project and get a gap analysis report, shadow AI scan, replayable audit trail, and signed evidence package — in under 60 seconds.</p>
+        <p class="section-desc">Run this on any Python AI project and get a gap analysis report, shadow AI scan, replayable audit trail, and signed evidence package - in under 60 seconds.</p>
         <div class="commands-grid">
             <div class="cmd-card">
                 <div class="cmd-name">air-blackbox comply</div>
@@ -792,7 +792,7 @@ client = OpenAI(
             </div>
             <div class="cmd-card">
                 <div class="cmd-name">air-blackbox discover</div>
-                <div class="cmd-desc">Finds undeclared model calls hiding in utility functions and helpers — your shadow AI inventory.</div>
+                <div class="cmd-desc">Finds undeclared model calls hiding in utility functions and helpers - your shadow AI inventory.</div>
             </div>
             <div class="cmd-card">
                 <div class="cmd-name">air-blackbox replay</div>
@@ -800,7 +800,7 @@ client = OpenAI(
             </div>
             <div class="cmd-card">
                 <div class="cmd-name">air-blackbox export</div>
-                <div class="cmd-desc">Generates a cryptographically signed evidence package with AI-BOM, gap analysis report, and audit chain — structured for regulator review.</div>
+                <div class="cmd-desc">Generates a cryptographically signed evidence package with AI-BOM, gap analysis report, and audit chain - structured for regulator review.</div>
             </div>
         </div>
     </div></section>
@@ -809,7 +809,7 @@ client = OpenAI(
     <section id="pricing"><div class="container">
         <div class="section-label">Pricing</div>
         <h2 class="section-title">Open source core. Scale when you're ready.</h2>
-        <p class="section-desc">Same gap analysis engine at every tier. Enterprise gets air-gapped isolation — zero data leaves your network.</p>
+        <p class="section-desc">Same gap analysis engine at every tier. Enterprise gets air-gapped isolation - zero data leaves your network.</p>
 
         <!-- Social proof stats -->
         <div style="display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap;margin:2rem 0;padding:1.2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
@@ -844,7 +844,7 @@ client = OpenAI(
                 <div style="position:absolute;top:-10px;right:1.5rem;background:var(--accent);color:var(--bg-deep);font-size:0.7rem;font-weight:700;padding:0.2rem 0.8rem;border-radius:10px;text-transform:uppercase">Popular</div>
                 <div style="font-family:var(--mono);font-size:0.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:0.5rem">Pro</div>
                 <div style="font-size:2.2rem;font-weight:800;margin-bottom:0.3rem">$299<span style="font-size:1rem;font-weight:400;color:var(--text-dim)">/mo</span></div>
-                <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:1.5rem">hosted VPS — we manage it</div>
+                <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:1.5rem">hosted VPS - we manage it</div>
                 <div style="border-top:1px solid var(--border);padding-top:1.2rem;font-size:0.85rem;color:var(--text-secondary);line-height:2.2">
                     <div><span style="color:var(--green)">&#x2713;</span> Everything in Free</div>
                     <div><span style="color:var(--accent)">&#x2605;</span> Managed VPS deployment</div>
@@ -860,10 +860,10 @@ client = OpenAI(
             <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative">
                 <div style="font-family:var(--mono);font-size:0.75rem;color:var(--yellow);text-transform:uppercase;letter-spacing:2px;margin-bottom:0.5rem">Enterprise</div>
                 <div style="font-size:2.2rem;font-weight:800;margin-bottom:0.3rem">Custom</div>
-                <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:1.5rem">air-gapped — your infrastructure</div>
+                <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:1.5rem">air-gapped - your infrastructure</div>
                 <div style="border-top:1px solid var(--border);padding-top:1.2rem;font-size:0.85rem;color:var(--text-secondary);line-height:2.2">
                     <div><span style="color:var(--green)">&#x2713;</span> Everything in Pro</div>
-                    <div><span style="color:var(--yellow)">&#x1F512;</span> Air-gapped VPS — zero data leaves</div>
+                    <div><span style="color:var(--yellow)">&#x1F512;</span> Air-gapped VPS - zero data leaves</div>
                     <div><span style="color:var(--yellow)">&#x1F512;</span> On-prem / private cloud deploy</div>
                     <div><span style="color:var(--yellow)">&#x1F512;</span> Model baked into Docker image</div>
                     <div><span style="color:var(--yellow)">&#x1F512;</span> SOC 2 + ISO 27001 mapping</div>
@@ -879,15 +879,15 @@ client = OpenAI(
     <section id="deploy"><div class="container">
         <div class="section-label">Deployment</div>
         <h2 class="section-title">How it gets into your infrastructure.</h2>
-        <p class="section-desc">Free runs on your laptop. Pro and Enterprise run on dedicated servers — yours or ours.</p>
+        <p class="section-desc">Free runs on your laptop. Pro and Enterprise run on dedicated servers - yours or ours.</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-top:2rem">
             <!-- Free deploy -->
             <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem">
-                <div style="font-family:var(--mono);font-size:0.75rem;color:var(--green);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem">Free — Your Laptop</div>
+                <div style="font-family:var(--mono);font-size:0.75rem;color:var(--green);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem">Free - Your Laptop</div>
                 <div class="terminal" style="margin:0;max-width:100%"><div class="terminal-bar"><div class="terminal-dot" style="background:#f85149"></div><div class="terminal-dot" style="background:#d29922"></div><div class="terminal-dot" style="background:#3fb950"></div></div><div class="terminal-body" style="font-size:0.78rem">
 <span class="t-prompt">$</span> <span class="t-cmd">pip install air-blackbox</span>
 <span class="t-prompt">$</span> <span class="t-cmd">air-blackbox comply --scan .</span>
-<span class="t-dim">  48 checks across 6 EU AI Act articles + GDPR</span>
+<span class="t-dim">  51 checks across 6 EU AI Act articles + GDPR</span>
 <span class="t-prompt">$</span> <span class="t-cmd">air-blackbox export --format pdf</span>
 <span class="t-pass">  &#x2705; Report saved</span>
                 </div></div>
@@ -895,7 +895,7 @@ client = OpenAI(
             </div>
             <!-- Pro deploy -->
             <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem">
-                <div style="font-family:var(--mono);font-size:0.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem">Pro — We Manage It</div>
+                <div style="font-family:var(--mono);font-size:0.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem">Pro - We Manage It</div>
                 <div class="terminal" style="margin:0;max-width:100%"><div class="terminal-bar"><div class="terminal-dot" style="background:#f85149"></div><div class="terminal-dot" style="background:#d29922"></div><div class="terminal-dot" style="background:#3fb950"></div></div><div class="terminal-body" style="font-size:0.78rem">
 <span class="t-comment"># We deploy a VPS for your team</span>
 <span class="t-prompt">$</span> <span class="t-cmd">export AIR_GATEWAY=https://your-co.airblackbox.ai</span>
@@ -907,7 +907,7 @@ client = OpenAI(
             </div>
             <!-- Enterprise deploy -->
             <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem">
-                <div style="font-family:var(--mono);font-size:0.75rem;color:var(--yellow);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem">Enterprise — Your Infrastructure</div>
+                <div style="font-family:var(--mono);font-size:0.75rem;color:var(--yellow);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem">Enterprise - Your Infrastructure</div>
                 <div class="terminal" style="margin:0;max-width:100%"><div class="terminal-bar"><div class="terminal-dot" style="background:#f85149"></div><div class="terminal-dot" style="background:#d29922"></div><div class="terminal-dot" style="background:#3fb950"></div></div><div class="terminal-body" style="font-size:0.78rem">
 <span class="t-comment"># Your DevOps runs one script</span>
 <span class="t-prompt">$</span> <span class="t-cmd">bash deploy-enterprise.sh</span>
@@ -916,7 +916,7 @@ client = OpenAI(
 <span class="t-dim">  &#x2192; All ports bound to 127.0.0.1</span>
 <span class="t-pass">  &#x2705; Air-gapped. Zero external connections.</span>
                 </div></div>
-                <p style="color:var(--text-secondary);font-size:0.82rem;margin-top:1rem;line-height:1.7">Everything ships inside Docker — including the fine-tuned LLM. Deploy on-prem, in your VPC, or on an air-gapped server. No code or data ever leaves your network.</p>
+                <p style="color:var(--text-secondary);font-size:0.82rem;margin-top:1rem;line-height:1.7">Everything ships inside Docker - including the fine-tuned LLM. Deploy on-prem, in your VPC, or on an air-gapped server. No code or data ever leaves your network.</p>
             </div>
         </div>
         <!-- Deploy stats -->
@@ -955,7 +955,7 @@ client = OpenAI(
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does two-tier scoring work?</div>
-                <div class="faq-a">Two-tier scoring separates the 48 checks into two categories: 41 Static checks analyze code patterns, documentation, and configuration that can be verified from source code alone. 7 Runtime checks require a running gateway or trust layer to verify. This gives teams a realistic compliance score even without the full gateway deployed -- you can pass all static checks immediately and work toward runtime compliance incrementally.</div>
+                <div class="faq-a">Two-tier scoring separates the 51 checks into two categories: 44 Static checks analyze code patterns, documentation, and configuration that can be verified from source code alone. 7 Runtime checks require a running gateway or trust layer to verify. This gives teams a realistic compliance score even without the full gateway deployed -- you can pass all static checks immediately and work toward runtime compliance incrementally.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">When is the EU AI Act deadline?</div>
@@ -963,7 +963,7 @@ client = OpenAI(
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What frameworks does AIR Blackbox support?</div>
-                <div class="faq-a">AIR Blackbox has trust layer integrations for 7 frameworks: LangChain, CrewAI, OpenAI Agents SDK, Google ADK, Claude Agent SDK, AutoGen, and Haystack — plus a standalone air-openai-trust SDK. 4 PyPI packages: air-blackbox, air-trust, air-openai-trust, and air-blackbox-mcp. The compliance scanner works on any Python AI code regardless of framework. There's also an MCP server for Claude Desktop and Cursor integration.</div>
+                <div class="faq-a">AIR Blackbox has trust layer integrations for 7 frameworks: LangChain, CrewAI, OpenAI Agents SDK, Google ADK, Claude Agent SDK, AutoGen, and Haystack - plus a standalone air-openai-trust SDK. 4 PyPI packages: air-blackbox, air-trust, air-openai-trust, and air-blackbox-mcp. The compliance scanner works on any Python AI code regardless of framework. There's also an MCP server for Claude Desktop and Cursor integration.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does it compare to Credo AI, Holistic AI, or OneTrust?</div>
@@ -975,7 +975,7 @@ client = OpenAI(
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What is the HMAC-SHA256 audit chain?</div>
-                <div class="faq-a">Every AI action logged through the AIR gateway or trust layers is written as a tamper-evident <code>.air.json</code> record. Each record is linked to the previous one via HMAC-SHA256 cryptographic hashes — creating a blockchain-style chain without the blockchain. If anyone modifies a record after the fact, the hash chain breaks and the tampering is detectable.</div>
+                <div class="faq-a">Every AI action logged through the AIR gateway or trust layers is written as a tamper-evident <code>.air.json</code> record. Each record is linked to the previous one via HMAC-SHA256 cryptographic hashes - creating a blockchain-style chain without the blockchain. If anyone modifies a record after the fact, the hash chain breaks and the tampering is detectable.</div>
             </div>
         </div>
     </div></section>

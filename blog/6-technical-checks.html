@@ -95,9 +95,9 @@
 <h1>The 6 Technical Checks Your AI System Needs Before August 2, 2026</h1>
 <p class="meta">March 26, 2026 · Jason Shotwell · 8 min read</p>
 
-<p>The EU AI Act enforcement deadline is August 2, 2026. If you're shipping Python AI agents — using LangChain, CrewAI, AutoGen, OpenAI, or any RAG pipeline — your code needs to pass 6 specific technical checks mapped to Articles 9, 10, 11, 12, 14, and 15 of the regulation.</p>
+<p>The EU AI Act enforcement deadline is August 2, 2026. If you're shipping Python AI agents - using LangChain, CrewAI, AutoGen, OpenAI, or any RAG pipeline - your code needs to pass 6 specific technical checks mapped to Articles 9, 10, 11, 12, 14, and 15 of the regulation.</p>
 
-<p>Most teams haven't started. We scanned typical agent code from 5 popular frameworks and found that <strong>none scored higher than 1/6</strong> out of the box — and most scored 0/6. Here's what each check actually requires in your codebase, and how to fix it.</p>
+<p>Most teams haven't started. We scanned typical agent code from 5 popular frameworks and found that <strong>none scored higher than 1/6</strong> out of the box - and most scored 0/6. Here's what each check actually requires in your codebase, and how to fix it.</p>
 
 <div class="check-section">
 <h2>Check 1: Risk Management System (Article 9)</h2>
@@ -136,7 +136,7 @@ trust = AIRTrustLayer(data_vault=True)
 <span class="comment"># PII is replaced with tokens like [PII_EMAIL_1] before reaching the model</span>
 <span class="comment"># Original values are restored in the response</span></code></pre>
 
-<p>This is especially important for RAG pipelines that ingest company documents — those documents often contain PII, financial data, and internal credentials.</p>
+<p>This is especially important for RAG pipelines that ingest company documents - those documents often contain PII, financial data, and internal credentials.</p>
 </div>
 
 <div class="check-section">
@@ -144,7 +144,7 @@ trust = AIRTrustLayer(data_vault=True)
 
 <p><strong>What the regulation says:</strong> You must maintain a general description of the AI system, kept up to date, covering its intended purpose, design specifications, and how it works.</p>
 
-<p><strong>What that means in code:</strong> Your agent's operations need structured logging — not just <code>print()</code> statements or unstructured log files, but a documentation system that captures what the agent does, what tools it uses, and how it processes data.</p>
+<p><strong>What that means in code:</strong> Your agent's operations need structured logging - not just <code>print()</code> statements or unstructured log files, but a documentation system that captures what the agent does, what tools it uses, and how it processes data.</p>
 
 <p><strong>What we found:</strong> No structured documentation in any framework. Agent operations are invisible. Severity: <span class="severity-medium">MEDIUM</span></p>
 
@@ -157,16 +157,16 @@ trust = AIRTrustLayer(audit_ledger=True)
 </div>
 
 <div class="check-section">
-<h2>Check 4: Record-Keeping (Article 12) — <span class="severity-critical">CRITICAL</span></h2>
+<h2>Check 4: Record-Keeping (Article 12) - <span class="severity-critical">CRITICAL</span></h2>
 
 <p><strong>What the regulation says:</strong> Your AI system must automatically record events ("logs") with enough detail for regulatory verification. This is the article with the sharpest teeth.</p>
 
-<p><strong>What that means in code:</strong> You need tamper-evident logging. A regulator needs to be able to verify that your logs haven't been altered after the fact. Regular log files don't cut it — they're trivially editable.</p>
+<p><strong>What that means in code:</strong> You need tamper-evident logging. A regulator needs to be able to verify that your logs haven't been altered after the fact. Regular log files don't cut it - they're trivially editable.</p>
 
 <p><strong>What we found:</strong> This was flagged as <span class="severity-critical">CRITICAL</span> severity across all 5 frameworks. No automatic record-keeping. Agent decisions and tool invocations are not recorded in any auditable format.</p>
 
 <p><strong>The fix:</strong></p>
-<pre><code><span class="comment"># HMAC-SHA256 audit chains — tamper-evident logging</span>
+<pre><code><span class="comment"># HMAC-SHA256 audit chains - tamper-evident logging</span>
 from air_langchain_trust import AIRTrustLayer
 trust = AIRTrustLayer(audit_chain=True)
 <span class="comment"># Each log entry is cryptographically chained to the previous one</span>
@@ -181,9 +181,9 @@ trust = AIRTrustLayer(audit_chain=True)
 
 <p><strong>What the regulation says:</strong> AI systems must be designed so they can be effectively overseen by natural persons. Humans must be able to intervene, override, or stop the system.</p>
 
-<p><strong>What that means in code:</strong> Your agent needs a human-in-the-loop mechanism for sensitive actions. Not every action — that would be impractical. But high-risk tool calls (database writes, sending emails, executing code) should require human approval.</p>
+<p><strong>What that means in code:</strong> Your agent needs a human-in-the-loop mechanism for sensitive actions. Not every action - that would be impractical. But high-risk tool calls (database writes, sending emails, executing code) should require human approval.</p>
 
-<p><strong>What we found:</strong> 4 out of 5 frameworks had no human oversight mechanism. The OpenAI SDK scored 1/6 partially because it doesn't have autonomous tool execution by default — but that's a technicality, not a compliance layer. Severity: <span class="severity-high">HIGH</span></p>
+<p><strong>What we found:</strong> 4 out of 5 frameworks had no human oversight mechanism. The OpenAI SDK scored 1/6 partially because it doesn't have autonomous tool execution by default - but that's a technicality, not a compliance layer. Severity: <span class="severity-high">HIGH</span></p>
 
 <p><strong>The fix:</strong></p>
 <pre><code><span class="comment"># ConsentGate for human-in-the-loop on sensitive actions</span>
@@ -198,7 +198,7 @@ trust = AIRTrustLayer(consent_gate=True)
 
 <p><strong>What the regulation says:</strong> Your AI system must be resilient against unauthorized third-party attempts to alter its use or behavior. It must achieve appropriate levels of accuracy and robustness.</p>
 
-<p><strong>What that means in code:</strong> Prompt injection defense. If a user (or a document your RAG pipeline ingests) can trick your agent into ignoring its instructions, executing unauthorized commands, or leaking system prompts — you fail Article 15.</p>
+<p><strong>What that means in code:</strong> Prompt injection defense. If a user (or a document your RAG pipeline ingests) can trick your agent into ignoring its instructions, executing unauthorized commands, or leaking system prompts - you fail Article 15.</p>
 
 <p><strong>What we found:</strong> No cybersecurity defenses in any framework. Every agent we scanned is vulnerable to prompt injection attacks. Severity: <span class="severity-high">HIGH</span></p>
 
@@ -223,7 +223,7 @@ trust = AIRTrustLayer(injection_detector=True)
 <tr><td>RAG (LangChain)</td><td><strong>0/6</strong></td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td><td class="fail">FAIL</td></tr>
 </table>
 
-<p>This isn't a knock on these frameworks — they're excellent tools for building AI agents. But they were built before the EU AI Act existed, and compliance isn't their job. That's what AIR Blackbox is for.</p>
+<p>This isn't a knock on these frameworks - they're excellent tools for building AI agents. But they were built before the EU AI Act existed, and compliance isn't their job. That's what AIR Blackbox is for.</p>
 
 <h2>Scan Your Own Code</h2>
 
@@ -250,7 +250,7 @@ pip install air-anthropic-trust    # Anthropic Claude SDK</code></pre>
 </div>
 
 <footer>
-  <p>AIR Blackbox — The flight recorder for AI agents. Open source. Apache 2.0.</p>
+  <p>AIR Blackbox - The flight recorder for AI agents. Open source. Apache 2.0.</p>
   <p><a href="/">Home</a> · <a href="/blog/">Blog</a> · <a href="https://github.com/airblackbox/airblackbox">GitHub</a></p>
 </footer>
 

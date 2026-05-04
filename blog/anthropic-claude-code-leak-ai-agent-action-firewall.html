@@ -3,23 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anthropic Leaked 500K Lines of Claude Code — Here's the AI Agent Security Pattern That Would Have Stopped It | AIR Blackbox</title>
+<title>Anthropic Leaked 500K Lines of Claude Code - Here's the AI Agent Security Pattern That Would Have Stopped It | AIR Blackbox</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="description" content="Anthropic's Claude Code source code leaked via NPM because no action firewall sat between the AI agent and a public registry. Here's how action gating prevents AI agent leaks, with code examples.">
 <meta name="keywords" content="Anthropic Claude Code leak, Claude Code source code leaked, NPM source code leak, AI agent security, AI agent action firewall, AI coding agent risks, Claude Code NPM, air-gate, AI agent governance, AI supply chain security, EU AI Act AI agents, prevent AI agent data leaks">
-<meta property="og:title" content="Anthropic Leaked 500K Lines of Claude Code — Here's the Pattern That Would Have Stopped It">
+<meta property="og:title" content="Anthropic Leaked 500K Lines of Claude Code - Here's the Pattern That Would Have Stopped It">
 <meta property="og:description" content="No action firewall sat between the AI agent and a public registry. Here's how action gating prevents this class of AI agent leak.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://airblackbox.ai/blog/anthropic-claude-code-leak-ai-agent-action-firewall">
 <link rel="canonical" href="https://airblackbox.ai/blog/anthropic-claude-code-leak-ai-agent-action-firewall">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Anthropic Leaked 500K Lines of Claude Code — Here's the Pattern That Would Have Stopped It">
+<meta name="twitter:title" content="Anthropic Leaked 500K Lines of Claude Code - Here's the Pattern That Would Have Stopped It">
 <meta name="twitter:description" content="No action firewall sat between the AI agent and a public registry. Here's how action gating prevents this class of AI agent leak.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Anthropic Leaked 500K Lines of Claude Code — Here's the AI Agent Security Pattern That Would Have Stopped It",
+  "headline": "Anthropic Leaked 500K Lines of Claude Code - Here's the AI Agent Security Pattern That Would Have Stopped It",
   "description": "Anthropic's Claude Code source code leaked via NPM because no action firewall sat between the AI agent and a public registry. Here's how action gating prevents AI agent leaks.",
   "url": "https://airblackbox.ai/blog/anthropic-claude-code-leak-ai-agent-action-firewall",
   "datePublished": "2026-04-03",
@@ -51,7 +51,7 @@
       "name": "What happened with the Anthropic Claude Code source code leak?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "On March 31, 2026, Anthropic accidentally published the complete source code of Claude Code (approximately 512,000 lines of TypeScript) to the public NPM registry. Version 2.1.88 of @anthropic-ai/claude-code shipped with a 59.8 MB JavaScript source map file that mapped minified production code back to the original TypeScript source, which pointed to a publicly accessible zip archive on Anthropic's Cloudflare R2 storage bucket. This was Anthropic's second data exposure in five days — the first leaked details of their unreleased Claude Mythos model."
+        "text": "On March 31, 2026, Anthropic accidentally published the complete source code of Claude Code (approximately 512,000 lines of TypeScript) to the public NPM registry. Version 2.1.88 of @anthropic-ai/claude-code shipped with a 59.8 MB JavaScript source map file that mapped minified production code back to the original TypeScript source, which pointed to a publicly accessible zip archive on Anthropic's Cloudflare R2 storage bucket. This was Anthropic's second data exposure in five days - the first leaked details of their unreleased Claude Mythos model."
       }
     },
     {
@@ -107,7 +107,7 @@
       "name": "Is the Anthropic Claude Code leak related to the Axios supply chain attack?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "They happened concurrently but are separate incidents. The Claude Code source leak was caused by Anthropic's own packaging error — shipping source maps that pointed to raw TypeScript. Separately, users who installed Claude Code via NPM on March 31 between 00:21 and 03:29 UTC may have pulled a trojanized version of the Axios HTTP client containing a remote access trojan. This was a supply chain attack on the Axios library, not caused by Anthropic. Both incidents highlight the risks of ungated agent actions in software supply chains."
+        "text": "They happened concurrently but are separate incidents. The Claude Code source leak was caused by Anthropic's own packaging error - shipping source maps that pointed to raw TypeScript. Separately, users who installed Claude Code via NPM on March 31 between 00:21 and 03:29 UTC may have pulled a trojanized version of the Axios HTTP client containing a remote access trojan. This was a supply chain attack on the Axios library, not caused by Anthropic. Both incidents highlight the risks of ungated agent actions in software supply chains."
       }
     }
   ]
@@ -167,23 +167,23 @@
 <h1>Anthropic Leaked 500K Lines of Claude Code. Here's the AI Agent Security Pattern That Would Have Stopped It.</h1>
 <p class="meta">April 3, 2026 · Jason Shotwell · 8 min read</p>
 
-<p>On March 31, 2026, Anthropic accidentally published the complete source code of Claude Code — their AI coding agent — to the public NPM registry. Roughly 512,000 lines of TypeScript, exposed by a single misconfigured source map file.</p>
+<p>On March 31, 2026, Anthropic accidentally published the complete source code of Claude Code - their AI coding agent - to the public NPM registry. Roughly 512,000 lines of TypeScript, exposed by a single misconfigured source map file.</p>
 
 <p>Five days earlier, ~3,000 unpublished internal assets (blog drafts, model details, event plans for their unreleased "Claude Mythos" model) were found sitting in a publicly accessible data store.</p>
 
 <p>Two leaks in five days. From the company that built Claude.</p>
 
-<p>This post isn't about blaming Anthropic. Build systems break. Humans make packaging errors. What's interesting is the <strong>architectural pattern</strong> that would have caught this — and why every team using AI coding agents needs to understand it now.</p>
+<p>This post isn't about blaming Anthropic. Build systems break. Humans make packaging errors. What's interesting is the <strong>architectural pattern</strong> that would have caught this - and why every team using AI coding agents needs to understand it now.</p>
 
 <h2>What Actually Happened</h2>
 
 <div class="timeline">
   <div class="timeline-item">
-    <div class="timeline-date">March 26, 2026 — First Leak</div>
+    <div class="timeline-date">March 26, 2026 - First Leak</div>
     <p style="margin-top:4px">~3,000 unpublished assets found in a publicly searchable data store linked to Anthropic's blog infrastructure. Draft blog posts revealed the existence of "Claude Mythos," an unreleased model Anthropic described internally as a "step change" in capabilities.</p>
   </div>
   <div class="timeline-item">
-    <div class="timeline-date">March 31, 2026 — Second Leak</div>
+    <div class="timeline-date">March 31, 2026 - Second Leak</div>
     <p style="margin-top:4px">Version 2.1.88 of <code>@anthropic-ai/claude-code</code> shipped to NPM with a 59.8 MB JavaScript source map file. That source map mapped the minified production code back to the original TypeScript and pointed to a publicly accessible zip archive on Anthropic's Cloudflare R2 bucket. Security researcher Chaofan Shou found the direct link and posted it publicly.</p>
   </div>
   <div class="timeline-item">
@@ -200,7 +200,7 @@
 
 <p>And there was no gate between "agent decides to publish" and "code hits a public registry."</p>
 
-<p>This is the architectural gap. AI agents are taking real-world, irreversible actions — shipping code, sending emails, making API calls, modifying databases — and the default pattern is: agent decides, action happens. No interception. No review. No audit trail.</p>
+<p>This is the architectural gap. AI agents are taking real-world, irreversible actions - shipping code, sending emails, making API calls, modifying databases - and the default pattern is: agent decides, action happens. No interception. No review. No audit trail.</p>
 
 <p>The question isn't "how did a human make a packaging error?" The question is: <strong>why did the system allow an unchecked publish to a public registry?</strong></p>
 
@@ -226,10 +226,10 @@
 
 <ol style="margin: 0 0 20px 24px; color: #c9d1d9;">
   <li style="margin-bottom:8px"><strong>Policy engine</strong> classifies "publish to public NPM registry" as <span class="fail">high-risk</span></li>
-  <li style="margin-bottom:8px"><strong>Secrets scanner</strong> detects internal source patterns — debug comments, internal URLs, unreleased API references, raw TypeScript instead of compiled JS</li>
+  <li style="margin-bottom:8px"><strong>Secrets scanner</strong> detects internal source patterns - debug comments, internal URLs, unreleased API references, raw TypeScript instead of compiled JS</li>
   <li style="margin-bottom:8px"><strong>Action routes to human</strong> for review before publish</li>
   <li style="margin-bottom:8px"><strong>Human sees</strong> 512,000 lines of raw TypeScript instead of compiled JavaScript. Catches the error.</li>
-  <li style="margin-bottom:8px"><strong>Audit chain</strong> logs exactly what was reviewed, who approved/rejected, and when — cryptographic proof via HMAC-SHA256</li>
+  <li style="margin-bottom:8px"><strong>Audit chain</strong> logs exactly what was reviewed, who approved/rejected, and when - cryptographic proof via HMAC-SHA256</li>
 </ol>
 
 <p>The publish never happens. The leak never occurs.</p>
@@ -302,11 +302,11 @@ policies:
     <tr><td><code>rm -rf</code></td><td><span class="fail">High</span></td><td>Destructive operations on production files</td></tr>
     <tr><td>Database <code>DROP</code> / <code>DELETE</code></td><td><span class="fail">High</span></td><td>Irreversible data loss</td></tr>
     <tr><td>Email/Slack send</td><td><span class="warn">Medium</span></td><td>Internal information shared externally</td></tr>
-    <tr><td>Read local files</td><td><span class="pass">Low</span></td><td>Generally safe — auto-allow</td></tr>
+    <tr><td>Read local files</td><td><span class="pass">Low</span></td><td>Generally safe - auto-allow</td></tr>
   </tbody>
 </table>
 
-<p>Every one of these happens in AI coding agents today. Claude Code, GitHub Copilot Workspace, Cursor, Windsurf, Devin — they all execute real commands. The question is whether those commands pass through a gate first.</p>
+<p>Every one of these happens in AI coding agents today. Claude Code, GitHub Copilot Workspace, Cursor, Windsurf, Devin - they all execute real commands. The question is whether those commands pass through a gate first.</p>
 
 <h2>The EU AI Act Makes This Mandatory</h2>
 
@@ -314,15 +314,15 @@ policies:
 
 <p>The EU AI Act (enforcement deadline: <strong>August 2, 2026</strong>) requires two things that action firewalls directly address:</p>
 
-<p><strong>Article 14 — Human Oversight:</strong> High-risk AI systems must include mechanisms for human review of AI-assisted decisions. An action firewall's <code>require_approval</code> policy is a direct implementation: high-risk actions route to a human before execution.</p>
+<p><strong>Article 14 - Human Oversight:</strong> High-risk AI systems must include mechanisms for human review of AI-assisted decisions. An action firewall's <code>require_approval</code> policy is a direct implementation: high-risk actions route to a human before execution.</p>
 
-<p><strong>Article 12 — Record-Keeping:</strong> AI systems must maintain tamper-evident logs of all decisions. AIR Gate's HMAC-SHA256 audit chain creates cryptographic proof of every action — what was attempted, what the policy decided, whether a human approved it, and when.</p>
+<p><strong>Article 12 - Record-Keeping:</strong> AI systems must maintain tamper-evident logs of all decisions. AIR Gate's HMAC-SHA256 audit chain creates cryptographic proof of every action - what was attempted, what the policy decided, whether a human approved it, and when.</p>
 
 <p>The Anthropic leak happened in the US, where there's no equivalent mandate. But the architectural pattern is the same regardless of jurisdiction: if AI agents are taking actions, those actions need gates.</p>
 
 <h2>What This Means for Your Team</h2>
 
-<p>If you're using AI coding agents — and in 2026, most engineering teams are — ask yourself:</p>
+<p>If you're using AI coding agents - and in 2026, most engineering teams are - ask yourself:</p>
 
 <ul>
   <li>Can your AI agent publish to a public registry without a human reviewing the payload?</li>
@@ -335,7 +335,7 @@ policies:
 
 <h2>Honest Limitations</h2>
 
-<p>AIR Gate is built for Python AI agent workflows — not CI/CD pipelines written in bash or TypeScript. Anthropic's actual leak happened in a Node.js build step, so AIR Gate wouldn't have caught it directly. The <em>pattern</em> applies, but you'd need to implement action gating in your specific build toolchain.</p>
+<p>AIR Gate is built for Python AI agent workflows - not CI/CD pipelines written in bash or TypeScript. Anthropic's actual leak happened in a Node.js build step, so AIR Gate wouldn't have caught it directly. The <em>pattern</em> applies, but you'd need to implement action gating in your specific build toolchain.</p>
 
 <p>Also: action firewalls add friction. The <code>require_approval</code> step means a human has to review things. For teams shipping fast, that's a tradeoff. The question is whether the cost of review is less than the cost of a 512,000-line source code leak. For most teams, the math is obvious.</p>
 
@@ -348,7 +348,7 @@ policies:
 <h2>Frequently Asked Questions</h2>
 
 <h3>What happened with the Anthropic Claude Code source code leak?</h3>
-<p>On March 31, 2026, Anthropic accidentally published ~512,000 lines of Claude Code's TypeScript source to the public NPM registry. Version 2.1.88 shipped with a 59.8 MB source map file that pointed to a zip archive on a public Cloudflare R2 bucket. This was Anthropic's second data exposure in five days — the first revealed their unreleased Claude Mythos model.</p>
+<p>On March 31, 2026, Anthropic accidentally published ~512,000 lines of Claude Code's TypeScript source to the public NPM registry. Version 2.1.88 shipped with a 59.8 MB source map file that pointed to a zip archive on a public Cloudflare R2 bucket. This was Anthropic's second data exposure in five days - the first revealed their unreleased Claude Mythos model.</p>
 
 <h3>How did Claude Code's source code get leaked to NPM?</h3>
 <p>A packaging error in the build pipeline included a JavaScript source map (<code>.map</code> file) that contained references to the original unobfuscated TypeScript source. That source map pointed to a zip archive on a publicly accessible storage bucket. Anthropic called it "a release packaging issue caused by human error."</p>

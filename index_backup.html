@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIR Blackbox — EU AI Act Compliance for AI Agents</title>
+    <title>AIR Blackbox - EU AI Act Compliance for AI Agents</title>
     <meta name="description" content="Open-source compliance infrastructure for AI agents. Tamper-evident audit trails, injection defense, and EU AI Act coverage. Drop-in trust layers for LangChain, CrewAI, AutoGen, and OpenAI Agents SDK.">
-    <meta property="og:title" content="AIR Blackbox — EU AI Act Compliance for AI Agents">
+    <meta property="og:title" content="AIR Blackbox - EU AI Act Compliance for AI Agents">
     <meta property="og:description" content="The August 2, 2026 deadline is 5 months away. Is your AI agent infrastructure compliant?">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://airblackbox.ai">
@@ -720,12 +720,12 @@
                 <div><span class="bright">EU AI Act Compliance Report</span></div>
                 <div><span class="dim">Project: ./my-agent | Framework: LangChain</span></div>
                 <div style="margin: 8px 0;"><span class="dim">────────────────────────────────────────────</span></div>
-                <div><span class="pass">PASS</span> <span class="bright">Article 9</span> <span class="dim">— Risk Management ........... 4/4</span></div>
-                <div><span class="pass">PASS</span> <span class="bright">Article 10</span> <span class="dim">— Data Governance .......... 3/3</span></div>
-                <div><span class="pass">PASS</span> <span class="bright">Article 11</span> <span class="dim">— Technical Documentation .. 3/3</span></div>
-                <div><span class="fail">FAIL</span> <span class="bright">Article 12</span> <span class="dim">— Record-Keeping ........... 1/4</span></div>
-                <div><span class="warn">WARN</span> <span class="bright">Article 14</span> <span class="dim">— Human Oversight .......... 2/4</span></div>
-                <div><span class="fail">FAIL</span> <span class="bright">Article 15</span> <span class="dim">— Robustness & Security .... 1/4</span></div>
+                <div><span class="pass">PASS</span> <span class="bright">Article 9</span> <span class="dim">- Risk Management ........... 4/4</span></div>
+                <div><span class="pass">PASS</span> <span class="bright">Article 10</span> <span class="dim">- Data Governance .......... 3/3</span></div>
+                <div><span class="pass">PASS</span> <span class="bright">Article 11</span> <span class="dim">- Technical Documentation .. 3/3</span></div>
+                <div><span class="fail">FAIL</span> <span class="bright">Article 12</span> <span class="dim">- Record-Keeping ........... 1/4</span></div>
+                <div><span class="warn">WARN</span> <span class="bright">Article 14</span> <span class="dim">- Human Oversight .......... 2/4</span></div>
+                <div><span class="fail">FAIL</span> <span class="bright">Article 15</span> <span class="dim">- Robustness & Security .... 1/4</span></div>
                 <div style="margin: 8px 0;"><span class="dim">────────────────────────────────────────────</span></div>
                 <div><span class="bright">Coverage: 63%</span> <span class="dim">| 14/22 checks passing</span></div>
                 <div><span class="fail">CRITICAL:</span> <span class="dim">HMAC-SHA256 chain not configured (Article 12)</span></div>
@@ -775,7 +775,7 @@
             <div class="feature-card">
                 <div class="feature-icon" style="background: rgba(168, 85, 247, 0.1);">&#x1f6e1;</div>
                 <h3>PII Tokenization</h3>
-                <p>20+ built-in detection patterns automatically redact PII across recruiting, finance, healthcare, and legal verticals — emails, SSNs, credit cards, MRNs, case numbers, and more — before they reach the LLM.</p>
+                <p>20+ built-in detection patterns automatically redact PII across recruiting, finance, healthcare, and legal verticals - emails, SSNs, credit cards, MRNs, case numbers, and more - before they reach the LLM.</p>
                 <span class="feature-tag tag-art10">Article 10</span>
             </div>
             <div class="feature-card">
@@ -893,7 +893,7 @@
 <span class="comment"># Configure trust controls</span>
 <span class="var">hook</span> = <span class="func">AirTrustHook</span>(<span class="var">config</span>=<span class="func">AirTrustConfig</span>())
 
-<span class="comment"># Attach to any crew — all agent actions</span>
+<span class="comment"># Attach to any crew - all agent actions</span>
 <span class="comment"># are now audited and protected.</span>
 <span class="var">crew</span> = <span class="func">Crew</span>(
     <span class="var">agents</span>=[<span class="var">researcher</span>, <span class="var">writer</span>],
@@ -980,7 +980,7 @@
     <div class="container">
         <div class="features-header">
             <h2>Now in Claude Desktop & Cursor</h2>
-            <p>10 compliance tools — directly in your AI coding assistant. Scan, analyze, and fix without leaving the editor.</p>
+            <p>10 compliance tools - directly in your AI coding assistant. Scan, analyze, and fix without leaving the editor.</p>
         </div>
         <div class="scanner-block" style="max-width: 700px;">
             <div class="scanner-label">Install the MCP Server</div>
@@ -1020,7 +1020,7 @@
     <div class="container">
         <div class="features-header">
             <h2>Now in OpenClaw</h2>
-            <p>The only EU AI Act compliance plugin for the world's most popular autonomous AI agent. 210K+ GitHub stars. Zero compliance — until now.</p>
+            <p>The only EU AI Act compliance plugin for the world's most popular autonomous AI agent. 210K+ GitHub stars. Zero compliance - until now.</p>
         </div>
         <div class="scanner-block" style="max-width: 700px;">
             <div class="scanner-label" style="color: var(--green);">OpenClaw Plugin</div>
@@ -1061,7 +1061,7 @@
                 <input type="email" name="email" placeholder="your@email.com" required
                     style="flex: 1; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; font-family: Inter, sans-serif; outline: none;"
                     onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'" />
-                <input type="hidden" name="_subject" value="AIR Blackbox — New Signup" />
+                <input type="hidden" name="_subject" value="AIR Blackbox - New Signup" />
                 <button type="submit"
                     style="padding: 12px 24px; border-radius: 8px; border: none; background: var(--accent); color: #000; font-weight: 600; font-size: 14px; cursor: pointer; font-family: Inter, sans-serif; white-space: nowrap;"
                     onmouseover="this.style.background='var(--accent-hover)'" onmouseout="this.style.background='var(--accent)'">

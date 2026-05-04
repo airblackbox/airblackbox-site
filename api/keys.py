@@ -1,12 +1,12 @@
 """
-AIR Blackbox — API Key Management
+AIR Blackbox - API Key Management
 
 Vercel serverless function for generating and managing API keys
 for the Shadow AI Detection API.
 
-POST /api/keys   — Generate a new API key (requires email)
-GET  /api/keys   — Check key status (requires Authorization header)
-DELETE /api/keys — Revoke a key (requires Authorization header)
+POST /api/keys   - Generate a new API key (requires email)
+GET  /api/keys   - Check key status (requires Authorization header)
+DELETE /api/keys - Revoke a key (requires Authorization header)
 
 Storage: Standard Redis via REDIS_URL environment variable.
 """

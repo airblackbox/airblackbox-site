@@ -83,7 +83,7 @@
           "name": "How does the CSA ATF relate to the EU AI Act?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The EU AI Act tells you what your AI system must do (risk management, audit trails, human oversight). The CSA ATF tells you how each individual agent should identify itself and earn trust. They layer — an EU AI Act Article 14 audit trail with ATF-conformant agent identities is strictly stronger than either standard alone. air-trust v0.4.0 uses the same AgentIdentity object for both regimes."
+            "text": "The EU AI Act tells you what your AI system must do (risk management, audit trails, human oversight). The CSA ATF tells you how each individual agent should identify itself and earn trust. They layer - an EU AI Act Article 14 audit trail with ATF-conformant agent identities is strictly stronger than either standard alone. air-trust v0.4.0 uses the same AgentIdentity object for both regimes."
           }
         },
         {
@@ -250,25 +250,25 @@
   <h2>Key Takeaways</h2>
   <ul>
     <li>The CSA ATF defines five Identity Core Elements (I-1 to I-5) and a four-stage maturity ladder (Intern, Junior, Senior, Principal) for AI agent identity and trust.</li>
-    <li>ATF layers on top of the EU AI Act — it does not replace it. The same <code>AgentIdentity</code> object serves both regimes in air-trust v0.4.0.</li>
+    <li>ATF layers on top of the EU AI Act - it does not replace it. The same <code>AgentIdentity</code> object serves both regimes in air-trust v0.4.0.</li>
     <li>Adding ATF conformance to an existing air-trust setup requires only two new fields: <code>purpose</code> and <code>capabilities</code>.</li>
-    <li>The <code>gaps()</code> function tells you exactly which core elements are missing before promoting an agent to a higher maturity level — wire it into CI/CD as a deployment gate.</li>
+    <li>The <code>gaps()</code> function tells you exactly which core elements are missing before promoting an agent to a higher maturity level - wire it into CI/CD as a deployment gate.</li>
     <li>v0.4.0 implements the Identity core element only. Agent Actions, Tools, Governance, and promotion gates are on the roadmap for v0.5.0 and v0.6.0.</li>
   </ul>
 </div>
 
 <h2>What Is the CSA Agentic Trust Framework?</h2>
 
-<p>The CSA Agentic Trust Framework is a Cloud Security Alliance specification that answers three questions the <a href="/blog/eu-ai-act-august-2026-deadline">EU AI Act</a> leaves open: who is the agent, what is it allowed to do, and how much autonomy has it earned? The framework sits underneath compliance regimes like the EU AI Act and ISO 42001 — it does not replace them. It tells you how to identify and progressively promote individual agents so that the broader compliance machinery has something durable to attach to.</p>
+<p>The CSA Agentic Trust Framework is a Cloud Security Alliance specification that answers three questions the <a href="/blog/eu-ai-act-august-2026-deadline">EU AI Act</a> leaves open: who is the agent, what is it allowed to do, and how much autonomy has it earned? The framework sits underneath compliance regimes like the EU AI Act and ISO 42001 - it does not replace them. It tells you how to identify and progressively promote individual agents so that the broader compliance machinery has something durable to attach to.</p>
 
 <p>There are two structural pieces:</p>
 
 <ul>
   <li><strong>Identity Core Elements.</strong> Five requirements, labeled I-1 through I-5, that describe the minimum identity surface every agent must expose.</li>
-  <li><strong>Maturity levels.</strong> Four progressive tiers — Intern, Junior, Senior, Principal — that gate how much autonomy an agent is trusted with. Each level raises the bar on which core elements are MUST, SHOULD, or MAY.</li>
+  <li><strong>Maturity levels.</strong> Four progressive tiers - Intern, Junior, Senior, Principal - that gate how much autonomy an agent is trusted with. Each level raises the bar on which core elements are MUST, SHOULD, or MAY.</li>
 </ul>
 
-<p>An agent starts at Intern, proves itself against a narrow set of MUSTs, and graduates upward. The maturity ladder borrows directly from how human organizations grant autonomy to junior employees — and it is the framework's most interesting design decision.</p>
+<p>An agent starts at Intern, proves itself against a narrow set of MUSTs, and graduates upward. The maturity ladder borrows directly from how human organizations grant autonomy to junior employees - and it is the framework's most interesting design decision.</p>
 
 <h2>What Are the Five Identity Core Elements (I-1 to I-5)?</h2>
 
@@ -279,7 +279,7 @@
     <tr><th>ID</th><th>Requirement</th><th>What it means in Python</th></tr>
   </thead>
   <tbody>
-    <tr><td><strong>I-1</strong></td><td>Unique Identifier</td><td>A persistent URN — e.g. <code>urn:agent:air-blackbox:search-bot:1.2.0</code></td></tr>
+    <tr><td><strong>I-1</strong></td><td>Unique Identifier</td><td>A persistent URN - e.g. <code>urn:agent:air-blackbox:search-bot:1.2.0</code></td></tr>
     <tr><td><strong>I-2</strong></td><td>Credential Binding</td><td>SHA-256 fingerprint over <code>name:owner:version</code></td></tr>
     <tr><td><strong>I-3</strong></td><td>Ownership Chain</td><td>A human owner and optional organization</td></tr>
     <tr><td><strong>I-4</strong></td><td>Purpose Declaration</td><td>A short string describing what the agent is for</td></tr>
@@ -287,11 +287,11 @@
   </tbody>
 </table>
 
-<p>I-4 and I-5 are new additions in v0.4.0 — the other three already existed to support EU AI Act Article 14 identity binding. Adding purpose and capabilities took about twenty lines of dataclass code and zero new dependencies. This is the cheapest compliance upgrade you will ever ship.</p>
+<p>I-4 and I-5 are new additions in v0.4.0 - the other three already existed to support EU AI Act Article 14 identity binding. Adding purpose and capabilities took about twenty lines of dataclass code and zero new dependencies. This is the cheapest compliance upgrade you will ever ship.</p>
 
 <h2>How Does the Maturity Ladder Work?</h2>
 
-<p>The ATF maturity ladder gates how much autonomy an agent earns based on how many of the five core elements it satisfies at the MUST level. An agent that is missing a Purpose Declaration (I-4) cannot even be an Intern. An agent with identifiers and an owner but no capability manifest is stuck at Intern. This is deliberate — it forces operators to write down what an agent does before trusting it with bigger jobs.</p>
+<p>The ATF maturity ladder gates how much autonomy an agent earns based on how many of the five core elements it satisfies at the MUST level. An agent that is missing a Purpose Declaration (I-4) cannot even be an Intern. An agent with identifiers and an owner but no capability manifest is stuck at Intern. This is deliberate - it forces operators to write down what an agent does before trusting it with bigger jobs.</p>
 
 <table>
   <thead>
@@ -305,7 +305,7 @@
   </tbody>
 </table>
 
-<p>The promotion logic is: you cannot claim a higher level than the most restrictive set of MUSTs you satisfy. In practice, this means your CI pipeline can gate deployments on maturity level — if the agent does not meet the requirements for its target level, the deployment fails with an explicit list of what to fix.</p>
+<p>The promotion logic is: you cannot claim a higher level than the most restrictive set of MUSTs you satisfy. In practice, this means your CI pipeline can gate deployments on maturity level - if the agent does not meet the requirements for its target level, the deployment fails with an explicit list of what to fix.</p>
 
 <h2>How Do You Check ATF Conformance in Python?</h2>
 
@@ -375,13 +375,13 @@ All MUST requirements for 'intern' level are satisfied.</code></pre>
 
 <h2>How Does ATF Layer on Top of the EU AI Act?</h2>
 
-<p>The two frameworks solve different problems and are designed to compose — you do not have to choose one or the other. The EU AI Act tells you what your system must do: run risk management (<a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Article 9</a>), govern data (Article 10), keep technical documentation (Article 11), log decisions (<a href="/blog/audit-trails-ai-agents-python">Article 12</a>), provide transparency (Article 13), enable human oversight (Article 14), and stay robust (Article 15). The ATF tells you how each individual agent inside that system should identify itself and earn trust.</p>
+<p>The two frameworks solve different problems and are designed to compose - you do not have to choose one or the other. The EU AI Act tells you what your system must do: run risk management (<a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Article 9</a>), govern data (Article 10), keep technical documentation (Article 11), log decisions (<a href="/blog/audit-trails-ai-agents-python">Article 12</a>), provide transparency (Article 13), enable human oversight (Article 14), and stay robust (Article 15). The ATF tells you how each individual agent inside that system should identify itself and earn trust.</p>
 
-<p>An EU AI Act Article 14 audit trail where every entry carries an ATF-conformant agent identity is strictly stronger than either standard alone and satisfies both regimes at once. In air-trust v0.4.0, the same <code>AgentIdentity</code> object that feeds the HMAC-SHA256 audit chain also carries the ATF fields. One object, two regimes. If you already had Article 14 wiring from an earlier version, you get ATF conformance almost for free — just add <code>purpose</code> and <code>capabilities</code>.</p>
+<p>An EU AI Act Article 14 audit trail where every entry carries an ATF-conformant agent identity is strictly stronger than either standard alone and satisfies both regimes at once. In air-trust v0.4.0, the same <code>AgentIdentity</code> object that feeds the HMAC-SHA256 audit chain also carries the ATF fields. One object, two regimes. If you already had Article 14 wiring from an earlier version, you get ATF conformance almost for free - just add <code>purpose</code> and <code>capabilities</code>.</p>
 
 <h2>How Do External Identity Providers Work with ATF?</h2>
 
-<p>The ATF explicitly allows external identity binding — a local URN plus a pointer to an external registry that can attest to the agent's identity. air-trust v0.4.0 exposes this as the <code>external_id</code> field on <code>AgentIdentity</code>. The design is intentionally provider-agnostic: AgentLair handles, <code>did:web:</code> URIs, and custom HTTP registries all work.</p>
+<p>The ATF explicitly allows external identity binding - a local URN plus a pointer to an external registry that can attest to the agent's identity. air-trust v0.4.0 exposes this as the <code>external_id</code> field on <code>AgentIdentity</code>. The design is intentionally provider-agnostic: AgentLair handles, <code>did:web:</code> URIs, and custom HTTP registries all work.</p>
 
 <pre><code>identity = AgentIdentity(
     agent_name="research-bot",
@@ -393,7 +393,7 @@ All MUST requirements for 'intern' level are satisfied.</code></pre>
     atf_level="junior",
 )</code></pre>
 
-<p>The core conformance check does not care where the external ID resolves — it only cares that one is declared. A provider adapter module is on the roadmap.</p>
+<p>The core conformance check does not care where the external ID resolves - it only cares that one is declared. A provider adapter module is on the roadmap.</p>
 
 <h2>What Are the Limits of the Current Implementation?</h2>
 

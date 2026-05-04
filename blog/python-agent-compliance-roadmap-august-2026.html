@@ -134,7 +134,7 @@
 <h1>Python AI Agent Compliance Roadmap: August 2026</h1>
 <p class="meta">April 8, 2026 &middot; Jason Shotwell &middot; 14 min read</p>
 
-<p>The EU AI Act enforcement date for high-risk AI systems is August 2, 2026 — 116 days from today. This roadmap breaks down exactly what Python teams need to implement, month by month, to reach <a href="/blog/eu-ai-act-august-2026-deadline">compliance before the deadline</a>. If your team runs autonomous agents (LangChain, CrewAI, AutoGen, or custom), this is your playbook.</p>
+<p>The EU AI Act enforcement date for high-risk AI systems is August 2, 2026 - 116 days from today. This roadmap breaks down exactly what Python teams need to implement, month by month, to reach <a href="/blog/eu-ai-act-august-2026-deadline">compliance before the deadline</a>. If your team runs autonomous agents (LangChain, CrewAI, AutoGen, or custom), this is your playbook.</p>
 
 <h2>Where Most Python AI Teams Stand Today</h2>
 
@@ -143,11 +143,11 @@
 <p>Here's what we see in raw numbers:</p>
 
 <ul>
-  <li><strong>100% lack audit trails</strong> (Article 12) — no tamper-evident logging out of the box</li>
-  <li><strong>95% have no human oversight mechanisms</strong> (Article 14) — agents run fully autonomous</li>
-  <li><strong>90% lack technical documentation</strong> (Article 11) — no model cards or system descriptions</li>
-  <li><strong>85% have no risk management plan</strong> (Article 9) — no documented failure modes or mitigations</li>
-  <li><strong>80% have no data governance</strong> (Article 10) — no PII detection or data retention policies</li>
+  <li><strong>100% lack audit trails</strong> (Article 12) - no tamper-evident logging out of the box</li>
+  <li><strong>95% have no human oversight mechanisms</strong> (Article 14) - agents run fully autonomous</li>
+  <li><strong>90% lack technical documentation</strong> (Article 11) - no model cards or system descriptions</li>
+  <li><strong>85% have no risk management plan</strong> (Article 9) - no documented failure modes or mitigations</li>
+  <li><strong>80% have no data governance</strong> (Article 10) - no PII detection or data retention policies</li>
 </ul>
 
 <p>The good news: none of this is hard to fix. It just takes planning and four months of methodical implementation. Let's walk through it.</p>
@@ -161,12 +161,12 @@
     <tr><th>Article</th><th>Requirement</th><th>By When</th></tr>
   </thead>
   <tbody>
-    <tr><td><strong>Article 9</strong></td><td>Risk management plan — identify failure modes, mitigations, monitoring</td><td>June 1</td></tr>
-    <tr><td><strong>Article 10</strong></td><td>Data governance — input validation, PII detection, data retention policy</td><td>June 1</td></tr>
-    <tr><td><strong>Article 11</strong></td><td>Technical documentation — model cards, system architecture, known limitations</td><td>June 15</td></tr>
-    <tr><td><strong>Article 12</strong></td><td>Automatic recording — HMAC-SHA256 audit trails, tamper-evident logging</td><td>May 15</td></tr>
-    <tr><td><strong>Article 13</strong></td><td>Transparency information — explain to users how the AI system works</td><td>June 30</td></tr>
-    <tr><td><strong>Article 14</strong></td><td>Human oversight — approval workflows, override capability, user identity binding</td><td>July 15</td></tr>
+    <tr><td><strong>Article 9</strong></td><td>Risk management plan - identify failure modes, mitigations, monitoring</td><td>June 1</td></tr>
+    <tr><td><strong>Article 10</strong></td><td>Data governance - input validation, PII detection, data retention policy</td><td>June 1</td></tr>
+    <tr><td><strong>Article 11</strong></td><td>Technical documentation - model cards, system architecture, known limitations</td><td>June 15</td></tr>
+    <tr><td><strong>Article 12</strong></td><td>Automatic recording - HMAC-SHA256 audit trails, tamper-evident logging</td><td>May 15</td></tr>
+    <tr><td><strong>Article 13</strong></td><td>Transparency information - explain to users how the AI system works</td><td>June 30</td></tr>
+    <tr><td><strong>Article 14</strong></td><td>Human oversight - approval workflows, override capability, user identity binding</td><td>July 15</td></tr>
   </tbody>
 </table>
 
@@ -174,7 +174,7 @@
 
 <h2>Month-by-Month Roadmap</h2>
 
-<h3>April 2026 — Baseline Assessment (This Month)</h3>
+<h3>April 2026 - Baseline Assessment (This Month)</h3>
 
 <p>Spend this month answering: where do we stand? What's the scope? How much work are we actually looking at?</p>
 
@@ -228,7 +228,7 @@ python -m air_compliance scan --path . --output report.json</code></pre>
 
 <p>These six files will hold all your compliance documentation by August. Start each with a stub outline. End of April deliverable: one-pager per agent system + six empty compliance markdown files.</p>
 
-<h3>May 2026 — Risk Management & Data Governance</h3>
+<h3>May 2026 - Risk Management & Data Governance</h3>
 
 <p>Articles 9 (risk management) and 10 (data governance) are the foundation. Everything else builds on them. Spend May filling these out.</p>
 
@@ -298,7 +298,7 @@ DATA ACCESS:
 
 <p><strong>May Deliverable:</strong> Completed risk management plans and data governance policies for all production agents. Second <code>air-compliance scan</code> should show improvement in Articles 9 and 10.</p>
 
-<h3>June 2026 — Technical Documentation & Transparency</h3>
+<h3>June 2026 - Technical Documentation & Transparency</h3>
 
 <p>Articles 11 (technical docs) and 13 (transparency) are heavy on paperwork. Your June is documentation month.</p>
 
@@ -350,7 +350,7 @@ PERFORMANCE BY GROUP
 - Women: 79% precision, 76% recall (slight negative disparity)
 - Men: 84% precision, 80% recall
 - White candidates: 82% precision
-- BIPOC candidates: 74% precision (8pt gap — being addressed in v3)</code></pre>
+- BIPOC candidates: 74% precision (8pt gap - being addressed in v3)</code></pre>
 
 <p>This goes in <code>compliance/technical_docs.md</code>. You'll need one per agent. Total time: 6-8 hours per agent.</p>
 
@@ -376,7 +376,7 @@ PERFORMANCE BY GROUP
 
 <p><strong>June Deliverable:</strong> Model cards + transparency statements for all agents. Third compliance scan should show significant improvement in Articles 11 and 13. You're now at 3/6 minimum.</p>
 
-<h3>July 2026 — Human Oversight & Integration Testing</h3>
+<h3>July 2026 - Human Oversight & Integration Testing</h3>
 
 <p>Article 14 is the operational requirement: humans have to be in the loop. This is where code meets process. July is implementation month.</p>
 
@@ -438,7 +438,7 @@ result = crew.kickoff()</code></pre>
 
 <p><strong>July Deliverable:</strong> Oversight workflows implemented for all agents. Audit trails running in production. Full integration testing complete. Fourth compliance scan should show 5/6 or 6/6.</p>
 
-<h3>August 1-2, 2026 — Final Verification</h3>
+<h3>August 1-2, 2026 - Final Verification</h3>
 
 <p>One week before the deadline, do final verification:</p>
 
@@ -527,7 +527,7 @@ import air_trust
 crew = Crew(agents=[agent1, agent2], tasks=[task1])
 crew = air_trust.trust(crew)
 
-# Then run as normal — audit trails happen automatically
+# Then run as normal - audit trails happen automatically
 </code></pre>
 
 <p>That's Article 12 done. Takes 10 minutes to add to an existing agent.</p>

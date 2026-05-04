@@ -17,7 +17,7 @@ function getRedis() {
 }
 
 export default async function handler(req, res) {
-  // Simple auth — check for dashboard key in query params or header
+  // Simple auth - check for dashboard key in query params or header
   const key = req.query.key || req.headers['x-dashboard-key'];
   const envKey = process.env.DASHBOARD_KEY;
 

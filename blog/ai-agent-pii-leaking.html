@@ -75,7 +75,7 @@
           "name": "How do AI agents leak PII?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "AI agents leak PII by passing raw user data through multiple services — LLM APIs, vector databases, logging systems, and audit trails — without filtering sensitive fields. A customer's SSN, email, or phone number flows through every hop in the agent pipeline as plain text because agents treat all data the same by default."
+            "text": "AI agents leak PII by passing raw user data through multiple services - LLM APIs, vector databases, logging systems, and audit trails - without filtering sensitive fields. A customer's SSN, email, or phone number flows through every hop in the agent pipeline as plain text because agents treat all data the same by default."
           }
         },
         {
@@ -107,7 +107,7 @@
           "name": "Can regex-based PII detection catch all sensitive data?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Regex-based detection covers universal patterns like emails, phone numbers, SSNs, and credit card numbers (25+ patterns out of the box), but custom PII patterns specific to your domain — internal ID formats, custom phone conventions, proprietary identifiers — require custom rules added to the redactor configuration."
+            "text": "No. Regex-based detection covers universal patterns like emails, phone numbers, SSNs, and credit card numbers (25+ patterns out of the box), but custom PII patterns specific to your domain - internal ID formats, custom phone conventions, proprietary identifiers - require custom rules added to the redactor configuration."
           }
         }
       ]
@@ -251,22 +251,22 @@
 
 <p><strong>Yes. If your AI agent passes user data to an LLM API, vector database, or logging system without a PII redaction layer, it is leaking personally identifiable information.</strong> Your LangChain agent just sent a customer's SSN to OpenAI's API. Your recruiting bot included a phone number in the audit log. Your RAG pipeline stored an email address in plain text. None of these generated an error. That is the problem.</p>
 
-<p>After scanning AI agents across recruiting, finance, and healthcare verticals, the pattern is consistent: agents treat all data as application data. A customer's social security number flows through the same pipeline as a product ID. Unless you explicitly gate PII before it leaves the running tool context, every downstream service receives unredacted personal data — and every hop is a potential GDPR violation.</p>
+<p>After scanning AI agents across recruiting, finance, and healthcare verticals, the pattern is consistent: agents treat all data as application data. A customer's social security number flows through the same pipeline as a product ID. Unless you explicitly gate PII before it leaves the running tool context, every downstream service receives unredacted personal data - and every hop is a potential GDPR violation.</p>
 
 <div class="key-takeaways">
   <h2>Key Takeaways</h2>
   <ul>
-    <li>AI agents leak PII by default because they treat all data identically — SSNs, emails, and credit cards flow through LLM APIs, logs, and vector databases as plain text.</li>
+    <li>AI agents leak PII by default because they treat all data identically - SSNs, emails, and credit cards flow through LLM APIs, logs, and vector databases as plain text.</li>
     <li>This violates GDPR Articles 5, 25, and 32 and EU AI Act Articles 10 and 12 simultaneously.</li>
-    <li>Automatic PII redaction before logging and API calls is the core technical control — a two-line code change that satisfies both regulations.</li>
+    <li>Automatic PII redaction before logging and API calls is the core technical control - a two-line code change that satisfies both regulations.</li>
     <li>SHA-256 hashing preserves the ability to look up records for GDPR Article 17 right-to-erasure requests without storing PII.</li>
-    <li>Redaction is not GDPR compliance by itself — you still need consent logic, retention policies, and breach procedures.</li>
+    <li>Redaction is not GDPR compliance by itself - you still need consent logic, retention policies, and breach procedures.</li>
   </ul>
 </div>
 
 <h2>Why Do AI Agents Leak PII by Default?</h2>
 
-<p>AI agents leak PII because they are built to process user input and route it through multiple services — LLM providers, vector databases, logging systems, audit trails, monitoring dashboards — and none of these hops include a PII filter by default. The agent does not know it is handling PII. It treats a customer's SSN the same way it treats a product SKU: as a string to pass along.</p>
+<p>AI agents leak PII because they are built to process user input and route it through multiple services - LLM providers, vector databases, logging systems, audit trails, monitoring dashboards - and none of these hops include a PII filter by default. The agent does not know it is handling PII. It treats a customer's SSN the same way it treats a product SKU: as a string to pass along.</p>
 
 <p>This violates GDPR Article 5 (data minimization), Article 25 (data protection by design), and Article 32 (security of processing). It also triggers <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">EU AI Act Article 10</a> (data governance requirements) and <a href="/blog/audit-trails-ai-agents-python">Article 12</a> (record-keeping). If you process health, financial, or employment data, PCI-DSS, HIPAA, or EEOC rules apply on top.</p>
 
@@ -274,7 +274,7 @@
 
 <h2>What Does PII Look Like in Agent Payloads?</h2>
 
-<p>PII in agent payloads looks like normal data — that is what makes it dangerous. There is no error, no warning, no flag. The sensitive fields pass through every service in your pipeline as plain text. Here is a realistic payload from a recruiting agent pulling candidate data:</p>
+<p>PII in agent payloads looks like normal data - that is what makes it dangerous. There is no error, no warning, no flag. The sensitive fields pass through every service in your pipeline as plain text. Here is a realistic payload from a recruiting agent pulling candidate data:</p>
 
 <pre><code class="detected">{
   "candidate_id": "cand_4892",
@@ -289,7 +289,7 @@
 
 <p>Five fields here are PII that should not be in your LLM prompt, audit logs, or vector database. But your agent sends all of it to every downstream service.</p>
 
-<p>What counts as PII varies by vertical. The GDPR does not define a fixed list — it treats any information that could identify a person as personal data:</p>
+<p>What counts as PII varies by vertical. The GDPR does not define a fixed list - it treats any information that could identify a person as personal data:</p>
 
 <table>
 <tr>
@@ -431,7 +431,7 @@ Stored as: {detections: [{category, field, method, hash}], payload: redacted}
     ↓
 [SHA-256 hash preserved for GDPR Art. 17 erasure lookups]</code></pre>
 
-<p>If a data subject requests erasure under GDPR Article 17, you look up their records by the SHA-256 hash and delete them — without ever having stored the original PII in your logs.</p>
+<p>If a data subject requests erasure under GDPR Article 17, you look up their records by the SHA-256 hash and delete them - without ever having stored the original PII in your logs.</p>
 
 <h2>How Does PII Redaction Map to GDPR and EU AI Act Requirements?</h2>
 
@@ -482,11 +482,11 @@ Stored as: {detections: [{category, field, method, hash}], payload: redacted}
 
 <p>PII redaction is the data governance layer that makes compliance possible, but it is not GDPR compliance by itself. Understanding the limits prevents false confidence and keeps your compliance posture honest.</p>
 
-<p><strong>Not full GDPR compliance.</strong> You still need consent logic, data retention policies, privacy notices, and breach procedures. Redaction handles the technical control — it does not handle the legal and organizational requirements.</p>
+<p><strong>Not full GDPR compliance.</strong> You still need consent logic, data retention policies, privacy notices, and breach procedures. Redaction handles the technical control - it does not handle the legal and organizational requirements.</p>
 
 <p><strong>Does not scan existing databases.</strong> Redaction gates new data flowing through your agent pipeline. If you have historical PII already stored in plain text in logs, vector databases, or audit trails, you need a separate data cleanup process.</p>
 
-<p><strong>Regex-based detection has limits.</strong> The library ships with 25+ patterns covering universal PII (emails, phones, SSNs, credit cards), but custom PII patterns in your domain — internal ID formats, custom phone conventions, proprietary identifiers — need custom rules added to the redactor configuration.</p>
+<p><strong>Regex-based detection has limits.</strong> The library ships with 25+ patterns covering universal PII (emails, phones, SSNs, credit cards), but custom PII patterns in your domain - internal ID formats, custom phone conventions, proprietary identifiers - need custom rules added to the redactor configuration.</p>
 
 <p><strong>Hashing and tokenisation are one-way.</strong> If you need to look up original values later for service delivery (not logging), use masking instead. Accept the tradeoff: your logs will contain partial data.</p>
 
@@ -496,7 +496,7 @@ Stored as: {detections: [{category, field, method, hash}], payload: redacted}
 <div class="faq-item">
   <button class="faq-question">How do AI agents leak PII?</button>
   <div class="faq-answer">
-    <p>AI agents leak PII by passing raw user data through multiple services — LLM APIs, vector databases, logging systems, and audit trails — without filtering sensitive fields. The agent treats all data identically by default, so a customer's SSN flows through the same pipeline as a product ID.</p>
+    <p>AI agents leak PII by passing raw user data through multiple services - LLM APIs, vector databases, logging systems, and audit trails - without filtering sensitive fields. The agent treats all data identically by default, so a customer's SSN flows through the same pipeline as a product ID.</p>
   </div>
 </div>
 
@@ -524,7 +524,7 @@ Stored as: {detections: [{category, field, method, hash}], payload: redacted}
 <div class="faq-item">
   <button class="faq-question">Can regex-based PII detection catch all sensitive data?</button>
   <div class="faq-answer">
-    <p>No. Regex covers universal patterns like emails, phones, SSNs, and credit cards (25+ patterns out of the box), but domain-specific PII — internal ID formats, custom phone conventions, proprietary identifiers — requires custom rules added to the redactor configuration.</p>
+    <p>No. Regex covers universal patterns like emails, phones, SSNs, and credit cards (25+ patterns out of the box), but domain-specific PII - internal ID formats, custom phone conventions, proprietary identifiers - requires custom rules added to the redactor configuration.</p>
   </div>
 </div>
 </section>

@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AIR Blackbox — Annotation Tool</title>
+<title>AIR Blackbox - Annotation Tool</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<meta name="description" content="AIR Blackbox Annotator — interactive tool for labeling AI compliance training data.">
+<meta name="description" content="AIR Blackbox Annotator - interactive tool for labeling AI compliance training data.">
 <link rel="canonical" href="https://airblackbox.ai/annotator">
 <meta property="og:title" content="AIR Blackbox Annotator">
-<meta property="og:description" content="AIR Blackbox Annotator — interactive tool for labeling AI compliance training data.">
+<meta property="og:description" content="AIR Blackbox Annotator - interactive tool for labeling AI compliance training data.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://airblackbox.ai/annotator">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AIR Blackbox Annotator">
-<meta name="twitter:description" content="AIR Blackbox Annotator — interactive tool for labeling AI compliance training data.">
+<meta name="twitter:description" content="AIR Blackbox Annotator - interactive tool for labeling AI compliance training data.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -108,9 +108,9 @@
   <div class="code-panel">
     <div class="file-header">
       <div class="file-meta">
-        <span class="file-name" id="fileName">—</span>
-        <span class="badge badge-fw" id="fwBadge">—</span>
-        <span class="badge" id="bucketBadge">—</span>
+        <span class="file-name" id="fileName">-</span>
+        <span class="badge badge-fw" id="fwBadge">-</span>
+        <span class="badge" id="bucketBadge">-</span>
       </div>
       <a class="gh-link" id="ghLink" href="#" target="_blank">↗ GitHub</a>
     </div>
@@ -123,7 +123,7 @@
       <div id="scannerLegend"></div>
     </div>
     <div class="ann-section">
-      <div class="ann-section-title">Your Judgment — Does this file implement?</div>
+      <div class="ann-section-title">Your Judgment - Does this file implement?</div>
       <div id="articleRows"></div>
     </div>
     <div class="nav-section">
@@ -210,7 +210,7 @@ function loadRow(idx) {
       <div class="scanner-dot ${pass ? 'dot-pass' : 'dot-fail'}"></div>
       <span style="color:${pass ? 'var(--accent)' : '#555'}">${a.label}</span>
       <span style="margin-left:4px">${a.name}</span>
-      <span style="margin-left:auto;font-size:10px">${pass ? 'PASS' : '—'}</span>
+      <span style="margin-left:auto;font-size:10px">${pass ? 'PASS' : '-'}</span>
     </div>`;
   }).join('');
 
@@ -219,7 +219,7 @@ function loadRow(idx) {
     const val = ann[a.key];
     return `<div class="article-row ${val !== undefined ? 'answered' : ''}" id="arow-${a.key}">
       <div class="article-row-top">
-        <span class="article-label">${a.label} — ${a.name}</span>
+        <span class="article-label">${a.label} - ${a.name}</span>
         <span class="scanner-badge scanner-${row[`scanner_${a.key}`]}">${row[`scanner_${a.key}`] === '1' ? 'scanner=YES' : 'scanner=NO'}</span>
       </div>
       <div class="article-desc">${a.desc}</div>

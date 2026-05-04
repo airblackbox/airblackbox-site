@@ -580,11 +580,11 @@
             <p><strong>Ed25519 is added for handoff identity.</strong> When an agent writes a handoff record, it includes five new fields:</p>
 
             <ul>
-                <li><strong>payload_hash</strong> — A SHA-256 hash of the task or result being handed off</li>
-                <li><strong>public_key</strong> — The agent's Ed25519 public key (so anyone can verify)</li>
-                <li><strong>signature</strong> — An Ed25519 signature over the record fields (proving only the keyholder could have signed)</li>
-                <li><strong>nonce</strong> — A random value for replay protection</li>
-                <li><strong>counterparty_id</strong> — The fingerprint of the agent on the other side of the handoff</li>
+                <li><strong>payload_hash</strong> - A SHA-256 hash of the task or result being handed off</li>
+                <li><strong>public_key</strong> - The agent's Ed25519 public key (so anyone can verify)</li>
+                <li><strong>signature</strong> - An Ed25519 signature over the record fields (proving only the keyholder could have signed)</li>
+                <li><strong>nonce</strong> - A random value for replay protection</li>
+                <li><strong>counterparty_id</strong> - The fingerprint of the agent on the other side of the handoff</li>
             </ul>
 
             <p>The HMAC still covers all of these new fields, so they are tamper-evident just like everything else in the chain. You get two layers: HMAC for integrity and Ed25519 for identity.</p>
@@ -774,7 +774,7 @@ python3 -m air_trust verify --handoffs-only</code></pre>
 
             <p>v1.2 is unilateral signing: Agent A signs "I am sending this" and Agent B signs "I received it." Future work (v1.3) would add <strong>bilateral co-attestation</strong>: both agents sign a single joint handoff record, proving they both witnessed the exchange simultaneously. This closes the collusion gap but requires both agents to be online at the moment of handoff.</p>
 
-            <p>We are not building co-attestation yet. Real demand drives prioritization. If multi-party signatures are something you need, <a href="https://github.com/airblackbox/air-trust/discussions">open a discussion on GitHub</a> — that signal influences the roadmap.</p>
+            <p>We are not building co-attestation yet. Real demand drives prioritization. If multi-party signatures are something you need, <a href="https://github.com/airblackbox/air-trust/discussions">open a discussion on GitHub</a> - that signal influences the roadmap.</p>
         </section>
 
         <!-- FAQ Section -->

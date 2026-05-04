@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quickstart — AIR Blackbox | EU AI Act Compliance in 5 Minutes</title>
+    <title>Quickstart - AIR Blackbox | EU AI Act Compliance in 5 Minutes</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta name="description" content="Get started with AIR Blackbox in 5 minutes. Install, scan your Python AI code, and see EU AI Act compliance results.">
     <meta name="keywords" content="EU AI Act quickstart, AI compliance setup, pip install air-blackbox, AI agent audit trail setup, Python AI compliance tutorial, LangChain trust layer, tamper-evident logging quickstart">
     <link rel="canonical" href="https://airblackbox.ai/quickstart">
-    <meta property="og:title" content="Quickstart — AIR Blackbox">
+    <meta property="og:title" content="Quickstart - AIR Blackbox">
     <meta property="og:description" content="Get started with AIR Blackbox in 5 minutes. Install, scan your Python AI code, and see EU AI Act compliance results.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://airblackbox.ai/quickstart">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Quickstart — AIR Blackbox">
+    <meta name="twitter:title" content="Quickstart - AIR Blackbox">
     <meta name="twitter:description" content="Get started with AIR Blackbox in 5 minutes. Install, scan your Python AI code, and see EU AI Act compliance results.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -262,7 +262,7 @@
 <header class="hero">
     <div class="hero-badge">5 minutes to your first audit trail</div>
     <h1>From <span class="highlight">pip install</span> to tamper-evident audit logs</h1>
-    <p>Add EU AI Act compliance infrastructure to your AI agent with zero configuration. SQLite storage, HMAC-SHA256 signing, policy enforcement — all out of the box.</p>
+    <p>Add EU AI Act compliance infrastructure to your AI agent with zero configuration. SQLite storage, HMAC-SHA256 signing, policy enforcement - all out of the box.</p>
 </header>
 
 <main class="content">
@@ -312,7 +312,7 @@ Installing collected packages: air-blackbox</span>
             <div class="terminal-body">
 <span class="prompt">$</span> <span class="cmd">air-blackbox demo</span>
 
-<span class="accent bold">    AIR BLACKBOX  —  The AI Action Firewall</span>
+<span class="accent bold">    AIR BLACKBOX  -  The AI Action Firewall</span>
 
 <span class="blue">[1/7]</span> <span class="bold">Agent searches for candidates</span>
 <span class="output">      Agent: recruiting-agent-001</span>
@@ -328,7 +328,7 @@ Installing collected packages: air-blackbox</span>
 
 <span class="blue">[4/7]</span> <span class="bold">Agent tries to delete records</span>
 <span class="err">      Decision: BLOCKED ✗</span>
-<span class="err">      AI agents cannot delete data — ever</span>
+<span class="err">      AI agents cannot delete data - ever</span>
 
 <span class="blue">[5/7]</span> <span class="bold">Simulating 5 more approved emails</span>
 <span class="success">      ✓ Email #1: Alex Chen (Netflix)</span>
@@ -370,7 +370,7 @@ Installing collected packages: air-blackbox</span>
 <span class="blue">from</span> gate.events <span class="blue">import</span> EventStore, GateEvent
 <span class="blue">from</span> gate.policy <span class="blue">import</span> PolicyEngine, PolicyRule
 
-<span class="output"># Initialize — SQLite storage, zero config</span>
+<span class="output"># Initialize - SQLite storage, zero config</span>
 store = EventStore(
     signing_key=<span class="accent">"your-secret-key"</span>,
     storage_path=<span class="accent">"audit.db"</span>
@@ -424,35 +424,35 @@ result = store.verify_chain()
             <span class="coverage-check">&#10003;</span>
             <div>
                 <div class="coverage-label">Policy Engine</div>
-                <div class="coverage-sub">Article 9 — Risk Management</div>
+                <div class="coverage-sub">Article 9 - Risk Management</div>
             </div>
         </div>
         <div class="coverage-item">
             <span class="coverage-check">&#10003;</span>
             <div>
                 <div class="coverage-label">Data Validation</div>
-                <div class="coverage-sub">Article 10 — Data Governance</div>
+                <div class="coverage-sub">Article 10 - Data Governance</div>
             </div>
         </div>
         <div class="coverage-item">
             <span class="coverage-check">&#10003;</span>
             <div>
                 <div class="coverage-label">HMAC Audit Chains</div>
-                <div class="coverage-sub">Article 12 — Record-Keeping</div>
+                <div class="coverage-sub">Article 12 - Record-Keeping</div>
             </div>
         </div>
         <div class="coverage-item">
             <span class="coverage-check">&#10003;</span>
             <div>
                 <div class="coverage-label">Approval Gates</div>
-                <div class="coverage-sub">Article 14 — Human Oversight</div>
+                <div class="coverage-sub">Article 14 - Human Oversight</div>
             </div>
         </div>
         <div class="coverage-item">
             <span class="coverage-check">&#10003;</span>
             <div>
                 <div class="coverage-label">Action Blocking</div>
-                <div class="coverage-sub">Article 15 — Robustness</div>
+                <div class="coverage-sub">Article 15 - Robustness</div>
             </div>
         </div>
         <div class="coverage-item">

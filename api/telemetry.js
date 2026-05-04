@@ -77,7 +77,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true });
   } catch (err) {
     console.error('Telemetry error:', err.message);
-    // Never return errors to the client — telemetry should be invisible
+    // Never return errors to the client - telemetry should be invisible
     return res.status(200).json({ ok: true });
   }
 }

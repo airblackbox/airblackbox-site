@@ -61,7 +61,7 @@ addLine('<span class="dim">  ─────────────────
 await narrate("6 of 6 technical checks passing. The code layer is covered. Compliance also requires process and documentation. This handles the engineering side.",1500);
 await narrate("AIR Blackbox supports LangChain, CrewAI, OpenAI Agents, Claude Agent SDK, Google ADK, AutoGen, and Haystack. Everything is open-source, zero external dependencies, and installs from PyPI.",1500);
 addLine('<span class="dim">  ─────────────────────────────────────────────────</span>');addBlank();addLine('  <span class="white bold">github.com/airblackbox</span>  │  <span class="white bold">airblackbox.ai</span>');addLine('  <span class="dim">pip install air-blackbox</span>');addBlank();
-await narrate("Star the repo on GitHub, or visit airblackbox.ai to get started. 48 checks, 1,500 tests, 74 percent coverage. This covers the code layer. Pair it with your compliance process for full coverage. The deadline is real. The technical fix is the easy part.",1200);
+await narrate("Star the repo on GitHub, or visit airblackbox.ai to get started. 51 checks, 1,500 tests, 74 percent coverage. This covers the code layer. Pair it with your compliance process for full coverage. The deadline is real. The technical fix is the easy part.",1200);
 narrationText.textContent="Demo complete. Press Start Demo to replay.";startBtn.disabled=false;startBtn.textContent='↻ Replay Demo';running=false}
 if(window.speechSynthesis){speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices()}
 document.getElementById('apiKey').addEventListener('change',e=>{if(e.target.value)localStorage.setItem('oai_key',e.target.value)});const sk=localStorage.getItem('oai_key');if(sk)document.getElementById('apiKey').value=sk;

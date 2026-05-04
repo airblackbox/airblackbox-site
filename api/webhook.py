@@ -31,7 +31,7 @@ RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 
 # ── Config ───────────────────────────────────────────────────────
 DO_REGION = "nyc1"
-DO_SIZE = "s-2vcpu-4gb"  # 4GB RAM — enough for Ollama + gateway stack
+DO_SIZE = "s-2vcpu-4gb"  # 4GB RAM - enough for Ollama + gateway stack
 DO_IMAGE = "ubuntu-22-04-x64"
 DOMAIN = "airblackbox.ai"
 
@@ -146,7 +146,7 @@ class handler(BaseHTTPRequestHandler):
 
 
 def handle_checkout(event):
-    """New Pro subscriber — provision their VPS."""
+    """New Pro subscriber - provision their VPS."""
     session = event["data"]["object"]
     customer_id = session.get("customer", "")
     customer_email = session.get("customer_details", {}).get("email", "")
@@ -242,7 +242,7 @@ def handle_checkout(event):
 
 
 def handle_cancellation(event):
-    """Subscription cancelled — tear down VPS."""
+    """Subscription cancelled - tear down VPS."""
     subscription = event["data"]["object"]
     customer_id = subscription.get("customer", "")
 
@@ -388,7 +388,7 @@ set -e
 curl -fsSL https://get.docker.com | sh
 
 # Clone the gateway repo
-git clone https://github.com/airblackbox/gateway.git /opt/airblackbox
+git clone https://github.com/airblackbox/airblackbox.git /opt/airblackbox
 cd /opt/airblackbox
 
 # Write .env file (secrets generated server-side, not on the VPS)
@@ -509,7 +509,7 @@ air-blackbox comply --scan . -v</pre>
         <p style="color: #8b949e;">Questions? Reply to this email or reach us at <a href="mailto:jason.j.shotwell@gmail.com" style="color: #58a6ff;">jason.j.shotwell@gmail.com</a></p>
 
         <hr style="border: 1px solid #21262d; margin: 2rem 0;">
-        <p style="color: #484f58; font-size: 12px;">AIR Blackbox — EU AI Act gap analysis scanner. Identifies gaps. Does not certify compliance.<br><a href="https://airblackbox.ai/terms.html" style="color: #484f58;">Terms of Service</a></p>
+        <p style="color: #484f58; font-size: 12px;">AIR Blackbox - EU AI Act gap analysis scanner. Identifies gaps. Does not certify compliance.<br><a href="https://airblackbox.ai/terms.html" style="color: #484f58;">Terms of Service</a></p>
     </div>
     """
 

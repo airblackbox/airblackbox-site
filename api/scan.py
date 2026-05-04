@@ -1,5 +1,5 @@
 """
-AIR Blackbox Console — Scan API
+AIR Blackbox Console - Scan API
 
 Vercel serverless function that accepts Python code and returns
 EU AI Act compliance findings. Uses the code scanner from the
@@ -153,7 +153,7 @@ def _track_usage(key_hash):
 
 # ============================================================
 # Code Scanner (extracted from air_blackbox.compliance.code_scanner)
-# All stdlib — zero external dependencies
+# All stdlib - zero external dependencies
 # ============================================================
 
 @dataclass
@@ -166,7 +166,7 @@ class CodeFinding:
     detection: str = "auto"
     fix_hint: str = ""
     files: list = field(default_factory=list)
-    severity: str = ""  # "high", "medium", "low" — set after scan
+    severity: str = ""  # "high", "medium", "low" - set after scan
 
     def to_dict(self):
         return {

@@ -1,9 +1,9 @@
 """
-AIR Blackbox — Stripe Checkout
+AIR Blackbox - Stripe Checkout
 
 Supports two products:
-  1. Pro plan subscription ($49/month) — GET /api/checkout
-  2. Scan credit packs (one-time) — GET /api/checkout?pack=500|2000|10000&key=airbb_sk_...
+  1. Pro plan subscription ($49/month) - GET /api/checkout
+  2. Scan credit packs (one-time) - GET /api/checkout?pack=500|2000|10000&key=airbb_sk_...
 
 Uses stdlib only (no stripe package) for maximum compatibility.
 """
