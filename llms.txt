@@ -2,7 +2,7 @@
 
 > The trust infrastructure between human intent and AI execution. Verify. Filter. Stabilize. Protect.
 
-AIR Blackbox is open-source trust infrastructure that sits inside every AI call -- between your team and the AI stack -- providing decision traceability, escalation intelligence, operational drift detection, and human oversight proof. v1.10.0. 1,500+ tests. 74% coverage. Runs locally. Apache 2.0.
+AIR Blackbox is open-source trust infrastructure that sits inside every AI call -- between your team and the AI stack -- providing decision traceability, escalation intelligence, operational drift detection, and human oversight proof. v1.12.0. 1,500+ tests. 74% coverage. Runs locally. Apache 2.0.
 
 AI made generation abundant. What becomes valuable now is the infrastructure that verifies, routes, constrains, and records machine-assisted work in real time. Compliance is the wedge. Trust infrastructure is the platform.
 
