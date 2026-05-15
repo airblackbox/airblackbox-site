@@ -535,7 +535,7 @@ function renderResults(data) {
                 '<div class="meta-line" style="color:var(--red); font-weight:600;">' + highCount + ' high &middot; ' + medCount + ' medium &middot; ' + lowCount + ' low</div>' +
                 '<div class="results-actions">' +
                     '<button onclick="showPanel(\'input\')">&#9654; New Scan</button>' +
-                    '<button onclick="window.location.href=\'/api/checkout\'">&#128196; Export PDF (Pro)</button>' +
+                    '<button onclick="exportEvidenceBundle()" id="export-btn">&#128196; Export Evidence Bundle</button>' +
                     '<button onclick="window.location.href=\'/api/checkout\'">&#128338; Save to History (Pro)</button>' +
                 '</div>' +
             '</div>' +
@@ -571,6 +571,91 @@ function filterFindings(severity, btn) {
             card.style.display = 'none';
         }
     });
+}
+
+async function exportEvidenceBundle() {
+    if (!lastScanData) {
+        alert('No scan results to export. Run a scan first.');
+        return;
+    }
+
+    // Check if user has an API key stored
+    var apiKey = localStorage.getItem('airbb_api_key') || '';
+
+    if (!apiKey) {
+        // Prompt for API key or redirect to get one
+        apiKey = prompt(
+            'Evidence bundle export requires an API key (5 credits per export).\n\n' +
+            'Enter your API key (airbb_sk_...) or leave blank to get one:'
+        );
+        if (!apiKey) {
+            window.location.href = '/shadow-ai';
+            return;
+        }
+        apiKey = apiKey.trim();
+        if (!apiKey.startsWith('airbb_sk_')) {
+            alert('Invalid API key format. Keys start with airbb_sk_');
+            return;
+        }
+        localStorage.setItem('airbb_api_key', apiKey);
+    }
+
+    var btn = document.getElementById('export-btn');
+    var originalText = btn.textContent;
+    btn.textContent = 'Generating bundle...';
+    btn.disabled = true;
+
+    try {
+        var response = await fetch('/api/export', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + apiKey
+            },
+            body: JSON.stringify({ scan_results: lastScanData })
+        });
+
+        if (response.status === 401 || response.status === 402) {
+            var err = await response.json();
+            localStorage.removeItem('airbb_api_key');
+            alert(err.error || 'Authentication failed. Please check your API key and credits.');
+            btn.textContent = originalText;
+            btn.disabled = false;
+            return;
+        }
+
+        if (!response.ok) {
+            var err2 = await response.json();
+            alert('Export failed: ' + (err2.error || 'Unknown error'));
+            btn.textContent = originalText;
+            btn.disabled = false;
+            return;
+        }
+
+        // Download the ZIP
+        var blob = await response.blob();
+        var evidenceId = response.headers.get('X-Evidence-ID') || 'bundle';
+        var creditsLeft = response.headers.get('X-Credits-Remaining') || '?';
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'air-evidence-' + evidenceId + '.zip';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        btn.textContent = 'Downloaded! (' + creditsLeft + ' credits left)';
+        setTimeout(function() {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }, 3000);
+
+    } catch (fetchErr) {
+        alert('Export failed: ' + fetchErr.message);
+        btn.textContent = originalText;
+        btn.disabled = false;
+    }
 }
 </script>
 

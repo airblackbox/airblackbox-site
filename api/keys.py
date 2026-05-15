@@ -35,7 +35,7 @@ PRICING = {
     "free": {"monthly_limit": 25, "per_scan": 0.0},
     "starter": {"monthly_limit": 5_000, "per_scan": 0.03},
     "growth": {"monthly_limit": 100_000, "per_scan": 0.02},
-    "enterprise": {"monthly_limit": None, "per_scan": 0.01},  # unlimited
+    # No unlimited tier yet. Credits only.
 }
 
 
@@ -128,6 +128,29 @@ def _kv_ttl(key: str) -> int:
         return r.ttl(key)
     except Exception:
         return -2
+
+
+# ============================================================
+# Rate Limiting
+# ============================================================
+
+def _check_rate_limit(identifier, action, limit=5, window=3600):
+    """Check if an identifier (IP) has exceeded the rate limit.
+
+    Returns True if under limit, False if over limit.
+    Uses a sliding window counter in Redis.
+    """
+    r = _get_redis()
+    if not r:
+        return True  # fail open if Redis is down
+    try:
+        key = f"ratelimit:{action}:{identifier}"
+        current = r.incr(key)
+        if current == 1:
+            r.expire(key, window)
+        return current <= limit
+    except Exception:
+        return True  # fail open
 
 
 # ============================================================
@@ -363,7 +386,14 @@ class handler(BaseHTTPRequestHandler):
             if not email or "@" not in email or "." not in email:
                 return self._error(400, "A valid email address is required.")
 
-            # Check if email already has a key
+            # Rate limit: max 5 key creation attempts per IP per hour
+            client_ip = self.headers.get("X-Forwarded-For", "unknown").split(",")[0].strip()
+            rate_ok = _check_rate_limit(client_ip, "keygen", limit=5, window=3600)
+            if not rate_ok:
+                return self._error(429, "Too many key creation requests. Try again in an hour.")
+
+            # Check if email already has a key.
+            # Use a generic message to prevent email enumeration.
             existing_hash = _kv_get(f"email:{email}")
             if existing_hash:
                 existing_meta = _kv_get(f"apikey:{existing_hash}")
@@ -371,9 +401,9 @@ class handler(BaseHTTPRequestHandler):
                     meta = json.loads(existing_meta)
                     if meta.get("active"):
                         return self._error(409,
-                            "This email already has an active API key. "
-                            "Use GET /api/keys with your key to check status, "
-                            "or DELETE /api/keys to revoke and generate a new one."
+                            "A key already exists for this account. "
+                            "Use GET /api/keys with your existing key to check status, "
+                            "or DELETE /api/keys with your key to revoke and generate a new one."
                         )
 
             # Generate and store the key

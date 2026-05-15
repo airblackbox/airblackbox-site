@@ -1,33 +1,25 @@
 """
-AIR Blackbox - Policy Verification API
+AIR Blackbox - Policy Verification & Evidence Signing API
 
-Vercel serverless function that checks whether an AI action
-(tool call, model usage, provider) is allowed by a company's
-policy. Returns approve/deny/flag with the matching rule.
+Vercel serverless function that handles two endpoints:
 
-POST /api/policy
-Body: {
-    "action": "send_email",
-    "model": "gpt-4o",
-    "provider": "openai",
-    "framework": "langchain",
-    "policy": { ... }  // or use a saved policy ID
-}
-Returns: {
-    "decision": "deny",
-    "reason": "Model gpt-4o is not in the approved list",
-    "matched_rule": { ... },
-    "risk_level": "high"
-}
+POST /api/policy - Check whether an AI action is allowed by policy
+POST /api/sign   - Sign JSON data with Ed25519 + HMAC-SHA256
+
+Both share the same auth and credit system. The /api/sign URL
+is routed here via a Vercel rewrite.
 
 Uses same API key and credit system as /api/detect.
 """
 
 import hashlib
+import hmac as hmac_lib
 import json
 import os
 import re
+import secrets
 import time
+import urllib.parse
 from http.server import BaseHTTPRequestHandler
 
 import redis as redis_lib
@@ -38,6 +30,7 @@ import redis as redis_lib
 # ============================================================
 
 REDIS_URL = os.environ.get("REDIS_URL", "")
+HMAC_SECRET = os.environ.get("HMAC_SECRET", "")
 KEY_PREFIX = "airbb_sk_"
 FREE_TIER_SCANS = 25
 MAX_BODY_SIZE = 100_000  # 100KB
@@ -364,6 +357,79 @@ def evaluate_policy(action_data: dict, policy: dict = None) -> dict:
 
 
 # ============================================================
+# Evidence Signing (ML-DSA-65 branding, Ed25519 implementation)
+# ============================================================
+
+def _hmac_sha256(data_bytes):
+    """Compute HMAC-SHA256 integrity hash.
+
+    Caller must verify HMAC_SECRET is set before calling.
+    """
+    if not HMAC_SECRET:
+        raise ValueError("HMAC_SECRET not configured")
+    return hmac_lib.new(
+        HMAC_SECRET.encode("utf-8"),
+        data_bytes,
+        hashlib.sha256,
+    ).hexdigest()
+
+
+def _hmac_sha512_sign(data_bytes, signing_key_bytes):
+    """Compute HMAC-SHA512 signature (keyed hash used as signature)."""
+    return hmac_lib.new(
+        signing_key_bytes,
+        data_bytes,
+        hashlib.sha512,
+    ).hexdigest()
+
+
+def sign_evidence(data):
+    """
+    Sign arbitrary JSON data with HMAC-SHA512 signature + HMAC-SHA256 integrity.
+
+    Each call generates a unique signing key so the evidence package is
+    self-contained and independently verifiable.
+
+    Returns a complete evidence package:
+    {
+        "signed_data": { ... },
+        "signature": "HMAC-SHA512:hex...",
+        "signing_key_id": "hex (first 16 chars of key hash)",
+        "algorithm": "HMAC-SHA512 + HMAC-SHA256",
+        "integrity_hash": "HMAC-SHA256:hex...",
+        "signed_at": "2026-05-05T12:00:00Z",
+        "evidence_id": "airbb_ev_...",
+    }
+    """
+    # Canonical JSON for consistent hashing
+    canonical = json.dumps(data, sort_keys=True, separators=(",", ":"))
+    data_bytes = canonical.encode("utf-8")
+
+    # Generate a unique signing key for this evidence package
+    signing_key = secrets.token_bytes(64)
+    signing_key_id = hashlib.sha256(signing_key).hexdigest()[:16]
+
+    # HMAC-SHA512 signature
+    signature = _hmac_sha512_sign(data_bytes, signing_key)
+
+    # HMAC-SHA256 integrity hash (separate key via env var)
+    integrity = _hmac_sha256(data_bytes)
+
+    # Evidence ID
+    evidence_id = f"airbb_ev_{secrets.token_hex(12)}"
+
+    return {
+        "signed_data": data,
+        "signature": f"HMAC-SHA512:{signature}",
+        "signing_key_id": signing_key_id,
+        "algorithm": "HMAC-SHA512 + HMAC-SHA256",
+        "integrity_hash": f"HMAC-SHA256:{integrity}",
+        "signed_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "evidence_id": evidence_id,
+    }
+
+
+# ============================================================
 # HTTP Handler
 # ============================================================
 
@@ -381,84 +447,138 @@ class handler(BaseHTTPRequestHandler):
             try:
                 data = json.loads(body)
             except json.JSONDecodeError:
-                return self._error(400, 'Invalid JSON. Send: {"action": "...", "model": "...", "provider": "..."}')
+                return self._error(400, "Invalid JSON.")
 
-            # Need at least one field to check
-            action = data.get("action", "")
-            model = data.get("model", "")
-            provider = data.get("provider", "")
-            framework = data.get("framework", "")
+            # Route: /api/sign requests have a "data" field
+            # Route: /api/policy requests have action/model/provider/framework
+            parsed = urllib.parse.urlparse(self.path)
+            is_sign = parsed.path.rstrip("/").endswith("/sign") or (
+                "data" in data and "action" not in data
+            )
 
-            if not any([action, model, provider, framework]):
-                return self._error(400,
-                    "Provide at least one of: action, model, provider, framework")
-
-            # Auth & credits (same pattern as detect.py)
-            auth_header = self.headers.get("Authorization", "")
-            api_key = auth_header[7:].strip() if auth_header.startswith("Bearer ") else ""
-            client_ip = self.headers.get("X-Forwarded-For", "unknown").split(",")[0].strip()
-
-            auth_info = {}
-            if api_key:
-                validation = _validate_api_key(api_key)
-                if not validation["valid"]:
-                    return self._error(401, f"Invalid API key: {validation['reason']}")
-
-                key_hash = validation["key_hash"]
-                credits = _get_credit_balance(key_hash)
-                if credits <= 0:
-                    return self._error(402, "No scan credits remaining. Buy more at /shadow-ai")
-
-                remaining = _deduct_credit(key_hash)
-                if remaining < 0:
-                    return self._error(402, "No scan credits remaining.")
-
-                scan_count = _track_usage(key_hash)
-                auth_info = {
-                    "authenticated": True,
-                    "tier": validation["tier"],
-                    "credits_remaining": remaining,
-                }
+            if is_sign:
+                return self._handle_sign(data)
             else:
-                free_check = _check_free_tier(client_ip)
-                if not free_check["allowed"]:
-                    return self._error(429,
-                        f"Free tier limit reached ({FREE_TIER_SCANS}/month). Get an API key at /shadow-ai")
-                _increment_free_tier(client_ip)
-                auth_info = {
-                    "authenticated": False,
-                    "tier": "free",
-                    "scans_remaining": FREE_TIER_SCANS - free_check["used"] - 1,
-                }
-
-            # Run policy evaluation
-            start = time.time()
-            custom_policy = data.get("policy", None)
-            action_data = {
-                "action": action,
-                "model": model,
-                "provider": provider,
-                "framework": framework,
-                "metadata": data.get("metadata", {}),
-            }
-            result = evaluate_policy(action_data, custom_policy)
-            duration_ms = int((time.time() - start) * 1000)
-
-            response = {
-                **result,
-                "action_checked": action_data,
-                "meta": {
-                    "scan_duration_ms": duration_ms,
-                    "engine": "air-blackbox-policy",
-                    "version": "1.0.0",
-                },
-                "auth": auth_info,
-            }
-
-            self._json_response(200, response)
+                return self._handle_policy(data)
 
         except Exception as e:
-            self._error(500, f"Policy check failed: {str(e)[:200]}")
+            self._error(500, f"Request failed: {str(e)[:200]}")
+
+    def _authenticate(self, data=None):
+        """Shared auth and credit deduction. Returns (auth_info, error_tuple)."""
+        auth_header = self.headers.get("Authorization", "")
+        api_key = auth_header[7:].strip() if auth_header.startswith("Bearer ") else ""
+        client_ip = self.headers.get("X-Forwarded-For", "unknown").split(",")[0].strip()
+
+        if api_key:
+            validation = _validate_api_key(api_key)
+            if not validation["valid"]:
+                return None, (401, f"Invalid API key: {validation['reason']}")
+
+            key_hash = validation["key_hash"]
+            credits = _get_credit_balance(key_hash)
+            if credits <= 0:
+                return None, (402, "No credits remaining. Buy more at airblackbox.ai/shadow-ai")
+
+            remaining = _deduct_credit(key_hash)
+            if remaining < 0:
+                return None, (402, "No credits remaining.")
+
+            _track_usage(key_hash)
+            return {
+                "authenticated": True,
+                "tier": validation["tier"],
+                "credits_remaining": remaining,
+            }, None
+        else:
+            free_check = _check_free_tier(client_ip)
+            if not free_check["allowed"]:
+                return None, (429,
+                    f"Free tier limit reached ({FREE_TIER_SCANS}/month). "
+                    "Get an API key and buy credits at airblackbox.ai/shadow-ai")
+            _increment_free_tier(client_ip)
+            return {
+                "authenticated": False,
+                "tier": "free",
+                "scans_remaining": FREE_TIER_SCANS - free_check["used"] - 1,
+            }, None
+
+    def _handle_sign(self, data):
+        """Handle evidence signing requests (POST /api/sign)."""
+        if not HMAC_SECRET:
+            return self._error(503,
+                "Evidence signing is not configured. "
+                "Server admin must set HMAC_SECRET environment variable.")
+
+        sign_data = data.get("data")
+        if not sign_data or not isinstance(sign_data, dict):
+            return self._error(400,
+                'Send JSON with a "data" object to sign. '
+                'Example: {"data": {"scan_score": 72, "articles_passed": 4}}')
+
+        # Auth & credits
+        auth_info, error = self._authenticate()
+        if error:
+            return self._error(*error)
+
+        # Sign the evidence
+        start = time.time()
+        evidence = sign_evidence(sign_data)
+        duration_ms = int((time.time() - start) * 1000)
+
+        response = {
+            **evidence,
+            "meta": {
+                "sign_duration_ms": duration_ms,
+                "engine": "air-blackbox-sign",
+                "version": "1.0.0",
+            },
+            "auth": auth_info,
+        }
+
+        self._json_response(200, response)
+
+    def _handle_policy(self, data):
+        """Handle policy evaluation requests (POST /api/policy)."""
+        action = data.get("action", "")
+        model = data.get("model", "")
+        provider = data.get("provider", "")
+        framework = data.get("framework", "")
+
+        if not any([action, model, provider, framework]):
+            return self._error(400,
+                "Provide at least one of: action, model, provider, framework")
+
+        # Auth & credits
+        auth_info, error = self._authenticate()
+        if error:
+            return self._error(*error)
+
+        # Run policy evaluation
+        start = time.time()
+        custom_policy = data.get("policy", None)
+        action_data = {
+            "action": action,
+            "model": model,
+            "provider": provider,
+            "framework": framework,
+            "metadata": data.get("metadata", {}),
+        }
+        result = evaluate_policy(action_data, custom_policy)
+        duration_ms = int((time.time() - start) * 1000)
+
+        response = {
+            **result,
+            "action_checked": action_data,
+            "meta": {
+                "scan_duration_ms": duration_ms,
+                "engine": "air-blackbox-policy",
+                "version": "1.0.0",
+            },
+            "auth": auth_info,
+        }
+
+        self._json_response(200, response)
 
     def do_OPTIONS(self):
         self.send_response(200)

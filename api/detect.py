@@ -956,7 +956,7 @@ class handler(BaseHTTPRequestHandler):
                 if not free_check["allowed"]:
                     return self._error(429,
                         f"Free tier limit reached ({FREE_TIER_SCANS} scans/month). "
-                        f"Get an API key at POST /api/keys for unlimited scans."
+                        f"Get an API key and buy credits at airblackbox.ai/shadow-ai"
                     )
                 _increment_free_tier(client_ip)
                 auth_info = {
@@ -994,6 +994,13 @@ class handler(BaseHTTPRequestHandler):
                         "context": context,
                         "engine": "air-blackbox-shadow-detect",
                         "version": "0.3.0",
+                        "method": "statistical_heuristic",
+                        "disclaimer": (
+                            "Detection uses statistical heuristics (vocabulary, "
+                            "sentence structure, hedging patterns), not a trained ML "
+                            "model. Results are indicative, not definitive. "
+                            "Sophisticated AI-generated text may evade detection."
+                        ),
                     },
                     "auth": auth_info,
                 }
@@ -1011,6 +1018,13 @@ class handler(BaseHTTPRequestHandler):
                         "context": context,
                         "engine": "air-blackbox-shadow-detect",
                         "version": "0.3.0",
+                        "method": "statistical_heuristic",
+                        "disclaimer": (
+                            "Detection uses statistical heuristics (vocabulary, "
+                            "sentence structure, hedging patterns), not a trained ML "
+                            "model. Results are indicative, not definitive. "
+                            "Sophisticated AI-generated text may evade detection."
+                        ),
                     },
                     "auth": auth_info,
                 }

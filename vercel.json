@@ -74,6 +74,10 @@
       "destination": "/demo/gate.html"
     },
     {
+      "source": "/demo/scanner",
+      "destination": "/demo/scanner.html"
+    },
+    {
       "source": "/vaultmind",
       "destination": "/vaultmind/index.html"
     },
@@ -170,6 +174,10 @@
       "destination": "/blog/python-agent-compliance-roadmap-august-2026.html"
     },
     {
+      "source": "/blog/openai-privacy-filter-compliance-stack",
+      "destination": "/blog/openai-privacy-filter-compliance-stack.html"
+    },
+    {
       "source": "/blog/agentic-ai-compliance-eu-ai-act",
       "destination": "/blog/agentic-ai-compliance-eu-ai-act.html"
     },
@@ -208,6 +216,10 @@
     {
       "source": "/attest",
       "destination": "/attest.html"
+    },
+    {
+      "source": "/api/sign",
+      "destination": "/api/policy"
     },
     {
       "source": "/shadow-ai",
@@ -261,10 +273,13 @@
       "maxDuration": 10
     },
     "api/policy.py": {
-      "maxDuration": 10
+      "maxDuration": 15
     },
     "api/admin.py": {
       "maxDuration": 15
+    },
+    "api/export.py": {
+      "maxDuration": 30
     },
     "api/attest.js": {
       "maxDuration": 10

@@ -62,12 +62,50 @@ function validateRecord(record) {
     }
   }
 
-  // Crypto -- signature is required for public registry
-  if (!record.crypto || !record.crypto.signature) {
-    issues.push('Missing crypto.signature (attestation must be signed)');
-  }
-  if (record.crypto && !record.crypto.public_key_fingerprint) {
-    issues.push('Missing crypto.public_key_fingerprint');
+  // Crypto -- signature must be present, structurally valid, and verifiable
+  if (!record.crypto || typeof record.crypto !== 'object') {
+    issues.push('Missing crypto object (attestation must be signed)');
+  } else {
+    // Signature must be a non-empty string with a recognized algorithm prefix
+    const sig = record.crypto.signature;
+    if (!sig || typeof sig !== 'string') {
+      issues.push('Missing or invalid crypto.signature');
+    } else if (sig.length < 32) {
+      issues.push('crypto.signature too short to be valid (minimum 32 characters)');
+    } else {
+      // Must start with a recognized algorithm prefix
+      const validPrefixes = ['HMAC-SHA256:', 'HMAC-SHA512:', 'Ed25519:', 'ML-DSA-65:'];
+      const hasValidPrefix = validPrefixes.some(p => sig.startsWith(p));
+      if (!hasValidPrefix) {
+        issues.push(
+          'crypto.signature must start with a recognized algorithm prefix: ' +
+          validPrefixes.join(', ')
+        );
+      }
+      // The hex payload after the prefix must be valid hex
+      const colonIdx = sig.indexOf(':');
+      if (colonIdx > 0) {
+        const hexPart = sig.slice(colonIdx + 1);
+        if (!/^[0-9a-fA-F]{32,}$/.test(hexPart)) {
+          issues.push('crypto.signature hex payload is invalid or too short');
+        }
+      }
+    }
+
+    if (!record.crypto.algorithm || typeof record.crypto.algorithm !== 'string') {
+      issues.push('Missing crypto.algorithm (e.g. "HMAC-SHA256", "Ed25519")');
+    }
+
+    if (!record.crypto.public_key_fingerprint || typeof record.crypto.public_key_fingerprint !== 'string') {
+      issues.push('Missing crypto.public_key_fingerprint');
+    } else if (record.crypto.public_key_fingerprint.length < 8) {
+      issues.push('crypto.public_key_fingerprint too short (minimum 8 characters)');
+    }
+
+    // Integrity hash must also be present if signature is present
+    if (!record.crypto.integrity_hash || typeof record.crypto.integrity_hash !== 'string') {
+      issues.push('Missing crypto.integrity_hash (HMAC-SHA256 of signed data)');
+    }
   }
 
   return issues;

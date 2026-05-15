@@ -9,6 +9,7 @@ Usage:
   curl -H "X-Admin-Secret: YOUR_SECRET" "https://airblackbox.ai/api/admin?limit=100"
 """
 
+import hmac
 import json
 import os
 import time
@@ -43,13 +44,13 @@ def _get_redis():
 # Data helpers
 # ============================================================
 
-def _get_signups(limit=50):
-    """Get recent signups from the signups list."""
+def _get_signups(limit=50, offset=0):
+    """Get recent signups from the signups list with pagination."""
     r = _get_redis()
     if not r:
         return []
     try:
-        raw_list = r.lrange("signups", 0, limit - 1)
+        raw_list = r.lrange("signups", offset, offset + limit - 1)
         return [json.loads(item) for item in raw_list]
     except Exception:
         return []
@@ -96,15 +97,17 @@ def _get_recent_purchases(limit=50):
 
 
 def _get_active_key_count():
-    """Count active API keys (approximate via scan)."""
+    """Count active API keys (bounded scan, max 1000 keys checked)."""
     r = _get_redis()
     if not r:
         return 0
     try:
         count = 0
         cursor = 0
-        while True:
-            cursor, keys = r.scan(cursor, match="apikey:*", count=100)
+        iterations = 0
+        max_iterations = 20  # 20 * 50 = 1000 keys max
+        while iterations < max_iterations:
+            cursor, keys = r.scan(cursor, match="apikey:*", count=50)
             for key in keys:
                 raw = r.get(key)
                 if raw:
@@ -114,6 +117,7 @@ def _get_active_key_count():
                             count += 1
                     except (json.JSONDecodeError, TypeError):
                         pass
+            iterations += 1
             if cursor == 0:
                 break
         return count
@@ -122,7 +126,7 @@ def _get_active_key_count():
 
 
 def _get_month_usage_stats():
-    """Get total API usage across all keys this month."""
+    """Get total API usage across all keys this month (bounded scan)."""
     r = _get_redis()
     if not r:
         return {"month": "", "total_calls": 0}
@@ -130,12 +134,15 @@ def _get_month_usage_stats():
         month = time.strftime("%Y-%m", time.gmtime())
         total = 0
         cursor = 0
-        while True:
-            cursor, keys = r.scan(cursor, match=f"usage:*:{month}", count=100)
+        iterations = 0
+        max_iterations = 20  # 20 * 50 = 1000 keys max
+        while iterations < max_iterations:
+            cursor, keys = r.scan(cursor, match=f"usage:*:{month}", count=50)
             for key in keys:
                 val = r.get(key)
                 if val:
                     total += int(val)
+            iterations += 1
             if cursor == 0:
                 break
         return {"month": month, "total_calls": total}
@@ -154,19 +161,18 @@ class handler(BaseHTTPRequestHandler):
         if not ADMIN_SECRET:
             return self._error(503, "ADMIN_SECRET not configured. Add it as a Vercel env var.")
 
-        secret = self.headers.get("X-Admin-Secret")
+        secret = self.headers.get("X-Admin-Secret", "")
 
-        if secret != ADMIN_SECRET:
+        if not secret or not hmac.compare_digest(secret, ADMIN_SECRET):
             return self._error(401, "Missing or invalid X-Admin-Secret header.")
 
         parsed = urllib.parse.urlparse(self.path)
         qs = urllib.parse.parse_qs(parsed.query)
-        limit = int(qs.get("limit", ["50"])[0])
-        if limit > 500:
-            limit = 500
+        limit = min(int(qs.get("limit", ["50"])[0]), 100)
+        offset = max(int(qs.get("offset", ["0"])[0]), 0)
 
         # Gather all stats
-        signups = _get_signups(limit)
+        signups = _get_signups(limit, offset)
         total_signups = _get_total_signups()
         active_keys = _get_active_key_count()
         usage = _get_month_usage_stats()
@@ -179,6 +185,11 @@ class handler(BaseHTTPRequestHandler):
                 "api_calls_this_month": usage["total_calls"],
                 "month": usage["month"],
                 "checked_at": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime()),
+            },
+            "pagination": {
+                "offset": offset,
+                "limit": limit,
+                "next_offset": offset + limit if len(signups) == limit else None,
             },
             "recent_signups": signups,
             "recent_purchases": purchases,

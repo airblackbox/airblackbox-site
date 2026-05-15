@@ -14,6 +14,7 @@ import json
 import os
 import re
 import hashlib
+import signal
 import tempfile
 import time
 from dataclasses import dataclass, field
@@ -334,11 +335,43 @@ DOC_PATTERNS = {
 }
 
 
+_REGEX_TIMEOUT_SECONDS = 2
+
+
+class _RegexTimeout(Exception):
+    pass
+
+
+def _regex_timeout_handler(signum, frame):
+    raise _RegexTimeout("Regex timed out")
+
+
+def _safe_re_search(pattern, text, flags=0, timeout=_REGEX_TIMEOUT_SECONDS):
+    """Run re.search with a timeout guard against ReDoS.
+
+    On platforms without SIGALRM (Windows, some serverless), falls back
+    to running without a timeout -- still safe because Vercel has its
+    own 10s function timeout.
+    """
+    has_alarm = hasattr(signal, "SIGALRM")
+    if has_alarm:
+        old_handler = signal.signal(signal.SIGALRM, _regex_timeout_handler)
+        signal.alarm(timeout)
+    try:
+        return re.search(pattern, text, flags)
+    except _RegexTimeout:
+        return None
+    finally:
+        if has_alarm:
+            signal.alarm(0)
+            signal.signal(signal.SIGALRM, old_handler)
+
+
 def _detect_patterns(code: str, patterns: list) -> list:
     """Return list of patterns that match anywhere in the code."""
     found = []
     for p in patterns:
-        if re.search(p, code, re.MULTILINE | re.IGNORECASE):
+        if _safe_re_search(p, code, re.MULTILINE | re.IGNORECASE):
             found.append(p)
     return found
 
@@ -946,6 +979,8 @@ class handler(BaseHTTPRequestHandler):
             client_ip = self.headers.get("X-Forwarded-For", "unknown").split(",")[0].strip()
 
             auth_info = {}
+            key_hash = None
+            is_free = False
             if api_key:
                 validation = _validate_api_key(api_key)
                 if not validation["valid"]:
@@ -956,32 +991,36 @@ class handler(BaseHTTPRequestHandler):
                 if credits <= 0:
                     return self._error(402, "No scan credits remaining. Buy more at /shadow-ai")
 
-                remaining = _deduct_credit(key_hash)
-                if remaining < 0:
-                    return self._error(402, "No scan credits remaining.")
-
-                scan_count = _track_usage(key_hash)
                 auth_info = {
                     "authenticated": True,
                     "tier": validation["tier"],
-                    "credits_remaining": remaining,
                 }
             else:
                 free_check = _check_free_tier(client_ip)
                 if not free_check["allowed"]:
                     return self._error(429,
                         f"Free tier limit reached ({FREE_TIER_SCANS}/month). Get an API key at /shadow-ai")
-                _increment_free_tier(client_ip)
+                is_free = True
                 auth_info = {
                     "authenticated": False,
                     "tier": "free",
                     "scans_remaining": FREE_TIER_SCANS - free_check["used"] - 1,
                 }
 
-            # Run scan
+            # Run scan BEFORE deducting credits -- if scan errors, no charge
             start = time.time()
             findings = scan_code_string(code)
             scores = calculate_score(findings)
+
+            # Scan succeeded -- NOW deduct credit / increment free tier
+            if key_hash:
+                remaining = _deduct_credit(key_hash)
+                if remaining < 0:
+                    return self._error(402, "No scan credits remaining.")
+                _track_usage(key_hash)
+                auth_info["credits_remaining"] = remaining
+            elif is_free:
+                _increment_free_tier(client_ip)
             duration_ms = int((time.time() - start) * 1000)
 
             # Build response

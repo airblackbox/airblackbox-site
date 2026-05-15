@@ -183,6 +183,9 @@ def handle_checkout(event):
     subdomain = f"{slug}.{DOMAIN}"
     gateway_key = f"gw_{secrets.token_hex(16)}"
 
+    droplet_id = None
+    droplet_ip = None
+
     try:
         # Step 0: Mark as provisioning BEFORE creating resources (prevents duplicates on retry)
         if customer_id and STRIPE_SECRET_KEY:
@@ -201,13 +204,12 @@ def handle_checkout(event):
         print(f"[WEBHOOK] Creating DNS record: {slug}.{DOMAIN}")
         create_dns_record(slug, droplet_ip)
 
-        # Step 3: Update Stripe customer metadata with full provisioning details
+        # Step 3: Update Stripe customer metadata (NO secrets stored here).
+        # gateway_key and vps_ip are sent via email only, not stored in Stripe.
         update_stripe_customer(customer_id, {
             "company_slug": slug,
             "subdomain": subdomain,
-            "vps_ip": droplet_ip,
             "droplet_id": str(droplet_id),
-            "gateway_key": gateway_key,
             "provision_status": "active",
         })
 
@@ -230,15 +232,35 @@ def handle_checkout(event):
         }
 
     except Exception as e:
-        # Update metadata to show failure
+        # Cleanup on partial failure: destroy orphaned resources
+        error_msg = str(e)[:200]
+        print(f"[WEBHOOK] Provisioning failed: {error_msg}")
+
+        # Try to clean up the droplet if it was created
+        try:
+            if droplet_id:
+                print(f"[WEBHOOK] Cleaning up orphaned droplet {droplet_id}")
+                destroy_droplet(droplet_id)
+        except Exception as cleanup_err:
+            print(f"[WEBHOOK] Droplet cleanup failed: {cleanup_err}")
+
+        # Try to clean up DNS if it was created
+        try:
+            if slug:
+                print(f"[WEBHOOK] Cleaning up orphaned DNS for {slug}")
+                delete_dns_record(slug)
+        except Exception as cleanup_err:
+            print(f"[WEBHOOK] DNS cleanup failed: {cleanup_err}")
+
+        # Update Stripe metadata to show failure
         if customer_id:
             try:
                 update_stripe_customer(customer_id, {
-                    "provision_status": f"failed: {str(e)[:100]}",
+                    "provision_status": f"failed: {error_msg[:100]}",
                 })
             except Exception:
                 pass
-        return {"status": "error", "message": str(e)}
+        return {"status": "error", "message": error_msg}
 
 
 def handle_cancellation(event):
@@ -391,16 +413,32 @@ curl -fsSL https://get.docker.com | sh
 git clone https://github.com/airblackbox/airblackbox.git /opt/airblackbox
 cd /opt/airblackbox
 
-# Write .env file (secrets generated server-side, not on the VPS)
+# Write .env file with restrictive permissions (root-only read)
+umask 077
 cat > .env <<ENVEOF
 TRUST_SIGNING_KEY={trust_key}
 MINIO_ROOT_USER=airblackbox
 MINIO_ROOT_PASSWORD={minio_password}
 GATEWAY_KEY={gateway_key}
 ENVEOF
+chmod 600 .env
 
 # Start the Pro stack
 docker compose up -d
+
+# Post-boot cleanup: scrub secrets from disk after Docker has read them.
+# Docker Compose reads .env at startup and injects vars into containers.
+# Wait for containers to be running, then delete the plaintext .env.
+sleep 10
+if docker compose ps --status running | grep -q "gateway"; then
+    rm -f /opt/airblackbox/.env
+    echo "[AIR] .env scrubbed after successful container start"
+else
+    echo "[AIR] WARNING: containers not running, keeping .env for debug"
+fi
+
+# Scrub cloud-init log which may contain the user-data script
+sed -i '/TRUST_SIGNING_KEY\\|MINIO_ROOT_PASSWORD\\|GATEWAY_KEY/d' /var/log/cloud-init-output.log 2>/dev/null || true
 """
 
     result = do_request("POST", "droplets", {

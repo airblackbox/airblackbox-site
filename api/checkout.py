@@ -71,7 +71,7 @@ class handler(BaseHTTPRequestHandler):
                 "line_items[0][price_data][currency]": "usd",
                 "line_items[0][price_data][unit_amount]": str(price_cents),
                 "line_items[0][price_data][product_data][name]": f"AIR Blackbox - {display_name}",
-                "line_items[0][price_data][product_data][description]": f"API credits for Detect, Policy, and Scan ({per_scan}/call)",
+                "line_items[0][price_data][product_data][description]": f"API credits for Detect, Policy, Scan, and Sign ({per_scan}/call)",
                 "line_items[0][quantity]": "1",
                 "metadata[product]": "scan_credits",
                 "metadata[pack_size]": pack,

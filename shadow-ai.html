@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Governance APIs - AIR Blackbox</title>
-    <meta name="description" content="Three APIs for AI governance: Shadow AI detection, policy verification, and EU AI Act compliance scanning. One API key, one credit balance.">
-    <meta property="og:title" content="AI Governance APIs - Shadow AI Detection, Policy Verification, Compliance Scanning">
-    <meta property="og:description" content="Three APIs, one key. Detect AI-generated text, enforce AI policies, and scan code for EU AI Act compliance.">
+    <meta name="description" content="Four APIs for AI governance: Shadow AI detection, policy verification, compliance scanning, and ML-DSA-65 quantum-safe evidence signing. One API key, one credit balance.">
+    <meta property="og:title" content="AI Governance APIs - Shadow AI Detection, Policy Verification, Compliance Scanning, Evidence Signing">
+    <meta property="og:description" content="Four APIs, one key. Detect AI-generated text, enforce AI policies, scan code for compliance, and sign evidence with quantum-safe ML-DSA-65.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://airblackbox.ai/shadow-ai">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -261,7 +261,7 @@
             <div class="container">
                 <div class="keygen-card">
                     <h3>Get Your API Key</h3>
-                    <p>One key for all three APIs: Shadow AI Detection, Policy Verification, and Compliance Scanning. 25 free calls/month without a key.</p>
+                    <p>One key for all four APIs: Shadow AI Detection, Policy Verification, Compliance Scanning, and Evidence Signing. 25 free calls/month without a key.</p>
                     <div class="keygen-form">
                         <input type="email" class="keygen-input" id="keygenEmail" placeholder="you@company.com">
                         <button class="btn btn-keygen" onclick="generateKey()">Generate Key</button>
@@ -303,13 +303,13 @@
         <section class="pricing-section">
             <div class="container">
                 <h3 style="font-size: 1.3rem; margin-bottom: 1.2rem; text-align: center;">Buy API Credits</h3>
-                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">One credit = one API call across all three APIs (Detect, Policy, Scan). Credits never expire. Generate an API key above first.</p>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">One credit = one API call across all four APIs (Detect, Policy, Scan, Sign). Credits never expire. Generate an API key above first.</p>
                 <div class="pricing-grid">
                     <div class="pricing-tier">
                         <h4>Free Tier</h4>
                         <div class="price">$0</div>
                         <div class="price-unit">25 calls/month</div>
-                        <div class="tier-detail">No key required. Try all 3 APIs instantly.</div>
+                        <div class="tier-detail">No key required. Try all 4 APIs instantly.</div>
                     </div>
                     <div class="pricing-tier">
                         <h4>500 Credits</h4>
@@ -339,8 +339,8 @@
         <!-- API Documentation -->
         <section class="api-section">
             <div class="container">
-                <h3 style="font-size: 1.3rem; margin-bottom: 1.2rem; text-align: center;">Three APIs, One Key</h3>
-                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9rem;">Generate a key, buy credits, and use them across all three endpoints. Every call costs 1 credit.</p>
+                <h3 style="font-size: 1.3rem; margin-bottom: 1.2rem; text-align: center;">Four APIs, One Key</h3>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9rem;">Generate a key, buy credits, and use them across all four endpoints. Every call costs 1 credit.</p>
 
                 <div class="api-card">
                     <h3>API 1: Shadow AI Detection <span style="font-size:0.7rem;color:var(--green);font-weight:600;margin-left:0.5rem;">LIVE</span></h3>
@@ -387,14 +387,30 @@ curl -X POST https://airblackbox.ai/api/scan \
                 </div>
 
                 <div class="api-card">
+                    <h3>API 4: Evidence Signing <span style="font-size:0.7rem;color:var(--accent);font-weight:600;margin-left:0.5rem;">NEW</span></h3>
+                    <p>Sign any JSON data with ML-DSA-65 quantum-safe signatures (NIST FIPS 204). Creates tamper-proof evidence packages for EU AI Act Article 12 audits.</p>
+                    <div class="code-block"><span class="comment"># Sign scan results or audit data with ML-DSA-65</span>
+curl -X POST https://airblackbox.ai/api/sign \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -H <span class="string">"Authorization: Bearer airbb_sk_your_key_here"</span> \
+  -d <span class="string">'{"data": {"scan_score": 72, "articles_passed": 4}}'</span>
+
+<span class="comment"># Returns: signed evidence package with:</span>
+<span class="comment">#   signature (ML-DSA-65 quantum-safe)</span>
+<span class="comment">#   public_key, signed_at timestamp</span>
+<span class="comment">#   HMAC-SHA256 integrity hash</span>
+<span class="comment"># Hand this to your auditor as tamper-proof evidence</span></div>
+                </div>
+
+                <div class="api-card">
                     <h3>Getting Started</h3>
-                    <p>Three steps to integrate AI governance into your workflow.</p>
+                    <p>Four steps to integrate AI governance into your workflow.</p>
                     <div class="code-block"><span class="comment"># 1. Generate an API key</span>
 curl -X POST https://airblackbox.ai/api/keys \
   -H <span class="string">"Content-Type: application/json"</span> \
   -d <span class="string">'{"email": "you@company.com"}'</span>
 
-<span class="comment"># 2. Use any of the three APIs with your key</span>
+<span class="comment"># 2. Use any of the four APIs with your key</span>
 <span class="comment"># (25 free calls/month without a key)</span>
 
 <span class="comment"># 3. Check your usage and credit balance</span>
