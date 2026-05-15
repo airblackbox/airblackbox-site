@@ -54,6 +54,10 @@
       "destination": "/demo/hub.html"
     },
     {
+      "source": "/demo/evidence-bundle",
+      "destination": "/demo/evidence-bundle.html"
+    },
+    {
       "source": "/demo/live-scan",
       "destination": "/demo/live-scan.html"
     },
