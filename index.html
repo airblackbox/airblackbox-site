@@ -112,7 +112,7 @@
           "name": "When is the EU AI Act deadline?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The key deadline for high-risk AI systems is August 2, 2026. Penalties for non-compliance can reach up to 35 million euros or 7% of global annual turnover, whichever is higher. Prohibited AI practices enforcement began February 2, 2025. GPAI model obligations apply from August 2, 2025. Full enforcement begins August 2, 2027."
+            "text": "Under the Digital Omnibus political agreement of May 2026, high-risk obligations for standalone Annex III systems, which include employment and recruiting AI, are deferred to December 2, 2027, and AI embedded in regulated products under Annex I to August 2, 2028. These dates take legal effect once the Omnibus is formally adopted and published, expected before August 2, 2026. Article 50 transparency obligations remain on the original schedule and still apply from August 2, 2026. Prohibited AI practices have been enforced since February 2, 2025, and GPAI model obligations since August 2, 2025. Penalties can reach 35 million euros or 7% of global annual turnover."
           }
         },
         {
@@ -358,8 +358,7 @@
 
     <!-- Hero -->
     <section class="hero"><div class="container">
-        <div class="deadline" id="countdown"></div>
-        <script>(function(){var d=document.getElementById('countdown');var days=Math.ceil((new Date('2026-08-02')-new Date())/(1000*60*60*24));d.textContent='\u26A0 '+days+' DAYS TO EU AI ACT HIGH-RISK DEADLINE';})()</script>
+        <div class="deadline">&#x26A0; EU AI ACT HIGH-RISK RULES DEFERRED TO DEC 2027 &middot; TRANSPARENCY DUTIES STILL APPLY AUG 2026</div>
         <h1>The <span class="highlight">flight recorder</span><br>for autonomous AI agents.</h1>
         <p class="subtitle">Record. Replay. Enforce. Audit. Open-source, runs locally, ten seconds to your first scan. The tamper-evident record of every AI decision - before regulators, clients, or your board ever ask.</p>
         <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox && air-blackbox comply --scan . -v').then(()=>this.textContent='Copied!')">pip install air-blackbox && air-blackbox comply --scan . -v</div>
@@ -417,7 +416,7 @@
             <div class="problem-card" style="border-color: var(--accent);">
                 <div class="icon" style="font-size:1.2rem; color:var(--accent);">VERIFY</div>
                 <h3>Cryptographic Proof</h3>
-                <p>Every AI call generates an HMAC-SHA256 tamper-evident record signed with ML-DSA-65 (FIPS 204) quantum-safe signatures. Modify any record and the chain breaks. Post-quantum integrity without the blockchain.</p>
+                <p>Every AI call generates an HMAC-SHA256 tamper-evident record, signed by default with Ed25519 and optionally with ML-DSA-65 (FIPS 204) post-quantum signatures. Modify any record and the chain breaks.</p>
             </div>
             <div class="problem-card" style="border-color: var(--green);">
                 <div class="icon" style="font-size:1.2rem; color:var(--green);">FILTER</div>
@@ -517,7 +516,7 @@
             <div class="feature-card">
                 <div class="feature-category cat-trust">Trust Layer</div>
                 <h3>Self-Verifying Evidence Bundles</h3>
-                <p>One command generates a <code>.air-evidence</code> ZIP containing the audit chain, scan results, ML-DSA-65 signatures, and a standalone <code>verify.py</code> script. Auditor extracts, runs verify, gets pass/fail - no pip install needed.</p>
+                <p>One command generates a <code>.air-evidence</code> ZIP containing the audit chain, scan results, a SHA-256 manifest, and a standalone <code>verify.py</code> script. The auditor extracts it and runs verify.py with the signing key on plain Python, no install needed, and gets pass or fail.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-category cat-dx">Developer Experience</div>
@@ -813,13 +812,10 @@ client = OpenAI(
 
         <!-- Social proof stats -->
         <div style="display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap;margin:2rem 0;padding:1.2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
-            <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--accent)" id="dl-counter">14,294</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">PyPI Downloads</div></div>
             <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--green)">51</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">Gap Analysis Checks</div></div>
             <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--yellow)">6</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">EU AI Act Articles</div></div>
             <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--text-primary)">4</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">PyPI Packages</div></div>
-            <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--red)" id="days-left">131</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">Days to Deadline</div></div>
         </div>
-        <script>(function(){var el=document.querySelector('#dl-counter');if(!el)return;var d=Math.ceil((new Date()-new Date('2026-03-25'))/(1000*60*60*24));el.textContent=(14294+d*30).toLocaleString();var dd=document.querySelector('#days-left');if(dd){var days=Math.ceil((new Date('2026-08-02')-new Date())/(1000*60*60*24));dd.textContent=days;}})()</script>
 
         <!-- Pricing cards -->
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem">
@@ -959,7 +955,7 @@ client = OpenAI(
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">When is the EU AI Act deadline?</div>
-                <div class="faq-a">The key deadline for high-risk AI systems is August 2, 2026. Penalties for non-compliance can reach up to &#x20AC;35 million or 7% of global annual turnover, whichever is higher. Prohibited AI practices enforcement began February 2, 2025. GPAI model obligations apply from August 2, 2025. Full enforcement begins August 2, 2027.</div>
+                <div class="faq-a">Under the Digital Omnibus political agreement of May 2026, high-risk obligations for standalone Annex III systems, which include employment and recruiting AI, are deferred to December 2, 2027, and AI embedded in regulated products under Annex I to August 2, 2028. These dates take legal effect once the Omnibus is formally adopted and published, expected before August 2, 2026. Article 50 transparency obligations remain on the original schedule and still apply from August 2, 2026. Prohibited AI practices have been enforced since February 2, 2025, and GPAI obligations since August 2, 2025. Penalties can reach &#x20AC;35 million or 7% of global annual turnover.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What frameworks does AIR Blackbox support?</div>
@@ -982,7 +978,7 @@ client = OpenAI(
 
     <!-- CTA -->
     <section style="text-align:center; padding:5rem 0"><div class="container">
-        <h2 class="section-title">EU AI Act deadline is August 2026.</h2>
+        <h2 class="section-title">The high-risk deadline moved. The preparation did not.</h2>
         <p style="color:var(--text-secondary); margin-bottom:2rem">51 gap analysis checks. 6 EU AI Act articles + GDPR. ML-DSA-65 signing. Self-verifying evidence bundles. 7 framework trust layers. GDPR + bias scanning. One pip install. Find out where your Python AI agents stand today.</p>
         <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox').then(()=>this.textContent='Copied!')" style="font-family:var(--mono);background:var(--bg-card);border:1px solid var(--border);padding:0.8rem 1.5rem;border-radius:8px;font-size:1rem;display:inline-block;margin-bottom:1.5rem;color:var(--green);cursor:pointer">pip install air-blackbox</div>
         <div class="hero-links" style="margin-top:1.5rem">
