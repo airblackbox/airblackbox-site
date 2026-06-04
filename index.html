@@ -569,8 +569,8 @@
     <!-- Article 12 Compliance Layer -->
     <section id="article-12"><div class="container">
         <div class="section-label">Article 12 Compliance Layer</div>
-        <h2 class="section-title">One chain. One signer. One bundle. Tamper-evident logging for the EU AI Act.</h2>
-        <p class="section-desc">Article 12 requires high-risk AI systems to produce automatic logs that are tamper-evident, retained appropriately, and available for audit. AIR Blackbox doesn't just check for this - it <em>is</em> the infrastructure.</p>
+        <h2 class="section-title">One chain. One signer. One bundle. Provable traceability for the EU AI Act.</h2>
+        <p class="section-desc">Article 12 requires high-risk AI systems to automatically record events over the system's lifetime, with traceability appropriate to their purpose, and Article 19 requires keeping those logs for at least six months. Tamper-evidence is not named in the text, it is how you <em>prove</em> that traceability and exceed the regulatory floor. For Annex III high-risk systems like hiring and lending AI, the logs must also record who verified each result, which is exactly the human-oversight record AIR Blackbox captures.</p>
         <div class="steps">
             <div class="step">
                 <div class="step-num">1</div>
@@ -579,8 +579,8 @@
             </div>
             <div class="step">
                 <div class="step-num">2</div>
-                <h3>ML-DSA-65 Signing</h3>
-                <p>The chain gets signed with FIPS 204 quantum-safe digital signatures. Post-quantum secure. Keys generated locally, never leave your machine. Proves who signed, when, and that nothing was altered.</p>
+                <h3>Ed25519 or ML-DSA-65 Signing</h3>
+                <p>The chain head is signed for third-party verification, with Ed25519 by default and FIPS 204 ML-DSA-65 post-quantum signing available as an option. Keys are generated locally and never leave your machine. Proves who signed, when, and that nothing was altered.</p>
             </div>
             <div class="step">
                 <div class="step-num">3</div>
@@ -761,6 +761,10 @@ client = OpenAI(
         <h2 class="section-title">Lightweight. Auditable. Open.</h2>
         <div class="stats-bar">
             <div class="stat">
+                <div class="num" style="color:var(--accent)">1,012</div>
+                <div class="label">PyPI downloads<br>last 30 days</div>
+            </div>
+            <div class="stat">
                 <div class="num" style="color:var(--accent)">51</div>
                 <div class="label">Automated gap analysis checks<br>(44 static + 7 runtime)</div>
             </div>
@@ -812,6 +816,7 @@ client = OpenAI(
 
         <!-- Social proof stats -->
         <div style="display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap;margin:2rem 0;padding:1.2rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+            <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--accent)">1,012</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">PyPI Downloads (30d)</div></div>
             <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--green)">51</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">Gap Analysis Checks</div></div>
             <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--yellow)">6</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">EU AI Act Articles</div></div>
             <div style="text-align:center"><span style="font-size:1.4rem;font-weight:800;color:var(--text-primary)">4</span><div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.2rem">PyPI Packages</div></div>
