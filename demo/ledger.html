@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIR Blackbox - Live Tamper-Evidence Demo</title>
+<meta name="description" content="Watch a real HMAC-SHA256 audit chain break when you tamper with an AI transaction. The cryptography runs live in your browser - the same algorithm the shipped package writes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0d10; --panel:#13171c; --panel-2:#171c22; --line:#232b33;
+    --ink:#e6ebef; --dim:#8a97a3; --faint:#5a6670;
+    --amber:#ff9e2c; --amber-soft:#ffb55a; --green:#3ad07f; --red:#ff5d5d;
+    --cyan:#3ec5e0;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --disp:'Chakra Petch',sans-serif;
+    --body:'Sora',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--ink); font-family:var(--body);
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(circle at 15% -10%, rgba(255,158,44,0.08), transparent 40%),
+      radial-gradient(circle at 90% 0%, rgba(62,197,224,0.05), transparent 35%),
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.012) 2px, rgba(255,255,255,0.012) 3px);
+  }
+  .wrap{max-width:980px;margin:0 auto;padding:0 24px}
+  a{color:var(--amber);text-decoration:none}
+  code,kbd{font-family:var(--mono)}
+
+  /* topbar */
+  .top{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(11,13,16,0.85);backdrop-filter:blur(10px);z-index:50}
+  .top .wrap{display:flex;align-items:center;justify-content:space-between;height:58px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:600;letter-spacing:0.5px}
+  .brand .rec{width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 0 0 rgba(255,93,93,0.6);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,93,93,0.5)}70%{box-shadow:0 0 0 7px rgba(255,93,93,0)}100%{box-shadow:0 0 0 0 rgba(255,93,93,0)}}
+  .top nav{display:flex;gap:22px;font-size:13px;font-family:var(--mono)}
+  .top nav a{color:var(--dim)}.top nav a:hover{color:var(--ink)}
+  @media(max-width:680px){.top nav{display:none}}
+
+  /* hero */
+  .hero{padding:74px 0 30px;text-align:center}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--amber);margin-bottom:20px}
+  h1{font-family:var(--disp);font-weight:700;font-size:clamp(34px,6vw,62px);line-height:1.02;letter-spacing:-0.5px}
+  h1 .b{color:var(--amber)}
+  .sub{max-width:620px;margin:22px auto 0;color:var(--dim);font-size:17px;font-weight:300}
+  .badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+  .badge{font-family:var(--mono);font-size:11.5px;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:6px 13px;background:var(--panel)}
+  .badge b{color:var(--green);font-weight:500}
+
+  /* instrument panel */
+  .panel{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--line);border-radius:14px;margin-top:38px;overflow:hidden;box-shadow:0 30px 80px -40px rgba(0,0,0,0.8)}
+  .panel-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);background:rgba(0,0,0,0.25)}
+  .panel-head .title{font-family:var(--mono);font-size:13px;color:var(--dim);display:flex;align-items:center;gap:9px}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .verdict{font-family:var(--disp);font-weight:700;font-size:14px;letter-spacing:1px;padding:6px 14px;border-radius:8px;transition:all .25s;display:flex;align-items:center;gap:8px}
+  .verdict.ok{color:var(--green);background:rgba(58,208,127,0.1);border:1px solid rgba(58,208,127,0.3)}
+  .verdict.fail{color:var(--red);background:rgba(255,93,93,0.1);border:1px solid rgba(255,93,93,0.35)}
+  .verdict.idle{color:var(--dim);background:rgba(255,255,255,0.03);border:1px solid var(--line)}
+
+  .ledger{padding:8px 18px 18px}
+
+  /* record card */
+  .rec-card{position:relative;border:1px solid var(--line);border-radius:11px;background:var(--bg);margin-top:18px;transition:border-color .25s, box-shadow .25s}
+  .rec-card.broken{border-color:rgba(255,93,93,0.55);box-shadow:0 0 0 1px rgba(255,93,93,0.25), 0 10px 30px -15px rgba(255,93,93,0.4)}
+  .link{height:18px;margin:0 auto;width:2px;background:linear-gradient(var(--green),rgba(58,208,127,0.15));position:relative}
+  .link.broken{background:linear-gradient(var(--red),rgba(255,93,93,0.1))}
+  .link::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:7px;height:7px;border-radius:50%;background:var(--green)}
+  .link.broken::after{background:var(--red);box-shadow:0 0 8px var(--red)}
+  .genesis{font-family:var(--mono);font-size:11px;color:var(--faint);text-align:center;padding-top:6px}
+
+  .rc-head{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;border-bottom:1px solid var(--line)}
+  .rc-id{font-family:var(--mono);font-size:13px;color:var(--amber-soft);font-weight:500}
+  .rc-action{font-family:var(--mono);font-size:11px;color:var(--dim);background:var(--panel);border:1px solid var(--line);padding:3px 9px;border-radius:6px}
+  .rc-body{padding:13px 15px;display:grid;grid-template-columns:1fr 1fr;gap:9px 18px}
+  @media(max-width:560px){.rc-body{grid-template-columns:1fr}}
+  .field{display:flex;flex-direction:column;gap:3px}
+  .field .k{font-family:var(--mono);font-size:10.5px;letter-spacing:0.5px;text-transform:uppercase;color:var(--faint)}
+  .field .v{font-family:var(--mono);font-size:13.5px;color:var(--ink)}
+  .field input{font-family:var(--mono);font-size:13.5px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:5px 8px;width:100%;transition:border-color .2s}
+  .field input:focus{outline:none;border-color:var(--amber)}
+  .field input.touched{border-color:var(--amber);color:var(--amber-soft)}
+
+  .rc-hash{padding:10px 15px;border-top:1px solid var(--line);background:rgba(0,0,0,0.22);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .rc-hash .lab{font-family:var(--mono);font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:0.5px}
+  .rc-hash .hash{font-family:var(--mono);font-size:12px;color:var(--green);word-break:break-all;flex:1;min-width:200px}
+  .rc-hash .hash.broken{color:var(--red)}
+  .chip{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.5px;padding:3px 8px;border-radius:5px}
+  .chip.ok{color:var(--green);background:rgba(58,208,127,0.12)}
+  .chip.fail{color:var(--red);background:rgba(255,93,93,0.12)}
+
+  /* controls */
+  .controls{display:flex;gap:11px;flex-wrap:wrap;padding:16px 18px;border-top:1px solid var(--line);background:rgba(0,0,0,0.18)}
+  button{font-family:var(--disp);font-weight:600;font-size:14px;letter-spacing:0.4px;border:none;border-radius:9px;padding:11px 20px;cursor:pointer;transition:all .18s}
+  .btn-primary{background:var(--amber);color:#1a1206}
+  .btn-primary:hover{background:var(--amber-soft)}
+  .btn-ghost{background:transparent;color:var(--dim);border:1px solid var(--line)}
+  .btn-ghost:hover{color:var(--ink);border-color:var(--faint)}
+  .btn-danger{background:transparent;color:var(--red);border:1px solid rgba(255,93,93,0.35)}
+  .btn-danger:hover{background:rgba(255,93,93,0.1)}
+  .key-row{display:flex;align-items:center;gap:9px;margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .key-row input{font-family:var(--mono);font-size:12px;background:var(--panel-2);border:1px solid var(--line);color:var(--ink);border-radius:7px;padding:8px 10px;width:150px}
+  .key-row input:focus{outline:none;border-color:var(--amber)}
+  @media(max-width:680px){.key-row{margin-left:0;width:100%}.key-row input{flex:1}}
+
+  .hint{font-family:var(--mono);font-size:12px;color:var(--faint);padding:0 18px 16px;line-height:1.6}
+  .hint b{color:var(--amber-soft);font-weight:500}
+
+  /* signature layer */
+  .sig{border-top:1px solid var(--line);background:rgba(62,197,224,0.03);padding:16px 18px}
+  .sig-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .sig-title{font-family:var(--mono);font-size:12.5px;color:var(--cyan)}
+  .sig-verdict{font-family:var(--disp);font-weight:700;font-size:12px;letter-spacing:0.8px;padding:5px 11px;border-radius:7px}
+  .sig-verdict.idle{color:var(--dim);background:rgba(255,255,255,0.03);border:1px solid var(--line)}
+  .sig-verdict.ok{color:var(--cyan);background:rgba(62,197,224,0.1);border:1px solid rgba(62,197,224,0.35)}
+  .sig-verdict.fail{color:var(--red);background:rgba(255,93,93,0.1);border:1px solid rgba(255,93,93,0.35)}
+  .sig-body{margin:12px 0 0}
+  .sig-row{display:flex;gap:10px;margin-bottom:5px;flex-wrap:wrap}
+  .sig-lbl{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:0.5px;color:var(--faint);min-width:200px}
+  .sig-val{font-family:var(--mono);font-size:11.5px;color:var(--cyan);word-break:break-all;flex:1;min-width:200px}
+  .sig-controls{display:flex;gap:10px;margin-top:13px;flex-wrap:wrap}
+  .sig-note{font-family:var(--mono);font-size:11.5px;color:var(--faint);line-height:1.65;margin-top:13px}
+  .sig-note b{color:var(--cyan);font-weight:500} .sig-note i{color:var(--amber-soft);font-style:normal}
+  .inspect{border-top:1px dashed var(--line);background:#0a0c0f;padding:11px 15px;display:none}
+  .inspect.show{display:block}
+  .inspect .row{font-family:var(--mono);font-size:11.5px;line-height:1.65;margin-bottom:5px;word-break:break-all}
+  .inspect .lbl{color:var(--faint);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:1px}
+  .inspect .prev{color:var(--cyan)}
+  .inspect .bytes{color:var(--amber-soft)}
+  .inspect .out{color:var(--green)}
+  .inspect .op{color:var(--dim)}
+
+  /* sections */
+  section{padding:54px 0}
+  .sec-kick{font-family:var(--mono);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--amber);margin-bottom:12px}
+  h2{font-family:var(--disp);font-weight:700;font-size:clamp(24px,4vw,36px);line-height:1.1;letter-spacing:-0.3px}
+  .lead{color:var(--dim);font-size:16px;margin-top:14px;max-width:680px;font-weight:300}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
+  @media(max-width:680px){.cols{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:12px;padding:22px;background:var(--panel)}
+  .card h3{font-family:var(--disp);font-weight:600;font-size:18px;margin-bottom:8px}
+  .card p{color:var(--dim);font-size:14.5px;font-weight:300}
+  .card .ic{font-family:var(--mono);font-size:12px;color:var(--amber);margin-bottom:14px;letter-spacing:1px}
+
+  /* code block */
+  .code{background:#0a0c0f;border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-top:22px}
+  .code-head{display:flex;align-items:center;gap:7px;padding:11px 15px;border-bottom:1px solid var(--line);background:rgba(255,255,255,0.02)}
+  .code-head .t{font-family:var(--mono);font-size:12px;color:var(--faint);margin-left:8px}
+  .code pre{padding:18px 16px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.75}
+  .code .c{color:var(--faint)} .code .g{color:var(--green)} .code .a{color:var(--amber-soft)} .code .w{color:var(--ink)} .code .cy{color:var(--cyan)}
+
+  .formula{font-family:var(--mono);font-size:13.5px;color:var(--ink);background:#0a0c0f;border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:8px;padding:16px 18px;margin-top:18px;line-height:1.9;overflow-x:auto}
+  .formula .hl{color:var(--amber-soft)}
+
+  .note{border:1px solid var(--line);border-radius:11px;padding:18px 20px;background:var(--panel);margin-top:26px;font-size:14px;color:var(--dim);font-weight:300}
+  .note b{color:var(--ink);font-weight:500}
+
+  footer{border-top:1px solid var(--line);padding:34px 0;margin-top:30px}
+  .foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .foot a{color:var(--dim)}.foot a:hover{color:var(--ink)}
+
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+  .disclaimer{font-family:var(--mono);font-size:11.5px;color:var(--faint);text-align:center;padding:22px 0 0;line-height:1.7}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="wrap">
+  <div class="brand"><span class="rec"></span> AIR&nbsp;BLACKBOX</div>
+  <nav>
+    <a href="#demo">live demo</a>
+    <a href="#why">why it matters</a>
+    <a href="#proof">technical proof</a>
+    <a href="https://github.com/airblackbox/airblackbox">github</a>
+  </nav>
+</div></div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="kicker">The audit layer for AI transactions</div>
+    <h1>Tamper with one record.<br>Watch the <span class="b">proof collapse.</span></h1>
+    <p class="sub">Every AI decision below is sealed into a tamper-evident chain. Change a single value and the cryptography breaks, live, in your browser. This is not an animation. It is the real HMAC-SHA256 chain the shipped package writes.</p>
+    <div class="badges">
+      <span class="badge"><b>&#10003;</b> Real Web Crypto, not faked</span>
+      <span class="badge"><b>&#10003;</b> Same algorithm as <code>pip install air-blackbox</code></span>
+      <span class="badge"><b>&#10003;</b> Nothing leaves this page</span>
+    </div>
+  </div>
+
+  <!-- ===== LIVE INSTRUMENT PANEL ===== -->
+  <div id="demo" class="panel">
+    <div class="panel-head">
+      <div class="title"><span class="dot" style="background:var(--red)"></span> audit_chain &mdash; hiring decision episode</div>
+      <div id="verdict" class="verdict idle">&middot; NOT YET VERIFIED</div>
+    </div>
+
+    <div id="ledger" class="ledger">
+      <div class="genesis">&#9660; prev_hash = "genesis"</div>
+      <!-- records injected by JS -->
+    </div>
+
+    <div class="controls">
+      <button class="btn-primary" id="btnVerify">Verify chain</button>
+      <button class="btn-danger" id="btnTamper">Tamper a record</button>
+      <button class="btn-ghost" id="btnRestore">Restore</button>
+      <button class="btn-ghost" id="btnInspect">Inspect bytes</button>
+      <div class="key-row">signing key <input id="keyInput" value="demo-key-2026" spellcheck="false"></div>
+    </div>
+    <div class="hint">
+      Try it: edit the <b>amount</b> or flip a <b>decision</b> in any record, then hit <b>Verify chain</b>.
+      The record you touched and every record after it turn red, because each hash is computed from the one before it.
+      Change the <b>signing key</b> and verification fails too, just like an auditor with the wrong key.
+    </div>
+
+    <!-- Ed25519 signature layer: the actual differentiator -->
+    <div class="sig" id="sigPanel">
+      <div class="sig-head">
+        <span class="sig-title">&#9211; Signature layer &mdash; Ed25519 (asymmetric, the part HMAC can't do)</span>
+        <span id="sigVerdict" class="sig-verdict idle">not signed</span>
+      </div>
+      <div class="sig-body">
+        <div class="sig-row"><span class="sig-lbl">public key (the auditor gets this)</span><span class="sig-val" id="sigPub">&mdash;</span></div>
+        <div class="sig-row"><span class="sig-lbl">signature over the chain head</span><span class="sig-val" id="sigSig">&mdash;</span></div>
+      </div>
+      <div class="sig-controls">
+        <button class="btn-ghost" id="btnSign">Sign chain head</button>
+        <button class="btn-ghost" id="btnVerifySig">Verify with public key only</button>
+      </div>
+      <div class="sig-note" id="sigNote">
+        HMAC proves the chain wasn't altered, but anyone with the secret key could have produced it. An Ed25519 signature is different: it's verified with the <b>public</b> key, so an auditor confirms <i>you</i> signed this exact chain without ever holding your secret. Sign it, then tamper with a record above and verify again, the signature no longer matches, because the head it signed has changed.
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== WHY IT MATTERS (buyer story) ===== -->
+  <section id="why">
+    <div class="sec-kick">Why this matters</div>
+    <h2>Traceability is the legal requirement.<br>Proving it is the hard part.</h2>
+    <p class="lead">The EU AI Act, Article 12, requires high-risk AI systems to automatically record events over the system's lifetime with traceability appropriate to their purpose. Tamper-evidence is not named in the text, it is how you <em>prove</em> that traceability and exceed the floor: it is not enough to <em>have</em> logs, you must be able to show no one changed them after the fact. For Annex III systems like hiring AI, the logs must also record who verified each result. The demo above is what that proof looks like when it is real.</p>
+    <div class="cols">
+      <div class="card">
+        <div class="ic">01 / THE PROBLEM</div>
+        <h3>A log file is not evidence</h3>
+        <p>Anyone with write access can edit a plain log and no one can tell. To a regulator or a court, an editable record proves nothing about what the AI actually did.</p>
+      </div>
+      <div class="card">
+        <div class="ic">02 / THE MECHANISM</div>
+        <h3>Each record seals the last</h3>
+        <p>Every record's hash is computed from the record before it. Alter one field and that record's hash no longer matches, and every record downstream breaks with it. You saw it happen above.</p>
+      </div>
+      <div class="card">
+        <div class="ic">03 / THE HANDOFF</div>
+        <h3>The auditor verifies offline</h3>
+        <p>One command bundles the chain with a standalone <code>verify.py</code>. The auditor runs it on plain Python, with no install and no trust in you, and gets a single PASS or FAIL.</p>
+      </div>
+      <div class="card">
+        <div class="ic">04 / THE POINT</div>
+        <h3>Built for the moment you're asked</h3>
+        <p>When a regulator, client, or board asks what your AI did and whether the record is trustworthy, the answer is a verifiable bundle, not a screenshot and a promise.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TECHNICAL PROOF (dev story) ===== -->
+  <section id="proof">
+    <div class="sec-kick">Technical proof</div>
+    <h2>The code running above is the shipped algorithm.</h2>
+    <p class="lead">No special demo path. The page computes each hash exactly the way the audit chain in the package does, verified byte-for-byte against the Python implementation.</p>
+
+    <div class="formula">
+      chain_hash = <span class="hl">HMAC-SHA256</span>( key , prev_hash <span class="hl">||</span> json(record, sort_keys=true) )<br>
+      prev_hash&nbsp;&nbsp; = raw digest of the previous record&nbsp;&nbsp;&middot;&nbsp;&nbsp; first prev_hash = "genesis"
+    </div>
+
+    <div class="code">
+      <div class="code-head"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#28c840"></span><span class="t">your terminal</span></div>
+<pre><span class="c"># 1. scan your AI project for gaps (free, runs locally)</span>
+<span class="g">$</span> <span class="w">pip install air-blackbox</span>
+<span class="g">$</span> <span class="w">air-blackbox comply --scan . -v</span>
+
+<span class="c"># 2. export a self-verifying evidence bundle</span>
+<span class="g">$</span> <span class="w">air-blackbox export --format evidence --signing-key</span> <span class="a">"$KEY"</span>
+<span class="cy">&#8594;</span> <span class="w">.air-evidence-20260601.zip</span>  <span class="c">(audit_chain + scan_results + manifest + verify.py)</span>
+
+<span class="c"># 3. hand the zip to an auditor. they run, with no install:</span>
+<span class="g">$</span> <span class="w">python verify.py --key</span> <span class="a">"$KEY"</span>
+<span class="g">&#10003; PASS</span> <span class="c">- chain intact, 3 records verified</span>
+<span class="c"># ...tamper with any record and the same command prints:</span>
+<span class="red" style="color:var(--red)">&#10007; FAIL</span> <span class="c">- chain broken at record 1</span></pre>
+    </div>
+
+    <div class="note">
+      <b>Where the keys come in.</b> The chain above is HMAC-SHA256, which makes it tamper-evident. The shipped package also <em>signs</em> each receipt for third-party verification, with Ed25519 by default and ML-DSA-65 (FIPS 204, post-quantum) available as an option. The free, offline <code>verify.py</code> checks the HMAC chain you see here using only the Python standard library.
+    </div>
+
+    <div class="note">
+      <b>The threat model, stated plainly.</b> The HMAC chain proves <em>integrity</em>: no record changed after it was written. The signing <em>key</em> proves <em>authority</em>: only the holder can produce a valid chain, and the auditor runs verification on their own machine with their own key, so editing the data in a browser proves nothing without it. HMAC gives tamper-evidence; the Ed25519 / ML-DSA-65 signature on top gives third-party non-repudiation, the holder cannot later deny they signed.
+    </div>
+
+    <div class="sec-kick" style="margin-top:40px">Don't take our word for it</div>
+    <h2 style="font-size:clamp(20px,3vw,28px)">Reproduce the demo's hashes in your own terminal.</h2>
+    <p class="lead">Two snippets. The first reproduces the genesis record. The second reproduces a <em>chained</em> record, where the previous hash feeds in as raw bytes, exactly what the inspector shows. Paste either into any Python 3.</p>
+    <div class="code">
+      <div class="code-head"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#28c840"></span><span class="t">record 1 of 3 &mdash; genesis</span></div>
+<pre><span class="g">$</span> <span class="w">python3 -c '</span>
+<span class="w">import hmac, hashlib, json</span>
+<span class="w">rec = {"action":"screen_resume","candidate":"Jos\u00e9 R\u00edos","decision":"advance",</span>
+<span class="w">       "model":"gpt-4o","req_id":"REQ-4471","run_id":"txn-001",</span>
+<span class="w">       "timestamp":"2026-06-01T09:14:02Z","version":"1.0.0"}</span>
+<span class="w">canon = json.dumps(rec, sort_keys=True).encode()  # ensure_ascii=True</span>
+<span class="w">print(hmac.new(b"demo-key-2026", b"genesis" + canon, hashlib.sha256).hexdigest())'</span>
+<span class="g">&#8594;</span> <span class="a">3406857a358925c0c92df41800ba682e06ef16be1f0d395a5c59a3de82fe6abe</span>
+<span class="c"># = txn-001's chain_hash on the card above. note: json escapes the unicode name.</span></pre>
+    </div>
+    <div class="code" style="margin-top:14px">
+      <div class="code-head"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#28c840"></span><span class="t">record 2 of 3 &mdash; chained (prev_hash as raw bytes)</span></div>
+<pre><span class="g">$</span> <span class="w">python3 -c '</span>
+<span class="w">import hmac, hashlib, json</span>
+<span class="w">prev = bytes.fromhex(</span>            <span class="c"># the hex from record 1, as RAW bytes</span>
+<span class="w">  "3406857a358925c0c92df41800ba682e06ef16be1f0d395a5c59a3de82fe6abe")</span>
+<span class="w">rec = {"action":"rank_candidates","candidate":"Jos\u00e9 R\u00edos","decision":"shortlist",</span>
+<span class="w">       "model":"gpt-4o","percentile":88,"run_id":"txn-002",</span>
+<span class="w">       "timestamp":"2026-06-01T09:14:05Z","version":"1.0.0"}</span>
+<span class="w">canon = json.dumps(rec, sort_keys=True).encode()</span>
+<span class="w">print(hmac.new(b"demo-key-2026", prev + canon, hashlib.sha256).hexdigest())'</span>
+<span class="g">&#8594;</span> <span class="a">3475b0db67e73bec0929d9845521b78a5e063ade4b3a6d287e7cb2c5d70de5ab</span>
+<span class="c"># = txn-002's chain_hash. THIS is why editing record 1 also breaks record 2.</span></pre>
+    </div>
+
+    <div class="cta-row">
+      <a href="https://github.com/airblackbox/airblackbox"><button class="btn-primary">Star on GitHub</button></a>
+      <a href="https://pypi.org/project/air-blackbox/"><button class="btn-ghost">View on PyPI</button></a>
+    </div>
+  </section>
+
+  <div class="disclaimer">
+    AIR Blackbox identifies potential compliance gaps and demonstrates tamper-evident logging.<br>
+    This is not a certified compliance test. It is a starting point to identify potential gaps. It does not certify or guarantee regulatory compliance.
+  </div>
+
+</div>
+
+<footer><div class="wrap"><div class="foot">
+  <span>&copy; 2026 AIR Blackbox &middot; Open-source AI governance &middot; Apache 2.0</span>
+  <span><a href="https://github.com/airblackbox/airblackbox">GitHub</a> &nbsp;&middot;&nbsp; <a href="https://pypi.org/project/air-blackbox/">PyPI</a> &nbsp;&middot;&nbsp; <a href="/">airblackbox.ai</a></span>
+</div></div></footer>
+
+<script>
+"use strict";
+const subtle = window.crypto.subtle;
+
+/* ---- canonical JSON: matches python json.dumps(record, sort_keys=True), ensure_ascii=True ---- */
+function jstr(s){
+  // JSON.stringify handles quotes/backslash/control chars; then escape every char >= 0x80
+  // so non-ASCII matches Python's default ensure_ascii=True (e.g. é -> \u00e9)
+  return JSON.stringify(s).replace(/[\u0080-\uffff]/g, ch => "\\u"+ch.charCodeAt(0).toString(16).padStart(4,"0"));
+}
+function canon(o){
+  if(o===null)return"null";
+  if(typeof o==="number")return String(o);
+  if(typeof o==="boolean")return o?"true":"false";
+  if(typeof o==="string")return jstr(o);
+  if(Array.isArray(o))return "["+o.map(canon).join(", ")+"]";
+  const keys=Object.keys(o).sort();
+  return "{"+keys.map(k=>jstr(k)+": "+canon(o[k])).join(", ")+"}";
+}
+const enc = s => new TextEncoder().encode(s);
+const toHex = buf => [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+function concat(a,b){const o=new Uint8Array(a.length+b.length);o.set(a,0);o.set(b,a.length);return o;}
+
+async function hmacRaw(keyStr, dataBytes){
+  const key = await subtle.importKey("raw", enc(keyStr), {name:"HMAC",hash:"SHA-256"}, false, ["sign"]);
+  const sig = await subtle.sign("HMAC", key, dataBytes);
+  return new Uint8Array(sig);
+}
+async function computeChain(records, keyStr){
+  let prev = enc("genesis");
+  const hashes = [];
+  for(const r of records){
+    const raw = await hmacRaw(keyStr, concat(prev, enc(canon(r))));
+    hashes.push(toHex(raw));
+    prev = raw;                      // advance as raw digest bytes
+  }
+  return hashes;
+}
+
+/* ---- pristine episode: a loan decision flow ---- */
+const PRISTINE = [
+  {run_id:"txn-001",timestamp:"2026-06-01T09:14:02Z",version:"1.0.0",action:"screen_resume",candidate:"José Ríos",req_id:"REQ-4471",model:"gpt-4o",decision:"advance"},
+  {run_id:"txn-002",timestamp:"2026-06-01T09:14:05Z",version:"1.0.0",action:"rank_candidates",candidate:"José Ríos",percentile:88,model:"gpt-4o",decision:"shortlist"},
+  {run_id:"txn-003",timestamp:"2026-06-01T09:14:09Z",version:"1.0.0",action:"human_review",reviewer:"a.chen",model:"none",decision:"interview"}
+];
+/* fields shown as editable inputs */
+const EDITABLE = {percentile:"number", decision:"text"};
+/* display order of fields */
+const SHOW = ["action","candidate","req_id","percentile","model","decision","reviewer"];
+
+let records = clone(PRISTINE);
+let sealed = [];           // hashes captured at seal time (ground truth)
+let inspect = false;       // byte-inspector visibility
+function clone(o){return JSON.parse(JSON.stringify(o));}
+
+const ledgerEl = document.getElementById("ledger");
+const verdictEl = document.getElementById("verdict");
+
+function render(computed, failIndex){
+  let html = '<div class="genesis">&#9660; prev_hash = "genesis"</div>';
+  records.forEach((r,i)=>{
+    const broken = (failIndex>=0 && i>=failIndex);
+    html += `<div class="link ${i>0 && broken ? 'broken':''}"></div>`;
+    html += `<div class="rec-card ${broken?'broken':''}">
+      <div class="rc-head">
+        <span class="rc-id">${r.run_id}</span>
+        <span class="rc-action">${r.action}</span>
+      </div>
+      <div class="rc-body">`;
+    SHOW.forEach(k=>{
+      if(!(k in r)) return;
+      if(EDITABLE[k]){
+        const touched = (JSON.stringify(r[k])!==JSON.stringify(PRISTINE[i][k]));
+        html += `<div class="field"><span class="k">${k}</span>
+          <input data-rec="${i}" data-key="${k}" class="${touched?'touched':''}" value="${String(r[k]).replace(/"/g,'&quot;')}"></div>`;
+      } else {
+        html += `<div class="field"><span class="k">${k}</span><span class="v">${r[k]}</span></div>`;
+      }
+    });
+    html += `</div>`;
+    const h = computed ? computed[i] : null;
+    if(h){
+      const bad = (failIndex>=0 && i>=failIndex);
+      html += `<div class="rc-hash">
+        <span class="lab">chain_hash</span>
+        <span class="hash ${bad?'broken':''}">${h}</span>
+        <span class="chip ${bad?'fail':'ok'}">${bad?'BROKEN':'SEALED'}</span>
+      </div>`;
+    } else {
+      html += `<div class="rc-hash"><span class="lab">chain_hash</span><span class="hash" style="color:var(--faint)">&mdash; press Verify chain &mdash;</span></div>`;
+    }
+    // byte inspector: exact inputs to the HMAC for this record
+    const prevLabel = (i===0)
+      ? 'prev_hash = "genesis" (literal ascii bytes)'
+      : 'prev_hash = raw digest of '+records[i-1].run_id+' (hex shown; unhex before concatenating)';
+    const prevVal = (i===0) ? '67 65 6e 65 73 69 73' : (computed ? computed[i-1] : '&mdash;');
+    html += `<div class="inspect ${inspect?'show':''}" data-insp="${i}">
+      <div class="row"><span class="lbl">${prevLabel}</span><span class="prev">${prevVal}</span></div>
+      <div class="row"><span class="lbl">canonical record bytes &mdash; json(record, sort_keys=true, ensure_ascii=true)</span><span class="bytes">${canon(records[i]).replace(/</g,'&lt;')}</span></div>
+      <div class="row"><span class="lbl">computed</span><span class="op">HMAC-SHA256( key , prev_hash &#8214; bytes ) =</span> <span class="out">${h || '&mdash;'}</span></div>
+    </div>`;
+    html += `</div>`;
+  });
+  ledgerEl.innerHTML = html;
+  // rebind inputs
+  ledgerEl.querySelectorAll("input").forEach(inp=>{
+    inp.addEventListener("input", e=>{
+      const i=+e.target.dataset.rec, k=e.target.dataset.key;
+      let val=e.target.value;
+      if(EDITABLE[k]==="number"){ const n=Number(val); records[i][k] = (val.trim()===""||isNaN(n))?val:n; }
+      else records[i][k]=val;
+      setVerdict("idle","&middot; EDITED &mdash; NOT YET VERIFIED");
+      if(signatureBytes && edSupported){ sigVerdict.className="sig-verdict idle"; sigVerdict.textContent="re-verify needed"; }
+    });
+  });
+}
+
+function setVerdict(state, text){
+  verdictEl.className = "verdict "+state;
+  verdictEl.innerHTML = text;
+}
+
+async function seal(){
+  sealed = await computeChain(clone(PRISTINE), document.getElementById("keyInput").value);
+  records = clone(PRISTINE);
+  render(sealed, -1);
+  setVerdict("ok","&#10003; CHAIN INTACT &middot; 3/3 VERIFIED");
+}
+
+async function verify(){
+  const key = document.getElementById("keyInput").value;
+  const computed = await computeChain(records, key);
+  let failIndex = -1;
+  for(let i=0;i<records.length;i++){ if(computed[i]!==sealed[i]){ failIndex=i; break; } }
+  render(computed, failIndex);
+  if(failIndex<0) setVerdict("ok","&#10003; CHAIN INTACT &middot; 3/3 VERIFIED");
+  else setVerdict("fail","&#10007; CHAIN BROKEN AT "+records[failIndex].run_id);
+}
+
+document.getElementById("btnVerify").addEventListener("click", verify);
+document.getElementById("btnRestore").addEventListener("click", async ()=>{ await seal(); });
+document.getElementById("btnTamper").addEventListener("click", async ()=>{
+  // dramatic auto-tamper: flip the human reviewer's decision on record 3
+  records[2].decision = "reject";
+  await verify();
+  const inp = ledgerEl.querySelector('input[data-rec="2"][data-key="decision"]');
+  if(inp){ inp.classList.add("touched"); }
+});
+/* ---- Ed25519 signature layer (the asymmetric differentiator) ---- */
+let edKeyPair = null;      // generated in-browser
+let signedHead = null;     // the chain-head hash that was signed
+let signatureBytes = null; // the signature over signedHead
+let edSupported = true;
+
+const sigVerdict = document.getElementById("sigVerdict");
+const sigPubEl = document.getElementById("sigPub");
+const sigSigEl = document.getElementById("sigSig");
+const sigNoteEl = document.getElementById("sigNote");
+
+function short(hexOrBytes){
+  const s = (typeof hexOrBytes==="string") ? hexOrBytes : toHex(hexOrBytes);
+  return s.length>32 ? s.slice(0,16)+"\u2026"+s.slice(-16) : s;
+}
+async function currentHead(){
+  const computed = await computeChain(records, document.getElementById("keyInput").value);
+  return computed[computed.length-1];
+}
+async function signHead(){
+  if(!edSupported) return;
+  try{
+    if(!edKeyPair) edKeyPair = await subtle.generateKey({name:"Ed25519"}, true, ["sign","verify"]);
+    const head = await currentHead();
+    const sig = await subtle.sign({name:"Ed25519"}, edKeyPair.privateKey, enc(head));
+    const pub = await subtle.exportKey("raw", edKeyPair.publicKey);
+    signedHead = head; signatureBytes = new Uint8Array(sig);
+    sigPubEl.textContent = short(new Uint8Array(pub));
+    sigSigEl.textContent = short(signatureBytes);
+    sigVerdict.className = "sig-verdict ok"; sigVerdict.textContent = "signed";
+  }catch(e){ disableEd(e); }
+}
+async function verifySig(){
+  if(!edSupported) return;
+  if(!signatureBytes){ sigVerdict.className="sig-verdict idle"; sigVerdict.textContent="sign it first"; return; }
+  try{
+    const head = await currentHead();
+    const ok = await subtle.verify({name:"Ed25519"}, edKeyPair.publicKey, signatureBytes, enc(head));
+    if(ok){ sigVerdict.className="sig-verdict ok"; sigVerdict.textContent="\u2713 signature valid"; }
+    else { sigVerdict.className="sig-verdict fail"; sigVerdict.textContent="\u2717 signature invalid \u2014 chain head changed"; }
+  }catch(e){ disableEd(e); }
+}
+function disableEd(e){
+  edSupported = false;
+  sigVerdict.className="sig-verdict idle"; sigVerdict.textContent="unavailable in this browser";
+  document.getElementById("btnSign").disabled = true;
+  document.getElementById("btnVerifySig").disabled = true;
+  sigNoteEl.innerHTML = "Your browser does not expose <b>Ed25519</b> in the Web Crypto API yet (Chrome 137+, Firefox 129+, Safari 17+ do). The shipped package signs with Ed25519 by default and ML-DSA-65 as an option; this in-page live signing just needs a current browser.";
+}
+// feature-detect on load
+(async ()=>{ try{ await subtle.generateKey({name:"Ed25519"}, true, ["sign","verify"]); }catch(e){ disableEd(e); } })();
+
+document.getElementById("btnSign").addEventListener("click", signHead);
+document.getElementById("btnVerifySig").addEventListener("click", verifySig);
+
+document.getElementById("btnInspect").addEventListener("click", (e)=>{
+  inspect = !inspect;
+  e.target.textContent = inspect ? "Hide bytes" : "Inspect bytes";
+  ledgerEl.querySelectorAll(".inspect").forEach(el=>el.classList.toggle("show", inspect));
+});
+document.getElementById("keyInput").addEventListener("input", ()=>{
+  setVerdict("idle","&middot; KEY CHANGED &mdash; NOT YET VERIFIED");
+  if(signatureBytes && edSupported){ sigVerdict.className="sig-verdict idle"; sigVerdict.textContent="re-verify needed"; }
+});
+
+/* seal on load so the page opens in a verified state */
+seal();
+</script>
+</body>
+</html>
