@@ -192,8 +192,8 @@
     <main>
         <section class="hero">
             <div class="container">
-                <h1>Detect <span class="highlight">Shadow AI</span> Anywhere</h1>
-                <p>Paste any professional text. Get a confidence score for AI-generated content in seconds. Catch unsanctioned LLM usage across hiring, legal, finance, healthcare, and more.</p>
+                <h1>Screen for <span class="highlight">Shadow AI</span> Markers</h1>
+                <p>Paste professional text and get a statistical signal of writing patterns associated with AI generation. A screening aid for reviewing possible LLM use across hiring, legal, finance, and healthcare. It is one input requiring human review, not proof, and never a basis for a decision about a person on its own.</p>
             </div>
         </section>
 
@@ -239,6 +239,7 @@
                         </div>
                         <div class="verdict" id="verdict">--</div>
                         <div class="score-subtitle" id="scoreSubtitle">--</div>
+                        <div class="score-subtitle" id="interpretation" style="margin-top:0.75rem;font-style:italic;opacity:0.85;"></div>
                     </div>
 
                     <!-- Signals -->
@@ -505,17 +506,21 @@ curl https://airblackbox.ai/api/keys \
             // Verdict
             const verdictEl = document.getElementById('verdict');
             const verdictMap = {
-                'very_likely_ai': 'Very Likely AI-Generated',
-                'likely_ai': 'Likely AI-Generated',
-                'inconclusive': 'Inconclusive',
-                'likely_human': 'Likely Human-Written',
-                'very_likely_human': 'Human-Written',
+                'high_ai_markers': 'High AI Markers',
+                'elevated_ai_markers': 'Elevated AI Markers',
+                'mixed_signals': 'Mixed Signals',
+                'low_ai_markers': 'Low AI Markers',
+                'minimal_ai_markers': 'Minimal AI Markers',
                 'insufficient_text': 'Not Enough Text',
             };
             verdictEl.textContent = verdictMap[data.verdict] || data.verdict;
             verdictEl.className = 'verdict ' + (data.score >= 0.6 ? 'ai' : data.score >= 0.4 ? 'unknown' : 'human');
 
             document.getElementById('scoreSubtitle').textContent = data.word_count + ' words analyzed';
+            if (data.interpretation) {
+                const interpEl = document.getElementById('interpretation');
+                if (interpEl) interpEl.textContent = data.interpretation;
+            }
 
             // Signals
             const signalsList = document.getElementById('signalsList');

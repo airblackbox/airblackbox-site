@@ -861,15 +861,15 @@ def detect_ai_text(text: str, context: str = "general", texts_batch: list = None
 
     # Verdict
     if composite >= 0.8:
-        verdict = "very_likely_ai"
+        verdict = "high_ai_markers"
     elif composite >= 0.6:
-        verdict = "likely_ai"
+        verdict = "elevated_ai_markers"
     elif composite >= 0.4:
-        verdict = "inconclusive"
+        verdict = "mixed_signals"
     elif composite >= 0.2:
-        verdict = "likely_human"
+        verdict = "low_ai_markers"
     else:
-        verdict = "very_likely_human"
+        verdict = "minimal_ai_markers"
 
     # Context-aware regulatory exposure
     regulations = []
@@ -879,6 +879,12 @@ def detect_ai_text(text: str, context: str = "general", texts_batch: list = None
     return {
         "score": composite,
         "verdict": verdict,
+        "confidence": "screening_signal",
+        "interpretation": (
+            "Statistical screening signal, not proof. Measures writing patterns "
+            "associated with AI-generated text and can be wrong in both directions. "
+            "Do not base any decision about a person on this score without human review."
+        ),
         "word_count": word_count,
         "context": context,
         "signals": signals,
