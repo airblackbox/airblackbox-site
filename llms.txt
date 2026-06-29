@@ -15,10 +15,13 @@ Enterprise governance platforms (Credo AI, Holistic AI, OneTrust) audit after th
 - **Stabilize** -- 51 compliance checks in CI/CD for operational drift detection
 - **Protect** -- Human oversight attestation (Art. 14 delegation logging)
 
+Tombstone is the enforcement companion: it wraps an agent's dangerous tools and blocks destructive actions (delete, drop, overwrite) before they run, sealing every decision to a tamper-evident ledger. AIR Blackbox records and proves; Tombstone prevents.
+
 ## Key Links
 
 - [Homepage](https://airblackbox.ai)
 - [GitHub](https://github.com/airblackbox/airblackbox)
+- [Tombstone (agent action firewall, blocks and proves destructive agent actions)](https://github.com/airblackbox/tombstone)
 - [PyPI](https://pypi.org/project/air-blackbox/)
 - [Audit Chain Specification (Open Standard v1.0.0)](https://airblackbox.ai/spec)
 - [CI/CD Integration Guide](https://airblackbox.ai/ci-cd)

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EU AI Act Article 9: Risk Management System Requirements | AIR Blackbox</title>
+    <meta name="description" content="EU AI Act Article 9 requires a continuous, documented risk management system for high-risk AI. Here is what it demands, who it applies to, the December 2027 deadline, and how to produce evidence you can show an auditor.">
+    <meta name="keywords" content="EU AI Act Article 9, risk management system, high-risk AI, AI risk management, Article 9 requirements, EU AI Act compliance, continuous risk management AI, AI Act risk assessment">
+    <meta property="og:title" content="EU AI Act Article 9: Risk Management System Requirements">
+    <meta property="og:description" content="What Article 9 actually requires for high-risk AI, who it applies to, the December 2027 deadline, and how to produce risk-management evidence you can show an auditor.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://airblackbox.ai/blog/article-9-risk-management-system">
+    <meta property="og:image" content="https://airblackbox.ai/og-image.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="EU AI Act Article 9: Risk Management System Requirements">
+    <meta name="twitter:description" content="A continuous, documented risk process for high-risk AI. What Article 9 demands and how to prove you did it.">
+    <link rel="canonical" href="https://airblackbox.ai/blog/article-9-risk-management-system">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "EU AI Act Article 9: Risk Management System Requirements",
+      "description": "What EU AI Act Article 9 requires for high-risk AI systems, who it applies to, the December 2027 deadline, and how to produce risk-management evidence you can show an auditor.",
+      "author": { "@type": "Organization", "name": "AIR Blackbox", "url": "https://github.com/airblackbox" },
+      "publisher": { "@type": "Organization", "name": "AIR Blackbox", "logo": { "@type": "ImageObject", "url": "https://airblackbox.ai/og-image.png" } },
+      "mainEntityOfPage": "https://airblackbox.ai/blog/article-9-risk-management-system",
+      "about": "EU AI Act Article 9 risk management system for high-risk AI systems"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://airblackbox.ai" },
+        { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://airblackbox.ai/blog/" },
+        { "@type": "ListItem", "position": 3, "name": "EU AI Act Article 9", "item": "https://airblackbox.ai/blog/article-9-risk-management-system" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What does EU AI Act Article 9 require?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Article 9 requires providers of high-risk AI systems to establish, implement, document and maintain a risk management system. It is a continuous, iterative process that runs across the entire lifecycle and is reviewed and updated regularly. It must identify and analyze known and foreseeable risks, estimate and evaluate risks under intended use and reasonably foreseeable misuse, account for post-market data, and adopt targeted measures until residual risk is judged acceptable." }
+        },
+        {
+          "@type": "Question",
+          "name": "Who has to comply with Article 9?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Providers of high-risk AI systems, which include the Annex III use cases such as AI used in hiring, lending, education, essential services, law enforcement and biometric identification. The main obligations for these Annex III high-risk systems apply from December 2, 2027 under the current timeline." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is a one-time risk assessment enough for Article 9?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Article 9 describes a continuous process that is maintained and updated throughout the system lifecycle, informed by testing and post-market monitoring. A single document filed once does not satisfy it. You need an ongoing, dated, reviewable record." }
+        }
+      ]
+    }
+    </script>
+    <style>
+        :root{
+            --bg:#0d1117; --panel:#161b22; --border:#30363d; --text:#e6edf3;
+            --muted:#8b949e; --red:#f85149; --green:#3fb950; --accent:#58a6ff;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;}
+        a{color:var(--accent);text-decoration:none;}
+        a:hover{text-decoration:underline;}
+        .container{max-width:760px;margin:0 auto;padding:0 1.5rem;}
+        header.site{border-bottom:1px solid var(--border);padding:1.1rem 0;position:sticky;top:0;background:rgba(13,17,23,0.85);backdrop-filter:blur(8px);z-index:10;}
+        header.site .container{display:flex;align-items:center;justify-content:space-between;}
+        .brand{font-weight:700;letter-spacing:0.3px;color:var(--text);}
+        .brand span{color:var(--red);}
+        nav.site a{color:var(--muted);margin-left:1.3rem;font-size:0.92rem;}
+        .crumbs{font-size:0.82rem;color:var(--muted);padding:1.6rem 0 0;}
+        .crumbs a{color:var(--muted);}
+        article{padding:1rem 0 3rem;}
+        .pill{display:inline-block;background:rgba(248,81,73,0.1);border:1px solid rgba(248,81,73,0.3);color:var(--red);padding:0.35rem 0.9rem;border-radius:20px;font-size:0.75rem;font-weight:600;letter-spacing:0.5px;margin:1.4rem 0 1rem;}
+        h1{font-size:2.2rem;line-height:1.2;margin:0.4rem 0 1rem;letter-spacing:-0.5px;}
+        h2{font-size:1.45rem;margin:2.6rem 0 0.9rem;letter-spacing:-0.3px;}
+        h3{font-size:1.1rem;margin:1.6rem 0 0.5rem;}
+        p{margin:0 0 1.1rem;color:#c9d1d9;}
+        .lede{font-size:1.18rem;color:var(--text);}
+        ul,ol{margin:0 0 1.2rem 1.2rem;color:#c9d1d9;}
+        li{margin:0.4rem 0;}
+        strong{color:var(--text);}
+        code{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:0.15rem 0.45rem;font-size:0.9em;color:#e6edf3;}
+        .callout{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:8px;padding:1.1rem 1.3rem;margin:1.6rem 0;}
+        .callout p:last-child{margin-bottom:0;}
+        table{width:100%;border-collapse:collapse;margin:1.4rem 0;font-size:0.95rem;}
+        th,td{border:1px solid var(--border);padding:0.7rem 0.85rem;text-align:left;vertical-align:top;}
+        th{background:var(--panel);font-weight:600;}
+        .cta{background:linear-gradient(180deg,rgba(63,185,80,0.08),rgba(13,17,23,0));border:1px solid var(--border);border-radius:12px;padding:1.8rem;margin:2.6rem 0 1rem;text-align:center;}
+        .cmd{display:inline-block;background:#010409;border:1px solid var(--border);border-radius:8px;padding:0.7rem 1rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:0.9rem;color:#3fb950;margin:0.6rem 0 1rem;}
+        .btn{display:inline-block;background:var(--green);color:#04130a;font-weight:700;padding:0.7rem 1.4rem;border-radius:8px;margin:0.3rem;}
+        .btn.secondary{background:transparent;color:var(--text);border:1px solid var(--border);}
+        .disclaimer{font-size:0.85rem;color:var(--muted);border-top:1px solid var(--border);margin-top:1.4rem;padding-top:1rem;}
+        .related{border-top:1px solid var(--border);margin-top:2.6rem;padding-top:1.4rem;}
+        .related a{display:block;margin:0.45rem 0;}
+        footer.site{border-top:1px solid var(--border);padding:2rem 0;color:var(--muted);font-size:0.85rem;text-align:center;}
+        @media(max-width:600px){h1{font-size:1.7rem;}}
+    </style>
+</head>
+<body>
+    <header class="site">
+        <div class="container">
+            <a class="brand" href="/">AIR <span>Blackbox</span></a>
+            <nav class="site">
+                <a href="/blog/">Blog</a>
+                <a href="/console/scan">Free Scan</a>
+                <a href="https://github.com/airblackbox/airblackbox">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="crumbs"><a href="/">Home</a> / <a href="/blog/">Blog</a> / EU AI Act Article 9</div>
+    </div>
+
+    <div class="container">
+        <article>
+            <div class="pill">&#x26A0; ANNEX III HIGH-RISK RULES APPLY DEC 2, 2027</div>
+            <h1>EU AI Act Article 9: building a risk management system you can prove.</h1>
+            <p class="lede">If you run a high-risk AI system, Article 9 is the one that does not let you file a document once and move on. It asks for a living risk process, kept current across the whole lifecycle, and the burden is on you to show you actually did it. Here is what it requires, who it covers, and how to leave evidence behind instead of a promise.</p>
+
+            <h2>What Article 9 actually requires</h2>
+            <p>Article 9 of the EU AI Act (Regulation 2024/1689) requires providers of high-risk AI systems to <strong>establish, implement, document, and maintain a risk management system</strong>. The key word is maintain. It is not a report. It is a <strong>continuous, iterative process that runs across the entire lifecycle</strong> of the system and is reviewed and updated on a regular basis.</p>
+            <p>In practice the process has to cover four things:</p>
+            <ol>
+                <li><strong>Identify and analyze</strong> the known and reasonably foreseeable risks the system can pose to health, safety, and fundamental rights when used for its intended purpose.</li>
+                <li><strong>Estimate and evaluate</strong> the risks that can emerge both in intended use and under reasonably foreseeable misuse.</li>
+                <li><strong>Account for post-market data</strong>, evaluating other risks that surface once the system is live, based on monitoring.</li>
+                <li><strong>Adopt targeted risk management measures</strong> until the remaining residual risk is judged acceptable, including testing against defined metrics before the system goes to market and as it changes.</li>
+            </ol>
+            <p>The regulation also calls for particular attention where a system could affect minors or other vulnerable groups. The throughline is simple: risk work is never finished, and every round of it is supposed to be recorded.</p>
+
+            <h2>Who has to comply</h2>
+            <p>Article 9 applies to providers of <strong>high-risk AI systems</strong>. That includes the Annex III use cases: AI used in hiring and employment decisions, lending and creditworthiness, education and exam scoring, access to essential public and private services, law enforcement, migration, and biometric identification. If your model decides something that materially affects a person's life or rights, assume you are in scope until you have confirmed otherwise.</p>
+            <div class="callout">
+                <p><strong>The deadline moved, the preparation did not.</strong> The obligations for Annex III high-risk systems now apply from <strong>December 2, 2027</strong> under the EU's revised timeline. That is not breathing room. A continuous risk process that has only existed for a month before an audit is not a continuous risk process. The teams that look credible in 2027 are the ones building the record now.</p>
+            </div>
+
+            <h2>The hard part: continuous, and you have to show it</h2>
+            <p>Most teams can write a risk assessment. The trap in Article 9 is the gap between doing the work and being able to prove the work. When a regulator, an enterprise customer's procurement team, or your own board asks how risk was managed over the last year, a single PDF dated last week answers the wrong question. They are asking for the process: what risks you flagged, when, what you changed in response, and whether anyone could have quietly edited that history after the fact.</p>
+            <p>That is an evidence problem, not a writing problem. You need a dated, reviewable, tamper-evident trail that shows the risk process ran continuously, not a snapshot assembled the week before the audit.</p>
+
+            <h2>How AIR Blackbox helps with Article 9</h2>
+            <p>AIR Blackbox is open-source tooling that turns the Article 9 process into evidence you can hand over. It scans your AI codebase for gaps mapped to the high-risk articles, and it records the risk-relevant events your system produces into a tamper-evident audit chain, so the history of how risk was handled cannot be silently rewritten.</p>
+            <table>
+                <tr><th>What Article 9 asks for</th><th>What AIR Blackbox produces</th></tr>
+                <tr><td>A documented, maintained risk process</td><td>Checks mapped to Article 9, run in CI on every change, with dated results that build a maintained record over time</td></tr>
+                <tr><td>Identification of foreseeable risks and misuse</td><td>Static and runtime scans for risk-relevant patterns, including PII exposure, prompt injection, and bias signals</td></tr>
+                <tr><td>Evidence the process actually ran</td><td>A tamper-evident audit chain and self-verifying evidence bundle an auditor can independently check</td></tr>
+                <tr><td>Traceability across the lifecycle</td><td>An append-only record, so the risk history is continuous rather than a single snapshot</td></tr>
+            </table>
+            <p>It installs in one line and runs locally, so nothing about your system leaves your machine:</p>
+            <div class="cmd">pip install air-blackbox &amp;&amp; air-blackbox comply --scan . -v</div>
+            <div class="callout">
+                <p><strong>Honest scope.</strong> This is not a certified compliance test. It is a starting point to identify potential gaps and to generate evidence of your risk process. It does not replace legal review or a conformity assessment. Use it to see where you stand and to leave a trail, not to declare yourself compliant.</p>
+            </div>
+
+            <div class="cta">
+                <h3 style="margin-top:0">See where your AI stands on Article 9 in about a minute.</h3>
+                <p style="color:var(--muted)">Run the free scan on any Python AI project. If it does not surface anything useful, you have lost sixty seconds.</p>
+                <div class="cmd">air-blackbox comply --scan . -v</div>
+                <div>
+                    <a class="btn" href="/console/scan">Run the Free Gap Scan</a>
+                    <a class="btn secondary" href="/compliance-mapping">See the full Article mapping</a>
+                </div>
+            </div>
+
+            <div class="related">
+                <h3>Keep reading the Article series</h3>
+                <a href="/blog/article-11-technical-documentation-ai-systems">Article 11: Technical Documentation for AI Systems &#8594;</a>
+                <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">The full picture: EU AI Act Articles 9 to 15, technical requirements &#8594;</a>
+                <a href="/blog/eu-ai-act-compliance-checklist">EU AI Act compliance checklist &#8594;</a>
+                <a href="/blog/eu-ai-act-august-2026-deadline">The EU AI Act deadline, and what actually changed &#8594;</a>
+            </div>
+
+            <p class="disclaimer">This article is general information about the EU AI Act, not legal advice. Regulatory text and timelines can change. Confirm your obligations with qualified counsel and the current official text of Regulation 2024/1689.</p>
+        </article>
+    </div>
+
+    <footer class="site">
+        <div class="container">AIR Blackbox &middot; Open source, Apache 2.0 &middot; <a href="https://github.com/airblackbox">GitHub</a> &middot; <a href="/">airblackbox.ai</a></div>
+    </footer>
+</body>
+</html>
