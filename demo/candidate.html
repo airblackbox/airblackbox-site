@@ -194,6 +194,26 @@ h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 1.2px; color: v
     </div>
   </div>
 
+  <div class="card">
+    <h2>Access &amp; Audit — AIR Blackbox Governed</h2>
+    <p style="font-size:14px; color:#3d4759;">
+      This candidate profile is governed by <a href="https://airblackbox.ai" style="color:var(--accent); text-decoration:none;">AIR Blackbox</a>.
+      Every access to this page — by a person or an AI assistant — is recorded on a
+      tamper-evident audit chain: each record's hash is linked to the record before it
+      (HMAC-SHA256), and records carry Ed25519 signatures anyone can verify with the
+      public key alone. No visitor data is stored; only that an access occurred, and when.
+    </p>
+    <p class="kv" style="margin-top:10px; font-family:'JetBrains Mono','SF Mono',ui-monospace,monospace; font-size:12.5px;" id="air-live-card">
+      Audit status: checking the chain…
+    </p>
+    <p style="font-size:12.5px; color:var(--dim); margin-top:10px;">
+      To govern your own AI agents the same way — approval gates on reject/advance
+      decisions, blocked inference of protected attributes, exportable evidence bundles —
+      add the AIR connector in claude.ai: Settings → Connectors → Add custom connector →
+      <code>https://air-mcp.fly.dev/mcp</code>
+    </p>
+  </div>
+
   <div class="prop-note">
     <strong>Fictional profile.</strong> Ada Example is not a real person; every employer, contact
     detail, and credential on this page is invented. This page is a demo prop for
@@ -208,22 +228,33 @@ h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 1.2px; color: v
 
 <script>
 (async () => {
-  const el = document.getElementById('air-live');
+  const strip = document.getElementById('air-live');
+  const card = document.getElementById('air-live-card');
+  const set = (html, plain) => {
+    if (strip) strip.innerHTML = html;
+    if (card) card.textContent = 'Audit status: ' + plain;
+  };
   try {
     const r = await fetch('https://air-mcp.fly.dev/demo/view', { method: 'POST' });
     const d = await r.json();
-    const intact = d.chain_intact
+    const intactHtml = d.chain_intact
       ? '<span class="ok">chain intact ✓</span>'
       : '<span class="warn">chain integrity FAILED</span>';
+    const intactPlain = d.chain_intact ? 'chain intact' : 'CHAIN INTEGRITY FAILED';
     if (d.recorded) {
-      el.innerHTML = '<span class="ok">✓ this access was recorded</span> — ' +
-        'record #' + d.records + ' · hash ' + d.chain_hash.slice(0, 12) + '… · ' + intact;
+      set('<span class="ok">✓ this access was recorded</span> — ' +
+            'record #' + d.records + ' · hash ' + d.chain_hash.slice(0, 12) + '… · ' + intactHtml,
+          'this access was recorded as record #' + d.records +
+            ', chain hash ' + d.chain_hash.slice(0, 12) + '…, ' + intactPlain + '.');
     } else {
-      el.innerHTML = '<span class="ok">✓ access covered by a recent audit record</span> — ' +
-        'chain has ' + d.records + ' records · ' + intact;
+      set('<span class="ok">✓ access covered by a recent audit record</span> — ' +
+            'chain has ' + d.records + ' records · ' + intactHtml,
+          'access covered by a recent audit record; the chain holds ' +
+            d.records + ' records, ' + intactPlain + '.');
     }
   } catch (e) {
-    el.innerHTML = '<span class="warn">⚠ audit service unreachable — this access was NOT recorded</span>';
+    set('<span class="warn">⚠ audit service unreachable — this access was NOT recorded</span>',
+        'audit service unreachable — this access was NOT recorded.');
   }
 })();
 </script>
