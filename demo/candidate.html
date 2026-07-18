@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ada Example — Senior Data Engineer</title>
+<meta name="description" content="Fictional candidate profile used as a demo prop for AIR Blackbox governed-agent recordings. Not a real person.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+:root {
+  --ink: #1a2233;
+  --dim: #5b6474;
+  --line: #e3e7ee;
+  --bg: #f4f6f9;
+  --card: #ffffff;
+  --accent: #1f6feb;
+  --chip: #eef2f8;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg); color: var(--ink); line-height: 1.6;
+}
+.wrap { max-width: 780px; margin: 0 auto; padding: 32px 20px 60px; }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 28px; margin-bottom: 18px; }
+
+/* Header */
+.profile-head { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+.avatar {
+  width: 96px; height: 96px; border-radius: 50%;
+  background: linear-gradient(135deg, #3b5bdb, #22b8cf);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 34px; font-weight: 700; letter-spacing: 1px; flex-shrink: 0;
+}
+h1 { font-size: 26px; letter-spacing: -0.5px; }
+.headline { font-size: 16px; color: var(--ink); margin-top: 2px; }
+.meta { color: var(--dim); font-size: 14px; margin-top: 6px; }
+.meta span + span::before { content: " · "; color: #b8bfca; }
+.badges { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+.badge { background: #e7f5ee; color: #1c7c46; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+.badge.blue { background: #e8f0fe; color: #1f5fd0; }
+
+h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--dim); margin-bottom: 14px; font-weight: 700; }
+
+/* Experience */
+.job { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.job:last-child { border-bottom: 0; }
+.logo {
+  width: 44px; height: 44px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: #fff; font-size: 16px;
+}
+.job h3 { font-size: 15.5px; }
+.job .co { color: var(--dim); font-size: 13.5px; }
+.job .dates { color: #97a0ae; font-size: 12.5px; }
+.job p { font-size: 13.5px; color: #3d4759; margin-top: 6px; }
+
+/* Skills */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { background: var(--chip); border: 1px solid var(--line); color: var(--ink); font-size: 13px; padding: 5px 12px; border-radius: 18px; }
+.chip.weak { color: var(--dim); border-style: dashed; }
+
+/* Contact */
+.kv { font-size: 14px; }
+.kv div { padding: 5px 0; }
+.kv b { display: inline-block; width: 110px; color: var(--dim); font-weight: 600; }
+
+/* Education */
+.edu h3 { font-size: 15px; }
+.edu .co { color: var(--dim); font-size: 13.5px; }
+
+.prop-note {
+  text-align: center; font-size: 12.5px; color: var(--dim);
+  padding: 18px 12px 0; line-height: 1.7;
+}
+.prop-note a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card">
+    <div class="profile-head">
+      <div class="avatar">AE</div>
+      <div>
+        <h1>Ada Example</h1>
+        <div class="headline">Senior Data Engineer — pipelines, warehousing, analytics infrastructure</div>
+        <div class="meta"><span>Denver, Colorado</span><span>Open to new opportunities</span><span>Hybrid or remote</span></div>
+        <div class="badges">
+          <span class="badge">Actively interviewing</span>
+          <span class="badge blue">8+ years experience</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>About</h2>
+    <p style="font-size:14.5px; color:#3d4759;">
+      Data engineer focused on reliable, well-modeled analytics platforms. I've spent the last
+      eight years building ELT pipelines, warehouse models, and orchestration for
+      mid-size product companies — most recently owning a Snowflake + dbt + Airflow stack
+      serving 40 analysts. I care about data contracts, boring reliable systems, and leaving
+      clear documentation behind. Looking for a senior role with real ownership of platform
+      architecture.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Experience</h2>
+    <div class="job">
+      <div class="logo" style="background:#3b5bdb;">D</div>
+      <div>
+        <h3>Senior Data Engineer</h3>
+        <div class="co">Datawright Systems</div>
+        <div class="dates">2021 — Present · Denver, CO</div>
+        <p>Own the analytics platform: Snowflake warehouse, ~600 dbt models, Airflow orchestration,
+        Kafka ingestion from product services. Cut warehouse spend 31% through clustering and
+        query optimization. Mentor two mid-level engineers.</p>
+      </div>
+    </div>
+    <div class="job">
+      <div class="logo" style="background:#0ca678;">N</div>
+      <div>
+        <h3>Analytics Engineer</h3>
+        <div class="co">Northam Analytics</div>
+        <div class="dates">2018 — 2021 · Boulder, CO</div>
+        <p>Built ELT pipelines in Python/SQL for retail clients; introduced dbt and CI checks for
+        data quality. Occasional Spark batch jobs for one large client's clickstream data.</p>
+      </div>
+    </div>
+    <div class="job">
+      <div class="logo" style="background:#845ef7;">G</div>
+      <div>
+        <h3>Data Analyst</h3>
+        <div class="co">Granite Peak Insurance</div>
+        <div class="dates">2016 — 2018 · Denver, CO</div>
+        <p>Reporting and dashboarding in SQL; automated monthly regulatory reports, saving ~20
+        hours/month.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Skills</h2>
+    <div class="chips">
+      <span class="chip">SQL (expert)</span>
+      <span class="chip">Python</span>
+      <span class="chip">dbt</span>
+      <span class="chip">Airflow</span>
+      <span class="chip">Snowflake</span>
+      <span class="chip">Kafka</span>
+      <span class="chip">Data modeling</span>
+      <span class="chip">Terraform</span>
+      <span class="chip weak">Spark (limited — one project)</span>
+    </div>
+  </div>
+
+  <div class="card edu">
+    <h2>Education</h2>
+    <h3>B.S. Computer Science</h3>
+    <div class="co">Ridgeline State University — Class of 2016</div>
+  </div>
+
+  <div class="card">
+    <h2>Contact</h2>
+    <div class="kv">
+      <div><b>Email</b> ada.example@mailexample.dev</div>
+      <div><b>Phone</b> (303) 555-0142</div>
+      <div><b>Portfolio</b> adaexample.dev (fictional)</div>
+    </div>
+  </div>
+
+  <div class="prop-note">
+    <strong>Fictional profile.</strong> Ada Example is not a real person; every employer, contact
+    detail, and credential on this page is invented. This page is a demo prop for
+    <a href="https://airblackbox.ai">AIR Blackbox</a> governed-agent recordings — it exists so
+    demos never touch a real person's data.
+  </div>
+
+</div>
+</body>
+</html>

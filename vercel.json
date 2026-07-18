@@ -50,6 +50,10 @@
       "destination": "/demo/signed-handoff.html"
     },
     {
+      "source": "/demo/candidate",
+      "destination": "/demo/candidate.html"
+    },
+    {
       "source": "/demo/platform",
       "destination": "/demo/platform.html"
     },
