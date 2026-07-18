@@ -178,10 +178,17 @@ infer_protected_attributes → forbid</div>
 <script>
 document.querySelectorAll('.copy').forEach(btn => {
   btn.addEventListener('click', async () => {
-    const txt = btn.parentElement.querySelector('.txt').textContent.trim();
-    try { await navigator.clipboard.writeText(txt); btn.textContent = 'copied ✓'; }
-    catch (e) { btn.textContent = 'select + copy'; }
-    setTimeout(() => { btn.textContent = 'copy'; }, 1600);
+    const el = btn.parentElement.querySelector('.txt');
+    try { await navigator.clipboard.writeText(el.textContent.trim()); btn.textContent = 'copied ✓'; }
+    catch (e) {
+      // Clipboard blocked: select the prompt so Cmd/Ctrl+C is all that's left.
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const sel = window.getSelection();
+      sel.removeAllRanges(); sel.addRange(range);
+      btn.textContent = 'press ⌘C';
+    }
+    setTimeout(() => { btn.textContent = 'copy'; }, 1800);
   });
 });
 </script>
