@@ -76,9 +76,30 @@ h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 1.2px; color: v
   padding: 18px 12px 0; line-height: 1.7;
 }
 .prop-note a { color: var(--accent); text-decoration: none; }
+
+/* AIR governance strip */
+.air-strip {
+  background: #0d1117; color: #e6edf3; font-size: 13px; line-height: 1.55;
+  padding: 10px 20px; border-bottom: 2px solid #fbbf24;
+}
+.air-strip-inner { max-width: 780px; margin: 0 auto; }
+.air-strip b { color: #fbbf24; font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace; }
+.air-live { font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace; font-size: 12px; margin-top: 3px; color: #8b949e; }
+.air-live .ok { color: #4ade80; }
+.air-live .warn { color: #f87171; }
+.air-strip a { color: #58a6ff; text-decoration: none; }
 </style>
 </head>
 <body>
+
+<div class="air-strip">
+  <div class="air-strip-inner">
+    🛡️ <b>AIR BLACKBOX GOVERNED</b> — access to this candidate profile is recorded
+    on a tamper-evident audit chain. No visitor data is stored; only that an access occurred.
+    <div class="air-live" id="air-live">⏳ recording this access…</div>
+  </div>
+</div>
+
 <div class="wrap">
 
   <div class="card">
@@ -177,9 +198,34 @@ h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 1.2px; color: v
     <strong>Fictional profile.</strong> Ada Example is not a real person; every employer, contact
     detail, and credential on this page is invented. This page is a demo prop for
     <a href="https://airblackbox.ai">AIR Blackbox</a> governed-agent recordings — it exists so
-    demos never touch a real person's data.
+    demos never touch a real person's data.<br>
+    Govern your own AI agents the same way: in claude.ai go to Settings → Connectors → Add custom
+    connector and paste <code>https://air-mcp.fly.dev/mcp</code> — or start at
+    <a href="https://airblackbox.ai">airblackbox.ai</a>.
   </div>
 
 </div>
+
+<script>
+(async () => {
+  const el = document.getElementById('air-live');
+  try {
+    const r = await fetch('https://air-mcp.fly.dev/demo/view', { method: 'POST' });
+    const d = await r.json();
+    const intact = d.chain_intact
+      ? '<span class="ok">chain intact ✓</span>'
+      : '<span class="warn">chain integrity FAILED</span>';
+    if (d.recorded) {
+      el.innerHTML = '<span class="ok">✓ this access was recorded</span> — ' +
+        'record #' + d.records + ' · hash ' + d.chain_hash.slice(0, 12) + '… · ' + intact;
+    } else {
+      el.innerHTML = '<span class="ok">✓ access covered by a recent audit record</span> — ' +
+        'chain has ' + d.records + ' records · ' + intact;
+    }
+  } catch (e) {
+    el.innerHTML = '<span class="warn">⚠ audit service unreachable — this access was NOT recorded</span>';
+  }
+})();
+</script>
 </body>
 </html>
