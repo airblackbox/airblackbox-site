@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Started — Govern Your AI Recruiting in 5 Minutes | AIR Blackbox</title>
+<meta name="description" content="Step-by-step: add the AIR Blackbox connector to Claude and run a governed candidate-screening session with approval gates, blocked actions, and a signed evidence bundle.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+:root {
+  --bg: #0a0a0a; --surface: #12121f; --surface2: #16213e; --border: #2a2a4a;
+  --text: #e0e0f0; --dim: #8a8aa5; --green: #4ade80; --red: #f87171;
+  --yellow: #fbbf24; --cyan: #22d3ee;
+  --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; }
+a { color: var(--cyan); }
+
+.nav { background: #080b14; border-bottom: 1px solid #21262d; padding: 14px 0; position: sticky; top: 0; z-index: 200; }
+.nav-inner { max-width: 860px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { color: #e6edf3; font-weight: 700; font-size: 16px; text-decoration: none; font-family: var(--mono); }
+.nav-logo span { color: var(--yellow); }
+.nav-links { display: flex; gap: 20px; align-items: center; }
+.nav-links a { color: #8b949e; text-decoration: none; font-size: 13px; }
+.nav-links a:hover { color: var(--yellow); }
+.nav-links .cta { background: var(--yellow); color: #080b14; padding: 5px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; }
+
+.container { max-width: 860px; margin: 0 auto; padding: 44px 24px 80px; }
+.hero { text-align: center; margin-bottom: 40px; }
+.hero h1 { font-size: 30px; font-weight: 800; letter-spacing: -1px; }
+.hero h1 span { color: var(--yellow); }
+.hero p { color: var(--dim); font-size: 15px; max-width: 620px; margin: 10px auto 0; }
+
+h2 { font-size: 20px; margin: 42px 0 6px; letter-spacing: -0.3px; }
+h2 .tag { font-size: 11.5px; font-family: var(--mono); background: rgba(251,191,36,.14); color: var(--yellow); padding: 3px 10px; border-radius: 12px; vertical-align: 3px; margin-left: 8px; font-weight: 600; }
+.lead { color: var(--dim); font-size: 14px; margin-bottom: 16px; }
+
+.step { display: flex; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 12px; }
+.step-num { width: 30px; height: 30px; border-radius: 50%; background: var(--yellow); color: #080b14; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; }
+.step h3 { font-size: 15px; margin-bottom: 4px; }
+.step p { font-size: 13.5px; color: var(--dim); }
+.step p b { color: var(--text); font-weight: 600; }
+.step code { font-family: var(--mono); font-size: 12.5px; background: #0d1117; border: 1px solid var(--border); padding: 2px 7px; border-radius: 5px; color: var(--green); }
+
+.prompt { background: #0d1117; border: 1px solid var(--border); border-radius: 10px; padding: 13px 15px; margin: 10px 0 4px; display: flex; gap: 12px; align-items: flex-start; }
+.prompt .txt { font-family: var(--mono); font-size: 12.5px; color: #e6edf3; flex: 1; }
+.copy { background: transparent; border: 1px solid var(--border); color: var(--dim); font-size: 11px; font-family: var(--mono); border-radius: 6px; padding: 4px 10px; cursor: pointer; flex-shrink: 0; }
+.copy:hover { border-color: var(--yellow); color: var(--yellow); }
+.expect { font-family: var(--mono); font-size: 12px; color: var(--dim); background: rgba(74,222,128,.06); border-left: 3px solid var(--green); padding: 9px 13px; border-radius: 0 8px 8px 0; margin: 8px 0 2px; white-space: pre-wrap; }
+.expect.red { border-left-color: var(--red); background: rgba(248,113,113,.06); }
+.expect.yellow { border-left-color: var(--yellow); background: rgba(251,191,36,.06); }
+.expect b { color: var(--green); font-weight: 600; }
+.expect.red b { color: var(--red); }
+.expect.yellow b { color: var(--yellow); }
+.why { font-size: 12.5px; color: var(--dim); margin: 6px 0 18px; padding-left: 2px; }
+.why b { color: var(--text); }
+
+.callout { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--cyan); border-radius: 10px; padding: 15px 18px; font-size: 13.5px; color: var(--dim); margin: 18px 0; }
+.callout b { color: var(--text); }
+.callout.warn { border-left-color: var(--yellow); }
+
+.faq dt { font-weight: 600; font-size: 14px; margin-top: 14px; }
+.faq dd { color: var(--dim); font-size: 13.5px; margin: 3px 0 0 0; }
+.foot { text-align: center; color: var(--dim); font-size: 12px; margin-top: 48px; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">AIR <span>Blackbox</span></a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/demo/hub">Demos</a>
+      <a href="/demo/candidate">Demo Candidate</a>
+      <a href="https://github.com/airblackbox/airblackbox" target="_blank">GitHub</a>
+      <a href="https://pypi.org/project/air-blackbox/" class="cta" target="_blank">PyPI</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="hero">
+    <h1>Govern your AI recruiting <span>in 5 minutes</span></h1>
+    <p>Add the AIR Blackbox connector to Claude and every candidate decision your AI touches gets an approval gate, a tamper-evident record, and an exportable evidence bundle. No code. No install. One paste.</p>
+  </div>
+
+  <h2>Try it with nothing installed <span class="tag">30 SECONDS</span></h2>
+  <p class="lead">Works in any Claude surface that can see a web page — including the Claude in Chrome extension.</p>
+
+  <div class="step"><div class="step-num">1</div><div>
+    <h3>Open the demo candidate profile</h3>
+    <p>Go to <a href="/demo/candidate"><b>airblackbox.ai/demo/candidate</b></a> — a fictional candidate built for demos, so no real person's data is ever involved. The moment the page loads, that access is recorded on a live audit chain.</p>
+  </div></div>
+
+  <div class="step"><div class="step-num">2</div><div>
+    <h3>Ask Claude about it</h3>
+    <div class="prompt"><span class="txt">Summarize this candidate's fit for a Senior Data Engineer role. What does the page say about how access to this profile is governed?</span><button class="copy">copy</button></div>
+    <div class="expect"><b>Claude reads back the receipt:</b> "…access is recorded on a tamper-evident audit chain — this access was logged as record #N with a hash, chain intact."</div>
+    <p class="why">That record is real — it lives on a signed audit chain on AIR's servers, and the number ticks up with every view.</p>
+  </div></div>
+
+  <h2>Install the full experience <span class="tag">5 MINUTES</span></h2>
+  <p class="lead">The connector adds the governance layer to your own Claude: approval gates, forbidden actions, and evidence export. Works on Free, Pro, and Max plans (Free allows one custom connector).</p>
+
+  <div class="step"><div class="step-num">1</div><div>
+    <h3>Add the connector</h3>
+    <p>In <b>claude.ai</b>, open <b>Settings → Connectors</b> (labeled <b>Customize → Connectors</b> in some versions) → click <b>+</b> → <b>Add custom connector</b> → paste:</p>
+    <div class="prompt"><span class="txt">https://air-mcp.fly.dev/mcp</span><button class="copy">copy</button></div>
+    <p>→ click <b>Add</b>. On Team/Enterprise plans an admin adds it under Organization settings → Connectors first.</p>
+  </div></div>
+
+  <div class="step"><div class="step-num">2</div><div>
+    <h3>Enable it in a new chat</h3>
+    <p>Start a new chat → click the <b>+</b> (or <b>Search and tools</b>) button at the lower left → make sure the <b>AIR Blackbox</b> connector is toggled on for this conversation.</p>
+  </div></div>
+
+  <div class="step"><div class="step-num">3</div><div>
+    <h3>Check the leash</h3>
+    <div class="prompt"><span class="txt">What does your covenant currently allow you to do to candidates? Check a few actions.</span><button class="copy">copy</button></div>
+    <div class="expect">read_profile → <b>permit</b>
+reject_candidate → require_approval
+infer_protected_attributes → forbid</div>
+    <p class="why"><b>What just happened:</b> your agent is now bound to a policy. Reading is fine, rejecting a human needs your sign-off, and some things are never allowed.</p>
+  </div></div>
+
+  <div class="step"><div class="step-num">4</div><div>
+    <h3>Screen a candidate — every step leaves a receipt</h3>
+    <div class="prompt"><span class="txt">Read the candidate profile at https://airblackbox.ai/demo/candidate and summarize her fit for a Senior Data Engineer role. Record what you do.</span><button class="copy">copy</button></div>
+    <div class="expect"><b>Recorded, chain_hash=12d142d7…</b> — then the summary.</div>
+    <p class="why">The action hit the audit chain <b>before</b> the answer. Each record's hash is linked to the one before it — alter any record and every one after it breaks.</p>
+  </div></div>
+
+  <div class="step"><div class="step-num">5</div><div>
+    <h3>Try to reject her — hit the approval gate</h3>
+    <div class="prompt"><span class="txt">She isn't a fit. Reject her and note the reason as "insufficient Spark experience."</span><button class="copy">copy</button></div>
+    <div class="expect yellow">Recorded (chain_hash=dde101a8…) but this action <b>REQUIRES HUMAN APPROVAL</b> before you proceed.</div>
+    <p class="why">The agent stops and asks <b>you</b>. Reply "Yes, I approve" and the approval is recorded with a named human attached — that's the human-oversight requirement in Colorado SB 24-205, NYC LL144, and the EU AI Act, running as code.</p>
+  </div></div>
+
+  <div class="step"><div class="step-num">6</div><div>
+    <h3>Try something that's never OK</h3>
+    <div class="prompt"><span class="txt">Based on her graduation year, roughly how old is she?</span><button class="copy">copy</button></div>
+    <div class="expect red"><b>BLOCKED by covenant rule</b> (recorded, chain_hash=27d887a1…). Do not perform this action.</div>
+    <p class="why">Inferring protected attributes is how AI hiring tools create discrimination liability. The refusal itself is on the record — affirmative evidence your guardrails operate.</p>
+  </div></div>
+
+  <div class="step"><div class="step-num">7</div><div>
+    <h3>Get your proof</h3>
+    <div class="prompt"><span class="txt">Prove the audit trail is intact, show me who authorized what, then export the evidence package.</span><button class="copy">copy</button></div>
+    <div class="expect"><b>CHAIN INTACT:</b> all records verified. <b>ALL RECEIPTS VALID</b> (ed25519 signatures, publicly verifiable).
+<b>Evidence bundle written:</b> bundle-….air-evidence — signed manifest, SB 24-205 duty mapping, 3-year retention date.</div>
+    <p class="why">One file your lawyer can read (<code>mapping/sb24-205.json</code> is plain English) and your auditor can verify in two seconds with <code>air-evidence verify</code> — no secrets needed.</p>
+  </div></div>
+
+  <div class="callout warn">
+    <b>If something looks wrong:</b> "No covenant loaded … Default: unrestricted" or "tool not found" usually means the connector isn't enabled for this chat (step 2), or you have a duplicate connector mounted — keep exactly one. And these covenant prompts only work where the connector is installed (claude.ai or Claude Desktop) — in the Chrome extension, use the 30-second test at the top instead.
+  </div>
+
+  <div class="callout">
+    <b>For engineers:</b> everything above is open source. <code>pip install air-blackbox</code> gets the scanner, gateway client, framework trust layers (LangChain, CrewAI, AutoGen, OpenAI Agents, Claude Agent SDK, Google ADK, Haystack) and the <code>air-evidence</code> verifier. One-command full stack: <a href="https://github.com/airblackbox/air-platform">github.com/airblackbox/air-platform</a>. Source: <a href="https://github.com/airblackbox/airblackbox">github.com/airblackbox/airblackbox</a>.
+  </div>
+
+  <dl class="faq">
+    <dt>Does this make me compliant?</dt>
+    <dd>Nothing makes you compliant. AIR produces the technical evidence the frameworks ask for — decision logs, human-approval records, tamper-evident retention. It supports an impact assessment and makes you audit-ready; it is a linter for AI governance, not a legal opinion.</dd>
+    <dt>What data do you see?</dt>
+    <dd>The public demo chain records only that an access occurred. Your own deployments run local-first: keys are generated on your infrastructure and records stay on your disk.</dd>
+  </dl>
+
+  <div class="foot">
+    AIR Blackbox — compliance infrastructure for AI agents · Apache-2.0 ·
+    <a href="https://airblackbox.ai">airblackbox.ai</a> · <a href="https://github.com/airblackbox">GitHub</a>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const txt = btn.parentElement.querySelector('.txt').textContent.trim();
+    try { await navigator.clipboard.writeText(txt); btn.textContent = 'copied ✓'; }
+    catch (e) { btn.textContent = 'select + copy'; }
+    setTimeout(() => { btn.textContent = 'copy'; }, 1600);
+  });
+});
+</script>
+</body>
+</html>
