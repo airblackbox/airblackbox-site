@@ -220,6 +220,14 @@ h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 1.2px; color: v
       Audit status: checking the chain…
     </p>
     <p style="font-size:12.5px; color:var(--dim); margin-top:10px;">
+      <b>Don't take this page's word for it.</b> The audit chain is queryable directly:
+      <a href="https://air-mcp.fly.dev/demo/status" style="color:var(--accent); text-decoration:none;">https://air-mcp.fly.dev/demo/status</a>
+      returns the live record count and integrity verdict as JSON from the audit server —
+      independent of anything rendered here. Signed evidence bundles are verifiable
+      offline against the server's public key with the open-source
+      <code>air-evidence verify</code> tool.
+    </p>
+    <p style="font-size:12.5px; color:var(--dim); margin-top:10px;">
       The same governance is available for any AI agent: AIR Blackbox publishes a
       claude.ai-compatible connector (<code>https://air-mcp.fly.dev/mcp</code>) that adds
       approval gates on reject/advance decisions, blocks inference of protected
