@@ -182,121 +182,121 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Archivo:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Archivo:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
     <style>
         :root {
-            --bg-deep: #080b14;
-            --bg-card: #0d1117;
-            --bg-elevated: #161b22;
-            --border: #21262d;
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
-            --text-dim: #484f58;
-            --accent: #fbbf24;
-            --accent-glow: rgba(251, 191, 36, 0.15);
-            --green: #3fb950;
-            --red: #f85149;
-            --yellow: #d29922;
+            --bg-deep: #201e1d;
+            --bg-card: #262322;
+            --bg-elevated: #2b2827;
+            --border: #3a3735;
+            --text-primary: #f3f2f2;
+            --text-secondary: #b8b5b3;
+            --text-dim: #8a8785;
+            --accent: #f3f2f2;
+            --accent-glow: rgba(243, 242, 242, 0.08);
+            --green: #f3f2f2;
+            --red: #ff7a5c;
+            --yellow: #b8b5b3;
             --mono: 'JetBrains Mono', monospace;
-            --sans: 'Sora', -apple-system, sans-serif;
+            --sans: 'Archivo', -apple-system, sans-serif;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body { font-family: var(--sans); background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
-        a { color: #58a6ff; text-decoration: none; }
+        a { color: #f3f2f2; text-decoration: none; }
         a:hover { text-decoration: underline; }
         code, .mono { font-family: var(--mono); }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
 
         /* Header */
-        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(8,11,20,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
-        nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text-primary); }
-        .logo span { color: #fbbf24; }
+        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(32,30,29,0.95); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; gap: 2rem; }
+        .logo { font-family: var(--sans); font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em; color: var(--text-primary); display: inline-flex; align-items: center; white-space: nowrap; }
+        .logo span { color: #f3f2f2; }
         .nav-links { display: flex; gap: 1.5rem; align-items: center; }
         .nav-links a { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
-        .nav-links a:hover { color: #fbbf24; text-decoration: none; }
-        .nav-links .btn-sm { background: #fbbf24; color: var(--bg-deep); padding: 0.4rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.8rem; }
+        .nav-links a:hover { color: #f3f2f2; text-decoration: none; }
+        .nav-links .btn-sm { background: #f3f2f2; color: var(--bg-deep); padding: 0.4rem 1rem;  font-weight: 600; font-size: 0.8rem; }
 
         /* Hero */
         .hero { padding: 10rem 0 5rem; text-align: center; position: relative; }
-        .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(251,191,36,0.06) 0%, transparent 70%); pointer-events: none; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(88, 166, 255,0.06) 0%, transparent 70%); pointer-events: none; }
         .hero h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 1.2rem; }
-        .hero h1 .highlight { background: linear-gradient(135deg, var(--accent), #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero h1 .highlight { background: linear-gradient(135deg, var(--accent), #f3f2f2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .hero .subtitle { color: var(--text-secondary); font-size: 1.15rem; max-width: 640px; margin: 0 auto 2rem; line-height: 1.8; }
-        .hero .install { font-family: var(--mono); background: var(--bg-card); border: 1px solid var(--border); padding: 0.8rem 1.5rem; border-radius: 8px; font-size: 1rem; display: inline-block; margin-bottom: 1.5rem; color: var(--green); cursor: pointer; transition: border-color 0.2s; }
-        .hero .install:hover { border-color: #fbbf24; }
+        .hero .install { font-family: var(--mono); background: var(--bg-card); border: 1px solid var(--border); padding: 0.8rem 1.5rem;  font-size: 1rem; display: inline-block; margin-bottom: 1.5rem; color: var(--green); cursor: pointer; transition: border-color 0.2s; }
+        .hero .install:hover { border-color: #f3f2f2; }
         .hero .install::before { content: '$ '; color: var(--text-dim); }
-        .deadline { display: inline-block; background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); color: var(--red); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 2rem; letter-spacing: 0.5px; }
+        .deadline { display: inline-block; background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); color: var(--red); padding: 0.4rem 1rem;  font-size: 0.8rem; font-weight: 600; margin-bottom: 2rem; letter-spacing: 0.5px; }
         .hero-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-        .hero-links a { padding: 0.7rem 1.5rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
-        .btn-primary { background: #fbbf24; color: var(--bg-deep); }
+        .hero-links a { padding: 0.7rem 1.5rem;  font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
+        .btn-primary { background: #f3f2f2; color: var(--bg-deep); }
         .btn-primary:hover { opacity: 0.85; text-decoration: none; }
         .btn-secondary { border: 1px solid var(--border); color: var(--text-primary); }
-        .btn-secondary:hover { border-color: #fbbf24; text-decoration: none; }
+        .btn-secondary:hover { border-color: #f3f2f2; text-decoration: none; }
 
         /* Sections */
         section { padding: 5rem 0; }
-        .section-label { font-family: var(--mono); font-size: 0.75rem; color: #fbbf24; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; }
+        .section-label { font-family: var(--mono); font-size: 0.75rem; color: #f3f2f2; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; }
         .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; letter-spacing: -1px; margin-bottom: 1rem; }
         .section-desc { color: var(--text-secondary); max-width: 600px; margin-bottom: 3rem; }
 
         /* Problem cards */
         .problem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-        .problem-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
+        .problem-card { background: var(--bg-card); border: 1px solid var(--border);  padding: 2rem; }
         .problem-card .icon { font-size: 1.6rem; margin-bottom: 1rem; }
         .problem-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; }
         .problem-card p { color: var(--text-secondary); font-size: 0.88rem; line-height: 1.7; }
 
         /* How It Works steps */
         .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; counter-reset: step; }
-        .step { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 1.5rem; position: relative; }
+        .step { background: var(--bg-card); border: 1px solid var(--border);  padding: 2rem 1.5rem; position: relative; }
         .step-num { font-family: var(--mono); font-size: 2rem; font-weight: 800; color: var(--accent); opacity: 0.3; margin-bottom: 0.8rem; }
         .step h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.6rem; }
         .step p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; }
 
         /* Features grid */
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.8rem; transition: border-color 0.3s; }
-        .feature-card:hover { border-color: #fbbf24; }
+        .feature-card { background: var(--bg-card); border: 1px solid var(--border);  padding: 1.8rem; transition: border-color 0.3s; }
+        .feature-card:hover { border-color: #f3f2f2; }
         .feature-category { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.5rem; }
         .feature-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; }
         .feature-card p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; }
         .cat-security { color: var(--red); }
         .cat-performance { color: var(--green); }
         .cat-compliance { color: var(--yellow); }
-        .cat-trust { color: #fbbf24; }
+        .cat-trust { color: #f3f2f2; }
         .cat-dx { color: #a78bfa; }
 
         /* Architecture */
         .arch-flow { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; margin: 2rem 0; }
-        .arch-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 2rem; text-align: center; min-width: 180px; }
+        .arch-box { background: var(--bg-card); border: 1px solid var(--border);  padding: 1.5rem 2rem; text-align: center; min-width: 180px; }
         .arch-box h4 { font-size: 0.95rem; margin-bottom: 0.3rem; }
         .arch-box p { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); }
         .arch-arrow { font-size: 1.5rem; color: var(--accent); font-weight: 700; }
         .arch-outputs { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
-        .arch-output { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; }
+        .arch-output { background: var(--bg-elevated); border: 1px solid var(--border);  padding: 1rem 1.5rem; text-align: center; }
         .arch-output h4 { font-size: 0.85rem; margin-bottom: 0.2rem; }
         .arch-output p { font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); }
 
         /* Verticals */
         .verticals-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
-        .vertical-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
+        .vertical-card { background: var(--bg-card); border: 1px solid var(--border);  padding: 2rem; }
         .vertical-card .industry { font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 0.5rem; }
         .vertical-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.6rem; }
         .vertical-card p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; }
 
         /* Code block */
-        .code-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; max-width: 600px; margin: 2rem auto; }
+        .code-block { background: var(--bg-card); border: 1px solid var(--border);  overflow: hidden; max-width: 600px; margin: 2rem auto; }
         .code-header { background: var(--bg-elevated); padding: 0.6rem 1rem; display: flex; gap: 6px; align-items: center; border-bottom: 1px solid var(--border); }
-        .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .code-dot { width: 10px; height: 10px;  }
         .code-body { padding: 1.5rem; font-family: var(--mono); font-size: 0.82rem; line-height: 1.9; overflow-x: auto; }
 
         /* Terminal */
-        .terminal { background: #0d1117; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin: 2rem 0; font-family: var(--mono); font-size: 0.82rem; line-height: 1.8; max-width: 700px; }
+        .terminal { background: #0d1117; border: 1px solid var(--border);  overflow: hidden; margin: 2rem 0; font-family: var(--mono); font-size: 0.82rem; line-height: 1.8; max-width: 700px; }
         .terminal-bar { background: var(--bg-elevated); padding: 0.6rem 1rem; display: flex; gap: 6px; align-items: center; border-bottom: 1px solid var(--border); }
-        .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .terminal-dot { width: 10px; height: 10px;  }
         .terminal-body { padding: 1.2rem 1.5rem; overflow-x: auto; }
         .t-prompt { color: var(--accent); } .t-cmd { color: var(--text-primary); } .t-comment { color: var(--text-dim); }
         .t-pass { color: var(--green); } .t-fail { color: var(--red); } .t-warn { color: var(--yellow); } .t-dim { color: var(--text-dim); }
@@ -309,15 +309,15 @@
 
         /* Commands grid */
         .commands-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
-        .cmd-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.8rem; transition: border-color 0.3s, transform 0.2s; }
-        .cmd-card:hover { border-color: #fbbf24; transform: translateY(-2px); }
+        .cmd-card { background: var(--bg-card); border: 1px solid var(--border);  padding: 1.8rem; transition: border-color 0.3s, transform 0.2s; }
+        .cmd-card:hover { border-color: #f3f2f2; transform: translateY(-2px); }
         .cmd-name { font-family: var(--mono); font-size: 1rem; font-weight: 600; color: var(--green); margin-bottom: 0.6rem; }
         .cmd-desc { color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6; }
 
         /* FAQ */
         .faq-item { border-bottom: 1px solid var(--border); padding: 1.5rem 0; }
         .faq-q { font-weight: 700; font-size: 1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .faq-q::after { content: '+'; font-family: var(--mono); font-size: 1.2rem; color: #fbbf24; transition: transform 0.2s; }
+        .faq-q::after { content: '+'; font-family: var(--mono); font-size: 1.2rem; color: #f3f2f2; transition: transform 0.2s; }
         .faq-item.open .faq-q::after { content: '-'; }
         .faq-a { color: var(--text-secondary); font-size: 0.88rem; line-height: 1.8; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; }
         .faq-item.open .faq-a { max-height: 500px; padding-top: 1rem; }
@@ -342,9 +342,9 @@
 <body>
     <!-- Header -->
     <header><nav>
-        <div class="logo">AIR <span>Blackbox</span></div>
+        <div class="logo" style="letter-spacing:-0.02em"><svg width="24" height="24" viewBox="0 0 96 96" fill="none" style="vertical-align:-5px;margin-right:9px"><path d="M48 8 L82.6 28 L82.6 68 L48 88 L13.4 68 L13.4 28 Z" stroke="#f3f2f2" stroke-width="9"/><circle cx="48" cy="48" r="11" fill="#f3f2f2"/></svg>airblackbox</div>
         <div class="nav-links">
-            <a href="/console/scan" style="color:#fbbf24;font-weight:600">Scan</a>
+            <a href="/console/scan" style="color:#f3f2f2;font-weight:600">Scan</a>
             <a href="/demo/ledger.html">Live Demo</a>
             <a href="#features">Features</a>
             <a href="/which-product">Which Product</a>
@@ -436,7 +436,7 @@
                 <p>Art. 14 delegation logging proves a human authorized AI-assisted actions. Decision lineage that shows who approved what, when, and why.</p>
             </div>
         </div>
-        <div style="text-align:center; margin-top:2rem; padding:1.5rem; background:var(--bg-card); border:1px solid var(--border); border-radius:10px;">
+        <div style="text-align:center; margin-top:2rem; padding:1.5rem; background:var(--bg-card); border:1px solid var(--border); ">
             <p style="color:var(--text-secondary); font-size:0.95rem; margin:0;"><strong style="color:var(--text-primary)">The Four Layers: Verify. Filter. Stabilize. Protect.</strong><br>Every piece of AIR Blackbox maps to one of these four functions. Together they form a complete audit infrastructure for AI systems.</p>
         </div>
     </div></section>
@@ -722,7 +722,7 @@
         <h2 class="section-title">They do one thing. We do four.</h2>
         <p class="section-desc">Arthur AI ($60M raised), Lasso Security, and Lakera Guard are AI security platforms. They filter threats. When a regulator asks for the audit trail, they have nothing.</p>
         <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:2rem 0">
+        <table style="width:100%;border-collapse:collapse;background:var(--bg-card);border:1px solid var(--border);overflow:hidden;margin:2rem 0">
             <thead>
                 <tr style="border-bottom:1px solid var(--border)">
                     <th style="padding:1rem;text-align:left;font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim)">Capability</th>
@@ -856,7 +856,7 @@ client = OpenAI(
         <!-- Pricing cards -->
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem">
             <!-- Free -->
-            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative">
+            <div style="background:var(--bg-card);border:1px solid var(--border);padding:2rem;position:relative">
                 <div style="font-family:var(--mono);font-size:0.75rem;color:var(--green);text-transform:uppercase;letter-spacing:2px;margin-bottom:0.5rem">Free</div>
                 <div style="font-size:2.2rem;font-weight:800;margin-bottom:0.3rem">$0</div>
                 <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:1.5rem">forever</div>
@@ -869,11 +869,11 @@ client = OpenAI(
                     <div><span style="color:var(--green)">&#x2713;</span> All framework trust layers</div>
                     <div style="color:var(--text-dim)"><span>&#x2197;</span> Anonymized telemetry improves model</div>
                 </div>
-                <a href="https://pypi.org/project/air-blackbox/" style="display:block;text-align:center;margin-top:1.5rem;padding:0.7rem;border:1px solid var(--border);border-radius:8px;font-weight:600;font-size:0.85rem;color:var(--text-primary);text-decoration:none">pip install air-blackbox</a>
+                <a href="https://pypi.org/project/air-blackbox/" style="display:block;text-align:center;margin-top:1.5rem;padding:0.7rem;border:1px solid var(--border);font-weight:600;font-size:0.85rem;color:var(--text-primary);text-decoration:none">pip install air-blackbox</a>
             </div>
             <!-- Pro -->
-            <div style="background:var(--bg-card);border:2px solid var(--accent);border-radius:12px;padding:2rem;position:relative">
-                <div style="position:absolute;top:-10px;right:1.5rem;background:var(--accent);color:var(--bg-deep);font-size:0.7rem;font-weight:700;padding:0.2rem 0.8rem;border-radius:10px;text-transform:uppercase">Popular</div>
+            <div style="background:var(--bg-card);border:2px solid var(--accent);padding:2rem;position:relative">
+                <div style="position:absolute;top:-10px;right:1.5rem;background:var(--accent);color:var(--bg-deep);font-size:0.7rem;font-weight:700;padding:0.2rem 0.8rem;text-transform:uppercase">Popular</div>
                 <div style="font-family:var(--mono);font-size:0.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:0.5rem">Pro</div>
                 <div style="font-size:2.2rem;font-weight:800;margin-bottom:0.3rem">$299<span style="font-size:1rem;font-weight:400;color:var(--text-dim)">/mo</span></div>
                 <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:1.5rem">hosted VPS - we manage it</div>
@@ -886,10 +886,10 @@ client = OpenAI(
                     <div><span style="color:var(--accent)">&#x2605;</span> Priority model updates</div>
                     <div><span style="color:var(--accent)">&#x2605;</span> Jaeger trace dashboard</div>
                 </div>
-                <a href="https://buy.stripe.com/test_6oU4gzgppgTW2YJ3yG8N200" style="display:block;text-align:center;margin-top:1.5rem;padding:0.7rem;background:var(--accent);border-radius:8px;font-weight:600;font-size:0.85rem;color:var(--bg-deep);text-decoration:none">Get Started &#x2192;</a>
+                <a href="https://buy.stripe.com/test_6oU4gzgppgTW2YJ3yG8N200" style="display:block;text-align:center;margin-top:1.5rem;padding:0.7rem;background:var(--accent);font-weight:600;font-size:0.85rem;color:var(--bg-deep);text-decoration:none">Get Started &#x2192;</a>
             </div>
             <!-- Enterprise -->
-            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative">
+            <div style="background:var(--bg-card);border:1px solid var(--border);padding:2rem;position:relative">
                 <div style="font-family:var(--mono);font-size:0.75rem;color:var(--yellow);text-transform:uppercase;letter-spacing:2px;margin-bottom:0.5rem">Enterprise</div>
                 <div style="font-size:2.2rem;font-weight:800;margin-bottom:0.3rem">Custom</div>
                 <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:1.5rem">air-gapped - your infrastructure</div>
@@ -902,7 +902,7 @@ client = OpenAI(
                     <div><span style="color:var(--yellow)">&#x1F512;</span> Dedicated support + SLA</div>
                     <div><span style="color:var(--yellow)">&#x1F512;</span> Custom compliance frameworks</div>
                 </div>
-                <a href="mailto:jason@airblackbox.ai?subject=AIR%20Blackbox%20Enterprise" style="display:block;text-align:center;margin-top:1.5rem;padding:0.7rem;border:1px solid var(--yellow);border-radius:8px;font-weight:600;font-size:0.85rem;color:var(--yellow);text-decoration:none">Contact Sales &#x2192;</a>
+                <a href="mailto:jason@airblackbox.ai?subject=AIR%20Blackbox%20Enterprise" style="display:block;text-align:center;margin-top:1.5rem;padding:0.7rem;border:1px solid var(--yellow);font-weight:600;font-size:0.85rem;color:var(--yellow);text-decoration:none">Contact Sales &#x2192;</a>
             </div>
         </div>
     </div></section>
@@ -914,7 +914,7 @@ client = OpenAI(
         <p class="section-desc">Free runs on your laptop. Pro and Enterprise run on dedicated servers - yours or ours.</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-top:2rem">
             <!-- Free deploy -->
-            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem">
+            <div style="background:var(--bg-card);border:1px solid var(--border);padding:2rem">
                 <div style="font-family:var(--mono);font-size:0.75rem;color:var(--green);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem">Free - Your Laptop</div>
                 <div class="terminal" style="margin:0;max-width:100%"><div class="terminal-bar"><div class="terminal-dot" style="background:#f85149"></div><div class="terminal-dot" style="background:#d29922"></div><div class="terminal-dot" style="background:#3fb950"></div></div><div class="terminal-body" style="font-size:0.78rem">
 <span class="t-prompt">$</span> <span class="t-cmd">pip install air-blackbox</span>
@@ -926,7 +926,7 @@ client = OpenAI(
                 <p style="color:var(--text-secondary);font-size:0.82rem;margin-top:1rem;line-height:1.7">One pip install. Runs locally with Ollama. Anonymized scan metadata helps improve the compliance model for everyone.</p>
             </div>
             <!-- Pro deploy -->
-            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem">
+            <div style="background:var(--bg-card);border:1px solid var(--border);padding:2rem">
                 <div style="font-family:var(--mono);font-size:0.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem">Pro - We Manage It</div>
                 <div class="terminal" style="margin:0;max-width:100%"><div class="terminal-bar"><div class="terminal-dot" style="background:#f85149"></div><div class="terminal-dot" style="background:#d29922"></div><div class="terminal-dot" style="background:#3fb950"></div></div><div class="terminal-body" style="font-size:0.78rem">
 <span class="t-comment"># We deploy a VPS for your team</span>
@@ -938,7 +938,7 @@ client = OpenAI(
                 <p style="color:var(--text-secondary);font-size:0.82rem;margin-top:1rem;line-height:1.7">We set up a dedicated VPS with the fine-tuned compliance model, Jaeger traces, and benchmarking dashboard. Your team just points the CLI at it. We handle updates.</p>
             </div>
             <!-- Enterprise deploy -->
-            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem">
+            <div style="background:var(--bg-card);border:1px solid var(--border);padding:2rem">
                 <div style="font-family:var(--mono);font-size:0.75rem;color:var(--yellow);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem">Enterprise - Your Infrastructure</div>
                 <div class="terminal" style="margin:0;max-width:100%"><div class="terminal-bar"><div class="terminal-dot" style="background:#f85149"></div><div class="terminal-dot" style="background:#d29922"></div><div class="terminal-dot" style="background:#3fb950"></div></div><div class="terminal-body" style="font-size:0.78rem">
 <span class="t-comment"># Your DevOps runs one script</span>
@@ -966,7 +966,7 @@ client = OpenAI(
                 <div style="color:var(--text-secondary);font-size:0.82rem">external connections<br><span style="color:var(--text-dim)">enterprise air-gapped mode</span></div>
             </div>
             <div style="text-align:center">
-                <div style="font-size:1.8rem;font-weight:800;color:var(--red)">51</div>
+                <div style="font-size:1.8rem;font-weight:800;color:var(--accent)">51</div>
                 <div style="color:var(--text-secondary);font-size:0.82rem">gap analysis checks<br><span style="color:var(--text-dim)">same engine at every tier</span></div>
             </div>
         </div>
@@ -1016,7 +1016,7 @@ client = OpenAI(
     <section style="text-align:center; padding:5rem 0"><div class="container">
         <h2 class="section-title">The high-risk deadline moved. The preparation did not.</h2>
         <p style="color:var(--text-secondary); margin-bottom:2rem">51 gap analysis checks. 6 EU AI Act articles + GDPR. ML-DSA-65 signing. Self-verifying evidence bundles. 7 framework trust layers. GDPR + bias scanning. One pip install. Find out where your Python AI agents stand today.</p>
-        <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox').then(()=>this.textContent='Copied!')" style="font-family:var(--mono);background:var(--bg-card);border:1px solid var(--border);padding:0.8rem 1.5rem;border-radius:8px;font-size:1rem;display:inline-block;margin-bottom:1.5rem;color:var(--green);cursor:pointer">pip install air-blackbox</div>
+        <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox').then(()=>this.textContent='Copied!')" style="font-family:var(--mono);background:var(--bg-card);border:1px solid var(--border);padding:0.8rem 1.5rem;font-size:1rem;display:inline-block;margin-bottom:1.5rem;color:var(--green);cursor:pointer">pip install air-blackbox</div>
         <div class="hero-links" style="margin-top:1.5rem">
             <a href="https://github.com/airblackbox/airblackbox" class="btn-primary">Star on GitHub</a>
             <a href="https://pypi.org/project/air-blackbox/" class="btn-secondary">View on PyPI</a>
@@ -1028,7 +1028,7 @@ client = OpenAI(
     <footer><div class="container">
         <div class="footer-grid">
             <div class="footer-col">
-                <div class="logo" style="margin-bottom:0.8rem">AIR <span style="color:#fbbf24">Blackbox</span></div>
+                <div class="logo" style="margin-bottom:0.8rem;letter-spacing:-0.02em"><svg width="24" height="24" viewBox="0 0 96 96" fill="none" style="vertical-align:-5px;margin-right:9px"><path d="M48 8 L82.6 28 L82.6 68 L48 88 L13.4 68 L13.4 28 Z" stroke="#f3f2f2" stroke-width="9"/><circle cx="48" cy="48" r="11" fill="#f3f2f2"/></svg>airblackbox</div>
                 <p style="color:var(--text-dim); font-size:0.85rem;">EU AI Act gap analysis scanner.<br>Identifies gaps. Does not certify.<br>Open source. Apache 2.0.</p>
             </div>
             <div class="footer-col">

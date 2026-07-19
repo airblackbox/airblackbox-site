@@ -3,333 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AIR Blackbox - Interactive Demos</title>
-<meta name="description" content="Interactive demos showing how AIR Blackbox scans AI agents for EU AI Act compliance. Live scan, trust layers, audit chains, before/after comparisons, and signed handoffs.">
+<title>Interactive Demos | airblackbox</title>
+<meta name="description" content="Interactive demos showing how AIR Blackbox governs AI agents: live audit chains, approval gates, tamper evidence, evidence bundles. Everything runs in your browser.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/brand/brand.css">
 <style>
-:root {
-  --bg: #0a0a0a;
-  --surface: #1a1a2e;
-  --surface2: #16213e;
-  --border: #2a2a4a;
-  --text: #e0e0f0;
-  --dim: #6a6a8a;
-  --green: #4ade80;
-  --red: #f87171;
-  --yellow: #fbbf24;
-  --cyan: #22d3ee;
-  --purple: #a78bfa;
-}
+body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--font); line-height: 1.6; }
+a { color: var(--ink); text-decoration: none; }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+.container { max-width: 1080px; margin: 0 auto; padding: 48px 24px 80px; }
+.hero { border-bottom: 2px solid var(--ink); padding-bottom: 34px; margin-bottom: 34px; }
+.hero .bb-kicker { margin-bottom: 16px; }
+.hero h1 { font-size: 38px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 12px; }
+.hero p { color: var(--neutral); font-size: 15px; max-width: 620px; margin: 0; }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-}
-
-/* Nav */
-.nav {
-  background: #080b14;
-  border-bottom: 1px solid #21262d;
-  padding: 14px 0;
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  backdrop-filter: blur(12px);
-}
-
-.nav-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.nav-logo {
-  color: #e6edf3;
-  font-weight: 700;
-  font-size: 16px;
-  text-decoration: none;
-  font-family: 'JetBrains Mono', 'SF Mono', monospace;
-}
-
-.nav-logo span { color: #fbbf24; }
-
-.nav-links {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.nav-links a {
-  color: #8b949e;
-  text-decoration: none;
-  font-size: 13px;
-  transition: color 0.2s;
-}
-
-.nav-links a:hover { color: #fbbf24; }
-.nav-links a.active { color: #58a6ff; }
-
-.nav-links .cta {
-  background: #fbbf24;
-  color: #080b14;
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 12px;
-}
-
-.nav-links .cta:hover { background: #f59e0b; color: #080b14; }
-
-/* Content */
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 60px 24px;
-}
-
-header {
-  text-align: center;
-  margin-bottom: 60px;
-}
-
-header h1 {
-  font-size: 36px;
-  font-weight: 800;
-  margin-bottom: 12px;
-  letter-spacing: -1px;
-}
-
-header h1 span { color: var(--yellow); }
-
-header p {
-  color: var(--dim);
-  font-size: 16px;
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.7;
-}
-
-/* Demo Grid */
-.demo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
-}
-
-.demo-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 32px 28px;
-  text-decoration: none;
-  color: var(--text);
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
-}
-
-.demo-card:hover {
-  border-color: var(--yellow);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(251, 191, 36, 0.1);
-}
-
-.demo-icon {
-  font-size: 32px;
-  margin-bottom: 16px;
-  display: block;
-}
-
-.demo-card h3 {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.demo-card p {
-  color: var(--dim);
-  font-size: 14px;
-  line-height: 1.6;
-  margin-bottom: 16px;
-}
-
-.demo-tag {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 20px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.tag-interactive { background: rgba(74, 222, 128, 0.15); color: var(--green); }
-.tag-visual { background: rgba(167, 139, 250, 0.15); color: var(--purple); }
-.tag-animated { background: rgba(34, 211, 238, 0.15); color: var(--cyan); }
-
-.demo-card .arrow {
-  position: absolute;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 20px;
-  color: var(--dim);
-  transition: all 0.3s;
-}
-
-.demo-card:hover .arrow {
-  color: var(--yellow);
-  right: 20px;
-}
-
-/* Footer */
-footer {
-  text-align: center;
-  padding: 60px 0 40px;
-  color: var(--dim);
-  font-size: 13px;
-}
-
-.install-cmd {
-  font-family: 'JetBrains Mono', 'SF Mono', monospace;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 24px;
-  display: inline-block;
-  margin-bottom: 16px;
-  color: var(--green);
-  font-size: 14px;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-
-.install-cmd:hover { border-color: var(--yellow); }
-.install-cmd::before { content: '$ '; color: var(--dim); }
-
-footer a {
-  color: var(--cyan);
-  text-decoration: none;
-}
-
-footer a:hover { text-decoration: underline; }
-
-@media (max-width: 700px) {
-  .nav-links { gap: 12px; flex-wrap: wrap; }
-  header h1 { font-size: 28px; }
-  .demo-grid { grid-template-columns: 1fr; }
-}
+.demo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.demo-card { border: 2px solid var(--ink); background: #ffffff; padding: 22px 24px; display: flex; flex-direction: column; gap: 8px; transition: transform .12s; }
+.demo-card:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+.demo-card h3 { font-size: 17px; font-weight: 800; letter-spacing: -0.01em; margin: 0; }
+.demo-card p { font-size: 13px; color: var(--neutral); margin: 0; flex: 1; }
+.demo-tag { align-self: flex-start; font-size: 10.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--ink); color: var(--ink); }
+.demo-tag.hot { background: var(--signal); border-color: var(--signal); color: var(--ground); }
+.demo-tag.dark { background: var(--ink); color: var(--ground); }
+.foot { border-top: 2px solid var(--ink); color: var(--neutral); font-size: 12px; margin-top: 48px; padding-top: 18px; }
 </style>
 </head>
-<body>
+<body class="brand">
 
-<nav class="nav">
-  <div class="nav-inner">
-    <a href="/" class="nav-logo">AIR <span>Blackbox</span></a>
-    <div class="nav-links">
+<header class="bb-header">
+  <div class="bb-header-inner">
+    <a href="/" class="bb-wordmark">
+      <svg width="24" height="24" viewBox="0 0 96 96" fill="none"><path d="M48 8 L82.6 28 L82.6 68 L48 88 L13.4 68 L13.4 28 Z" stroke="#201e1d" stroke-width="9"/><circle cx="48" cy="48" r="11" fill="#201e1d"/></svg>
+      airblackbox
+    </a>
+    <nav class="bb-nav">
       <a href="/">Home</a>
       <a href="/scan">Scan</a>
-      <a href="/demo/hub" class="active">Demos</a>
+      <a href="/demo/hub">Demos</a>
       <a href="/blog/">Blog</a>
       <a href="https://github.com/airblackbox/airblackbox" target="_blank">GitHub</a>
-      <a href="https://pypi.org/project/air-blackbox/" class="cta" target="_blank">PyPI</a>
-    </div>
+      <a href="https://pypi.org/project/air-blackbox/" class="bb-cta" target="_blank">PyPI</a>
+    </nav>
   </div>
-</nav>
+</header>
 
 <div class="container">
-  <header>
-    <h1>Interactive <span>Demos</span></h1>
-    <p>See AIR Blackbox in action. Every demo runs in your browser. No install, no API keys, no data sent anywhere.</p>
-  </header>
+  <div class="hero">
+    <div class="bb-kicker">Interactive demos — everything runs in your browser</div>
+    <h1>See it govern.</h1>
+    <p>Live audit chains, approval gates, tamper evidence, and signed evidence bundles. No install, no API keys, no data sent anywhere.</p>
+  </div>
 
   <div class="demo-grid">
-    <a href="/demo/get-started" class="demo-card" style="border-color: var(--green);">
-      <span class="demo-icon">&#x1f680;</span>
-      <h3>Get Started in 5 Minutes</h3>
-      <p>Step-by-step: add the AIR connector to Claude, run a governed candidate screening with approval gates and blocked actions, export your first signed evidence bundle. Copy-paste prompts included.</p>
-      <span class="demo-tag tag-interactive" style="background: rgba(74,222,128,0.15); color: var(--green);">START HERE</span>
+    <a href="/demo/get-started" class="demo-card" style="border-width: 3px;">
+      <h3>Get Started</h3>
+      <p>Install the connector in claude.ai and run a fully governed candidate-screening session — approval gates, blocked actions, evidence export. Copy-paste prompts included.</p>
+      <span class="demo-tag hot">Start here — 5 min</span>
     </a>
 
-    <a href="/demo/platform" class="demo-card" style="border-color: var(--yellow);">
-      <span class="demo-icon">&#x2699;&#xfe0f;</span>
+    <a href="/demo/platform" class="demo-card">
       <h3>The Full Platform</h3>
       <p>Boot the whole stack, record an agent call, watch guardrails block a runaway loop and a prompt injection — then tamper with the audit chain and watch it break. Real hashes, in your browser.</p>
-      <span class="demo-tag tag-interactive" style="background: rgba(251,191,36,0.15); color: var(--yellow);">NEW</span>
+      <span class="demo-tag dark">Interactive</span>
     </a>
 
-    <a href="/demo/" class="demo-card" style="border-color: var(--cyan);">
-      <span class="demo-icon">&#x1f6e1;&#xfe0f;</span>
+    <a href="/demo/candidate" class="demo-card">
+      <h3>Governed Candidate Page</h3>
+      <p>A fictional candidate profile that records every access on a live audit chain — ask any AI assistant about it and hear the receipt read back. Compare with the ungoverned twin.</p>
+      <span class="demo-tag dark">Live chain</span>
+    </a>
+
+    <a href="/demo/" class="demo-card">
       <h3>Runtime Compliance Proxy</h3>
       <p>Test prompt injection detection, compliance headers, SB 942 kill-switch, quantum-safe signing, and dashboard preview. All running in your browser.</p>
-      <span class="demo-tag tag-interactive" style="background: rgba(34,211,238,0.15); color: var(--cyan);">Interactive</span>
+      <span class="demo-tag">Interactive</span>
     </a>
 
     <a href="/demo/live-scan" class="demo-card">
-      <span class="demo-icon">&#x1f50d;</span>
       <h3>Live Scan</h3>
       <p>Paste your Python AI agent code and watch the compliance scanner check it against 6 EU AI Act articles in real time.</p>
-      <span class="demo-tag tag-interactive">Interactive</span>
+      <span class="demo-tag">Interactive</span>
     </a>
 
     <a href="/demo/before-after" class="demo-card">
-      <span class="demo-icon">&#x2194;&#xfe0f;</span>
-      <h3>Before & After</h3>
-      <p>Same agent, two lines of code. See what changes when you add a trust layer, side by side, across 4 frameworks.</p>
-      <span class="demo-tag tag-visual">Visual</span>
+      <h3>Before &amp; After</h3>
+      <p>The same agent, ungoverned and governed, side by side — what changes in the code and what shows up in the audit trail.</p>
+      <span class="demo-tag">Comparison</span>
     </a>
 
     <a href="/demo/trust-layer" class="demo-card">
-      <span class="demo-icon">&#x1f6e1;&#xfe0f;</span>
       <h3>Trust Layer</h3>
-      <p>Watch what happens under the hood when a trust layer wraps your agent. PII detection, injection scanning, audit records, step by step.</p>
-      <span class="demo-tag tag-animated">Animated</span>
+      <p>Drop-in wrappers for LangChain, CrewAI, AutoGen and more — same audit chain, native integration.</p>
+      <span class="demo-tag">Interactive</span>
     </a>
 
     <a href="/demo/audit-chain" class="demo-card">
-      <span class="demo-icon">&#x1f517;</span>
       <h3>Audit Chain Explorer</h3>
-      <p>Build an HMAC-SHA256 audit chain, verify its integrity, then try to tamper with it. See why tamper-evident logging matters.</p>
-      <span class="demo-tag tag-interactive">Interactive</span>
+      <p>Walk a real HMAC-linked chain record by record; break one and watch every downstream hash fail.</p>
+      <span class="demo-tag">Interactive</span>
     </a>
 
     <a href="/demo/signed-handoff" class="demo-card">
-      <span class="demo-icon">&#x1f91d;</span>
       <h3>Signed Handoffs</h3>
-      <p>Two AI agents, one task, cryptographic proof of every step. Click through the Ed25519 handoff protocol.</p>
-      <span class="demo-tag tag-animated">Animated</span>
+      <p>Ed25519-signed agent handoffs — the hiring episode with a real in-browser chain and signature verification.</p>
+      <span class="demo-tag">Live crypto</span>
     </a>
 
     <a href="/demo/gate" class="demo-card">
-      <span class="demo-icon">&#x1f6e1;&#xfe0f;</span>
-      <h3>Gate - Bilateral Receipts</h3>
-      <p>A loan processor agent hits four actions against its covenant. Approve or reject sensitive actions, watch Ed25519 receipts and HMAC audit chains build live.</p>
-      <span class="demo-tag tag-interactive">Interactive</span>
+      <h3>Gate — Bilateral Receipts</h3>
+      <p>Pre-execution approval receipts for consequential actions: who asked, who authorized, cryptographically bound.</p>
+      <span class="demo-tag">Interactive</span>
+    </a>
+
+    <a href="/demo/ledger" class="demo-card">
+      <h3>Tamper-Evidence Ledger</h3>
+      <p>A live ledger you can try to rewrite — and watch it catch you.</p>
+      <span class="demo-tag">Live crypto</span>
     </a>
 
     <a href="/demo/scanner" class="demo-card">
-      <span class="demo-icon">&#x25b6;&#xfe0f;</span>
       <h3>Narrated Walkthrough</h3>
-      <p>The original demo: a narrated terminal session showing a full scan, from zero compliance to 6/6 technical checks passing.</p>
-      <span class="demo-tag tag-visual">Voice</span>
+      <p>A guided tour of the scanner with voice narration.</p>
+      <span class="demo-tag">Walkthrough</span>
     </a>
   </div>
+
+  <div class="foot">
+    airblackbox — compliance infrastructure for AI agents · Apache-2.0 · <a href="https://github.com/airblackbox" style="text-decoration: underline;">GitHub</a>
+  </div>
 </div>
-
-<footer>
-  <div class="install-cmd" onclick="navigator.clipboard.writeText('pip install air-blackbox').then(()=>this.textContent='Copied!').catch(()=>{})">pip install air-blackbox</div>
-  <br>
-  <a href="https://github.com/airblackbox/airblackbox">GitHub</a> &middot;
-  <a href="https://pypi.org/project/air-blackbox/">PyPI</a> &middot;
-  <a href="https://airblackbox.ai">airblackbox.ai</a>
-</footer>
-
 </body>
 </html>

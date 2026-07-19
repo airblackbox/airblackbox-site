@@ -1,0 +1,66 @@
+/* AIR Blackbox brand foundation — from Brand Kit v1.0 (July 2026).
+   One ink, one stroke weight, one typeface. No rounded corners, ever. */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+
+:root {
+  --ink: #201e1d;        /* the mark, wordmark, body text */
+  --ground: #f3f2f2;     /* page background; mark on dark */
+  --neutral: #6b6866;    /* secondary text, meta, captions */
+  --neutral-soft: #8a8785;
+  --signal: #ec3013;     /* UI only: alerts, failing checks, primary CTA. Never the logo. */
+  --divider: #201e1d;
+  --font: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+* { border-radius: 0 !important; }
+
+body.brand {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font);
+  line-height: 1.6;
+}
+
+/* Ruled header — compact mark + lowercase wordmark, flush left */
+.bb-header {
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  background: var(--ground);
+  position: sticky; top: 0; z-index: 200;
+}
+.bb-header-inner {
+  max-width: 1080px; margin: 0 auto; padding: 12px 24px;
+  display: flex; align-items: center; gap: 10px;
+}
+.bb-wordmark {
+  font-family: var(--font); font-weight: 700; font-size: 17px;
+  letter-spacing: -0.02em; color: var(--ink); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.bb-nav { margin-left: auto; display: flex; gap: 22px; align-items: center; }
+.bb-nav a {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--neutral); text-decoration: none;
+}
+.bb-nav a:hover { color: var(--ink); }
+.bb-nav a.bb-cta {
+  background: var(--signal); color: var(--ground); padding: 6px 12px; font-weight: 700;
+}
+.bb-nav a.bb-cta:hover { background: var(--ink); color: var(--ground); }
+
+/* Dark inversion (ground on ink) for terminal panels and dark sections */
+.bb-dark { background: var(--ink); color: var(--ground); }
+
+/* Kicker label style — caps 600, tracked +0.1em */
+.bb-kicker {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--neutral);
+}
+
+h1, h2, h3, .bb-heading { font-family: var(--font); letter-spacing: -0.02em; }
+
+/* Recording node: blinks ONLY when the page is genuinely recording. */
+@keyframes bb-rec { 0%, 55% { opacity: 1; } 70% { opacity: 0.1; } 85%, 100% { opacity: 1; } }
+.bb-node-rec { animation: bb-rec 1.8s infinite; }
