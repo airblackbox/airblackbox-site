@@ -65,23 +65,25 @@
     }
     </script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+
         :root {
-            --bg-deep: #080b14;
-            --bg-card: #0d1117;
-            --bg-elevated: #161b22;
-            --border: #21262d;
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
-            --text-dim: #484f58;
-            --accent: #fbbf24;
-            --accent-glow: rgba(251, 191, 36, 0.15);
-            --green: #3fb950;
-            --red: #f85149;
-            --yellow: #d29922;
-            --blue: #58a6ff;
-            --purple: #bc8cff;
+            --bg-deep: #f3f2f2;
+            --bg-card: #eae9e9;
+            --bg-elevated: #dfdddd;
+            --border: rgba(32,30,29,0.35);
+            --text-primary: #201e1d;
+            --text-secondary: #6b6866;
+            --text-dim: #8a8785;
+            --accent: #ec3013;
+            --accent-glow: rgba(236,48,19, 0.15);
+            --green: #1a7f37;
+            --red: #ec3013;
+            --yellow: #b45309;
+            --blue: #ec3013;
+            --purple: #ec3013;
             --mono: 'JetBrains Mono', monospace;
-            --sans: 'Sora', -apple-system, sans-serif;
+            --sans: 'Archivo', -apple-system, sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -93,21 +95,21 @@
         .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
 
         /* Header */
-        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(8,11,20,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(243,242,242,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
         nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text-primary); }
         .logo span { color: var(--accent); }
         .nav-links { display: flex; gap: 1.5rem; align-items: center; }
         .nav-links a { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
         .nav-links a:hover { color: var(--accent); text-decoration: none; }
-        .nav-links .btn-sm { background: var(--accent); color: var(--bg-deep); padding: 0.4rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.8rem; }
+        .nav-links .btn-sm { background: var(--accent); color: var(--bg-deep); padding: 0.4rem 1rem; border-radius: 0; font-weight: 600; font-size: 0.8rem; }
         .nav-links .active { color: var(--accent); }
 
         /* Hero */
         .hero { padding: 9rem 0 3rem; text-align: center; position: relative; }
-        .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(251,191,36,0.06) 0%, transparent 70%); pointer-events: none; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: none; pointer-events: none; }
         .hero h1 { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 800; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 1.2rem; }
-        .hero h1 .highlight { background: linear-gradient(135deg, var(--accent), #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero h1 .highlight { color: var(--accent); }
         .hero .subtitle { color: var(--text-secondary); font-size: 1.05rem; max-width: 720px; margin: 0 auto 1rem; line-height: 1.8; }
 
         /* Sections */
@@ -117,7 +119,7 @@
         .section-desc { color: var(--text-secondary); max-width: 720px; margin-bottom: 2.5rem; font-size: 0.95rem; line-height: 1.8; }
 
         /* 60-second decision box */
-        .tldr-box { background: var(--bg-card); border: 1px solid var(--accent); border-radius: 12px; padding: 2rem; margin: 2rem 0; box-shadow: 0 0 40px rgba(251,191,36,0.08); }
+        .tldr-box { background: var(--bg-card); border: 1px solid var(--accent); border-radius: 0; padding: 2rem; margin: 2rem 0; }
         .tldr-box h3 { font-family: var(--mono); font-size: 0.85rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 1.2rem; }
         .tldr-item { display: flex; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
         .tldr-item:last-child { border-bottom: none; }
@@ -127,16 +129,16 @@
 
         /* Product cards */
         .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
-        .product-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: border-color 0.3s, transform 0.3s; }
+        .product-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 0; padding: 2rem; transition: border-color 0.3s, transform 0.3s; }
         .product-card:hover { border-color: var(--accent); transform: translateY(-2px); }
         .product-card .pkg { font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.5rem; }
         .product-card h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.6rem; font-family: var(--mono); }
         .product-card .tagline { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; margin-bottom: 1.2rem; min-height: 3.2rem; }
-        .product-card .install { font-family: var(--mono); background: var(--bg-elevated); border: 1px solid var(--border); padding: 0.6rem 1rem; border-radius: 6px; font-size: 0.8rem; color: var(--green); display: block; margin-bottom: 1.2rem; }
+        .product-card .install { font-family: var(--mono); background: var(--bg-elevated); border: 1px solid var(--border); padding: 0.6rem 1rem; border-radius: 0; font-size: 0.8rem; color: var(--green); display: block; margin-bottom: 1.2rem; }
         .product-card .install::before { content: '$ '; color: var(--text-dim); }
         .product-card .when-use { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; }
         .product-card .when-use strong { color: var(--text-primary); display: block; margin-bottom: 0.4rem; font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; }
-        .product-card.air-trust { border-color: rgba(251,191,36,0.4); }
+        .product-card.air-trust { border-color: rgba(236,48,19,0.4); }
         .product-card.air-trust h3 { color: var(--accent); }
         .product-card.gateway h3 { color: var(--blue); }
         .product-card.air-gate h3 { color: var(--purple); }
@@ -144,7 +146,7 @@
         .product-card .repo-link { display: inline-block; margin-top: 1rem; font-size: 0.8rem; color: var(--text-dim); }
 
         /* Comparison table */
-        .compare-table { width: 100%; border-collapse: collapse; margin: 2rem 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .compare-table { width: 100%; border-collapse: collapse; margin: 2rem 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 0; overflow: hidden; }
         .compare-table th, .compare-table td { padding: 1rem 1.2rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: top; }
         .compare-table th { font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-dim); background: var(--bg-elevated); }
         .compare-table td:first-child { color: var(--text-secondary); font-weight: 500; }
@@ -156,15 +158,15 @@
 
         /* Scenario cards */
         .scenario-list { display: flex; flex-direction: column; gap: 1rem; margin: 2rem 0; }
-        .scenario { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 1.4rem 1.6rem; }
+        .scenario { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0; padding: 1.4rem 1.6rem; }
         .scenario .person { font-size: 0.82rem; color: var(--text-dim); font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem; }
         .scenario .situation { color: var(--text-primary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 0.6rem; }
         .scenario .answer { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; }
-        .scenario .answer code { background: var(--bg-elevated); padding: 0.15rem 0.45rem; border-radius: 4px; color: var(--accent); font-size: 0.8rem; }
+        .scenario .answer code { background: var(--bg-elevated); padding: 0.15rem 0.45rem; border-radius: 0; color: var(--accent); font-size: 0.8rem; }
 
         /* FAQ */
         .faq-list { display: flex; flex-direction: column; gap: 1rem; margin: 2rem 0; }
-        .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.4rem 1.6rem; }
+        .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 0; padding: 1.4rem 1.6rem; }
         .faq-item h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.6rem; color: var(--text-primary); }
         .faq-item p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; }
 
@@ -172,11 +174,11 @@
         .cta-section { text-align: center; padding: 4rem 0 5rem; }
         .cta-section h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; margin-bottom: 1rem; }
         .cta-section p { color: var(--text-secondary); margin-bottom: 2rem; max-width: 560px; margin-left: auto; margin-right: auto; font-size: 0.95rem; }
-        .cta-install { font-family: var(--mono); background: var(--bg-card); border: 1px solid var(--border); padding: 0.8rem 1.5rem; border-radius: 8px; font-size: 1rem; display: inline-block; margin-bottom: 1.5rem; color: var(--green); cursor: pointer; transition: border-color 0.2s; }
+        .cta-install { font-family: var(--mono); background: var(--bg-card); border: 1px solid var(--border); padding: 0.8rem 1.5rem; border-radius: 0; font-size: 1rem; display: inline-block; margin-bottom: 1.5rem; color: var(--green); cursor: pointer; transition: border-color 0.2s; }
         .cta-install:hover { border-color: var(--accent); }
         .cta-install::before { content: '$ '; color: var(--text-dim); }
         .cta-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-        .cta-links a { padding: 0.7rem 1.5rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
+        .cta-links a { padding: 0.7rem 1.5rem; border-radius: 0; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
         .btn-primary { background: var(--accent); color: var(--bg-deep); }
         .btn-primary:hover { opacity: 0.85; text-decoration: none; }
         .btn-secondary { border: 1px solid var(--border); color: var(--text-primary); }
@@ -246,7 +248,7 @@
                 <div class="tldr-a">&rarr; air-trust</div>
             </div>
         </div>
-        <p style="color: var(--text-dim); font-size: 0.8rem; text-align: center; margin-top: 1rem;">If you are still not sure after reading the decision tree, the answer is <code style="color: var(--accent); background: var(--bg-elevated); padding: 0.15rem 0.45rem; border-radius: 4px;">pip install air-trust</code>. It is the default for a reason.</p>
+        <p style="color: var(--text-dim); font-size: 0.8rem; text-align: center; margin-top: 1rem;">If you are still not sure after reading the decision tree, the answer is <code style="color: var(--accent); background: var(--bg-elevated); padding: 0.15rem 0.45rem; border-radius: 0;">pip install air-trust</code>. It is the default for a reason.</p>
     </div></section>
 
     <!-- The four products -->

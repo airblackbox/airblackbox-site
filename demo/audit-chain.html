@@ -5,23 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HMAC-SHA256 Audit Chain Explorer - AIR Blackbox</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            border-radius: 0 !important;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #0a0a0a;
-            color: #e0e0e0;
+            font-family: 'Archivo', system-ui, sans-serif;
+            background: #f3f2f2;
+            color: #201e1d;
             line-height: 1.6;
         }
 
         /* Navigation */
         nav {
-            background: #1a1a2e;
-            border-bottom: 1px solid #16213e;
+            background: #f3f2f2;
+            border-bottom: 2px solid #201e1d;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -29,7 +32,7 @@
         }
 
         nav a {
-            color: #22d3ee;
+            color: #6b6866;
             text-decoration: none;
             margin-right: 2rem;
             font-size: 0.9rem;
@@ -37,32 +40,33 @@
         }
 
         nav a:hover {
-            color: #4ade80;
+            color: #ec3013;
         }
 
         nav .logo {
             font-weight: bold;
-            color: #e0e0e0;
+            color: #201e1d;
             margin-right: auto;
         }
 
         /* Header */
         header {
-            background: linear-gradient(135deg, #16213e 0%, #0a0a0a 100%);
+            background: #f3f2f2;
             padding: 3rem 2rem;
-            border-bottom: 1px solid #16213e;
+            border-bottom: 2px solid #201e1d;
             text-align: center;
         }
 
         header h1 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
-            color: #22d3ee;
+            color: #201e1d;
+            letter-spacing: -0.02em;
         }
 
         header p {
             font-size: 1.1rem;
-            color: #a0a0a0;
+            color: #6b6866;
             max-width: 800px;
             margin: 0 auto;
         }
@@ -74,11 +78,10 @@
             padding: 2rem;
         }
 
-        /* Chain visualization */
+        /* Chain visualization — stays dark (brand ink terminal panel) */
         .chain-wrapper {
-            background: #1a1a2e;
-            border: 1px solid #16213e;
-            border-radius: 12px;
+            background: #201e1d;
+            border: 2px solid #201e1d;
             padding: 2rem;
             margin: 2rem 0;
             overflow-x: auto;
@@ -93,15 +96,15 @@
         }
 
         .record-card {
-            background: #0d1520;
-            border: 2px solid #16213e;
-            border-radius: 8px;
+            background: #171514;
+            border: 2px solid #3a3735;
             padding: 1.2rem;
             min-width: 280px;
             max-width: 280px;
             position: relative;
             transition: all 0.3s ease;
             animation: slideIn 0.5s ease-out;
+            color: #d7d3d3;
         }
 
         @keyframes slideIn {
@@ -116,28 +119,25 @@
         }
 
         .record-card:hover {
-            border-color: #22d3ee;
-            box-shadow: 0 0 20px rgba(34, 211, 238, 0.2);
+            border-color: #8a8785;
         }
 
         .record-card.verified {
-            border-color: #4ade80;
-            box-shadow: 0 0 20px rgba(74, 222, 128, 0.2);
+            border-color: #6fcf8f;
         }
 
         .record-card.verified::after {
-            content: "✓";
+            content: "\2713";
             position: absolute;
             top: 10px;
             right: 10px;
-            color: #4ade80;
+            color: #6fcf8f;
             font-size: 1.5rem;
             font-weight: bold;
         }
 
         .record-card.tampered {
-            border-color: #f87171;
-            box-shadow: 0 0 20px rgba(248, 113, 113, 0.3);
+            border-color: #ff9783;
             animation: shake 0.5s ease;
         }
 
@@ -153,20 +153,19 @@
             align-items: center;
             margin-bottom: 0.8rem;
             padding-bottom: 0.8rem;
-            border-bottom: 1px solid #16213e;
+            border-bottom: 1px solid #3a3735;
         }
 
         .record-number {
             font-weight: bold;
-            color: #22d3ee;
+            color: #f3f2f2;
             font-size: 0.9rem;
         }
 
         .record-type {
-            background: #16213e;
-            color: #a78bfa;
+            background: #3a3735;
+            color: #d7d3d3;
             padding: 0.3rem 0.6rem;
-            border-radius: 4px;
             font-size: 0.75rem;
             font-weight: bold;
             text-transform: uppercase;
@@ -175,7 +174,7 @@
 
         .record-timestamp {
             font-size: 0.8rem;
-            color: #6b7280;
+            color: #8a8785;
             margin: 0.5rem 0;
             font-family: monospace;
         }
@@ -194,24 +193,23 @@
         }
 
         .record-data-label {
-            color: #6b7280;
+            color: #8a8785;
             font-weight: 500;
         }
 
         .record-data-value {
-            color: #e0e0e0;
+            color: #d7d3d3;
             margin-left: 0.5rem;
         }
 
         .record-hash {
-            background: #0a0a0a;
-            border: 1px solid #16213e;
+            background: #201e1d;
+            border: 1px solid #3a3735;
             padding: 0.6rem;
-            border-radius: 4px;
             margin: 0.8rem 0;
             font-family: "Courier New", monospace;
             font-size: 0.7rem;
-            color: #fbbf24;
+            color: #ff9783;
             word-break: break-all;
             animation: typewriter 1s steps(16) forwards;
         }
@@ -223,7 +221,7 @@
 
         .hash-label {
             font-size: 0.75rem;
-            color: #6b7280;
+            color: #8a8785;
             margin-bottom: 0.3rem;
             font-weight: bold;
             text-transform: uppercase;
@@ -231,21 +229,20 @@
         }
 
         .prev-hash {
-            background: #0a0a0a;
-            border: 1px solid #16213e;
+            background: #201e1d;
+            border: 1px solid #3a3735;
             padding: 0.6rem;
-            border-radius: 4px;
             margin: 0.8rem 0;
             font-family: "Courier New", monospace;
             font-size: 0.7rem;
-            color: #22d3ee;
+            color: #d7d3d3;
             word-break: break-all;
         }
 
         .arrow {
             display: flex;
             align-items: center;
-            color: #16213e;
+            color: #8a8785;
             font-size: 1.5rem;
             margin: 0 -0.25rem;
             user-select: none;
@@ -253,9 +250,8 @@
 
         /* Control panel */
         .control-panel {
-            background: #1a1a2e;
-            border: 1px solid #16213e;
-            border-radius: 12px;
+            background: #eae9e9;
+            border: 1px solid rgba(32,30,29,0.35);
             padding: 2rem;
             margin: 2rem 0;
         }
@@ -273,86 +269,81 @@
         }
 
         label {
-            color: #a0a0a0;
+            color: #6b6866;
             font-size: 0.9rem;
             font-weight: 500;
         }
 
         select {
-            background: #0d1520;
-            border: 1px solid #16213e;
-            color: #e0e0e0;
+            background: #ffffff;
+            border: 1px solid rgba(32,30,29,0.35);
+            color: #201e1d;
             padding: 0.5rem 1rem;
-            border-radius: 6px;
             font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.3s;
+            font-family: inherit;
         }
 
         select:hover, select:focus {
-            border-color: #22d3ee;
-            box-shadow: 0 0 10px rgba(34, 211, 238, 0.1);
+            border-color: #201e1d;
             outline: none;
         }
 
         button {
             padding: 0.6rem 1.5rem;
             border: none;
-            border-radius: 6px;
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            font-family: inherit;
         }
 
         .btn-primary {
-            background: #22d3ee;
-            color: #0a0a0a;
+            background: #201e1d;
+            color: #f3f2f2;
         }
 
         .btn-primary:hover {
-            background: #06b6d4;
+            background: #3a3735;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(34, 211, 238, 0.3);
         }
 
         .btn-danger {
-            background: #f87171;
-            color: #0a0a0a;
+            background: #ec3013;
+            color: #fff;
         }
 
         .btn-danger:hover {
-            background: #ef4444;
+            background: #ae1800;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(248, 113, 113, 0.3);
         }
 
         .btn-success {
-            background: #4ade80;
-            color: #0a0a0a;
+            background: #1a7f37;
+            color: #fff;
         }
 
         .btn-success:hover {
-            background: #22c55e;
+            background: #14602a;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(74, 222, 128, 0.3);
         }
 
         .btn-secondary {
-            background: #6b7280;
+            background: #6b6866;
             color: #fff;
         }
 
         .btn-secondary:hover {
-            background: #4b5563;
+            background: #4f4c4a;
             transform: translateY(-2px);
         }
 
         .status-message {
             padding: 1rem;
-            border-radius: 6px;
             font-weight: 600;
             text-align: center;
             margin-top: 1rem;
@@ -370,30 +361,30 @@
         }
 
         .status-message.success {
-            background: rgba(74, 222, 128, 0.2);
-            border: 1px solid #4ade80;
-            color: #4ade80;
+            background: #d9f2e1;
+            border: 1px solid #1a7f37;
+            color: #1a7f37;
         }
 
         .status-message.error {
-            background: rgba(248, 113, 113, 0.2);
-            border: 1px solid #f87171;
-            color: #f87171;
+            background: #ffe0d9;
+            border: 1px solid #ec3013;
+            color: #ec3013;
         }
 
         /* Explainer section */
         .explainer {
-            background: #1a1a2e;
-            border: 1px solid #16213e;
-            border-radius: 12px;
+            background: #eae9e9;
+            border: 1px solid rgba(32,30,29,0.35);
             padding: 2rem;
             margin: 2rem 0;
         }
 
         .explainer h2 {
-            color: #22d3ee;
+            color: #201e1d;
             margin-bottom: 1.5rem;
             font-size: 1.5rem;
+            letter-spacing: -0.02em;
         }
 
         .explainer-steps {
@@ -404,9 +395,8 @@
         }
 
         .step {
-            background: #0d1520;
-            border: 1px solid #16213e;
-            border-radius: 8px;
+            background: #ffffff;
+            border: 1px solid rgba(32,30,29,0.35);
             padding: 1.5rem;
             text-align: center;
         }
@@ -415,34 +405,32 @@
             display: inline-block;
             width: 40px;
             height: 40px;
-            background: #16213e;
-            border: 2px solid #22d3ee;
-            border-radius: 50%;
+            background: #f3f2f2;
+            border: 2px solid #ec3013;
             line-height: 40px;
             margin-bottom: 1rem;
-            color: #22d3ee;
+            color: #ec3013;
             font-weight: bold;
         }
 
         .step h3 {
-            color: #a78bfa;
+            color: #201e1d;
             margin-bottom: 1rem;
         }
 
         .step p {
             font-size: 0.9rem;
-            color: #a0a0a0;
+            color: #6b6866;
             line-height: 1.6;
         }
 
         .formula {
-            background: #0a0a0a;
-            border-left: 3px solid #fbbf24;
+            background: #201e1d;
+            border-left: 3px solid #ec3013;
             padding: 1.5rem;
-            border-radius: 6px;
             font-family: monospace;
             font-size: 0.85rem;
-            color: #fbbf24;
+            color: #d7d3d3;
             margin: 1.5rem 0;
             overflow-x: auto;
             line-height: 1.8;
@@ -450,22 +438,26 @@
 
         /* Why it matters */
         .why-matters {
-            background: linear-gradient(135deg, rgba(34, 211, 238, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
-            border-left: 4px solid #22d3ee;
+            background: #eae9e9;
+            border-left: 4px solid #ec3013;
             padding: 2rem;
-            border-radius: 8px;
             margin: 2rem 0;
         }
 
         .why-matters h2 {
-            color: #22d3ee;
+            color: #201e1d;
             margin-bottom: 1rem;
+            letter-spacing: -0.02em;
         }
 
         .why-matters p {
-            color: #a0a0a0;
+            color: #6b6866;
             line-height: 1.8;
             margin-bottom: 1rem;
+        }
+
+        .why-matters p strong {
+            color: #201e1d;
         }
 
         .why-matters p:last-child {
@@ -474,22 +466,26 @@
 
         /* Footer */
         footer {
-            background: #1a1a2e;
-            border-top: 1px solid #16213e;
+            background: #f3f2f2;
+            border-top: 2px solid #201e1d;
             padding: 2rem;
             text-align: center;
-            color: #6b7280;
+            color: #6b6866;
             margin-top: 3rem;
         }
 
+        footer strong {
+            color: #201e1d;
+        }
+
         footer a {
-            color: #22d3ee;
+            color: #ec3013;
             text-decoration: none;
             transition: color 0.3s;
         }
 
         footer a:hover {
-            color: #4ade80;
+            color: #ae1800;
         }
 
         /* Responsive */
@@ -518,13 +514,13 @@
         }
 
         .tamper-mode {
-            background: rgba(248, 113, 113, 0.1) !important;
-            border: 2px dashed #f87171 !important;
+            background: rgba(255, 151, 131, 0.12) !important;
+            border: 2px dashed #ff9783 !important;
         }
 
         .tamper-mode:hover {
             cursor: pointer;
-            background: rgba(248, 113, 113, 0.2) !important;
+            background: rgba(255, 151, 131, 0.22) !important;
         }
 
         .scanning-line {
@@ -533,7 +529,7 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, transparent, #4ade80, transparent);
+            background: linear-gradient(90deg, transparent, #6fcf8f, transparent);
             animation: scan 0.5s ease-in-out;
         }
 
@@ -626,7 +622,7 @@ signing_key = "sk-audit-key-..."<br>
 new_hash = "d7c3e1a5f2b8..."
             </div>
 
-            <p style="color: #a0a0a0; font-style: italic;">
+            <p style="color: #6b6866; font-style: italic;">
                 When you change a single byte in any record, its HMAC completely changes. The next record still references
                 the old hash, creating a mismatch. Verification fails immediately, exposing the tampering.
             </p>

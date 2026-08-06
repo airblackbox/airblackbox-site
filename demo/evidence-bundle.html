@@ -7,38 +7,39 @@
 <meta name="description" content="See how AIR Blackbox generates signed, tamper-evident evidence bundles for EU AI Act compliance audits. HMAC-SHA512 signing, PDF reports, and verifiable manifests.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+
 :root {
-  --bg: #0a0a0a;
-  --surface: #1a1a2e;
-  --surface2: #16213e;
-  --border: #2a2a4a;
-  --text: #e0e0f0;
-  --dim: #6a6a8a;
-  --green: #4ade80;
-  --red: #f87171;
-  --yellow: #fbbf24;
-  --cyan: #22d3ee;
-  --purple: #a78bfa;
-  --gold: #d4a017;
+  --bg: #f3f2f2;
+  --surface: #eae9e9;
+  --surface2: #eae9e9;
+  --border: rgba(32,30,29,0.35);
+  --text: #201e1d;
+  --dim: #6b6866;
+  --green: #1a7f37;
+  --red: #ec3013;
+  --yellow: #b45309;
+  --cyan: #6b6866;
+  --purple: #6b6866;
+  --gold: #ec3013;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0 !important; }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Archivo', system-ui, sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
 }
 
 .nav {
-  background: #080b14;
-  border-bottom: 1px solid #21262d;
+  background: #f3f2f2;
+  border-bottom: 2px solid #201e1d;
   padding: 14px 0;
   position: sticky;
   top: 0;
   z-index: 200;
-  backdrop-filter: blur(12px);
 }
 
 .nav-inner {
@@ -54,12 +55,12 @@ body {
   font-weight: 800;
   font-size: 16px;
   letter-spacing: -0.5px;
-  color: #fff;
+  color: #201e1d;
   text-decoration: none;
   font-family: 'SF Mono', 'Fira Code', monospace;
 }
 
-.nav-logo span { color: var(--gold); }
+.nav-logo span { color: #201e1d; }
 
 .nav-links { display: flex; gap: 20px; align-items: center; }
 .nav-links a {
@@ -68,7 +69,7 @@ body {
   font-size: 13px;
   transition: color 0.2s;
 }
-.nav-links a:hover { color: #fff; }
+.nav-links a:hover { color: #201e1d; }
 
 .container {
   max-width: 900px;
@@ -85,12 +86,11 @@ h1 {
 
 h1 .badge {
   display: inline-block;
-  background: linear-gradient(135deg, var(--gold), #b8860b);
-  color: #000;
+  background: #ec3013;
+  color: #fff;
   font-size: 11px;
   font-weight: 700;
   padding: 3px 10px;
-  border-radius: 4px;
   vertical-align: middle;
   margin-left: 10px;
   letter-spacing: 0.5px;
@@ -116,7 +116,6 @@ h1 .badge {
   background: var(--surface);
   border: 1px solid var(--border);
   padding: 8px 16px;
-  border-radius: 20px;
   font-size: 13px;
   color: var(--dim);
   cursor: pointer;
@@ -125,41 +124,49 @@ h1 .badge {
 }
 
 .step-pill.active {
-  background: var(--gold);
-  color: #000;
-  border-color: var(--gold);
+  background: #201e1d;
+  color: #f3f2f2;
+  border-color: #201e1d;
   font-weight: 600;
 }
 
 .step-pill.done {
-  background: #1a3a1a;
-  color: var(--green);
-  border-color: #2a5a2a;
+  background: #d9f2e1;
+  color: #1a7f37;
+  border-color: #1a7f37;
 }
 
-/* Demo area */
+/* Demo area — ink terminal panel (stays dark) */
 .demo-frame {
-  background: #0d1117;
-  border: 1px solid #21262d;
-  border-radius: 12px;
+  background: #201e1d;
+  border: 2px solid #201e1d;
   overflow: hidden;
   min-height: 480px;
   position: relative;
+  /* dark-panel palette overrides */
+  --border: #3a3735;
+  --dim: #8a8785;
+  --green: #6fcf8f;
+  --red: #ff9783;
+  --yellow: #e0b56a;
+  --cyan: #9c9997;
+  --purple: #c9c6c4;
+  --gold: #ff9783;
 }
 
 .demo-titlebar {
-  background: #161b22;
+  background: #171514;
   padding: 10px 16px;
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 1px solid #21262d;
+  border-bottom: 1px solid #3a3735;
 }
 
-.dot { width: 12px; height: 12px; border-radius: 50%; }
-.dot-r { background: #f85149; }
-.dot-y { background: #d29922; }
-.dot-g { background: #3fb950; }
+.dot { width: 12px; height: 12px; }
+.dot-r { background: #6b6866; }
+.dot-y { background: #8a8785; }
+.dot-g { background: #c9c6c4; }
 
 .demo-titlebar span {
   margin-left: 12px;
@@ -174,6 +181,7 @@ h1 .badge {
   font-size: 13px;
   line-height: 1.7;
   min-height: 420px;
+  color: #d7d3d3;
 }
 
 /* Terminal lines */
@@ -189,8 +197,8 @@ h1 .badge {
 
 .prompt { color: var(--green); }
 .cmd { color: #fff; }
-.comment { color: #6a737d; }
-.output { color: #8b949e; }
+.comment { color: #8a8785; }
+.output { color: #b8b5b3; }
 .pass { color: var(--green); }
 .fail { color: var(--red); }
 .warn { color: var(--yellow); }
@@ -199,28 +207,26 @@ h1 .badge {
 .purple { color: var(--purple); }
 .bold { font-weight: 700; }
 .white { color: #fff; }
+.dim { color: var(--dim); }
 
 /* Progress bar */
 .progress-bar {
   height: 3px;
-  background: #21262d;
-  border-radius: 2px;
+  background: #3a3735;
   margin: 12px 0;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--gold), var(--green));
-  border-radius: 2px;
+  background: #ff9783;
   transition: width 0.8s ease;
 }
 
 /* Bundle box */
 .bundle-box {
-  background: #161b22;
-  border: 1px solid #30363d;
-  border-radius: 8px;
+  background: #171514;
+  border: 1px solid #3a3735;
   padding: 16px;
   margin: 12px 0;
 }
@@ -229,8 +235,9 @@ h1 .badge {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
-  border-bottom: 1px solid #21262d;
+  border-bottom: 1px solid #3a3735;
   font-size: 12px;
+  color: #d7d3d3;
 }
 
 .bundle-box .file-row:last-child { border-bottom: none; }
@@ -240,9 +247,8 @@ h1 .badge {
 
 /* Signature block */
 .sig-block {
-  background: #0d2818;
-  border: 1px solid #1a4a2a;
-  border-radius: 8px;
+  background: #17251b;
+  border: 1px solid #2c5237;
   padding: 16px;
   margin: 12px 0;
   position: relative;
@@ -254,7 +260,7 @@ h1 .badge {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent 0%, rgba(74, 222, 128, 0.05) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(111, 207, 143, 0.05) 50%, transparent 100%);
   animation: sigSweep 2s ease-in-out infinite;
 }
 
@@ -264,7 +270,7 @@ h1 .badge {
 }
 
 .sig-label { color: var(--green); font-weight: 600; font-size: 12px; margin-bottom: 6px; }
-.sig-value { color: #8b949e; font-size: 11px; word-break: break-all; }
+.sig-value { color: #b8b5b3; font-size: 11px; word-break: break-all; }
 
 /* Controls */
 .controls {
@@ -276,28 +282,28 @@ h1 .badge {
 
 .btn {
   padding: 10px 24px;
-  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   border: none;
   transition: all 0.2s;
+  font-family: inherit;
 }
 
 .btn-primary {
-  background: var(--gold);
-  color: #000;
+  background: #ec3013;
+  color: #fff;
 }
 
-.btn-primary:hover { background: #e0ad1f; transform: translateY(-1px); }
+.btn-primary:hover { background: #ae1800; transform: translateY(-1px); }
 
 .btn-secondary {
   background: transparent;
-  color: var(--dim);
-  border: 1px solid var(--border);
+  color: #6b6866;
+  border: 1px solid rgba(32,30,29,0.35);
 }
 
-.btn-secondary:hover { color: #fff; border-color: #555; }
+.btn-secondary:hover { color: #201e1d; border-color: #201e1d; }
 
 .btn:disabled {
   opacity: 0.4;
@@ -320,21 +326,20 @@ h1 .badge {
 }
 
 .info-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  background: #eae9e9;
+  border: 1px solid rgba(32,30,29,0.35);
   padding: 20px;
 }
 
 .info-card h3 {
   font-size: 14px;
   margin-bottom: 8px;
-  color: #fff;
+  color: #201e1d;
 }
 
 .info-card p {
   font-size: 13px;
-  color: var(--dim);
+  color: #6b6866;
   line-height: 1.5;
 }
 
@@ -348,7 +353,7 @@ h1 .badge {
   display: inline-block;
   width: 8px;
   height: 15px;
-  background: var(--green);
+  background: #f3f2f2;
   animation: blink 1s step-end infinite;
   vertical-align: middle;
   margin-left: 2px;
@@ -358,18 +363,18 @@ h1 .badge {
   50% { opacity: 0; }
 }
 
-/* CTA banner */
+/* CTA banner — ink inversion */
 .cta-banner {
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  background: #201e1d;
+  border: 2px solid #201e1d;
+  color: #f3f2f2;
   padding: 32px;
   margin-top: 48px;
   text-align: center;
 }
 
-.cta-banner h2 { font-size: 22px; margin-bottom: 8px; }
-.cta-banner p { color: var(--dim); margin-bottom: 20px; }
+.cta-banner h2 { font-size: 22px; margin-bottom: 8px; color: #f3f2f2; }
+.cta-banner p { color: #b8b5b3; margin-bottom: 20px; }
 
 .cta-banner .btn-primary {
   padding: 12px 32px;

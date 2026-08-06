@@ -17,52 +17,54 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+
         :root {
-           --bg-deep: #080b14;
-           --bg-card: #0d1117;
-           --bg-elevated: #161b22;
-           --border: #21262d;
-           --text-primary: #e6edf3;
-           --text-secondary: #8b949e;
-           --text-dim: #484f58;
-           --accent: #fbbf24;
-           --accent-glow: rgba(251, 191, 36, 0.15);
-           --green: #3fb950;
-           --red: #f85149;
-           --yellow: #d29922;
+           --bg-deep: #f3f2f2;
+           --bg-card: #eae9e9;
+           --bg-elevated: #dfdddd;
+           --border: rgba(32,30,29,0.35);
+           --text-primary: #201e1d;
+           --text-secondary: #6b6866;
+           --text-dim: #8a8785;
+           --accent: #ec3013;
+           --accent-glow: rgba(236,48,19, 0.15);
+           --green: #1a7f37;
+           --red: #ec3013;
+           --yellow: #b45309;
            --mono: 'JetBrains Mono', monospace;
-           --sans: 'Sora', -apple-system, sans-serif;
+           --sans: 'Archivo', -apple-system, sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body { font-family: var(--sans); background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
-        a { color: #58a6ff; text-decoration: none; }
+        a { color: #ec3013; text-decoration: none; }
         a:hover { text-decoration: underline; }
         code, .mono { font-family: var(--mono); }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
 
         /* Header */
-        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(8,11,20,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(243,242,242,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
         nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text-primary); }
-        .logo span { color: #fbbf24; }
+        .logo span { color: #ec3013; }
         .nav-links { display: flex; gap: 1.5rem; align-items: center; }
         .nav-links a { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
-        .nav-links a:hover { color: #fbbf24; text-decoration: none; }
-        .nav-links .btn-sm { background: #fbbf24; color: var(--bg-deep); padding: 0.4rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.8rem; }
-        .nav-links .active { color: #fbbf24; }
+        .nav-links a:hover { color: #ec3013; text-decoration: none; }
+        .nav-links .btn-sm { background: #ec3013; color: var(--bg-deep); padding: 0.4rem 1rem; border-radius: 0; font-weight: 600; font-size: 0.8rem; }
+        .nav-links .active { color: #ec3013; }
 
         /* Hero */
         .hero { padding: 9rem 0 4rem; text-align: center; position: relative; }
-        .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(251,191,36,0.06) 0%, transparent 70%); pointer-events: none; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: none; pointer-events: none; }
         .hero h1 { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 800; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 1.2rem; }
-        .hero h1 .highlight { background: linear-gradient(135deg, var(--accent), #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero h1 .highlight { color: var(--accent); }
         .hero .subtitle { color: var(--text-secondary); font-size: 1.05rem; max-width: 640px; margin: 0 auto 2.5rem; line-height: 1.8; }
 
         /* Sections */
         section { padding: 4rem 0; }
-        .section-label { font-family: var(--mono); font-size: 0.75rem; color: #fbbf24; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; }
+        .section-label { font-family: var(--mono); font-size: 0.75rem; color: #ec3013; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; }
         .section-title { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; letter-spacing: -1px; margin-bottom: 1rem; }
         .section-desc { color: var(--text-secondary); max-width: 600px; margin-bottom: 2.5rem; font-size: 0.95rem; line-height: 1.8; }
 
@@ -70,37 +72,37 @@
         .compare-table { width: 100%; border-collapse: collapse; margin: 2rem 0; }
         .compare-table th, .compare-table td { padding: 1rem 1.5rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
         .compare-table th { font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); background: var(--bg-elevated); }
-        .compare-table th:first-child { border-radius: 8px 0 0 0; }
+        .compare-table th:first-child { border-radius: 0 0 0 0; }
         .compare-table th:last-child { border-radius: 0 8px 0 0; }
         .compare-table td:first-child { color: var(--text-secondary); font-weight: 500; }
         .col-air { color: var(--green); font-weight: 600; }
         .col-saas { color: var(--text-dim); }
-        .compare-table tr:hover { background: rgba(251,191,36,0.03); }
+        .compare-table tr:hover { background: rgba(236,48,19,0.03); }
 
         /* Principle Cards */
         .principles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        .principle-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; transition: border-color 0.3s; }
-        .principle-card:hover { border-color: #fbbf24; }
+        .principle-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 0; padding: 2rem; transition: border-color 0.3s; }
+        .principle-card:hover { border-color: #ec3013; }
         .principle-num { font-family: var(--mono); font-size: 2.5rem; font-weight: 800; color: var(--accent); opacity: 0.2; margin-bottom: 0.5rem; }
         .principle-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; }
         .principle-card p { color: var(--text-secondary); font-size: 0.88rem; line-height: 1.7; }
 
         /* Architecture diagram */
         .arch-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0; }
-        .arch-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
+        .arch-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 0; padding: 2rem; }
         .arch-panel h3 { font-family: var(--mono); font-size: 0.85rem; font-weight: 700; margin-bottom: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
         .arch-panel.local h3 { color: var(--green); }
         .arch-panel.saas h3 { color: var(--text-dim); }
         .arch-flow-v { display: flex; flex-direction: column; gap: 0.5rem; }
-        .arch-node { padding: 0.6rem 1rem; border-radius: 6px; font-size: 0.82rem; text-align: center; }
-        .arch-node.you { background: rgba(63, 185, 80, 0.1); border: 1px solid rgba(63, 185, 80, 0.3); color: var(--green); }
+        .arch-node { padding: 0.6rem 1rem; border-radius: 0; font-size: 0.82rem; text-align: center; }
+        .arch-node.you { background: rgba(26,127,55, 0.1); border: 1px solid rgba(26,127,55, 0.3); color: var(--green); }
         .arch-node.neutral { background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary); }
-        .arch-node.risk { background: rgba(248, 81, 73, 0.08); border: 1px solid rgba(248, 81, 73, 0.25); color: var(--red); }
+        .arch-node.risk { background: rgba(236,48,19, 0.08); border: 1px solid rgba(236,48,19, 0.25); color: var(--red); }
         .arch-arrow-down { text-align: center; color: var(--text-dim); font-family: var(--mono); font-size: 0.8rem; }
 
         /* Crypto section */
         .crypto-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0; }
-        .crypto-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
+        .crypto-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 0; padding: 2rem; }
         .crypto-card h4 { font-family: var(--mono); font-size: 0.9rem; margin-bottom: 1rem; }
         .crypto-card.proven h4 { color: var(--green); }
         .crypto-card.exotic h4 { color: var(--text-dim); }
@@ -119,15 +121,15 @@
         .cta-section { text-align: center; padding: 5rem 0; }
         .cta-section h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; margin-bottom: 1rem; }
         .cta-section p { color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
-        .cta-install { font-family: var(--mono); background: var(--bg-card); border: 1px solid var(--border); padding: 0.8rem 1.5rem; border-radius: 8px; font-size: 1rem; display: inline-block; margin-bottom: 1.5rem; color: var(--green); cursor: pointer; transition: border-color 0.2s; }
-        .cta-install:hover { border-color: #fbbf24; }
+        .cta-install { font-family: var(--mono); background: var(--bg-card); border: 1px solid var(--border); padding: 0.8rem 1.5rem; border-radius: 0; font-size: 1rem; display: inline-block; margin-bottom: 1.5rem; color: var(--green); cursor: pointer; transition: border-color 0.2s; }
+        .cta-install:hover { border-color: #ec3013; }
         .cta-install::before { content: '$ '; color: var(--text-dim); }
         .cta-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-        .cta-links a { padding: 0.7rem 1.5rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
-        .btn-primary { background: #fbbf24; color: var(--bg-deep); }
+        .cta-links a { padding: 0.7rem 1.5rem; border-radius: 0; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
+        .btn-primary { background: #ec3013; color: var(--bg-deep); }
         .btn-primary:hover { opacity: 0.85; text-decoration: none; }
         .btn-secondary { border: 1px solid var(--border); color: var(--text-primary); }
-        .btn-secondary:hover { border-color: #fbbf24; text-decoration: none; }
+        .btn-secondary:hover { border-color: #ec3013; text-decoration: none; }
 
         /* Footer */
         footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 3rem; }
@@ -378,7 +380,7 @@
             </div>
         </div>
 
-        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 2rem; margin-top: 1.5rem;">
+        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 0; padding: 1.5rem 2rem; margin-top: 1.5rem;">
             <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.8;">
                 <strong style="color: var(--text-primary);">The technical reality:</strong> HMAC-SHA256 is a symmetric construction. Grover's algorithm (the quantum threat to symmetric crypto) would require a 2<sup>128</sup> quantum search - well beyond any projected quantum computer capability. NIST's own guidance is that HMAC-SHA256 remains secure in a post-quantum world. Post-quantum <em>signature</em> schemes solve a different problem (public-key authentication) that isn't relevant to tamper-evident audit chains. Marketing post-quantum crypto for compliance logs is solving a problem that doesn't exist.
             </p>
@@ -419,7 +421,7 @@
                 <div class="label">Framework Trust Layers</div>
             </div>
             <div class="stat">
-                <div class="num" style="color: #58a6ff;">51</div>
+                <div class="num" style="color: #ec3013;">51</div>
                 <div class="label">Compliance Checks</div>
             </div>
             <div class="stat">

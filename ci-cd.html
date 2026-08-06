@@ -32,21 +32,23 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+
         :root {
-            --bg-deep: #080b14;
-            --bg-card: #0d1117;
-            --bg-elevated: #161b22;
-            --border: #21262d;
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
-            --text-dim: #484f58;
-            --accent: #58a6ff;
-            --accent-glow: rgba(88, 166, 255, 0.15);
-            --green: #3fb950;
-            --red: #f85149;
-            --yellow: #d29922;
+            --bg-deep: #f3f2f2;
+            --bg-card: #eae9e9;
+            --bg-elevated: #dfdddd;
+            --border: rgba(32,30,29,0.35);
+            --text-primary: #201e1d;
+            --text-secondary: #6b6866;
+            --text-dim: #8a8785;
+            --accent: #ec3013;
+            --accent-glow: rgba(236,48,19, 0.15);
+            --green: #1a7f37;
+            --red: #ec3013;
+            --yellow: #b45309;
             --mono: 'JetBrains Mono', monospace;
-            --sans: 'Sora', -apple-system, sans-serif;
+            --sans: 'Archivo', -apple-system, sans-serif;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
@@ -56,18 +58,18 @@
         code, .mono { font-family: var(--mono); }
         .container { max-width: 820px; margin: 0 auto; padding: 0 2rem; }
 
-        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(8,11,20,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(243,242,242,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
         nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text-primary); }
         .logo span { color: var(--accent); }
         .nav-links { display: flex; gap: 1.5rem; align-items: center; }
         .nav-links a { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
         .nav-links a:hover { color: var(--text-primary); text-decoration: none; }
-        .nav-links .btn-sm { background: var(--accent); color: var(--bg-deep); padding: 0.4rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.8rem; }
+        .nav-links .btn-sm { background: var(--accent); color: var(--bg-deep); padding: 0.4rem 1rem; border-radius: 0; font-weight: 600; font-size: 0.8rem; }
 
         .page-hero { padding: 8rem 0 3rem; text-align: center; }
         .page-hero h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -1px; margin-bottom: 1rem; }
-        .page-hero .highlight { background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .page-hero .highlight { color: var(--accent); }
         .page-hero p { color: var(--text-secondary); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
 
         .content { padding: 2rem 0 5rem; }
@@ -78,27 +80,27 @@
         .content ul, .content ol { color: var(--text-secondary); margin: 0 0 1.5rem 1.5rem; font-size: 0.95rem; }
         .content li { margin-bottom: 0.5rem; }
 
-        .code-block { position: relative; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; margin: 1.2rem 0 1.8rem; overflow: hidden; }
-        .code-header { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 1rem; background: var(--bg-elevated); border-bottom: 1px solid var(--border); }
-        .code-filename { font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim); }
-        .copy-btn { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); background: none; border: 1px solid var(--border); border-radius: 4px; padding: 0.2rem 0.6rem; cursor: pointer; transition: all 0.2s; }
-        .copy-btn:hover { background: var(--accent); color: var(--bg-deep); }
+        .code-block { position: relative; background: #201e1d; border: 1px solid #201e1d; border-radius: 0; margin: 1.2rem 0 1.8rem; overflow: hidden; }
+        .code-header { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 1rem; background: #171514; border-bottom: 1px solid #3a3735; }
+        .code-filename { font-family: var(--mono); font-size: 0.75rem; color: #8a8785; }
+        .copy-btn { font-family: var(--mono); font-size: 0.7rem; color: #ff9783; background: none; border: 1px solid #4a4744; border-radius: 0; padding: 0.2rem 0.6rem; cursor: pointer; transition: all 0.2s; }
+        .copy-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
         .code-block pre { padding: 1.2rem; overflow-x: auto; margin: 0; }
-        .code-block code { font-family: var(--mono); font-size: 0.82rem; line-height: 1.7; color: var(--text-primary); }
+        .code-block code { font-family: var(--mono); font-size: 0.82rem; line-height: 1.7; color: #d7d3d3; }
 
         .benefit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin: 2rem 0; }
-        .benefit-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+        .benefit-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 0; padding: 1.5rem; }
         .benefit-card .icon { font-size: 1.4rem; margin-bottom: 0.6rem; }
         .benefit-card h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem; }
         .benefit-card p { color: var(--text-secondary); font-size: 0.82rem; margin: 0; }
 
-        .cta-box { background: var(--bg-card); border: 1px solid var(--accent); border-radius: 12px; padding: 2.5rem; text-align: center; margin: 3rem 0; }
+        .cta-box { background: var(--bg-card); border: 1px solid var(--accent); border-radius: 0; padding: 2.5rem; text-align: center; margin: 3rem 0; }
         .cta-box h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.8rem; }
         .cta-box p { color: var(--text-secondary); margin-bottom: 1.2rem; }
-        .cta-install { font-family: var(--mono); background: var(--bg-elevated); border: 1px solid var(--border); padding: 0.8rem 1.5rem; border-radius: 8px; font-size: 0.95rem; display: inline-block; color: var(--green); cursor: pointer; }
+        .cta-install { font-family: var(--mono); background: #201e1d; border: 1px solid #201e1d; padding: 0.8rem 1.5rem; border-radius: 0; font-size: 0.95rem; display: inline-block; color: #8fd19e; cursor: pointer; }
         .cta-install:hover { border-color: var(--accent); }
 
-        .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem 2rem; margin: 2rem 0; }
+        .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 0; padding: 1.5rem 2rem; margin: 2rem 0; }
         .toc h4 { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 0.8rem; }
         .toc a { display: block; color: var(--text-secondary); font-size: 0.9rem; padding: 0.3rem 0; }
         .toc a:hover { color: var(--accent); text-decoration: none; }
@@ -107,10 +109,10 @@
         footer a { color: var(--text-dim); font-size: 0.8rem; margin: 0 0.5rem; }
         footer p { color: var(--text-dim); font-size: 0.75rem; margin-top: 0.5rem; }
 
-        .badge { display: inline-block; font-family: var(--mono); font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600; }
-        .badge-green { background: rgba(63,185,80,0.15); color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
-        .badge-yellow { background: rgba(210,153,34,0.15); color: var(--yellow); border: 1px solid rgba(210,153,34,0.3); }
-        .badge-blue { background: rgba(88,166,255,0.15); color: var(--accent); border: 1px solid rgba(88,166,255,0.3); }
+        .badge { display: inline-block; font-family: var(--mono); font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 0; font-weight: 600; }
+        .badge-green { background: rgba(26,127,55,0.15); color: var(--green); border: 1px solid rgba(26,127,55,0.3); }
+        .badge-yellow { background: rgba(180,83,9,0.15); color: var(--yellow); border: 1px solid rgba(180,83,9,0.3); }
+        .badge-blue { background: rgba(236,48,19,0.15); color: var(--accent); border: 1px solid rgba(236,48,19,0.3); }
 
         @media (max-width: 640px) {
             .benefit-grid { grid-template-columns: 1fr; }

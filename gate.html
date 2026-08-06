@@ -17,29 +17,39 @@
     <meta name="twitter:description" content="Pre-execution policy enforcement with cryptographic proof. Covenants + Ed25519 bilateral receipts + HMAC audit chains.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0 !important; }
         :root {
-            --bg: #080b14;
-            --bg-card: #0d1117;
-            --bg-card-hover: #18181b;
-            --border: #21262d;
-            --text: #e6edf3;
-            --text-muted: #8b949e;
-            --text-dim: #484f58;
-            --accent: #58a6ff;
-            --accent-hover: #79c0ff;
-            --accent-glow: rgba(88, 166, 255, 0.15);
-            --green: #22c55e;
-            --red: #ef4444;
-            --yellow: #eab308;
-            --blue: #3b82f6;
-            --purple: #a855f7;
+            --bg: #f3f2f2;
+            --bg-card: #eae9e9;
+            --bg-card-hover: #e2e1e1;
+            --border: rgba(32, 30, 29, 0.35);
+            --text: #201e1d;
+            --text-muted: #6b6866;
+            --text-dim: #8a8785;
+            --accent: #ec3013;
+            --accent-hover: #ae1800;
+            --accent-glow: rgba(236, 48, 19, 0.12);
+            --green: #1a7f37;
+            --red: #ec3013;
+            --yellow: #b45309;
+            --blue: #ec3013;
+            --purple: #ec3013;
+            /* dark terminal panel palette (brand ink) */
+            --term-bg: #201e1d;
+            --term-inner: #171514;
+            --term-text: #d7d3d3;
+            --term-muted: #8a8785;
+            --term-accent: #ff9783;
+            --term-green: #7ee2a8;
+            --term-yellow: #ffd27d;
+            --term-red: #ff9783;
         }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
@@ -47,7 +57,7 @@
         }
         nav {
             position: fixed; top: 0; width: 100%; z-index: 100;
-            background: rgba(8, 11, 20, 0.92);
+            background: rgba(243, 242, 242, 0.92);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
         }
@@ -67,7 +77,7 @@
         .hero { padding: 160px 24px 80px; text-align: center; max-width: 900px; margin: 0 auto; }
         .hero-badge {
             display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(88, 166, 255, 0.1); border: 1px solid rgba(88, 166, 255, 0.2);
+            background: rgba(236, 48, 19, 0.1); border: 1px solid rgba(236, 48, 19, 0.25);
             padding: 8px 20px; border-radius: 100px; font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 32px;
         }
         .hero h1 { font-size: clamp(40px, 6vw, 64px); font-weight: 900; line-height: 1.1; margin-bottom: 24px; }
@@ -89,7 +99,7 @@
         .arch-step { background: var(--bg-card); border: 1px solid var(--border); padding: 28px 16px; text-align: center; position: relative; }
         .arch-step:first-child { border-radius: 16px 0 0 16px; }
         .arch-step:last-child { border-radius: 0 16px 16px 0; }
-        .arch-num { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-glow); border: 1px solid rgba(88, 166, 255, 0.3); color: var(--accent); font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+        .arch-num { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-glow); border: 1px solid rgba(236, 48, 19, 0.3); color: var(--accent); font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; }
         .arch-step h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
         .arch-step p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
         .arch-arrow { position: absolute; right: -14px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 20px; z-index: 2; }
@@ -101,17 +111,17 @@
         .feature-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 20px; }
         .feature-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
         .feature-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
-        .feature-tag { display: inline-block; margin-top: 16px; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; background: rgba(88, 166, 255, 0.1); color: var(--accent); border: 1px solid rgba(88, 166, 255, 0.2); }
+        .feature-tag { display: inline-block; margin-top: 16px; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; background: rgba(236, 48, 19, 0.1); color: var(--accent); border: 1px solid rgba(236, 48, 19, 0.25); }
 
         /* Terminal */
-        .terminal { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; max-width: 800px; margin: 0 auto; }
-        .terminal-bar { display: flex; align-items: center; gap: 8px; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+        .terminal { background: var(--term-bg); border: 1px solid var(--term-bg); border-radius: 16px; overflow: hidden; max-width: 800px; margin: 0 auto; }
+        .terminal-bar { display: flex; align-items: center; gap: 8px; padding: 14px 20px; background: var(--term-inner); border-bottom: 1px solid rgba(243, 242, 242, 0.15); }
         .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
-        .terminal-dot.r { background: #ef4444; } .terminal-dot.y { background: #eab308; } .terminal-dot.g { background: #22c55e; }
-        .terminal-title { font-size: 13px; color: var(--text-dim); margin-left: 8px; font-family: 'JetBrains Mono', monospace; }
-        .terminal-body { padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; }
-        .t-comment { color: var(--text-dim); } .t-green { color: var(--green); } .t-red { color: var(--red); }
-        .t-yellow { color: var(--yellow); } .t-blue { color: var(--blue); } .t-accent { color: var(--accent); } .t-muted { color: var(--text-muted); } .t-purple { color: var(--purple); }
+        .terminal-dot.r { background: #ff9783; } .terminal-dot.y { background: #ffd27d; } .terminal-dot.g { background: #7ee2a8; }
+        .terminal-title { font-size: 13px; color: var(--term-muted); margin-left: 8px; font-family: 'JetBrains Mono', monospace; }
+        .terminal-body { padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; color: var(--term-text); }
+        .t-comment { color: var(--term-muted); } .t-green { color: var(--term-green); } .t-red { color: var(--term-red); }
+        .t-yellow { color: var(--term-yellow); } .t-blue { color: var(--term-accent); } .t-accent { color: var(--term-accent); } .t-muted { color: var(--term-muted); } .t-purple { color: var(--term-accent); }
 
         /* Two-col layout */
         .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
@@ -119,14 +129,14 @@
         .two-col-text p { font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
 
         /* Receipt visual */
-        .receipt-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7; }
-        .receipt-header { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .receipt-card { background: var(--term-bg); border: 1px solid var(--term-bg); border-radius: 16px; padding: 32px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7; color: var(--term-text); }
+        .receipt-header { font-family: 'Archivo', sans-serif; font-size: 14px; font-weight: 700; color: var(--term-accent); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
         .receipt-phase { display: inline-block; padding: 2px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; }
-        .receipt-phase.auth { background: rgba(34, 197, 94, 0.15); color: var(--green); border: 1px solid rgba(34, 197, 94, 0.3); }
-        .receipt-phase.seal { background: rgba(168, 85, 247, 0.15); color: var(--purple); border: 1px solid rgba(168, 85, 247, 0.3); }
-        .receipt-field { color: var(--text-muted); }
-        .receipt-value { color: var(--text); }
-        .receipt-sig { color: var(--yellow); word-break: break-all; }
+        .receipt-phase.auth { background: rgba(126, 226, 168, 0.15); color: var(--term-green); border: 1px solid rgba(126, 226, 168, 0.3); }
+        .receipt-phase.seal { background: rgba(255, 151, 131, 0.15); color: var(--term-accent); border: 1px solid rgba(255, 151, 131, 0.3); }
+        .receipt-field { color: var(--term-muted); }
+        .receipt-value { color: #f3f2f2; }
+        .receipt-sig { color: var(--term-yellow); word-break: break-all; }
 
         /* CTA */
         .final-cta { text-align: center; padding: 80px 24px 120px; max-width: 800px; margin: 0 auto; }
@@ -388,13 +398,13 @@
             <div class="feature-tag">Article 9</div>
         </div>
         <div class="feature-card">
-            <div class="feature-icon" style="background: rgba(168, 85, 247, 0.1);">&#x1F4DD;</div>
+            <div class="feature-icon" style="background: rgba(236, 48, 19, 0.1);">&#x1F4DD;</div>
             <h3>Bilateral Receipts</h3>
             <p>Two-phase proof: authorization decision + execution result in a single cryptographically bound record. Seal covers auth, auth covers covenant.</p>
             <div class="feature-tag">Article 12</div>
         </div>
         <div class="feature-card">
-            <div class="feature-icon" style="background: rgba(59, 130, 246, 0.1);">&#x1F517;</div>
+            <div class="feature-icon" style="background: rgba(236, 48, 19, 0.1);">&#x1F517;</div>
             <h3>HMAC Audit Chains</h3>
             <p>Every receipt is chained into an HMAC-SHA256 audit trail. Tamper with one record, break every record after it. Cryptographically verifiable integrity.</p>
             <div class="feature-tag">Article 12</div>

@@ -6,10 +6,13 @@
 <title>AIR Blackbox - Live Scan</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  border-radius: 0 !important;
 }
 
 html, body {
@@ -19,17 +22,17 @@ html, body {
 }
 
 body {
-  background: #0a0a0a;
-  color: #e0e0e0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f3f2f2;
+  color: #201e1d;
+  font-family: 'Archivo', system-ui, sans-serif;
   display: flex;
   flex-direction: column;
 }
 
 /* Navigation Bar */
 nav {
-  background: #16213e;
-  border-bottom: 1px solid #1a1a2e;
+  background: #f3f2f2;
+  border-bottom: 2px solid #201e1d;
   padding: 0 24px;
   height: 64px;
   display: flex;
@@ -40,15 +43,16 @@ nav {
 
 .nav-logo {
   font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   display: flex;
   align-items: center;
   gap: 8px;
+  color: #201e1d;
 }
 
 .nav-logo .blackbox {
-  color: #ffbd2e;
+  color: #201e1d;
 }
 
 .nav-links {
@@ -58,14 +62,14 @@ nav {
 }
 
 .nav-links a {
-  color: #b0b0b0;
+  color: #6b6866;
   text-decoration: none;
   font-size: 14px;
   transition: color 0.2s;
 }
 
 .nav-links a:hover {
-  color: #e0e0e0;
+  color: #201e1d;
 }
 
 /* Main Container */
@@ -80,14 +84,14 @@ nav {
   flex: 1;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #1a1a2e;
+  border-right: 1px solid rgba(32,30,29,0.35);
   overflow: hidden;
-  background: #0a0a0a;
+  background: #f3f2f2;
 }
 
 .panel-header {
   padding: 16px 20px;
-  border-bottom: 1px solid #1a1a2e;
+  border-bottom: 1px solid rgba(32,30,29,0.35);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -97,27 +101,26 @@ nav {
 .panel-header h3 {
   font-size: 14px;
   font-weight: 600;
-  color: #e0e0e0;
+  color: #201e1d;
 }
 
 .sample-dropdown {
-  background: #1a1a2e;
-  border: 1px solid #2a2a3e;
-  color: #b0b0b0;
+  background: #ffffff;
+  border: 1px solid rgba(32,30,29,0.35);
+  color: #201e1d;
   padding: 8px 12px;
-  border-radius: 6px;
   font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Archivo', system-ui, sans-serif;
 }
 
 .sample-dropdown:hover {
-  border-color: #3a3a4e;
-  color: #e0e0e0;
+  border-color: #201e1d;
+  color: #201e1d;
 }
 
-/* Code Editor Area */
+/* Code Editor Area — ink code panel (stays dark) */
 .editor-wrapper {
   display: flex;
   flex: 1;
@@ -126,13 +129,13 @@ nav {
 }
 
 .line-numbers {
-  background: #1a1a2e;
-  border-right: 1px solid #2a2a3e;
+  background: #171514;
+  border-right: 1px solid #3a3735;
   padding: 16px 12px;
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
   font-size: 13px;
   line-height: 1.6;
-  color: #4a4a6a;
+  color: #8a8785;
   user-select: none;
   overflow: hidden;
   min-width: 40px;
@@ -142,9 +145,9 @@ nav {
 
 .code-editor {
   flex: 1;
-  background: #1a1a2e;
+  background: #201e1d;
   border: none;
-  color: #e0e0e0;
+  color: #d7d3d3;
   padding: 16px 20px;
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
   font-size: 13px;
@@ -155,7 +158,7 @@ nav {
 }
 
 .code-editor::placeholder {
-  color: #4a4a6a;
+  color: #8a8785;
 }
 
 /* Scanning pulse overlay */
@@ -166,10 +169,10 @@ nav {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 188, 212, 0.03);
+  background: rgba(255, 151, 131, 0.05);
   pointer-events: none;
   animation: pulse 1.5s infinite;
-  border-left: 3px solid #00bcd4;
+  border-left: 3px solid #ec3013;
 }
 
 @keyframes pulse {
@@ -179,29 +182,28 @@ nav {
 
 .editor-controls {
   padding: 16px 20px;
-  border-top: 1px solid #1a1a2e;
+  border-top: 1px solid rgba(32,30,29,0.35);
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   flex-shrink: 0;
-  background: #0a0a0a;
+  background: #f3f2f2;
 }
 
 .scan-btn {
-  background: #f97316;
+  background: #ec3013;
   color: white;
   border: none;
   padding: 10px 28px;
-  border-radius: 8px;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Archivo', system-ui, sans-serif;
 }
 
 .scan-btn:hover:not(:disabled) {
-  background: #ea580c;
+  background: #ae1800;
   transform: translateY(-2px);
 }
 
@@ -211,7 +213,7 @@ nav {
 }
 
 .scan-btn.scanning {
-  background: #00bcd4;
+  background: #201e1d;
 }
 
 /* Right Panel - Results */
@@ -220,33 +222,33 @@ nav {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #0a0a0a;
+  background: #f3f2f2;
 }
 
 .results-header {
   padding: 16px 20px;
-  border-bottom: 1px solid #1a1a2e;
+  border-bottom: 1px solid rgba(32,30,29,0.35);
   flex-shrink: 0;
 }
 
 .results-header h3 {
   font-size: 14px;
   font-weight: 600;
-  color: #e0e0e0;
+  color: #201e1d;
 }
 
 .results-header p {
   font-size: 12px;
-  color: #666;
+  color: #6b6866;
   margin-top: 4px;
 }
 
 /* Scanning Progress */
 .scan-progress {
   padding: 16px 20px;
-  border-bottom: 1px solid #1a1a2e;
+  border-bottom: 1px solid rgba(32,30,29,0.35);
   font-size: 13px;
-  color: #00bcd4;
+  color: #ec3013;
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
   min-height: 24px;
   display: none;
@@ -274,12 +276,11 @@ nav {
 }
 
 .results-table::-webkit-scrollbar-track {
-  background: #1a1a2e;
+  background: #eae9e9;
 }
 
 .results-table::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 3px;
+  background: #b8b5b3;
 }
 
 .result-row {
@@ -287,7 +288,7 @@ nav {
   grid-template-columns: 100px 1fr 80px 1fr;
   gap: 12px;
   padding: 12px 0;
-  border-bottom: 1px solid #2a2a3e;
+  border-bottom: 1px solid rgba(32,30,29,0.2);
   font-size: 13px;
   animation: slideIn 0.3s ease-out;
 }
@@ -308,20 +309,19 @@ nav {
 }
 
 .article-label {
-  color: #666;
+  color: #6b6866;
   font-weight: 600;
   text-align: right;
   padding-right: 8px;
 }
 
 .article-desc {
-  color: #b0b0b0;
+  color: #201e1d;
 }
 
 .status-badge {
   font-weight: 600;
   padding: 4px 8px;
-  border-radius: 4px;
   display: inline-block;
   text-align: center;
   text-transform: uppercase;
@@ -329,30 +329,30 @@ nav {
 }
 
 .status-pass {
-  background: rgba(40, 200, 64, 0.15);
-  color: #4ade80;
+  background: #d9f2e1;
+  color: #1a7f37;
 }
 
 .status-fail {
-  background: rgba(255, 95, 87, 0.15);
-  color: #f87171;
+  background: #ffe0d9;
+  color: #ec3013;
 }
 
 .status-warn {
-  background: rgba(255, 189, 46, 0.15);
-  color: #fbbf24;
+  background: rgba(180, 83, 9, 0.12);
+  color: #b45309;
 }
 
 .detail-text {
-  color: #666;
+  color: #6b6866;
   font-size: 12px;
 }
 
 /* Coverage Bar */
 .coverage-bar {
   padding: 16px 20px;
-  border-top: 1px solid #1a1a2e;
-  background: #1a1a2e;
+  border-top: 1px solid rgba(32,30,29,0.35);
+  background: #eae9e9;
   flex-shrink: 0;
   animation: slideUp 0.5s ease-out;
 }
@@ -383,7 +383,7 @@ nav {
 }
 
 .stat-label {
-  color: #666;
+  color: #6b6866;
   font-size: 12px;
 }
 
@@ -393,20 +393,19 @@ nav {
 }
 
 .stat-pass {
-  color: #4ade80;
+  color: #1a7f37;
 }
 
 .stat-fail {
-  color: #f87171;
+  color: #ec3013;
 }
 
 .stat-warn {
-  color: #fbbf24;
+  color: #b45309;
 }
 
 .compliance-banner {
   padding: 12px 16px;
-  border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
   display: none;
@@ -423,21 +422,21 @@ nav {
 }
 
 .banner-compliant {
-  background: rgba(40, 200, 64, 0.1);
-  border: 1px solid rgba(40, 200, 64, 0.3);
-  color: #4ade80;
+  background: rgba(26, 127, 55, 0.1);
+  border: 1px solid rgba(26, 127, 55, 0.35);
+  color: #1a7f37;
 }
 
 .banner-non-compliant {
-  background: rgba(255, 95, 87, 0.1);
-  border: 1px solid rgba(255, 95, 87, 0.3);
-  color: #f87171;
+  background: rgba(236, 48, 19, 0.1);
+  border: 1px solid rgba(236, 48, 19, 0.35);
+  color: #ec3013;
 }
 
 .banner-partial {
-  background: rgba(255, 189, 46, 0.1);
-  border: 1px solid rgba(255, 189, 46, 0.3);
-  color: #fbbf24;
+  background: rgba(180, 83, 9, 0.1);
+  border: 1px solid rgba(180, 83, 9, 0.35);
+  color: #b45309;
 }
 
 /* Empty State */
@@ -447,7 +446,7 @@ nav {
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #666;
+  color: #6b6866;
   text-align: center;
   padding: 40px;
 }
@@ -465,8 +464,8 @@ nav {
 
 /* Footer */
 footer {
-  background: #16213e;
-  border-top: 1px solid #1a1a2e;
+  background: #f3f2f2;
+  border-top: 2px solid #201e1d;
   padding: 16px 24px;
   display: flex;
   justify-content: space-between;
@@ -484,18 +483,17 @@ footer {
 }
 
 .install-code {
-  background: #1a1a2e;
+  background: #201e1d;
   padding: 8px 12px;
-  border-radius: 4px;
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  color: #b0b0b0;
+  color: #d7d3d3;
   user-select: all;
 }
 
 .copy-btn {
   background: none;
   border: none;
-  color: #00bcd4;
+  color: #ec3013;
   cursor: pointer;
   font-size: 12px;
   padding: 4px 8px;
@@ -503,7 +501,7 @@ footer {
 }
 
 .copy-btn:hover {
-  color: #22d3ee;
+  color: #ae1800;
 }
 
 .footer-links {
@@ -513,13 +511,13 @@ footer {
 }
 
 .footer-links a {
-  color: #666;
+  color: #6b6866;
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .footer-links a:hover {
-  color: #b0b0b0;
+  color: #201e1d;
 }
 
 /* Responsive */
@@ -531,7 +529,7 @@ footer {
   .panel-left, .panel-right {
     flex: 1;
     border: none;
-    border-top: 1px solid #1a1a2e;
+    border-top: 1px solid rgba(32,30,29,0.35);
   }
 
   .panel-left {

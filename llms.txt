@@ -46,7 +46,7 @@ air-blackbox comply --scan . -v
 - Prompt injection detection (20 patterns, 5 categories)
 - GDPR scanner (8 checks)
 - Bias and fairness scanner (6 checks)
-- ISO 42001 + NIST AI RMF + Colorado SB 24-205 crosswalk
+- ISO 42001 + NIST AI RMF + Colorado SB 26-189 crosswalk (SB 24-205 was repealed before taking effect)
 - Trust layers for LangChain, CrewAI, OpenAI SDK, Claude Agent SDK, Google ADK, AutoGen, Haystack
 - Agent-to-agent (A2A) compliance protocol
 - Pre-commit hooks

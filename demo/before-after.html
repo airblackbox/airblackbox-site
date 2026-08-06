@@ -5,23 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Before & After - AIR Blackbox</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            border-radius: 0 !important;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #0a0a0a;
-            color: #e8e8e8;
+            font-family: 'Archivo', system-ui, sans-serif;
+            background: #f3f2f2;
+            color: #201e1d;
             line-height: 1.6;
         }
 
         /* Navigation */
         nav {
-            background: #1a1a2e;
-            border-bottom: 1px solid #16213e;
+            background: #f3f2f2;
+            border-bottom: 2px solid #201e1d;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -34,7 +37,7 @@
         .nav-logo {
             font-weight: bold;
             font-size: 1.3rem;
-            color: #22d3ee;
+            color: #201e1d;
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -42,7 +45,7 @@
         }
 
         .nav-logo span {
-            color: #4ade80;
+            color: #201e1d;
         }
 
         .nav-links {
@@ -52,14 +55,14 @@
         }
 
         .nav-links a {
-            color: #e8e8e8;
+            color: #6b6866;
             text-decoration: none;
             font-size: 0.95rem;
             transition: color 0.2s;
         }
 
         .nav-links a:hover {
-            color: #22d3ee;
+            color: #ec3013;
         }
 
         @media (max-width: 768px) {
@@ -75,21 +78,22 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #16213e 0%, #0f3f5c 100%);
+            background: #f3f2f2;
             padding: 4rem 2rem;
             text-align: center;
-            border-bottom: 2px solid #22d3ee;
+            border-bottom: 2px solid #201e1d;
         }
 
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
-            color: #22d3ee;
+            color: #201e1d;
+            letter-spacing: -0.02em;
         }
 
         .header p {
             font-size: 1.1rem;
-            color: #a8a8a8;
+            color: #6b6866;
             max-width: 600px;
             margin: 0 auto;
         }
@@ -112,31 +116,31 @@
             justify-content: center;
             gap: 1rem;
             padding: 2rem;
-            background: #0a0a0a;
-            border-bottom: 1px solid #16213e;
+            background: #f3f2f2;
+            border-bottom: 1px solid rgba(32,30,29,0.35);
             flex-wrap: wrap;
         }
 
         .framework-btn {
             padding: 0.6rem 1.2rem;
-            background: #1a1a2e;
-            border: 2px solid #16213e;
-            color: #e8e8e8;
+            background: #eae9e9;
+            border: 2px solid rgba(32,30,29,0.35);
+            color: #201e1d;
             cursor: pointer;
-            border-radius: 6px;
             font-size: 0.95rem;
             transition: all 0.2s;
+            font-family: inherit;
         }
 
         .framework-btn:hover {
-            border-color: #22d3ee;
-            color: #22d3ee;
+            border-color: #201e1d;
+            color: #201e1d;
         }
 
         .framework-btn.active {
-            background: #22d3ee;
-            color: #0a0a0a;
-            border-color: #22d3ee;
+            background: #201e1d;
+            color: #f3f2f2;
+            border-color: #201e1d;
         }
 
         /* Comparison Container */
@@ -159,24 +163,24 @@
 
         /* Panel */
         .panel {
-            background: #1a1a2e;
-            border-radius: 8px;
+            background: #eae9e9;
+            border: 1px solid rgba(32,30,29,0.35);
             overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
         .panel.without {
-            border-left: 4px solid #f87171;
+            border-left: 4px solid #ec3013;
         }
 
         .panel.with {
-            border-left: 4px solid #4ade80;
+            border-left: 4px solid #1a7f37;
         }
 
         .panel-header {
             padding: 1.5rem;
-            border-bottom: 1px solid #16213e;
+            border-bottom: 1px solid rgba(32,30,29,0.35);
             font-weight: bold;
             font-size: 1.1rem;
             display: flex;
@@ -185,26 +189,26 @@
         }
 
         .panel.without .panel-header {
-            color: #f87171;
+            color: #ec3013;
         }
 
         .panel.with .panel-header {
-            color: #4ade80;
+            color: #1a7f37;
         }
 
         .status-icon {
             font-size: 1.3rem;
         }
 
-        /* Code Block */
+        /* Code Block — ink terminal panel */
         .code-block {
-            background: #0f1419;
+            background: #201e1d;
             padding: 1.5rem;
             font-family: "Courier New", monospace;
             font-size: 0.85rem;
-            color: #a8a8a8;
+            color: #d7d3d3;
             overflow-x: auto;
-            border-bottom: 1px solid #16213e;
+            border-bottom: 1px solid rgba(32,30,29,0.35);
             flex-grow: 1;
             min-height: 250px;
         }
@@ -215,16 +219,16 @@
         }
 
         .highlight {
-            background: rgba(34, 211, 238, 0.1);
-            color: #22d3ee;
+            background: rgba(255, 151, 131, 0.15);
+            color: #ff9783;
             padding: 0.1rem 0.2rem;
-            border-radius: 2px;
         }
 
         /* Checklist */
         .checklist {
             padding: 1.5rem;
-            background: #0f1419;
+            background: #eae9e9;
+            color: #201e1d;
         }
 
         .checklist-title {
@@ -248,19 +252,19 @@
         }
 
         .panel.without .checklist-icon {
-            color: #f87171;
+            color: #ec3013;
         }
 
         .panel.with .checklist-icon {
-            color: #4ade80;
+            color: #1a7f37;
         }
 
         /* Compliance Score */
         .compliance-score {
             padding: 1.5rem;
             text-align: center;
-            border-top: 1px solid #16213e;
-            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(32,30,29,0.35);
+            background: rgba(32, 30, 29, 0.04);
         }
 
         .score-text {
@@ -270,49 +274,47 @@
         }
 
         .panel.without .score-text {
-            color: #f87171;
+            color: #ec3013;
         }
 
         .panel.with .score-text {
-            color: #4ade80;
+            color: #1a7f37;
         }
 
         .score-label {
             font-size: 0.85rem;
-            color: #8a8a8a;
+            color: #6b6866;
         }
 
         .score-bar {
             width: 100%;
             height: 6px;
-            background: #0f1419;
-            border-radius: 3px;
+            background: #d8d6d5;
             margin-top: 0.75rem;
             overflow: hidden;
         }
 
         .score-fill {
             height: 100%;
-            border-radius: 3px;
             transition: width 1s ease-out;
             width: 0%;
         }
 
         .panel.without .score-fill {
-            background: #f87171;
+            background: #ec3013;
         }
 
         .panel.with .score-fill {
-            background: #4ade80;
+            background: #1a7f37;
         }
 
         /* Auditor Text */
         .auditor-text {
             padding: 1rem 1.5rem;
             font-size: 0.85rem;
-            color: #8a8a8a;
+            color: #6b6866;
             font-style: italic;
-            border-top: 1px solid #16213e;
+            border-top: 1px solid rgba(32,30,29,0.35);
         }
 
         /* Diff Section */
@@ -326,22 +328,23 @@
             font-size: 1.3rem;
             font-weight: bold;
             margin-bottom: 1rem;
-            color: #22d3ee;
+            color: #201e1d;
+            letter-spacing: -0.02em;
         }
 
         .diff-container {
-            background: #1a1a2e;
-            border: 1px solid #16213e;
-            border-radius: 8px;
+            background: #eae9e9;
+            border: 1px solid rgba(32,30,29,0.35);
             overflow: hidden;
         }
 
+        /* Diff code — ink terminal panel */
         .diff-code {
-            background: #0f1419;
+            background: #201e1d;
             padding: 1.5rem;
             font-family: "Courier New", monospace;
             font-size: 0.85rem;
-            color: #a8a8a8;
+            color: #b8b5b3;
             overflow-x: auto;
         }
 
@@ -359,16 +362,16 @@
             font-weight: bold;
         }
 
-        .diff-added {
-            color: #4ade80;
+        .diff-code .diff-added {
+            color: #6fcf8f;
         }
 
-        .diff-removed {
-            color: #f87171;
+        .diff-code .diff-removed {
+            color: #ff9783;
         }
 
-        .diff-neutral {
-            color: #a8a8a8;
+        .diff-code .diff-neutral {
+            color: #b8b5b3;
         }
 
         .diff-stats {
@@ -376,7 +379,7 @@
             display: flex;
             justify-content: center;
             gap: 3rem;
-            border-top: 1px solid #16213e;
+            border-top: 1px solid rgba(32,30,29,0.35);
         }
 
         .diff-stat {
@@ -387,15 +390,16 @@
             font-size: 1.8rem;
             font-weight: bold;
             margin-bottom: 0.25rem;
+            color: #201e1d;
         }
 
         .diff-stat-label {
             font-size: 0.85rem;
-            color: #8a8a8a;
+            color: #6b6866;
         }
 
-        .diff-added .diff-stat-number {
-            color: #4ade80;
+        .diff-stats .diff-added .diff-stat-number {
+            color: #1a7f37;
         }
 
         /* Audit Records Section */
@@ -409,7 +413,8 @@
             font-size: 1.3rem;
             font-weight: bold;
             margin-bottom: 1rem;
-            color: #22d3ee;
+            color: #201e1d;
+            letter-spacing: -0.02em;
         }
 
         .audit-grid {
@@ -425,14 +430,14 @@
             }
         }
 
+        /* JSON block — ink terminal panel */
         .json-block {
-            background: #0f1419;
-            border: 1px solid #16213e;
-            border-radius: 8px;
+            background: #201e1d;
+            border: 1px solid #201e1d;
             padding: 1.5rem;
             font-family: "Courier New", monospace;
             font-size: 0.8rem;
-            color: #a8a8a8;
+            color: #d7d3d3;
             overflow-x: auto;
         }
 
@@ -443,15 +448,15 @@
         }
 
         .json-key {
-            color: #22d3ee;
+            color: #ff9783;
         }
 
         .json-value {
-            color: #4ade80;
+            color: #6fcf8f;
         }
 
         .json-string {
-            color: #fbbf24;
+            color: #d7d3d3;
         }
 
         /* HMAC Chain Visualization */
@@ -465,9 +470,8 @@
         }
 
         .chain-block {
-            background: #1a1a2e;
-            border: 2px solid #16213e;
-            border-radius: 6px;
+            background: #ffffff;
+            border: 2px solid rgba(32,30,29,0.35);
             padding: 1rem;
             min-width: 140px;
             text-align: center;
@@ -491,13 +495,13 @@
         }
 
         .chain-block.linked {
-            border-color: #22d3ee;
-            background: rgba(34, 211, 238, 0.05);
+            border-color: #201e1d;
+            background: #eae9e9;
         }
 
         .chain-label {
             font-size: 0.75rem;
-            color: #8a8a8a;
+            color: #6b6866;
             margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -506,13 +510,13 @@
         .chain-hash {
             font-family: "Courier New", monospace;
             font-size: 0.7rem;
-            color: #4ade80;
+            color: #1a7f37;
             word-break: break-all;
         }
 
         .chain-arrow {
             font-size: 1.5rem;
-            color: #22d3ee;
+            color: #ec3013;
             animation: pulse 1.5s ease-in-out infinite;
         }
 
@@ -536,26 +540,26 @@
         .action-section {
             text-align: center;
             padding: 2rem;
-            background: #0a0a0a;
-            border-top: 1px solid #16213e;
+            background: #f3f2f2;
+            border-top: 1px solid rgba(32,30,29,0.35);
         }
 
         .run-btn {
             padding: 1rem 2rem;
-            background: linear-gradient(135deg, #22d3ee 0%, #4ade80 100%);
-            color: #0a0a0a;
+            background: #ec3013;
+            color: #ffffff;
             border: none;
-            border-radius: 6px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
             max-width: 300px;
+            font-family: inherit;
         }
 
         .run-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(34, 211, 238, 0.3);
+            background: #ae1800;
         }
 
         .run-btn:active {
@@ -588,11 +592,11 @@
 
         /* Footer */
         footer {
-            background: #1a1a2e;
-            border-top: 1px solid #16213e;
+            background: #f3f2f2;
+            border-top: 2px solid #201e1d;
             padding: 2rem;
             text-align: center;
-            color: #8a8a8a;
+            color: #6b6866;
             margin-top: 3rem;
         }
 
@@ -605,20 +609,24 @@
             flex-wrap: wrap;
         }
 
+        .footer-content strong {
+            color: #201e1d;
+        }
+
         .footer-link {
-            color: #22d3ee;
+            color: #ec3013;
             text-decoration: none;
             transition: color 0.2s;
         }
 
         .footer-link:hover {
-            color: #4ade80;
+            color: #ae1800;
         }
 
         /* Tooltip */
         .tooltip-trigger {
             cursor: help;
-            border-bottom: 1px dotted #22d3ee;
+            border-bottom: 1px dotted #ec3013;
             position: relative;
             display: inline-block;
         }
@@ -629,15 +637,13 @@
             bottom: 125%;
             left: 50%;
             transform: translateX(-50%);
-            background: #0f1419;
-            color: #e8e8e8;
+            background: #201e1d;
+            color: #f3f2f2;
             padding: 0.75rem;
-            border-radius: 4px;
             font-size: 0.8rem;
-            border: 1px solid #16213e;
+            border: 1px solid #201e1d;
             white-space: nowrap;
             z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         .tooltip-trigger:hover .tooltip-content {
@@ -805,7 +811,7 @@
                     <div class="diff-stat-label">Refactoring</div>
                 </div>
                 <div class="diff-stat">
-                    <div class="diff-stat-number" style="color: #4ade80;">6</div>
+                    <div class="diff-stat-number" style="color: #1a7f37;">6</div>
                     <div class="diff-stat-label">Articles Covered</div>
                 </div>
             </div>
@@ -818,14 +824,14 @@
 
         <div class="audit-grid">
             <div>
-                <h3 style="margin-bottom: 1rem; color: #22d3ee;">Sample .air.json Audit Record</h3>
+                <h3 style="margin-bottom: 1rem; color: #201e1d;">Sample .air.json Audit Record</h3>
                 <div class="json-block">
                     <pre id="json-sample"></pre>
                 </div>
             </div>
             <div>
-                <h3 style="margin-bottom: 1rem; color: #22d3ee;">HMAC-SHA256 Chain</h3>
-                <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #8a8a8a;">
+                <h3 style="margin-bottom: 1rem; color: #201e1d;">HMAC-SHA256 Chain</h3>
+                <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #6b6866;">
                     Each record links to the previous via HMAC. Change one record, the chain breaks.
                 </p>
                 <div class="chain-visualization" id="chain-viz"></div>

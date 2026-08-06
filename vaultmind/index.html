@@ -11,27 +11,27 @@
   <meta property="og:url" content="https://airblackbox.ai/vaultmind">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0 !important; }
 
     :root {
-      --bg: #0a0a0b;
-      --bg-card: #111113;
-      --bg-card-hover: #18181b;
-      --border: #27272a;
-      --text: #fafafa;
-      --text-muted: #a1a1aa;
-      --text-dim: #71717a;
-      --accent: #6366f1;
-      --accent-hover: #818cf8;
-      --accent-glow: rgba(99, 102, 241, 0.15);
-      --green: #22c55e;
-      --orange: #f97316;
+      --bg: #f3f2f2;
+      --bg-card: #eae9e9;
+      --bg-card-hover: #e2e1e1;
+      --border: rgba(32, 30, 29, 0.35);
+      --text: #201e1d;
+      --text-muted: #6b6866;
+      --text-dim: #8a8785;
+      --accent: #ec3013;
+      --accent-hover: #ae1800;
+      --accent-glow: rgba(236, 48, 19, 0.12);
+      --green: #1a7f37;
+      --orange: #ec3013;
     }
 
     body {
-      font-family: 'Inter', -apple-system, sans-serif;
+      font-family: 'Archivo', -apple-system, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
@@ -47,7 +47,7 @@
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
-      background: rgba(10,10,11,.92);
+      background: rgba(243,242,242,.92);
       backdrop-filter: blur(12px);
       z-index: 100;
     }
@@ -56,7 +56,7 @@
     .nav-logo-text span { color: var(--accent); }
     .nav-badge {
       font-size: 10px; font-weight: 600; color: var(--orange);
-      background: rgba(249,115,22,.12); border: 1px solid rgba(249,115,22,.25);
+      background: rgba(236,48,19,.1); border: 1px solid rgba(236,48,19,.3);
       border-radius: 20px; padding: 2px 8px; letter-spacing: .05em;
     }
     .nav-right { display: flex; align-items: center; gap: 16px; }
@@ -79,7 +79,7 @@
     .hero-eyebrow {
       display: inline-flex; align-items: center; gap: 8px;
       font-size: 12px; font-weight: 600; color: var(--accent);
-      background: var(--accent-glow); border: 1px solid rgba(99,102,241,.25);
+      background: var(--accent-glow); border: 1px solid rgba(236,48,19,.3);
       border-radius: 20px; padding: 4px 14px; margin-bottom: 28px;
       letter-spacing: .08em; text-transform: uppercase;
     }
@@ -169,7 +169,7 @@
     }
     .security-step-num {
       width: 18px; height: 18px; border-radius: 50%;
-      background: rgba(99,102,241,.15); border: 1px solid rgba(99,102,241,.3);
+      background: rgba(236,48,19,.1); border: 1px solid rgba(236,48,19,.3);
       color: var(--accent); font-size: 10px; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; margin-top: 1px;
@@ -229,7 +229,7 @@
     .step-card:hover { border-color: var(--accent); }
     .step-num {
       width: 36px; height: 36px; border-radius: 10px;
-      background: var(--accent-glow); border: 1px solid rgba(99,102,241,.3);
+      background: var(--accent-glow); border: 1px solid rgba(236,48,19,.3);
       color: var(--accent); font-size: 16px; font-weight: 800;
       display: flex; align-items: center; justify-content: center;
       margin-bottom: 18px;
@@ -240,14 +240,14 @@
     .step-time {
       display: inline-block; margin-top: 14px;
       font-size: 11px; font-weight: 600; color: var(--green);
-      background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.2);
+      background: #d9f2e1; border: 1px solid rgba(26,127,55,.3);
       border-radius: 20px; padding: 2px 10px;
     }
 
     /* ── Demo Query ── */
     .demo-section {
       padding: 80px 40px;
-      background: linear-gradient(180deg, var(--bg) 0%, rgba(99,102,241,.04) 50%, var(--bg) 100%);
+      background: var(--bg);
     }
     .demo-inner { max-width: 800px; margin: 0 auto; }
     .demo-chat {
@@ -282,14 +282,14 @@
       align-self: flex-end;
     }
     .demo-ai {
-      background: #18181b; color: var(--text);
+      background: #ffffff; color: var(--text);
       border: 1px solid var(--border);
       border-radius: 12px 12px 12px 4px;
     }
     .demo-source {
       font-size: 11px; color: var(--text-dim);
-      background: rgba(99,102,241,.08);
-      border: 1px solid rgba(99,102,241,.15);
+      background: rgba(236,48,19,.06);
+      border: 1px solid rgba(236,48,19,.2);
       border-radius: 6px; padding: 4px 10px; display: inline-flex;
       align-items: center; gap: 6px; margin-top: 8px;
     }
@@ -308,7 +308,7 @@
       padding: 24px;
       transition: border-color .2s, background .2s;
     }
-    .feature-card:hover { border-color: rgba(99,102,241,.4); background: var(--bg-card-hover); }
+    .feature-card:hover { border-color: rgba(236,48,19,.45); background: var(--bg-card-hover); }
     .feature-icon { font-size: 24px; margin-bottom: 14px; }
     .feature-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
     .feature-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
@@ -335,7 +335,7 @@
       display: grid;
       grid-template-columns: 2fr 1fr 1fr;
       padding: 14px 24px;
-      border-bottom: 1px solid rgba(39,39,42,.5);
+      border-bottom: 1px solid rgba(32,30,29,.2);
       font-size: 14px;
       align-items: center;
     }
@@ -343,12 +343,12 @@
     .compare-row:hover { background: var(--bg-card); }
     .compare-row .label { color: var(--text-muted); }
     .check { color: var(--green); font-size: 16px; }
-    .cross { color: #52525b; font-size: 16px; }
+    .cross { color: #8a8785; font-size: 16px; }
     .vm-cell { font-weight: 600; color: var(--text); }
 
     /* ── Privacy Section ── */
     .privacy-section {
-      background: linear-gradient(135deg, rgba(99,102,241,.06) 0%, rgba(99,102,241,.02) 100%);
+      background: var(--bg-card);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
       padding: 80px 40px;
@@ -357,7 +357,7 @@
     @media (max-width: 768px) { .privacy-inner { grid-template-columns: 1fr; } }
     .privacy-badge {
       display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.25);
+      background: #d9f2e1; border: 1px solid rgba(26,127,55,.35);
       border-radius: 8px; padding: 8px 14px;
       font-size: 13px; font-weight: 600; color: var(--green);
       margin-bottom: 20px;
@@ -371,10 +371,10 @@
       padding: 24px;
     }
     .network-title { font-size: 12px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 16px; }
-    .network-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(39,39,42,.4); font-size: 13px; }
+    .network-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(32,30,29,.2); font-size: 13px; }
     .network-row:last-child { border-bottom: none; }
     .network-dest { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
-    .network-blocked { color: var(--green); font-size: 11px; font-weight: 600; background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.2); border-radius: 20px; padding: 2px 8px; }
+    .network-blocked { color: var(--green); font-size: 11px; font-weight: 600; background: #d9f2e1; border: 1px solid rgba(26,127,55,.3); border-radius: 20px; padding: 2px 8px; }
 
     /* ── AIR Blackbox Banner ── */
     .air-banner {
@@ -382,15 +382,15 @@
       padding: 80px 40px;
     }
     .air-card {
-      background: linear-gradient(135deg, rgba(249,115,22,.08) 0%, rgba(249,115,22,.03) 100%);
-      border: 1px solid rgba(249,115,22,.2);
+      background: rgba(236,48,19,.06);
+      border: 1px solid rgba(236,48,19,.3);
       border-radius: 20px;
       padding: 36px 40px;
       display: flex; align-items: flex-start; gap: 28px;
     }
     @media (max-width: 640px) { .air-card { flex-direction: column; gap: 20px; } }
     .air-icon { font-size: 40px; flex-shrink: 0; }
-    .air-badge { font-size: 11px; font-weight: 600; color: var(--orange); background: rgba(249,115,22,.1); border: 1px solid rgba(249,115,22,.2); border-radius: 20px; padding: 2px 10px; margin-bottom: 10px; display: inline-block; }
+    .air-badge { font-size: 11px; font-weight: 600; color: var(--orange); background: rgba(236,48,19,.08); border: 1px solid rgba(236,48,19,.25); border-radius: 20px; padding: 2px 10px; margin-bottom: 10px; display: inline-block; }
     .air-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
     .air-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
     .air-link { font-size: 13px; font-weight: 600; color: var(--orange); text-decoration: none; }
@@ -860,10 +860,10 @@
   // Detect OS and highlight the right download button
   const ua = navigator.userAgent;
   if (/Mac/i.test(ua) && !/iPhone|iPad/.test(ua)) {
-    document.getElementById('mac-btn').style.boxShadow = '0 0 0 3px rgba(99,102,241,.35)';
+    document.getElementById('mac-btn').style.boxShadow = '0 0 0 3px rgba(236,48,19,.35)';
   } else if (/Win/i.test(ua)) {
     document.getElementById('win-btn').style.borderColor = 'var(--accent)';
-    document.getElementById('win-btn').style.background = 'rgba(99,102,241,.08)';
+    document.getElementById('win-btn').style.background = 'rgba(236,48,19,.06)';
   }
 </script>
 

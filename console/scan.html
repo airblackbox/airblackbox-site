@@ -11,22 +11,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+
         :root {
-            --bg-deep: #080b14;
-            --bg-card: #0d1117;
-            --bg-elevated: #161b22;
-            --border: #21262d;
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
-            --text-dim: #484f58;
-            --accent: #fbbf24;
-            --green: #3fb950;
-            --red: #f85149;
-            --yellow: #d29922;
-            --blue: #58a6ff;
-            --purple: #a78bfa;
+            --bg-deep: #f3f2f2;
+            --bg-card: #eae9e9;
+            --bg-elevated: #dfdddd;
+            --border: rgba(32,30,29,0.35);
+            --text-primary: #201e1d;
+            --text-secondary: #6b6866;
+            --text-dim: #8a8785;
+            --accent: #ec3013;
+            --green: #1a7f37;
+            --red: #ec3013;
+            --yellow: #b45309;
+            --blue: #ec3013;
+            --purple: #ec3013;
             --mono: 'JetBrains Mono', monospace;
-            --sans: 'Sora', -apple-system, sans-serif;
+            --sans: 'Archivo', -apple-system, sans-serif;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: var(--sans); background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; min-height: 100vh; }
@@ -35,20 +37,20 @@
 
         /* Layout */
         .app { display: grid; grid-template-columns: 260px 1fr; grid-template-rows: 56px 1fr; min-height: 100vh; }
-        .topbar { grid-column: 1 / -1; background: rgba(8,11,20,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; backdrop-filter: blur(12px); z-index: 10; }
+        .topbar { grid-column: 1 / -1; background: rgba(243,242,242,0.95); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; backdrop-filter: blur(12px); z-index: 10; }
         .topbar-logo { font-family: var(--mono); font-weight: 700; font-size: 0.95rem; color: var(--text-primary); }
         .topbar-logo span { color: var(--accent); }
-        .topbar-logo .badge { font-size: 0.55rem; background: var(--accent); color: var(--bg-deep); padding: 0.1rem 0.4rem; border-radius: 3px; margin-left: 0.4rem; vertical-align: middle; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+        .topbar-logo .badge { font-size: 0.55rem; background: var(--accent); color: var(--bg-deep); padding: 0.1rem 0.4rem; border-radius: 0; margin-left: 0.4rem; vertical-align: middle; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
         .topbar-right { display: flex; align-items: center; gap: 1rem; }
-        .topbar-plan { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); background: var(--accent-glow, rgba(251,191,36,0.1)); padding: 0.2rem 0.6rem; border-radius: 4px; }
+        .topbar-plan { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); background: var(--accent-glow, rgba(236,48,19,0.1)); padding: 0.2rem 0.6rem; border-radius: 0; }
         .topbar-user { width: 28px; height: 28px; border-radius: 50%; background: var(--bg-elevated); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--text-secondary); }
 
         .sidebar { background: var(--bg-card); border-right: 1px solid var(--border); padding: 1.5rem 0; overflow-y: auto; }
         .sidebar-section { padding: 0 1rem; margin-bottom: 1.5rem; }
         .sidebar-label { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.6rem; padding: 0 0.5rem; }
-        .sidebar-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.8rem; border-radius: 6px; font-size: 0.82rem; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; margin-bottom: 0.2rem; }
+        .sidebar-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.8rem; border-radius: 0; font-size: 0.82rem; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; margin-bottom: 0.2rem; }
         .sidebar-item:hover { background: var(--bg-elevated); color: var(--text-primary); }
-        .sidebar-item.active { background: rgba(251,191,36,0.08); color: var(--accent); }
+        .sidebar-item.active { background: rgba(236,48,19,0.08); color: var(--accent); }
         .sidebar-item .icon { width: 18px; text-align: center; font-size: 0.9rem; }
         .sidebar-divider { border: none; border-top: 1px solid var(--border); margin: 1rem 1.5rem; }
 
@@ -68,14 +70,14 @@
         .tab-content.active { display: block; }
 
         /* Paste Tab */
-        .code-input { width: 100%; min-height: 300px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; font-family: var(--mono); font-size: 0.82rem; color: var(--green); line-height: 1.8; resize: vertical; outline: none; transition: border-color 0.2s; }
+        .code-input { width: 100%; min-height: 300px; background: #201e1d; border: 1px solid #201e1d; border-radius: 0; padding: 1.2rem; font-family: var(--mono); font-size: 0.82rem; color: #d7d3d3; line-height: 1.8; resize: vertical; outline: none; transition: border-color 0.2s; }
         .code-input:focus { border-color: var(--accent); }
-        .code-input::placeholder { color: var(--text-dim); }
+        .code-input::placeholder { color: #8a8785; }
 
         /* Upload Tab */
-        .upload-zone { border: 2px dashed var(--border); border-radius: 12px; padding: 3rem 2rem; text-align: center; cursor: pointer; transition: all 0.2s; }
-        .upload-zone:hover { border-color: var(--accent); background: rgba(251,191,36,0.03); }
-        .upload-zone.dragging { border-color: var(--accent); background: rgba(251,191,36,0.06); }
+        .upload-zone { border: 2px dashed var(--border); border-radius: 0; padding: 3rem 2rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .upload-zone:hover { border-color: var(--accent); background: rgba(236,48,19,0.03); }
+        .upload-zone.dragging { border-color: var(--accent); background: rgba(236,48,19,0.06); }
         .upload-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
         .upload-zone h3 { font-size: 1rem; margin-bottom: 0.3rem; }
         .upload-zone p { color: var(--text-dim); font-size: 0.82rem; }
@@ -85,19 +87,19 @@
         .github-connect { text-align: center; padding: 3rem 2rem; }
         .github-connect .gh-icon { font-size: 3rem; margin-bottom: 1rem; }
         .github-connect p { color: var(--text-secondary); margin-bottom: 1.5rem; }
-        .gh-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; background: #238636; color: white; border-radius: 8px; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; transition: background 0.2s; }
-        .gh-btn:hover { background: #2ea043; }
+        .gh-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; background: #1a7f37; color: white; border-radius: 0; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; transition: background 0.2s; }
+        .gh-btn:hover { background: #166b2e; }
         .gh-lock { color: var(--text-dim); font-size: 0.75rem; margin-top: 1rem; }
 
         /* Scan Button */
         .scan-actions { margin-top: 1.5rem; display: flex; gap: 1rem; align-items: center; }
-        .scan-btn { padding: 0.85rem 2.5rem; background: var(--accent); color: var(--bg-deep); border: none; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; font-family: var(--sans); }
+        .scan-btn { padding: 0.85rem 2.5rem; background: var(--accent); color: var(--bg-deep); border: none; border-radius: 0; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; font-family: var(--sans); }
         .scan-btn:hover { opacity: 0.85; }
         .scan-btn:disabled { opacity: 0.4; cursor: not-allowed; }
         .scan-hint { color: var(--text-dim); font-size: 0.78rem; }
 
         /* Scanning Animation */
-        .scanning-overlay { display: none; position: fixed; inset: 0; background: rgba(8,11,20,0.92); z-index: 100; justify-content: center; align-items: center; flex-direction: column; }
+        .scanning-overlay { display: none; position: fixed; inset: 0; background: rgba(243,242,242,0.92); z-index: 100; justify-content: center; align-items: center; flex-direction: column; }
         .scanning-overlay.active { display: flex; }
         .scan-spinner { width: 60px; height: 60px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 1.5rem; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -126,35 +128,35 @@
         .results-meta h2 { font-size: 1.3rem; margin-bottom: 0.3rem; }
         .results-meta .meta-line { color: var(--text-secondary); font-size: 0.82rem; margin-bottom: 0.3rem; }
         .results-actions { display: flex; gap: 0.8rem; margin-top: 1rem; }
-        .results-actions button { padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text-primary); font-family: var(--sans); transition: all 0.2s; }
+        .results-actions button { padding: 0.5rem 1rem; border-radius: 0; font-size: 0.8rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text-primary); font-family: var(--sans); transition: all 0.2s; }
         .results-actions button:hover { border-color: var(--accent); }
 
         /* Article Bars */
         .article-bars { display: grid; gap: 0.8rem; margin-bottom: 2.5rem; }
-        .article-bar { display: flex; align-items: center; gap: 1rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1.2rem; cursor: pointer; transition: border-color 0.2s; }
+        .article-bar { display: flex; align-items: center; gap: 1rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 0; padding: 0.8rem 1.2rem; cursor: pointer; transition: border-color 0.2s; }
         .article-bar:hover { border-color: var(--accent); }
         .article-bar.active { border-color: var(--accent); }
         .ab-label { font-family: var(--mono); font-size: 0.75rem; color: var(--text-secondary); width: 160px; flex-shrink: 0; }
-        .ab-track { flex: 1; height: 10px; background: var(--bg-elevated); border-radius: 5px; overflow: hidden; }
-        .ab-fill { height: 100%; border-radius: 5px; transition: width 1s ease; }
+        .ab-track { flex: 1; height: 10px; background: var(--bg-elevated); border-radius: 0; overflow: hidden; }
+        .ab-fill { height: 100%; border-radius: 0; transition: width 1s ease; }
         .ab-value { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; width: 45px; text-align: right; }
-        .ab-status { font-family: var(--mono); font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600; }
+        .ab-status { font-family: var(--mono); font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 0; font-weight: 600; }
 
         /* Findings */
         .findings-section { margin-top: 2rem; }
         .findings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .findings-header h3 { font-size: 1rem; }
         .findings-filter { display: flex; gap: 0.5rem; }
-        .filter-btn { padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.72rem; font-family: var(--mono); cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); transition: all 0.15s; }
+        .filter-btn { padding: 0.3rem 0.8rem; border-radius: 0; font-size: 0.72rem; font-family: var(--mono); cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); transition: all 0.15s; }
         .filter-btn:hover, .filter-btn.active { border-color: var(--accent); color: var(--accent); }
 
-        .finding-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.8rem; overflow: hidden; transition: border-color 0.2s; }
+        .finding-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 0; margin-bottom: 0.8rem; overflow: hidden; transition: border-color 0.2s; }
         .finding-card:hover { border-color: var(--accent); }
         .finding-card-header { padding: 1rem 1.2rem; cursor: pointer; display: flex; align-items: center; gap: 0.8rem; }
-        .finding-sev { font-family: var(--mono); font-size: 0.6rem; padding: 0.15rem 0.5rem; border-radius: 3px; font-weight: 700; text-transform: uppercase; flex-shrink: 0; }
-        .finding-sev.high { background: rgba(248,81,73,0.15); color: var(--red); }
-        .finding-sev.medium { background: rgba(210,153,34,0.15); color: var(--yellow); }
-        .finding-sev.low { background: rgba(63,185,80,0.15); color: var(--green); }
+        .finding-sev { font-family: var(--mono); font-size: 0.6rem; padding: 0.15rem 0.5rem; border-radius: 0; font-weight: 700; text-transform: uppercase; flex-shrink: 0; }
+        .finding-sev.high { background: rgba(236,48,19,0.15); color: var(--red); }
+        .finding-sev.medium { background: rgba(180,83,9,0.15); color: var(--yellow); }
+        .finding-sev.low { background: rgba(26,127,55,0.15); color: var(--green); }
         .finding-name { font-size: 0.88rem; font-weight: 600; flex: 1; }
         .finding-art { font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); }
         .finding-chevron { color: var(--text-dim); transition: transform 0.2s; font-size: 0.8rem; }
@@ -165,7 +167,7 @@
         .finding-section { margin-bottom: 1rem; }
         .finding-section-label { font-family: var(--mono); font-size: 0.68rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem; }
         .finding-section p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; }
-        .finding-code { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1rem; font-family: var(--mono); font-size: 0.78rem; color: var(--green); line-height: 1.7; overflow-x: auto; margin-top: 0.5rem; }
+        .finding-code { background: #201e1d; border: 1px solid #201e1d; border-radius: 0; padding: 0.8rem 1rem; font-family: var(--mono); font-size: 0.78rem; color: #8fd19e; line-height: 1.7; overflow-x: auto; margin-top: 0.5rem; }
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -204,7 +206,7 @@
             <div class="sidebar-label">History</div>
             <div class="sidebar-item" style="opacity:0.6; cursor:pointer;" onclick="window.location.href='/api/checkout'">
                 <span class="icon">&#128338;</span> Past Scans
-                <span style="margin-left:auto; font-size:0.6rem; background:var(--accent); color:var(--bg-deep); padding:0.1rem 0.4rem; border-radius:3px; font-weight:700;">PRO</span>
+                <span style="margin-left:auto; font-size:0.6rem; background:var(--accent); color:var(--bg-deep); padding:0.1rem 0.4rem; border-radius: 0; font-weight:700;">PRO</span>
             </div>
         </div>
         <hr class="sidebar-divider">
@@ -212,7 +214,7 @@
             <div class="sidebar-label">Repos</div>
             <div class="sidebar-item" style="opacity:0.6; cursor:pointer;" onclick="window.location.href='/api/checkout'">
                 <span class="icon">&#128279;</span> GitHub Connect
-                <span style="margin-left:auto; font-size:0.6rem; background:var(--accent); color:var(--bg-deep); padding:0.1rem 0.4rem; border-radius:3px; font-weight:700;">PRO</span>
+                <span style="margin-left:auto; font-size:0.6rem; background:var(--accent); color:var(--bg-deep); padding:0.1rem 0.4rem; border-radius: 0; font-weight:700;">PRO</span>
             </div>
         </div>
         <hr class="sidebar-divider">
@@ -220,7 +222,7 @@
             <div class="sidebar-label">Export</div>
             <div class="sidebar-item" style="opacity:0.6; cursor:pointer;" onclick="window.location.href='/api/checkout'">
                 <span class="icon">&#128196;</span> PDF Report
-                <span style="margin-left:auto; font-size:0.6rem; background:var(--accent); color:var(--bg-deep); padding:0.1rem 0.4rem; border-radius:3px; font-weight:700;">PRO</span>
+                <span style="margin-left:auto; font-size:0.6rem; background:var(--accent); color:var(--bg-deep); padding:0.1rem 0.4rem; border-radius: 0; font-weight:700;">PRO</span>
             </div>
         </div>
     </div>

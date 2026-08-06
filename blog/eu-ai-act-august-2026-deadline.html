@@ -65,6 +65,7 @@
     <title>EU AI Act August 2026 Deadline: What Developers Actually Need to Do</title>
 
     <style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
         * {
             margin: 0;
             padding: 0;
@@ -76,9 +77,9 @@
         }
 
         body {
-            font-family: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #080b14;
-            color: #c9d1d9;
+            font-family: 'Archivo', system-ui, sans-serif;
+            background-color: #f3f2f2;
+            color: #201e1d;
             line-height: 1.6;
         }
 
@@ -87,19 +88,19 @@
         }
 
         a {
-            color: #58a6ff;
+            color: #ec3013;
             text-decoration: none;
             transition: color 0.2s;
         }
 
         a:hover {
-            color: #79c0ff;
+            color: #ae1800;
         }
 
         /* Navigation */
         nav {
-            background-color: #0d1117;
-            border-bottom: 1px solid #30363d;
+            background-color: #eae9e9;
+            border-bottom: 1px solid rgba(32,30,29,0.35);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -118,7 +119,7 @@
         nav .logo {
             font-size: 18px;
             font-weight: 600;
-            color: #58a6ff;
+            color: #ec3013;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -136,7 +137,7 @@
         }
 
         nav a:not(.logo):hover {
-            color: #79c0ff;
+            color: #ae1800;
         }
 
         /* Container */
@@ -156,18 +157,18 @@
             font-size: 48px;
             margin-bottom: 20px;
             line-height: 1.2;
-            color: #e6edf3;
+            color: #201e1d;
         }
 
         header .subtitle {
             font-size: 18px;
-            color: #8b949e;
+            color: #6b6866;
             margin-bottom: 30px;
         }
 
         header .meta {
             font-size: 14px;
-            color: #6e7681;
+            color: #8a8785;
             display: flex;
             justify-content: center;
             gap: 20px;
@@ -189,30 +190,30 @@
 
         h2 {
             font-size: 32px;
-            color: #e6edf3;
+            color: #201e1d;
             margin-bottom: 20px;
             margin-top: 40px;
-            border-bottom: 2px solid #58a6ff;
+            border-bottom: 2px solid #ec3013;
             padding-bottom: 10px;
         }
 
         h3 {
             font-size: 24px;
-            color: #e6edf3;
+            color: #201e1d;
             margin-top: 30px;
             margin-bottom: 15px;
         }
 
         h4 {
             font-size: 18px;
-            color: #c9d1d9;
+            color: #201e1d;
             margin-top: 20px;
             margin-bottom: 10px;
         }
 
         p {
             margin-bottom: 16px;
-            color: #c9d1d9;
+            color: #201e1d;
         }
 
         ul, ol {
@@ -222,16 +223,16 @@
 
         li {
             margin-bottom: 8px;
-            color: #c9d1d9;
+            color: #201e1d;
         }
 
         /* Timeline */
         .timeline {
-            background-color: #0d1117;
-            border-left: 3px solid #58a6ff;
+            background-color: #eae9e9;
+            border-left: 3px solid #ec3013;
             padding: 20px;
             margin: 20px 0;
-            border-radius: 8px;
+            border-radius: 0;
         }
 
         .timeline-item {
@@ -243,7 +244,7 @@
         }
 
         .timeline-date {
-            color: #58a6ff;
+            color: #ec3013;
             font-weight: 600;
             font-size: 14px;
             text-transform: uppercase;
@@ -252,39 +253,39 @@
 
         .timeline-content {
             margin-top: 5px;
-            color: #c9d1d9;
+            color: #201e1d;
         }
 
         /* Boxes */
         .highlight-box {
-            background-color: #0d1117;
-            border-left: 4px solid #58a6ff;
+            background-color: #eae9e9;
+            border-left: 4px solid #ec3013;
             padding: 20px;
             margin: 20px 0;
-            border-radius: 8px;
+            border-radius: 0;
         }
 
         .important-box {
-            background-color: rgba(88, 166, 255, 0.05);
-            border: 1px solid #58a6ff;
+            background-color: rgba(236, 48, 19, 0.05);
+            border: 1px solid #ec3013;
             padding: 20px;
             margin: 20px 0;
-            border-radius: 8px;
+            border-radius: 0;
         }
 
         .callout {
-            background-color: #0d1117;
-            border-left: 4px solid #79c0ff;
+            background-color: #eae9e9;
+            border-left: 4px solid #ae1800;
             padding: 20px;
             margin: 20px 0;
-            border-radius: 8px;
+            border-radius: 0;
         }
 
         /* Code blocks */
         pre {
-            background-color: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 8px;
+            background-color: #201e1d;
+            border: 1px solid rgba(32,30,29,0.35);
+            border-radius: 0;
             padding: 16px;
             overflow-x: auto;
             margin: 20px 0;
@@ -293,11 +294,11 @@
         }
 
         code {
-            color: #79c0ff;
+            color: #ae1800;
         }
 
         pre code {
-            color: #c9d1d9;
+            color: #d7d3d3;
         }
 
         /* Tables */
@@ -309,22 +310,22 @@
         }
 
         th {
-            background-color: #0d1117;
-            color: #e6edf3;
+            background-color: #eae9e9;
+            color: #201e1d;
             padding: 12px;
             text-align: left;
-            border-bottom: 2px solid #58a6ff;
+            border-bottom: 2px solid #ec3013;
             font-weight: 600;
         }
 
         td {
             padding: 12px;
-            border-bottom: 1px solid #30363d;
-            color: #c9d1d9;
+            border-bottom: 1px solid rgba(32,30,29,0.35);
+            color: #201e1d;
         }
 
         tr:hover {
-            background-color: rgba(88, 166, 255, 0.05);
+            background-color: rgba(236, 48, 19, 0.05);
         }
 
         /* FAQ */
@@ -333,25 +334,25 @@
         }
 
         .faq-question {
-            background-color: #0d1117;
+            background-color: #eae9e9;
             padding: 16px;
-            border-radius: 8px;
+            border-radius: 0;
             cursor: pointer;
             font-weight: 600;
-            color: #e6edf3;
-            border-left: 4px solid #58a6ff;
+            color: #201e1d;
+            border-left: 4px solid #ec3013;
             transition: background-color 0.2s;
         }
 
         .faq-question:hover {
-            background-color: #161b22;
+            background-color: #eae9e9;
         }
 
         .faq-answer {
             padding: 16px;
-            background-color: rgba(13, 17, 23, 0.5);
+            background-color: rgba(32, 30, 29, 0.06);
             display: none;
-            color: #c9d1d9;
+            color: #201e1d;
         }
 
         .faq-answer.active {
@@ -374,38 +375,38 @@
 
         .myth-box, .reality-box {
             padding: 16px;
-            border-radius: 8px;
+            border-radius: 0;
         }
 
         .myth-box {
-            background-color: rgba(248, 81, 73, 0.1);
-            border-left: 4px solid #f85149;
+            background-color: rgba(236, 48, 19, 0.1);
+            border-left: 4px solid #ec3013;
         }
 
         .myth-box h4 {
-            color: #f85149;
+            color: #ec3013;
         }
 
         .reality-box {
-            background-color: rgba(88, 166, 255, 0.1);
-            border-left: 4px solid #58a6ff;
+            background-color: rgba(236, 48, 19, 0.1);
+            border-left: 4px solid #ec3013;
         }
 
         .reality-box h4 {
-            color: #58a6ff;
+            color: #ec3013;
         }
 
         /* Action Plan */
         .action-month {
-            background-color: #0d1117;
+            background-color: #eae9e9;
             padding: 20px;
             margin: 16px 0;
-            border-radius: 8px;
-            border-left: 4px solid #58a6ff;
+            border-radius: 0;
+            border-left: 4px solid #ec3013;
         }
 
         .action-month h4 {
-            color: #58a6ff;
+            color: #ec3013;
             margin-top: 0;
         }
 
@@ -419,11 +420,11 @@
 
         /* Footer */
         footer {
-            background-color: #0d1117;
-            border-top: 1px solid #30363d;
+            background-color: #eae9e9;
+            border-top: 1px solid rgba(32,30,29,0.35);
             padding: 40px 20px;
             text-align: center;
-            color: #6e7681;
+            color: #8a8785;
             font-size: 14px;
         }
 
@@ -441,7 +442,7 @@
         }
 
         footer a {
-            color: #58a6ff;
+            color: #ec3013;
         }
 
         /* Responsive */
@@ -469,8 +470,8 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: #58a6ff;
-            color: #080b14;
+            background-color: #ec3013;
+            color: #f3f2f2;
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -494,15 +495,15 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav style="background:#080b14;border-bottom:1px solid #21262d;padding:16px 0;">
+    <nav style="background:#f3f2f2;border-bottom:1px solid rgba(32,30,29,0.35);padding:16px 0;">
       <div style="max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
-        <a href="/" style="color:#e6edf3;font-weight:700;font-size:18px;text-decoration:none;">AIR <span style="color:#58a6ff;">Blackbox</span></a>
+        <a href="/" style="color:#201e1d;font-weight:700;font-size:18px;text-decoration:none;">AIR <span style="color:#ec3013;">Blackbox</span></a>
         <span class="links" style="display:flex;gap:20px;">
-          <a href="/" style="color:#8b949e;text-decoration:none;">Home</a>
-          <a href="/compliance-mapping" style="color:#8b949e;text-decoration:none;">Docs</a>
-          <a href="/blog/" style="color:#58a6ff;text-decoration:none;">Blog</a>
-          <a href="https://github.com/airblackbox/airblackbox" style="color:#8b949e;text-decoration:none;">GitHub</a>
-          <a href="https://pypi.org/project/air-blackbox/" style="color:#8b949e;text-decoration:none;">PyPI</a>
+          <a href="/" style="color:#6b6866;text-decoration:none;">Home</a>
+          <a href="/compliance-mapping" style="color:#6b6866;text-decoration:none;">Docs</a>
+          <a href="/blog/" style="color:#ec3013;text-decoration:none;">Blog</a>
+          <a href="https://github.com/airblackbox/airblackbox" style="color:#6b6866;text-decoration:none;">GitHub</a>
+          <a href="https://pypi.org/project/air-blackbox/" style="color:#6b6866;text-decoration:none;">PyPI</a>
         </span>
       </div>
     </nav>
@@ -1012,7 +1013,7 @@ decision = compliant_model.predict(user_data)</code></pre>
             </section>
 
             <!-- Call to Action -->
-            <section id="next-steps" style="background-color: rgba(88, 166, 255, 0.05); padding: 40px; border-radius: 8px; margin-top: 40px;">
+            <section id="next-steps" style="background-color: rgba(236, 48, 19, 0.05); padding: 40px; border-radius: 0; margin-top: 40px;">
                 <h2 style="border: none; margin-top: 0;">Next Steps: Start Your Compliance Work Today</h2>
 
                 <p>August 2, 2026 is five months away. Waiting until summer to start compliance work puts you at serious risk. Here is what to do immediately:</p>

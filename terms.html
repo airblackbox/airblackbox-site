@@ -19,28 +19,30 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+
         :root {
-            --bg-deep: #080b14;
-            --bg-card: #0d1117;
-            --bg-elevated: #161b22;
-            --border: #21262d;
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
-            --text-dim: #484f58;
-            --accent: #58a6ff;
-            --green: #3fb950;
-            --red: #f85149;
-            --yellow: #d29922;
+            --bg-deep: #f3f2f2;
+            --bg-card: #eae9e9;
+            --bg-elevated: #dfdddd;
+            --border: rgba(32,30,29,0.35);
+            --text-primary: #201e1d;
+            --text-secondary: #6b6866;
+            --text-dim: #8a8785;
+            --accent: #ec3013;
+            --green: #1a7f37;
+            --red: #ec3013;
+            --yellow: #b45309;
             --mono: 'JetBrains Mono', monospace;
-            --sans: 'Sora', -apple-system, sans-serif;
+            --sans: 'Archivo', -apple-system, sans-serif;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body { font-family: var(--sans); background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; }
         a { color: var(--accent); text-decoration: none; }
         a:hover { text-decoration: underline; }
-        code { font-family: var(--mono); background: var(--bg-elevated); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.88rem; }
-        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(8,11,20,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+        code { font-family: var(--mono); background: var(--bg-elevated); padding: 0.15rem 0.4rem; border-radius: 0; font-size: 0.88rem; }
+        header { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(243,242,242,0.92); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
         nav { max-width: 1100px; margin: 0 auto; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: var(--text-primary); }
         .logo span { color: var(--accent); }
@@ -54,7 +56,7 @@
         .content p { color: var(--text-secondary); margin-bottom: 1.2rem; font-size: 0.92rem; }
         .content ul { color: var(--text-secondary); font-size: 0.92rem; margin-bottom: 1.2rem; padding-left: 1.5rem; }
         .content li { margin-bottom: 0.5rem; }
-        .disclaimer-box { background: var(--bg-card); border: 1px solid var(--yellow); border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0; }
+        .disclaimer-box { background: var(--bg-card); border: 1px solid var(--yellow); border-radius: 0; padding: 1.5rem 2rem; margin: 2rem 0; }
         .disclaimer-box h3 { color: var(--yellow); font-size: 0.95rem; margin-bottom: 0.8rem; }
         .disclaimer-box p { color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 0; }
         footer { border-top: 1px solid var(--border); padding: 3rem 0; margin-top: 3rem; }

@@ -17,28 +17,29 @@
     <meta name="twitter:description" content="Get started with AIR Blackbox in 5 minutes. Install, scan your Python AI code, and see EU AI Act compliance results.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0 !important; }
         :root {
-            --bg: #080b14;
-            --bg-card: #0d1117;
-            --bg-card-hover: #18181b;
-            --border: #21262d;
-            --text: #e6edf3;
-            --text-muted: #8b949e;
-            --text-dim: #484f58;
-            --accent: #58a6ff;
-            --accent-hover: #79c0ff;
-            --accent-glow: rgba(88, 166, 255, 0.15);
-            --green: #22c55e;
-            --red: #ef4444;
-            --yellow: #eab308;
-            --blue: #3b82f6;
+            --bg: #f3f2f2;
+            --bg-card: #eae9e9;
+            --bg-card-hover: #e2e1e1;
+            --border: rgba(32, 30, 29, 0.35);
+            --text: #201e1d;
+            --text-muted: #6b6866;
+            --text-dim: #8a8785;
+            --accent: #ec3013;
+            --accent-hover: #ae1800;
+            --accent-glow: rgba(236, 48, 19, 0.12);
+            --green: #1a7f37;
+            --red: #ec3013;
+            --yellow: #b45309;
+            --blue: #ec3013;
         }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
@@ -48,7 +49,7 @@
         /* Nav */
         nav {
             position: fixed; top: 0; width: 100%; z-index: 100;
-            background: rgba(8, 11, 20, 0.92);
+            background: rgba(243, 242, 242, 0.92);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
         }
@@ -70,7 +71,7 @@
         .hero { padding: 140px 24px 60px; text-align: center; max-width: 800px; margin: 0 auto; }
         .hero-badge {
             display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(88, 166, 255, 0.1); border: 1px solid rgba(88, 166, 255, 0.2);
+            background: rgba(236, 48, 19, 0.1); border: 1px solid rgba(236, 48, 19, 0.25);
             padding: 8px 20px; border-radius: 100px; font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 32px;
         }
         .hero h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 900; line-height: 1.15; margin-bottom: 20px; }
@@ -85,7 +86,7 @@
         .step-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
         .step-num {
             width: 40px; height: 40px; border-radius: 50%;
-            background: var(--accent-glow); border: 1px solid rgba(88, 166, 255, 0.3);
+            background: var(--accent-glow); border: 1px solid rgba(236, 48, 19, 0.3);
             color: var(--accent); font-weight: 700; font-size: 16px;
             display: inline-flex; align-items: center; justify-content: center;
             flex-shrink: 0;
@@ -95,55 +96,56 @@
 
         /* Terminal */
         .terminal {
-            background: #0d1117;
-            border: 1px solid var(--border);
+            background: #201e1d;
+            border: 1px solid #201e1d;
             border-radius: 12px;
             overflow: hidden;
             margin: 20px 0;
         }
         .terminal-bar {
-            background: #161b22;
+            background: #171514;
             padding: 10px 16px;
             display: flex; align-items: center; gap: 8px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid rgba(243, 242, 242, 0.15);
         }
         .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
-        .terminal-dot.red { background: #ff5f57; }
-        .terminal-dot.yellow { background: #febc2e; }
-        .terminal-dot.green { background: #28c840; }
-        .terminal-title { color: var(--text-dim); font-size: 12px; margin-left: 8px; font-family: 'JetBrains Mono', monospace; }
+        .terminal-dot.red { background: #ff9783; }
+        .terminal-dot.yellow { background: #ffd27d; }
+        .terminal-dot.green { background: #7ee2a8; }
+        .terminal-title { color: #8a8785; font-size: 12px; margin-left: 8px; font-family: 'JetBrains Mono', monospace; }
         .terminal-body {
             padding: 20px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 13px;
             line-height: 1.7;
+            color: #d7d3d3;
             overflow-x: auto;
         }
-        .terminal-body .prompt { color: var(--green); }
-        .terminal-body .cmd { color: var(--text); font-weight: 500; }
-        .terminal-body .output { color: var(--text-dim); }
-        .terminal-body .success { color: var(--green); }
-        .terminal-body .warn { color: var(--yellow); }
-        .terminal-body .err { color: var(--red); }
-        .terminal-body .accent { color: var(--accent); }
-        .terminal-body .blue { color: var(--blue); }
-        .terminal-body .bold { font-weight: 700; color: var(--text); }
+        .terminal-body .prompt { color: #7ee2a8; }
+        .terminal-body .cmd { color: #f3f2f2; font-weight: 500; }
+        .terminal-body .output { color: #8a8785; }
+        .terminal-body .success { color: #7ee2a8; }
+        .terminal-body .warn { color: #ffd27d; }
+        .terminal-body .err { color: #ff9783; }
+        .terminal-body .accent { color: #ff9783; }
+        .terminal-body .blue { color: #f3f2f2; }
+        .terminal-body .bold { font-weight: 700; color: #f3f2f2; }
 
         /* Copy button */
         .copy-wrap { position: relative; }
         .copy-btn {
             position: absolute; top: 12px; right: 12px;
-            background: rgba(255,255,255,0.08); border: 1px solid var(--border);
-            color: var(--text-muted); padding: 6px 14px; border-radius: 6px;
-            font-size: 12px; font-family: 'Inter', sans-serif; font-weight: 500;
+            background: rgba(243,242,242,0.08); border: 1px solid rgba(243,242,242,0.3);
+            color: #d7d3d3; padding: 6px 14px; border-radius: 6px;
+            font-size: 12px; font-family: 'Archivo', sans-serif; font-weight: 500;
             cursor: pointer; transition: all 0.2s; z-index: 10;
         }
-        .copy-btn:hover { background: rgba(255,255,255,0.15); color: var(--text); }
+        .copy-btn:hover { background: rgba(243,242,242,0.15); color: #f3f2f2; }
 
         /* Code inline */
         code {
-            background: rgba(249, 115, 22, 0.1);
-            border: 1px solid rgba(249, 115, 22, 0.15);
+            background: rgba(236, 48, 19, 0.1);
+            border: 1px solid rgba(236, 48, 19, 0.2);
             padding: 2px 8px; border-radius: 4px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.85em; color: var(--accent);
