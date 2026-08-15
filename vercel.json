@@ -226,6 +226,10 @@
       "destination": "/.well-known/security.txt"
     },
     {
+      "source": "/verify",
+      "destination": "/verify.html"
+    },
+    {
       "source": "/verify/:id",
       "destination": "/api/verify/:id"
     },
