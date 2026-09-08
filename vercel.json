@@ -130,6 +130,10 @@
       "destination": "/blog/index.html"
     },
     {
+      "source": "/blog/ai-recruiting-compliance-case-study",
+      "destination": "/blog/ai-recruiting-compliance-case-study.html"
+    },
+    {
       "source": "/blog/oauth-ai-agents-delegation-scan",
       "destination": "/blog/oauth-ai-agents-delegation-scan.html"
     },

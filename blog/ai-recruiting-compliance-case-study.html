@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Two weeks of live AI recruiting decisions recorded in a tamper-evident audit chain: 450 decisions, 93 adverse outcomes, zero without a named human reviewer - provable in any browser, no trust in the vendor required.">
+    <meta name="keywords" content="AI recruiting compliance, AI hiring audit trail, NYC Local Law 144 audit, Colorado SB 26-189, FEHA automated decision system records, tamper-evident audit chain, AI hiring evidence, human oversight AI recruiting, air-evidence bundle">
+    <meta name="author" content="Jason Shotwell">
+    <link rel="canonical" href="https://airblackbox.ai/blog/ai-recruiting-compliance-case-study">
+
+    <meta property="og:title" content="450 Hiring Decisions, Zero Unreviewable Ones: A Production Case Study in AI Recruiting Compliance">
+    <meta property="og:description" content="Two weeks of live AI recruiting decisions recorded in a tamper-evident audit chain: 450 decisions, 93 adverse outcomes, zero without a named human reviewer - provable in any browser, no trust in the vendor required.">
+    <meta property="og:url" content="https://airblackbox.ai/blog/ai-recruiting-compliance-case-study">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://airblackbox.ai/og-image.svg">
+    <meta property="article:published_time" content="2026-09-08">
+    <meta property="article:author" content="Jason Shotwell">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="450 Hiring Decisions, Zero Unreviewable Ones">
+    <meta name="twitter:description" content="Two weeks of live AI recruiting decisions recorded in a tamper-evident audit chain: 450 decisions, 93 adverse outcomes, zero without a named human reviewer - provable in any browser, no trust in the vendor required.">
+    <meta name="twitter:image" content="https://airblackbox.ai/og-image.svg">
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "450 Hiring Decisions, Zero Unreviewable Ones: A Production Case Study in AI Recruiting Compliance",
+  "description": "Two weeks of live AI recruiting decisions recorded in a tamper-evident audit chain: 450 decisions, 93 adverse outcomes, zero without a named human reviewer - provable in any browser, no trust in the vendor required.",
+  "image": "https://airblackbox.ai/og-image.svg",
+  "datePublished": "2026-09-08",
+  "dateModified": "2026-09-08",
+  "author": {
+    "@type": "Person",
+    "name": "Jason Shotwell",
+    "url": "https://github.com/shotwellj",
+    "jobTitle": "Creator of AIR Blackbox"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AIR Blackbox",
+    "url": "https://airblackbox.ai",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://airblackbox.ai/logo.png"
+    }
+  },
+  "mainEntityOfPage": "https://airblackbox.ai/blog/ai-recruiting-compliance-case-study",
+  "keywords": [
+    "AI recruiting compliance",
+    "NYC Local Law 144",
+    "Colorado SB 26-189",
+    "FEHA automated decision system",
+    "tamper-evident audit trail",
+    "AI hiring audit",
+    "evidence bundle",
+    "human oversight AI hiring"
+  ]
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does an AI hiring audit trail need to prove?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Under NYC Local Law 144, Colorado SB 26-189, and California's FEHA automated-decision rules, a vendor must be able to show what its AI decided about a candidate, who reviewed it, and that the record was not altered afterwards. An HMAC-chained, signed, externally timestamped record makes that a verifiable property of a file rather than an assertion in a policy document."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can an auditor verify an .air-evidence bundle?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Drop the file on airblackbox.ai/verify. The page runs entirely in the browser - no upload, no account - and recomputes every digest, verifies every decision receipt signature, and recomputes the compliance counts from the raw records. The air-evidence CLI performs the same checks plus full RFC 3161 timestamp validation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does a VERIFIED result prove who issued the bundle?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. VERIFIED proves the bundle is intact and internally consistent since signing. Attribution requires comparing the printed signer fingerprint against one obtained from the issuer separately, or pinning it with --expect-key. The verifier states this limit explicitly rather than implying more than it checked."
+      }
+    }
+  ]
+}
+    </script>
+
+    <title>450 Hiring Decisions, Zero Unreviewable Ones: A Production Case Study in AI Recruiting Compliance</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #f3f2f2;
+            --bg-secondary: #eae9e9;
+            --bg-tertiary: #eae9e9;
+            --text-primary: #201e1d;
+            --text-secondary: #6b6866;
+            --accent: #ec3013;
+            --accent-muted: rgba(236, 48, 19, 0.1);
+            --border: rgba(32,30,29,0.35);
+            --green: #1a7f37;
+            --yellow: #b45309;
+            --red: #ec3013;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Archivo', system-ui, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            padding: 4rem 0 2rem;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--accent-muted);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        code {
+            font-family: "JetBrains Mono", "Courier New", monospace;
+            background-color: var(--bg-tertiary);
+            padding: 0.2em 0.4em;
+            border-radius: 0;
+            font-size: 0.9em;
+            color: var(--accent);
+        }
+
+        pre {
+            background-color: #201e1d;
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            font-family: "JetBrains Mono", "Courier New", monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #d7d3d3;
+        }
+
+        .highlight {
+            background-color: var(--accent-muted);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0;
+        }
+
+        .highlight strong {
+            color: var(--accent);
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            background-color: var(--accent-muted);
+            border-radius: 0 4px 4px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background-color: var(--bg-tertiary);
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: var(--bg-secondary);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .key-takeaways {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .key-takeaways h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+
+        .key-takeaways li {
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-item {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .faq-toggle {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .faq-item.open .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            display: none;
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+
+        .author-box {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .author-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        .author-info .author-title {
+            color: var(--accent);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .author-info p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        .cta-box {
+            background: #eae9e9;
+            border: 1px solid var(--accent);
+            border-radius: 0;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .cta-box h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+
+        .cta-box pre {
+            text-align: left;
+            max-width: 500px;
+            margin: 1rem auto;
+        }
+
+        footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 6rem;
+            padding: 3rem 0;
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            .container { padding: 0 1rem; }
+            .author-box { flex-direction: column; }
+            .article-meta { gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<nav style="background:#f3f2f2;border-bottom:1px solid rgba(32,30,29,0.35);padding:16px 0;">
+      <div style="max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+        <a href="/" style="color:#201e1d;font-weight:700;font-size:18px;text-decoration:none;">AIR <span style="color:#ec3013;">Blackbox</span></a>
+        <span style="display:flex;gap:20px;">
+          <a href="/" style="color:#6b6866;text-decoration:none;">Home</a>
+          <a href="/compliance-mapping" style="color:#6b6866;text-decoration:none;">Docs</a>
+          <a href="/blog/" style="color:#ec3013;text-decoration:none;">Blog</a>
+          <a href="https://github.com/airblackbox/airblackbox" style="color:#6b6866;text-decoration:none;">GitHub</a>
+          <a href="https://pypi.org/project/air-trust/" style="color:#6b6866;text-decoration:none;">PyPI</a>
+        </span>
+      </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <div class="article-meta">
+                <span>Published September 8, 2026</span>
+                <span>7 min read</span>
+                <span>By <a href="https://github.com/shotwellj">Jason Shotwell</a></span>
+            </div>
+            <h1>450 hiring decisions, zero unreviewable ones: what AI recruiting compliance looks like when it&#x27;s real</h1>
+            <p class="subtitle">Every AI recruiting tool now operates under laws with teeth: NYC Local Law 144 bias audits, Colorado SB 26-189, California&#x27;s FEHA automated-decision rules with their four-year record-keeping floor. All of them converge on the same question a vendor eventually gets asked: <strong>&quot;Show me what your AI decided, and prove nobody touched the record afterwards.&quot;</strong> &quot;Trust our logs&quot; is not an answer. This is what an answer looks like.</p>
+        </header>
+
+        <div class="key-takeaways">
+            <h3>Key Takeaways</h3>
+            <ul>
+                <li>A live recruiting platform recorded <strong>450 consequential AI decisions over two weeks</strong> into a tamper-evident AIR Blackbox audit chain, at the moment each decision happened.</li>
+                <li>Of <strong>93 adverse (candidacy-ending) decisions, zero lacked a named human reviewer</strong> - and that claim is a recomputable property of a signed file, not an assertion in a policy document.</li>
+                <li>Anyone holding the evidence bundle can verify it <strong>in their own browser</strong> at airblackbox.ai/verify - no upload, no account, no trust in the vendor or in us.</li>
+                <li>Integration took about a week: a server-to-server feed from the product to a private AIR instance. Recruiters&#x27; workflow did not change.</li>
+            </ul>
+        </div>
+
+        <section>
+            <h2>The deployment</h2>
+            <p>SourcingNav is a live sourcing and screening platform for technical recruiting. Every consequential action its AI takes - scoring a candidate, ranking a slate, a screening decision that ends a candidacy - is written, at the moment it happens, into an AIR Blackbox audit chain:</p>
+            <ul>
+                <li>Each record is <strong>HMAC-chained</strong> to the one before it, so removing or reordering history breaks the chain.</li>
+                <li>Each decision carries a <strong>signed receipt</strong> (Ed25519) naming what was decided and who authorized it.</li>
+                <li>The chain head is <strong>anchored with an RFC 3161 timestamp</strong> from an external authority - a key neither the vendor nor AIR holds - so a rewritten history cannot reproduce the moment it was witnessed.</li>
+            </ul>
+            <p>None of this changed how recruiters work. It is a server-to-server feed from the product to a private AIR instance; the ingest credential never touches the browser.</p>
+        </section>
+
+        <section>
+            <h2>Two weeks of production, measured</h2>
+            <p>One export, covering fourteen days of live operation:</p>
+            <table>
+                <tbody>
+                <tr><td>Decisions recorded</td><td><strong>450</strong></td></tr>
+                <tr><td>Adverse (candidacy-ending) decisions</td><td><strong>93</strong></td></tr>
+                <tr><td>Adverse decisions with no named human reviewer</td><td><strong>0</strong></td></tr>
+                <tr><td>Records carrying a valid signed receipt</td><td><strong>450 / 450</strong></td></tr>
+                <tr><td>Alterations detected at verification</td><td><strong>0</strong></td></tr>
+                </tbody>
+            </table>
+            <p>The number that matters is the zero. Under every automated-decision regime, the exposure question is <em>&quot;did your AI end someone&#x27;s candidacy with no human in the loop?&quot;</em> For this deployment, across 93 adverse outcomes, the answer is: it did not - and that claim is not an assertion. It is a recomputable property of a signed file.</p>
+            <p>(The deployment also logged 163 engine outputs without a reviewer - scores and rankings, which are inputs a human weighs rather than decisions. The bundle separates those counts precisely so the number that matters cannot hide inside the one that does not.)</p>
+        </section>
+
+        <section>
+            <h2>The part that makes it evidence</h2>
+            <p>The export is a single <code>.air-evidence</code> file. Anyone holding it - an auditor, a customer, a regulator - can drop it on <a href="/verify">airblackbox.ai/verify</a> and watch six checks run <em>in their own browser</em>: no upload, no account, no trust in the vendor, no trust in us. The page recomputes every digest, verifies every one of the 450 receipt signatures, recomputes the compliance counts from the raw records, and says plainly what it can and cannot prove.</p>
+            <p>Try it yourself right now with a <a href="/demo/sample.air-evidence">sample bundle</a> - ten fictional candidates, including one deliberately unreviewed rejection, so you can see what a <em>finding</em> looks like instead of a reassuring all-green.</p>
+            <blockquote>Because honesty is the product: a verified bundle proves the records are <strong>intact and internally consistent</strong>. It does not by itself prove who issued them (pin the signer&#x27;s fingerprint for that) or that nothing was omitted (external anchoring at record time is what constrains that). The verifier says so out loud. We published our own <a href="https://github.com/airblackbox/airblackbox/blob/main/docs/security/red-team-2026-08.md">red-team review</a> of exactly where that line sits.</blockquote>
+        </section>
+
+        <section>
+            <h2>What this took to build into a product</h2>
+            <p>About a week of integration: point the product&#x27;s decision path at AIR&#x27;s <code>/ingest</code> endpoint, store the tenant token server-side, add a download button. The chain, signing, anchoring, counting, and the browser verifier are the open-source platform doing its job.</p>
+        </section>
+
+        <div class="cta-box">
+            <h3>Put this loop in your product</h3>
+            <p>If you build an AI recruiting product - or any product whose AI makes consequential decisions about people - this is what your customers&#x27; lawyers are going to start asking for. We can put it in your product in about a week.</p>
+            <p><a href="mailto:jason@airblackbox.ai?subject=Evidence%20loop%20for%20our%20product">jason@airblackbox.ai</a></p>
+        </div>
+
+        <section>
+            <h2>FAQ</h2>
+            <div class="faq-item"><div class="faq-question">What does an AI hiring audit trail need to prove?<span class="faq-toggle">+</span></div><div class="faq-answer"><p>Under NYC Local Law 144, Colorado SB 26-189, and California's FEHA automated-decision rules, a vendor must be able to show what its AI decided about a candidate, who reviewed it, and that the record was not altered afterwards. An HMAC-chained, signed, externally timestamped record makes that a verifiable property of a file rather than an assertion in a policy document.</p></div></div>
+            <div class="faq-item"><div class="faq-question">How can an auditor verify an .air-evidence bundle?<span class="faq-toggle">+</span></div><div class="faq-answer"><p>Drop the file on airblackbox.ai/verify. The page runs entirely in the browser - no upload, no account - and recomputes every digest, verifies every decision receipt signature, and recomputes the compliance counts from the raw records. The air-evidence CLI performs the same checks plus full RFC 3161 timestamp validation.</p></div></div>
+            <div class="faq-item"><div class="faq-question">Does a VERIFIED result prove who issued the bundle?<span class="faq-toggle">+</span></div><div class="faq-answer"><p>No. VERIFIED proves the bundle is intact and internally consistent since signing. Attribution requires comparing the printed signer fingerprint against one obtained from the issuer separately, or pinning it with --expect-key. The verifier states this limit explicitly rather than implying more than it checked.</p></div></div>
+        </section>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;margin:2rem 0"><em>AIR Blackbox is open source (Apache 2.0). The scanner, chain, verifier, and evidence format are all inspectable - which is rather the point.</em></p>
+    </div>
+<footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://github.com/airblackbox/airblackbox">GitHub</a>
+                <a href="https://pypi.org/project/air-trust/">PyPI</a>
+                <a href="https://airblackbox.ai/terms">Terms of Service</a>
+                <a href="https://airblackbox.ai/privacy">Privacy Policy</a>
+            </div>
+            <div class="footer-copyright">
+                Copyright 2026 AIR Blackbox. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    <script>
+        document.querySelectorAll('.faq-item').forEach(function(item) {
+            item.querySelector('.faq-question').addEventListener('click', function() { item.classList.toggle('open'); });
+        });
+    </script>
+</body>
+</html>
