@@ -1145,16 +1145,24 @@ client = OpenAI(
     });
     var v=document.createElement("div");
     v.className="hv-verdict "+R.level; v.style.animationDelay=d+"ms";
+    /* R.unchecked means a signature check could not RUN in this browser. That is
+       neither a pass nor a failure, and must never render as "VERIFIED". */
     v.textContent = R.level==="bad" ? "TAMPERED - do not rely on this file"
+                  : R.unchecked     ? "COULD NOT VERIFY IN THIS BROWSER"
                   : R.level==="warn" ? "VERIFIED, with things to ask about"
                   : "VERIFIED - unaltered since signing";
     body.appendChild(v);
     var s=document.createElement("div");
     s.className="hv-sub"; s.style.animationDelay=(d+110)+"ms";
-    s.textContent=label;
+    s.textContent = R.unchecked
+      ? "This browser cannot run Ed25519 checks, so nothing here is established either way. "
+        + "Try a current Chrome, Edge, Firefox or Safari - or run air-evidence verify."
+      : label;
     body.appendChild(s);
-    dot.className="hv-dot "+R.level;
-    title.textContent = R.level==="bad" ? "Verification failed" : "Verification complete";
+    dot.className="hv-dot "+(R.unchecked ? "warn" : R.level);
+    title.textContent = R.level==="bad" ? "Verification failed"
+                      : R.unchecked ? "Verification could not run"
+                      : "Verification complete";
     foot.innerHTML='Checked in <strong>your</strong> browser - nothing uploaded. '+
       '<a href="/verify">Check your own file &#8594;</a>';
   }

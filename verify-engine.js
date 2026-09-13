@@ -94,7 +94,11 @@ async function ed25519Verify(spkiDer, sig, msg){
 
 /* ---------- the checks ---------- */
 async function verify(buf, expectKey){
-  const R = {checks: [], facts: {}, level: "ok"};
+  const R = {checks: [], facts: {}, level: "ok", unchecked: false};
+  /* unchecked = a signature check could not RUN here (browser lacks Ed25519,
+     or the bundle uses an algorithm this page cannot verify). That is not the
+     same as a check running and passing, and a caller must not render it as
+     any kind of pass. */
   const add = (mark, t, d) => {
     R.checks.push({mark, t, d});
     if (mark === "bad") R.level = "bad";
@@ -146,13 +150,14 @@ async function verify(buf, expectKey){
     const okSig = await ed25519Verify(der, unhex(sig.value || ""), digest);
     if (okSig === false) return fail("Tampered: the signature does not match",
       "This file was altered after signing, or it was not signed by the key it carries.");
-    if (okSig === null) add("warn", "Signature could not be checked in this browser",
+    if (okSig === null) { R.unchecked = true; add("warn", "Signature could not be checked in this browser",
       "Your browser does not support Ed25519 checking. Try a current Chrome, Edge, Firefox or " +
-      "Safari, or run air-evidence verify.");
+      "Safari, or run air-evidence verify."); }
     else add("ok", "The summary sheet is signed and unaltered",
       "Its contents match the signature exactly. Whether the underlying records match is the " +
       "next check.");
   } else {
+    R.unchecked = true;
     add("warn", "Signed with a method this page cannot check",
       "Algorithm: " + (sig.alg || "unknown") + ". Run air-evidence verify for a full check.");
   }
@@ -221,9 +226,11 @@ async function verify(buf, expectKey){
     add("ok", "Each decision was individually signed, and every signature checks out",
       `${good} of ${records.length} records verified one by one` +
       (uncheckable ? `; ${uncheckable} used a method this page cannot check.` : "."));
-  else
+  else {
+    R.unchecked = true;
     add("warn", "Decision signatures could not be checked in this browser",
       `${uncheckable} receipt(s) use a method this page cannot verify. Run air-evidence verify.`);
+  }
 
   const scr = records.filter(r => r.screening);
   const reviewer = r => (r.screening || {}).human_reviewer || "";

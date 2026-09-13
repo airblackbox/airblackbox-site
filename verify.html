@@ -139,6 +139,10 @@ function headline(R){
     : "";
   if (bad) return {cls:"bad", h:"Do not rely on this file",
     p:"It failed at least one check below. Either it was altered after it was signed, or it was not produced by the sender it claims."};
+  if (R.unchecked) return {cls:"warn", h:"This browser could not check the signatures",
+    p:"Some signature checks could not run here, so nothing below establishes that this file is " +
+      "authentic — it is not a pass and not a failure. Open this page in a current Chrome, Edge, " +
+      "Firefox or Safari, or run `air-evidence verify` for the full check."};
   if (R.level === "warn") return {cls:"warn", h:"Authentic, with things to ask about",
     p:`The contents are genuine and unaltered. Some assurances are missing — see below.${gapText}`};
   return {cls:"ok", h:"Authentic and complete",
