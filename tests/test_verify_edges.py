@@ -1,5 +1,9 @@
-"""Edge cases for the hero panel, hunting for false passes and broken states."""
-import http.server, socketserver, threading, functools, os, sys, time
+"""Edge cases for the hero panel, hunting for false passes and broken states.
+Run it with:
+    pip install playwright && playwright install chromium
+    python tests/test_verify_edges.py
+"""
+import glob, http.server, socketserver, threading, functools, os, sys, time
 from playwright.sync_api import sync_playwright
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
@@ -24,10 +28,29 @@ crypto.subtle.importKey = function(fmt, key, algo, ext, usages){
 };
 """
 
+
+def launch_chromium(p):
+    """Resolve a Chromium that exists on THIS machine.
+
+    A plain `playwright install chromium` needs no executable_path at all, so
+    that is the default. Some CI images instead pre-provision browsers under
+    PLAYWRIGHT_BROWSERS_PATH, so fall back to that, and let CHROMIUM_PATH
+    override both. Hardcoding one absolute path makes a test pass in exactly
+    one environment and fail everywhere else.
+    """
+    exe = os.environ.get("CHROMIUM_PATH")
+    if not exe:
+        base = os.environ.get("PLAYWRIGHT_BROWSERS_PATH")
+        if base:
+            hits = sorted(glob.glob(os.path.join(base, "chromium-*", "chrome-linux", "chrome")))
+            exe = hits[-1] if hits else None
+    return p.chromium.launch(executable_path=exe) if exe else p.chromium.launch()
+
+
 def main():
     httpd = serve(); base = f"http://127.0.0.1:{PORT}"; failures = []
     with sync_playwright() as p:
-        b = p.chromium.launch(executable_path='/opt/pw-browsers/chromium-1194/chrome-linux/chrome')
+        b = launch_chromium(p)
 
         # --- A. browser that cannot do Ed25519 must NOT be told "VERIFIED" ---
         pg = b.new_page()

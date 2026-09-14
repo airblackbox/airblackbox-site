@@ -4,8 +4,12 @@ The engine was moved out of verify.html into a shared verify-engine.js. That fil
 is the one place canonicalJSON() lives, so a regression here would silently break
 every signature check. These tests run the actual pages in Chromium against the
 real signed sample bundle and against tampered copies of it.
+
+Run it with:
+    pip install playwright && playwright install chromium
+    python tests/test_verify_pages.py
 """
-import http.server, socketserver, threading, functools, shutil, zipfile, io, os, sys, time
+import glob, http.server, socketserver, threading, functools, shutil, zipfile, io, os, sys, time
 from playwright.sync_api import sync_playwright
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
@@ -45,6 +49,25 @@ def serve():
     return httpd
 
 
+
+def launch_chromium(p):
+    """Resolve a Chromium that exists on THIS machine.
+
+    A plain `playwright install chromium` needs no executable_path at all, so
+    that is the default. Some CI images instead pre-provision browsers under
+    PLAYWRIGHT_BROWSERS_PATH, so fall back to that, and let CHROMIUM_PATH
+    override both. Hardcoding one absolute path makes a test pass in exactly
+    one environment and fail everywhere else.
+    """
+    exe = os.environ.get("CHROMIUM_PATH")
+    if not exe:
+        base = os.environ.get("PLAYWRIGHT_BROWSERS_PATH")
+        if base:
+            hits = sorted(glob.glob(os.path.join(base, "chromium-*", "chrome-linux", "chrome")))
+            exe = hits[-1] if hits else None
+    return p.chromium.launch(executable_path=exe) if exe else p.chromium.launch()
+
+
 def main():
     make_tampered()
     httpd = serve()
@@ -52,7 +75,7 @@ def main():
     failures = []
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(executable_path='/opt/pw-browsers/chromium-1194/chrome-linux/chrome')
+        browser = launch_chromium(p)
         page = browser.new_page()
         errors = []          # real JS exceptions
         bad_urls = []        # resources that failed to load, by URL
