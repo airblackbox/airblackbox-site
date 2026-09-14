@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EU AI Act Compliance for AI Agents, Open Source | AIR Blackbox</title>
-    <meta name="description" content="Prove your AI agents are EU AI Act compliant. AIR Blackbox scans your code for gaps across Articles 9-12 and 14-15 and hands you an auditor-ready report in minutes. Open source. Runs locally. Free.">
+    <meta name="description" content="Don't trust our logs - check them yourself. AIR Blackbox records every AI decision in a tamper-evident, externally anchored chain, and anyone you hand the evidence to can verify it in their own browser. Open source, runs locally.">
     <meta name="keywords" content="EU AI Act compliance, AI agent audit trail, tamper-evident logging, AI compliance scanner, Python AI governance, LangChain compliance, CrewAI compliance, OpenAI SDK compliance, Claude Agent SDK, Anthropic compliance, Google ADK, AI risk management, Article 9, Article 10, Article 11, Article 12, Article 14, Article 15, HMAC audit chain, AI agent security, prompt injection detection, PII detection, open source AI compliance, EU AI Act 2027 deadline, air-blackbox, pip install air-blackbox, AI bill of materials, AIBOM, AI observability, MCP server compliance, GDPR AI compliance, AI bias detection, AI fairness scanner, ISO 42001, NIST AI RMF, agent-to-agent compliance, A2A protocol, evidence bundle, pre-commit AI compliance, standards crosswalk">
-    <meta property="og:title" content="Prove your AI agents are EU AI Act compliant | AIR Blackbox">
+    <meta property="og:title" content="Don't trust our logs. Check them yourself. | AIR Blackbox">
     <meta property="og:description" content="Scan your AI agents for EU AI Act gaps and get an auditor-ready report in minutes. Tamper-evident audit trails, 51 checks across Articles 9-12 and 14-15, trust layers for 7 frameworks. Open source, runs locally.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://airblackbox.ai">
     <meta property="og:image" content="https://airblackbox.ai/og-image.svg">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Prove your AI agents are EU AI Act compliant | AIR Blackbox">
+    <meta name="twitter:title" content="Don't trust our logs. Check them yourself. | AIR Blackbox">
     <meta name="twitter:description" content="Scan your code for EU AI Act gaps, get an auditor-ready report in minutes. 51 checks, Articles 9-12 and 14-15. Open source. Runs locally. Free.">
     <link rel="canonical" href="https://airblackbox.ai">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -340,7 +340,44 @@
             .arch-arrow { transform: rotate(90deg); }
             .stats-bar { gap: 1.5rem; }
         }
-    </style>
+    
+        /* ---- hero: live verification panel ---- */
+        .hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:3rem;align-items:start;text-align:left}
+        .hero-copy h1{text-align:left}
+        .hero-note{color:var(--text-dim);font-size:0.8rem;margin-top:0.9rem}
+        .hv{background:var(--ink);color:var(--on-ink);border:1px solid var(--border);
+            font-family:var(--mono);font-size:0.78rem;line-height:1.5;overflow:hidden}
+        .hv-head{display:flex;align-items:center;gap:0.6rem;padding:0.75rem 1rem;
+                 border-bottom:1px solid rgba(243,242,242,0.15);font-size:0.75rem;letter-spacing:0.04em}
+        .hv-dot{width:8px;height:8px;border-radius:50%;background:var(--on-ink-dim);flex:none;
+                animation:hvPulse 1.1s ease-in-out infinite}
+        .hv-dot.ok{background:#3fb950;animation:none}
+        .hv-dot.warn{background:#d29922;animation:none}
+        .hv-dot.bad{background:#ff6b58;animation:none}
+        @keyframes hvPulse{0%,100%{opacity:0.35}50%{opacity:1}}
+        .hv-body{padding:0.5rem 0;min-height:232px}
+        .hv-boot{padding:0.6rem 1rem;color:var(--on-ink-dim)}
+        .hv-row{display:flex;gap:0.6rem;padding:0.42rem 1rem;align-items:baseline;
+                opacity:0;transform:translateY(4px);animation:hvIn 0.32s ease forwards}
+        @keyframes hvIn{to{opacity:1;transform:none}}
+        .hv-mark{flex:none;width:1.1em;font-weight:700}
+        .hv-mark.ok{color:#3fb950}.hv-mark.warn{color:#d29922}.hv-mark.bad{color:#ff6b58}
+        .hv-t{color:var(--on-ink)}
+        .hv-verdict{margin:0.55rem 1rem 0.2rem;padding-top:0.7rem;
+                    border-top:1px solid rgba(243,242,242,0.15);font-weight:700;
+                    opacity:0;animation:hvIn 0.32s ease forwards}
+        .hv-verdict.ok{color:#3fb950}.hv-verdict.warn{color:#d29922}.hv-verdict.bad{color:#ff6b58}
+        .hv-sub{margin:0.3rem 1rem 0.6rem;color:var(--on-ink-dim);font-size:0.73rem;
+                opacity:0;animation:hvIn 0.32s ease forwards}
+        .hv-foot{padding:0.7rem 1rem;border-top:1px solid rgba(243,242,242,0.15);
+                 color:var(--on-ink-dim);font-size:0.72rem}
+        .hv-foot a{color:var(--on-ink);text-decoration:underline}
+        .hv.over{outline:2px solid var(--accent);outline-offset:-2px}
+        @media (max-width:900px){
+          .hero-grid{grid-template-columns:1fr;gap:2rem}
+          .hv-body{min-height:0}
+        }
+</style>
 </head>
 <body>
     <!-- Header -->
@@ -363,15 +400,35 @@
 
     <!-- Hero -->
     <section class="hero"><div class="container">
-        <div class="deadline">&#x26A0; EU AI ACT HIGH-RISK RULES DEFERRED TO DEC 2027 &middot; TRANSPARENCY DUTIES STILL APPLY AUG 2026</div>
-        <h1>Prove your AI agents are<br><span class="highlight">EU AI Act compliant</span>.</h1>
-        <p class="subtitle">The flight recorder for autonomous AI agents. Record, replay, enforce, audit. Scan your code and get an auditor-ready gap report in ten seconds. The tamper-evident record of every AI decision, before regulators, clients, or your board ever ask.</p>
-        <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox && air-blackbox comply --scan . -v').then(()=>this.textContent='Copied!')">pip install air-blackbox && air-blackbox comply --scan . -v</div>
-        <div class="hero-links">
-            <a href="/console/scan" class="btn-primary">Run the Free Gap Scan</a>
-            <a href="/demo/ledger.html" class="btn-secondary">See the Live Proof &#8594;</a>
-            <a href="#how-it-works" class="btn-secondary">See How It Works ↓</a>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <h1>Don&#x27;t trust our logs.<br><span class="highlight">Check them yourself.</span></h1>
+          <p class="subtitle">AIR Blackbox writes every AI decision into a tamper-evident chain and countersigns it with an external timestamp authority &mdash; a key we do not hold. Anyone you hand the evidence to can verify it independently, without an account, without installing anything, and without taking your word for it.</p>
+          <div class="hero-links">
+            <a href="/verify" class="btn-primary">Verify your own file &#8594;</a>
+            <a href="/blog/ai-recruiting-compliance-case-study" class="btn-secondary">450 decisions in production &#8594;</a>
+          </div>
+          <div class="install" onclick="navigator.clipboard.writeText('pip install air-blackbox').then(()=>this.textContent='Copied!')">pip install air-blackbox</div>
+          <p class="hero-note">Open source, Apache 2.0. Runs locally &mdash; scanning never sends your code anywhere.</p>
         </div>
+
+        <div class="hv" id="hv">
+          <div class="hv-head">
+            <span class="hv-dot" id="hvDot"></span>
+            <span id="hvTitle">Verifying a real evidence bundle&hellip;</span>
+          </div>
+          <div class="hv-body" id="hvBody">
+            <div class="hv-boot">Fetching bundle&hellip;</div>
+          </div>
+          <div class="hv-foot">
+            <span id="hvFoot">This runs in <strong>your</strong> browser. Nothing is uploaded.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="deadline">EU AI Act high-risk duties now apply Dec 2027 &middot; transparency duties Aug 2026 &middot; US state ADS rules (Colorado SB&nbsp;26-189, NYC LL144, California FEHA) are live now</div>
+    </div></section>
+
     </div></section>
 
     <!-- The Real Problem -->
@@ -1058,5 +1115,90 @@ client = OpenAI(
         </div>
         <div class="footer-bottom">&#xA9; 2026 AIR Blackbox. Open-source AI governance. Built on OpenTelemetry.</div>
     </div></footer>
+
+<script src="/verify-engine.js"></script>
+<script>
+/* The hero panel runs the real verifier from /verify-engine.js against a real
+   signed bundle. Results are revealed on a stagger for legibility, but every
+   line is the genuine output of the same checks /verify runs - nothing here is
+   a scripted animation of a result we decided in advance. */
+(function(){
+  "use strict";
+  var body=document.getElementById("hvBody"), dot=document.getElementById("hvDot"),
+      title=document.getElementById("hvTitle"), foot=document.getElementById("hvFoot"),
+      panel=document.getElementById("hv");
+  if(!body||typeof verify!=="function") return;
+
+  function esc(s){ return String(s).replace(/[&<>]/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]; }); }
+
+  function paint(R, label){
+    body.innerHTML="";
+    var d=0;
+    R.checks.forEach(function(c){
+      var row=document.createElement("div");
+      row.className="hv-row"; row.style.animationDelay=d+"ms"; d+=110;
+      row.innerHTML='<span class="hv-mark '+c.mark+'">'+
+        (c.mark==="ok"?"&#10003;":c.mark==="warn"?"!":"&#10007;")+
+        '</span><span class="hv-t">'+esc(c.t)+'</span>';
+      body.appendChild(row);
+    });
+    var v=document.createElement("div");
+    v.className="hv-verdict "+R.level; v.style.animationDelay=d+"ms";
+    /* R.unchecked means a signature check could not RUN in this browser. That is
+       neither a pass nor a failure, and must never render as "VERIFIED". */
+    v.textContent = R.level==="bad" ? "TAMPERED - do not rely on this file"
+                  : R.unchecked     ? "COULD NOT VERIFY IN THIS BROWSER"
+                  : R.level==="warn" ? "VERIFIED, with things to ask about"
+                  : "VERIFIED - unaltered since signing";
+    body.appendChild(v);
+    var s=document.createElement("div");
+    s.className="hv-sub"; s.style.animationDelay=(d+110)+"ms";
+    s.textContent = R.unchecked
+      ? "This browser cannot run Ed25519 checks, so nothing here is established either way. "
+        + "Try a current Chrome, Edge, Firefox or Safari - or run air-evidence verify."
+      : label;
+    body.appendChild(s);
+    dot.className="hv-dot "+(R.unchecked ? "warn" : R.level);
+    title.textContent = R.level==="bad" ? "Verification failed"
+                      : R.unchecked ? "Verification could not run"
+                      : "Verification complete";
+    foot.innerHTML='Checked in <strong>your</strong> browser - nothing uploaded. '+
+      '<a href="/verify">Check your own file &#8594;</a>';
+  }
+
+  function fail(msg){
+    body.innerHTML='<div class="hv-boot">'+esc(msg)+'</div>';
+    dot.className="hv-dot"; title.textContent="Evidence verification";
+    foot.innerHTML='<a href="/verify">Open the full verifier &#8594;</a>';
+  }
+
+  async function run(buf, label){
+    body.innerHTML='<div class="hv-boot">Running checks&hellip;</div>';
+    dot.className="hv-dot"; title.textContent="Verifying&hellip;";
+    try{ paint(await verify(buf, ""), label); }
+    catch(e){ fail("Could not check this file: "+(e && e.message ? e.message : e)); }
+  }
+
+  /* Visitors can drop their own bundle straight onto the hero. */
+  ["dragenter","dragover"].forEach(function(ev){
+    panel.addEventListener(ev, function(e){ e.preventDefault(); panel.classList.add("over"); }); });
+  ["dragleave","drop"].forEach(function(ev){
+    panel.addEventListener(ev, function(e){ e.preventDefault(); panel.classList.remove("over"); }); });
+  panel.addEventListener("drop", async function(e){
+    var f=e.dataTransfer && e.dataTransfer.files[0];
+    if(f) run(await f.arrayBuffer(), "Your file, checked locally. Nothing left this browser.");
+  });
+
+  fetch("/demo/sample.air-evidence").then(function(r){
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    return r.arrayBuffer();
+  }).then(function(buf){
+    run(buf, "Sample bundle: 10 decisions about fictional candidates, one deliberately left without a human reviewer so a real finding is visible. Drop your own file here to check it.");
+  }).catch(function(){
+    fail("Drop an .air-evidence file here to verify it in your browser.");
+  });
+})();
+</script>
 </body>
 </html>
