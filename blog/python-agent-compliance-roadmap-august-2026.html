@@ -5,25 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Python AI Agent Compliance Roadmap: August 2026</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<meta name="description" content="Month-by-month roadmap for Python AI agents to hit EU AI Act compliance by August 2, 2026. Baseline assessment to final verification with air-compliance.">
+<meta name="description" content="Month-by-month roadmap for Python AI agents to reach EU AI Act compliance, written for the original August 2, 2026 date; the high-risk dates are now December 2, 2027 and August 2, 2028. Baseline assessment to final verification with air-compliance.">
 <meta name="keywords" content="python ai agent compliance, eu ai act august 2026 deadline, ai compliance roadmap, python ai governance, eu ai act implementation timeline, ai agent compliance checklist 2026">
 <meta property="og:title" content="Python AI Agent Compliance Roadmap: August 2026">
-<meta property="og:description" content="Month-by-month roadmap for Python AI agents to hit EU AI Act compliance by August 2, 2026. Baseline assessment to final verification.">
+<meta property="og:description" content="Month-by-month roadmap for Python AI agents to reach EU AI Act compliance, written for the original August 2, 2026 date; the high-risk dates are now December 2, 2027 and August 2, 2028. Baseline assessment to final verification.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://airblackbox.ai/blog/python-agent-compliance-roadmap-august-2026">
 <link rel="canonical" href="https://airblackbox.ai/blog/python-agent-compliance-roadmap-august-2026">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Python AI Agent Compliance Roadmap: August 2026">
-<meta name="twitter:description" content="Month-by-month roadmap to EU AI Act compliance for Python agents by August 2, 2026.">
+<meta name="twitter:description" content="Month-by-month roadmap to EU AI Act compliance for Python agents, written for the original August 2, 2026 date.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": "Python AI Agent Compliance Roadmap: August 2026",
-  "description": "Month-by-month roadmap for Python AI agents to hit EU AI Act compliance by August 2, 2026. From baseline assessment to final verification.",
+  "description": "Month-by-month roadmap for Python AI agents to reach EU AI Act compliance, written for the original August 2, 2026 date; the high-risk dates are now December 2, 2027 and August 2, 2028. From baseline assessment to final verification.",
   "url": "https://airblackbox.ai/blog/python-agent-compliance-roadmap-august-2026",
   "datePublished": "2026-04-08",
-  "dateModified": "2026-04-08",
+  "dateModified": "2026-09-24",
   "author": {"@type": "Person", "name": "Jason Shotwell", "url": "https://airblackbox.ai"},
   "publisher": {"@type": "Organization", "name": "AIR Blackbox", "url": "https://airblackbox.ai"},
   "mainEntityOfPage": {"@type": "WebPage", "@id": "https://airblackbox.ai/blog/python-agent-compliance-roadmap-august-2026"}
@@ -50,7 +50,7 @@
       "name": "When exactly is the EU AI Act enforcement deadline?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "August 2, 2026. That's 116 days from today (April 8, 2026). After that date, high-risk AI systems deployed in the EU without compliance documentation face enforcement action, including fines up to 6% of global annual revenue."
+        "text": "This roadmap was written for August 2, 2026. Regulation (EU) 2026/1744 has since moved the high-risk obligations to December 2, 2027 (Annex III) and August 2, 2028 (Annex I). After those dates, high-risk AI systems deployed in the EU without compliance documentation face enforcement action."
       }
     },
     {
@@ -133,9 +133,10 @@
 <div class="container">
 
 <h1>Python AI Agent Compliance Roadmap: August 2026</h1>
+<div class="correction-note" style="margin:1.5rem 0 2rem;padding:1rem 1.25rem;border-left:4px solid #ec3013;background:rgba(236,48,19,0.06);font-size:0.95rem;line-height:1.6;text-align:left"><p style="margin:0 0 0.6rem"><strong>Correction, 24 September 2026.</strong> This post was written around a 2 August 2026 date for the high-risk obligations. That date is no longer current: <a href="https://eur-lex.europa.eu/eli/reg/2026/1744/oj">Regulation (EU) 2026/1744</a> moved the Chapter III, Sections 1 to 3 high-risk obligations to <strong>2 December 2027</strong> for Annex III systems and <strong>2 August 2028</strong> for Annex I systems, subject to the regulation's transition rules (see the Commission's <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/faq/when-does-enforcement-start">enforcement FAQ</a>). Countdowns and month-by-month timelines below are left as originally published.</p><p style="margin:0">Where this post said Article 12 requires tamper-evident or cryptographically verifiable logs, that overstated the text. <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-12">Article 12</a> requires automatic logging of relevant events in high-risk AI systems. It does not specify cryptographic signatures, an independent verifier, or a receipt format. Signed, tamper-evident records are a design choice that goes beyond the article; they matter when evidence must survive a dispute with someone who does not trust the operator.</p></div>
 <p class="meta">April 8, 2026 &middot; Jason Shotwell &middot; 14 min read</p>
 
-<p>The EU AI Act enforcement date for high-risk AI systems is August 2, 2026 - 116 days from today. This roadmap breaks down exactly what Python teams need to implement, month by month, to reach <a href="/blog/eu-ai-act-august-2026-deadline">compliance before the deadline</a>. If your team runs autonomous agents (LangChain, CrewAI, AutoGen, or custom), this is your playbook.</p>
+<p>This roadmap was written when the EU AI Act high-risk date was August 2, 2026, 116 days out. Regulation (EU) 2026/1744 has since moved that to December 2, 2027 (Annex III) and August 2, 2028 (Annex I), so the calendar below is a template, not the current countdown. It breaks down exactly what Python teams need to implement, month by month, to reach <a href="/blog/eu-ai-act-august-2026-deadline">compliance before the deadline</a>. If your team runs autonomous agents (LangChain, CrewAI, AutoGen, or custom), this is your playbook.</p>
 
 <h2>Where Most Python AI Teams Stand Today</h2>
 
@@ -144,7 +145,7 @@
 <p>Here's what we see in raw numbers:</p>
 
 <ul>
-  <li><strong>100% lack audit trails</strong> (Article 12) - no tamper-evident logging out of the box</li>
+  <li><strong>100% lack audit trails</strong> (Article 12) - no automatic event logging out of the box, let alone tamper-evident logging</li>
   <li><strong>95% have no human oversight mechanisms</strong> (Article 14) - agents run fully autonomous</li>
   <li><strong>90% lack technical documentation</strong> (Article 11) - no model cards or system descriptions</li>
   <li><strong>85% have no risk management plan</strong> (Article 9) - no documented failure modes or mitigations</li>
@@ -545,7 +546,7 @@ crew = air_trust.trust(crew)
 
 <h2>What Happens If You Miss the Deadline</h2>
 
-<p>August 2, 2026 is hard enforcement. After that, the EU AI Act applies. High-risk systems deployed without compliance documentation face:</p>
+<p>The high-risk obligations apply from December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems (Regulation (EU) 2026/1744). After those dates, high-risk systems deployed without compliance documentation face:</p>
 
 <ul>
   <li><strong>Administrative fines:</strong> Up to 6% of global annual revenue or €30 million, whichever is higher. For a €500M company, that's €30M. For a €10M startup, that's €600k.</li>
@@ -562,7 +563,7 @@ crew = air_trust.trust(crew)
 <h2>FAQ</h2>
 
 <h3>When exactly is the enforcement deadline?</h3>
-<p>August 2, 2026. That's 116 days from today (April 8, 2026). The EU AI Act Articles 9-15 apply to all high-risk AI systems deployed in the EU starting that date. If your agent is deployed before that date with compliance documentation, you're grandfathered in with a brief transition period. If you deploy after without documentation, you're in violation immediately.</p>
+<p>When this was written (April 8, 2026), the date was August 2, 2026. Regulation (EU) 2026/1744 has since moved it: Articles 9-15 apply to Annex III high-risk systems from December 2, 2027 and to Annex I systems from August 2, 2028, subject to the regulation's transition rules. The work in this roadmap is the same; the deadline moved.</p>
 
 <h3>What counts as a high-risk AI system?</h3>
 <p>Autonomous AI agents used for real-world decision-making in specific use cases listed in <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Annex III of the EU AI Act</a>. That includes recruitment, criminal justice, benefits/entitlements, critical infrastructure, education, and content moderation. If your Python agent can take action without human approval at each step, it's almost certainly high-risk.</p>
@@ -593,9 +594,9 @@ crew = air_trust.trust(crew)
 <footer>
   <p><strong>Related articles:</strong></p>
   <p style="margin-top: 8px;">
-    <a href="/blog/eu-ai-act-august-2026-deadline">EU AI Act August 2, 2026 Deadline: What Developers Need to Know</a><br>
+    <a href="/blog/eu-ai-act-august-2026-deadline">EU AI Act High-Risk Deadline: What Developers Need to Know</a><br>
     <a href="/blog/eu-ai-act-compliance-checklist">EU AI Act Compliance Checklist for Python Developers</a><br>
-    <a href="/blog/6-technical-checks">The 6 Technical Checks Your AI System Needs Before August 2026</a><br>
+    <a href="/blog/6-technical-checks">The 6 Technical Checks Your AI System Needs Before the EU AI Act High-Risk Deadline</a><br>
     <a href="/blog/audit-trails-ai-agents-python">Audit Trails for AI Agents: Python HMAC-SHA256 Guide</a><br>
     <a href="/blog/langchain-eu-ai-act-compliance">LangChain EU AI Act Compliance Guide</a><br>
     <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">EU AI Act Articles 9-15: Technical Requirements Explained</a><br>

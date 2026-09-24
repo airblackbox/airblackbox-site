@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>What Does Article 11 Require for AI Technical Documentation? Python Guide</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <meta name="description" content="What does EU AI Act Article 11 require for technical documentation? Annex IV checklist, model card Python code, documentation-as-code pipeline, and cross-references to Articles 9-15 for compliance before August 2026.">
+    <meta name="description" content="What does EU AI Act Article 11 require for technical documentation? Annex IV checklist, model card Python code, documentation-as-code pipeline, and cross-references to Articles 9-15 for compliance before the high-risk obligations apply.">
     <meta name="keywords" content="article 11 eu ai act, technical documentation ai systems, ai system documentation requirements, eu ai act documentation, model card python, annex iv checklist, documentation as code, ai compliance automation">
     <meta name="author" content="Jason Shotwell">
     <link rel="canonical" href="https://airblackbox.ai/blog/article-11-technical-documentation-ai-systems">
@@ -35,7 +35,7 @@
       "description": "What does EU AI Act Article 11 require for technical documentation? Annex IV checklist, model card Python code, documentation-as-code pipeline, and cross-references to Articles 9-15.",
       "url": "https://airblackbox.ai/blog/article-11-technical-documentation-ai-systems",
       "datePublished": "2026-04-08",
-      "dateModified": "2026-04-17",
+      "dateModified": "2026-09-24",
       "author": {
         "@type": "Person",
         "name": "Jason Shotwell",
@@ -107,7 +107,7 @@
           "name": "When should I start building Article 11 documentation?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "During development, not after deployment. Document during the design phase, update as you build, integrate generation into your CI/CD pipeline, and maintain it throughout the system's lifecycle. The August 2, 2026 enforcement deadline applies to all high-risk AI systems deployed after that date."
+            "text": "During development, not after deployment. Document during the design phase, update as you build, integrate generation into your CI/CD pipeline, and maintain it throughout the system's lifecycle. The high-risk obligations apply from December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems (Regulation (EU) 2026/1744)."
           }
         }
       ]
@@ -247,7 +247,7 @@
 <p class="meta">April 8, 2026 &middot; Jason Shotwell &middot; 14 min read</p>
 <p class="last-updated">Last updated: April 17, 2026</p>
 
-<p><strong>Article 11 of the EU AI Act requires providers of high-risk AI systems to create and maintain technical documentation that demonstrates compliance before the system is placed on the market.</strong> This is not a Word document with outdated screenshots. It is a living record of system design, risk management, testing results, and post-deployment behavior that regulators can audit. If you ship AI in the EU after <a href="/blog/eu-ai-act-august-2026-deadline">August 2, 2026</a>, you need this documentation locked in before launch.</p>
+<p><strong>Article 11 of the EU AI Act requires providers of high-risk AI systems to create and maintain technical documentation that demonstrates compliance before the system is placed on the market.</strong> This is not a Word document with outdated screenshots. It is a living record of system design, risk management, testing results, and post-deployment behavior that regulators can audit. If you ship high-risk AI in the EU after <a href="/blog/eu-ai-act-august-2026-deadline">December 2, 2027 (Annex III) or August 2, 2028 (Annex I)</a>, you need this documentation locked in before launch.</p>
 
 <p>After building documentation pipelines for three compliance scanning tools, the biggest lesson is this: teams that treat documentation as code pass audits. Teams that treat it as a quarterly chore fail. This guide walks through what Article 11 actually requires, what Annex IV spells out in detail, and how to build documentation programmatically in Python so it stays synchronized with your actual system.</p>
 
@@ -302,7 +302,7 @@
   </tbody>
 </table>
 
-<p>Each item should be updated during development and maintained throughout the system's operational lifetime. The <a href="/blog/eu-ai-act-august-2026-deadline">August 2026 enforcement deadline</a> applies to systems deployed after that date.</p>
+<p>Each item should be updated during development and maintained throughout the system's operational lifetime. The <a href="/blog/eu-ai-act-august-2026-deadline">high-risk obligations</a> apply from December 2, 2027 (Annex III) and August 2, 2028 (Annex I).</p>
 
 <h2>How Do You Build a Model Card in Python?</h2>
 
@@ -534,7 +534,7 @@ tech_file.to_pdf(
 
 <h2>What Are the Most Common Documentation Gaps?</h2>
 
-<p>Five documentation gaps cause the majority of Article 11 audit failures. Each has a straightforward fix, but you need to address them before the <a href="/blog/eu-ai-act-august-2026-deadline">August 2026 deadline</a> - not after a regulator flags them.</p>
+<p>Five documentation gaps cause the majority of Article 11 audit failures. Each has a straightforward fix, but you need to address them before the <a href="/blog/eu-ai-act-august-2026-deadline">high-risk obligations apply</a> - not after a regulator flags them.</p>
 
 <p><strong>No versioning.</strong> You update your model, but the technical file is still v1.0 from last year. Fix: link version numbers to Git tags and generate documentation per release.</p>
 
@@ -573,7 +573,7 @@ tech_file.to_pdf(
 <div class="faq-item">
   <button class="faq-question">When should I start writing Article 11 documentation?</button>
   <div class="faq-answer">
-    <p>During development, not after deployment. Document during the design phase, update as you build, integrate documentation generation into your CI/CD pipeline so it stays current, and maintain it throughout the system's lifecycle. The <a href="/blog/eu-ai-act-august-2026-deadline">August 2, 2026 enforcement deadline</a> applies to all high-risk AI systems deployed after that date.</p>
+    <p>During development, not after deployment. Document during the design phase, update as you build, integrate documentation generation into your CI/CD pipeline so it stays current, and maintain it throughout the system's lifecycle. The <a href="/blog/eu-ai-act-august-2026-deadline">high-risk obligations</a> apply from December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems (Regulation (EU) 2026/1744).</p>
   </div>
 </div>
 
@@ -610,8 +610,8 @@ tech_file.to_pdf(
     <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">What Do EU AI Act Articles 9-15 Require in Your Code?</a><br>
     <a href="/blog/eu-ai-act-compliance-checklist">EU AI Act Compliance Checklist for Python Developers</a><br>
     <a href="/blog/audit-trails-ai-agents-python">Audit Trails for AI Agents: HMAC-SHA256 Python Guide</a><br>
-    <a href="/blog/eu-ai-act-august-2026-deadline">EU AI Act August 2026 Deadline: What Developers Need to Do</a><br>
-    <a href="/blog/6-technical-checks">The 6 Technical Checks Your AI System Needs Before August 2026</a><br>
+    <a href="/blog/eu-ai-act-august-2026-deadline">EU AI Act High-Risk Deadline: What Developers Need to Do</a><br>
+    <a href="/blog/6-technical-checks">The 6 Technical Checks Your AI System Needs Before the EU AI Act High-Risk Deadline</a><br>
     <a href="/blog/langchain-eu-ai-act-compliance">LangChain EU AI Act Compliance Guide</a>
   </p>
   <p style="margin-top: 20px;">&copy; 2026 AIR Blackbox &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>

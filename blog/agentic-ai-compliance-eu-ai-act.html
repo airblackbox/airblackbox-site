@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Agentic AI systems face strict compliance requirements under the EU AI Act. Learn what auditors check, how to build tamper-evident audit trails, and how to scan your Python agent for compliance gaps before the August 2026 deadline.">
+    <meta name="description" content="Agentic AI systems face strict compliance requirements under the EU AI Act. Learn what auditors check, how to build tamper-evident audit trails, and how to scan your Python agent for compliance gaps before the high-risk obligations apply.">
     <meta name="keywords" content="agentic ai, ai compliance, eu ai act, ai governance, ai risk management, ai audit, agentic ai compliance, ai governance tools, ai agent compliance">
     <meta name="author" content="Jason Shotwell">
     <link rel="canonical" href="https://airblackbox.ai/blog/agentic-ai-compliance-eu-ai-act">
 
     <!-- OG Tags -->
     <meta property="og:title" content="How Do You Audit an Agentic AI System? A Compliance Guide for 2026">
-    <meta property="og:description" content="Agentic AI systems must comply with EU AI Act Articles 9-15 by August 2, 2026. This guide covers what auditors check and how to prepare your Python agents.">
+    <meta property="og:description" content="Agentic AI systems must comply with EU AI Act Articles 9-15 from December 2, 2027 (Annex III) or August 2, 2028 (Annex I). This guide covers what auditors check and how to prepare your Python agents.">
     <meta property="og:url" content="https://airblackbox.ai/blog/agentic-ai-compliance-eu-ai-act">
     <meta property="og:type" content="article">
     <meta property="og:image" content="https://airblackbox.ai/og-image.svg">
@@ -33,7 +33,7 @@
       "description": "Agentic AI systems face strict compliance requirements under the EU AI Act. Learn what auditors check, how to build tamper-evident audit trails, and how to scan your Python agent for compliance gaps.",
       "image": "https://airblackbox.ai/og-image.svg",
       "datePublished": "2026-04-17",
-      "dateModified": "2026-04-17",
+      "dateModified": "2026-09-24",
       "author": {
         "@type": "Person",
         "name": "Jason Shotwell",
@@ -66,7 +66,7 @@
           "name": "What is agentic AI compliance?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Agentic AI compliance means ensuring that autonomous AI agents meet regulatory requirements for record-keeping, transparency, human oversight, and risk management. Under the EU AI Act, agentic AI systems that make decisions affecting health, finance, employment, or insurance are classified as high-risk and must maintain tamper-evident audit trails, provide human override mechanisms, and document their capabilities and limitations."
+            "text": "Agentic AI compliance means ensuring that autonomous AI agents meet regulatory requirements for record-keeping, transparency, human oversight, and risk management. Under the EU AI Act, agentic AI systems that make decisions affecting health, finance, employment, or insurance are classified as high-risk and must automatically log relevant events, provide human override mechanisms, and document their capabilities and limitations."
           }
         },
         {
@@ -82,7 +82,7 @@
           "name": "What is the EU AI Act deadline for high-risk AI systems?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The EU AI Act enforcement deadline for high-risk AI systems is August 2, 2026. After this date, organizations deploying high-risk AI systems without compliant audit trails, risk management processes, and transparency documentation face fines up to 35 million euros or 7% of global annual turnover, whichever is higher."
+            "text": "The EU AI Act high-risk obligations apply from December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems (Regulation (EU) 2026/1744). After those dates, organizations deploying high-risk AI systems without compliant audit trails, risk management processes, and transparency documentation face fines up to 35 million euros or 7% of global annual turnover, whichever is higher."
           }
         },
         {
@@ -525,16 +525,17 @@
                 <span>By <a href="https://github.com/jshotwell">Jason Shotwell</a></span>
             </div>
             <h1>How Do You Audit an Agentic AI System? A Compliance Guide for 2026</h1>
-            <p class="subtitle">Agentic AI is the fastest-growing category in software (500K monthly searches, up 900% year over year). The EU AI Act is the fastest-approaching compliance deadline. This guide covers where those two collide and what to do about it before August 2, 2026.</p>
+<div class="correction-note" style="margin:1.5rem 0 2rem;padding:1rem 1.25rem;border-left:4px solid #ec3013;background:rgba(236,48,19,0.06);font-size:0.95rem;line-height:1.6;text-align:left"><p style="margin:0 0 0.6rem"><strong>Correction, 24 September 2026.</strong> This post was written around a 2 August 2026 date for the high-risk obligations. That date is no longer current: <a href="https://eur-lex.europa.eu/eli/reg/2026/1744/oj">Regulation (EU) 2026/1744</a> moved the Chapter III, Sections 1 to 3 high-risk obligations to <strong>2 December 2027</strong> for Annex III systems and <strong>2 August 2028</strong> for Annex I systems, subject to the regulation's transition rules (see the Commission's <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/faq/when-does-enforcement-start">enforcement FAQ</a>). Countdowns and month-by-month timelines below are left as originally published.</p><p style="margin:0">Where this post said Article 12 requires tamper-evident or cryptographically verifiable logs, that overstated the text. <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-12">Article 12</a> requires automatic logging of relevant events in high-risk AI systems. It does not specify cryptographic signatures, an independent verifier, or a receipt format. Signed, tamper-evident records are a design choice that goes beyond the article; they matter when evidence must survive a dispute with someone who does not trust the operator.</p></div>
+            <p class="subtitle">Agentic AI is the fastest-growing category in software (500K monthly searches, up 900% year over year). The EU AI Act is the fastest-approaching compliance deadline. This guide covers where those two collide and what to do about it before the high-risk obligations apply (December 2, 2027 for Annex III systems).</p>
         </header>
 
         <!-- Key Takeaways for AEO extraction -->
         <div class="key-takeaways">
             <h3>Key Takeaways</h3>
             <ul>
-                <li>Agentic AI systems that make decisions in healthcare, finance, HR, or insurance are classified as high-risk under the EU AI Act and must comply by <strong>August 2, 2026</strong>.</li>
+                <li>Agentic AI systems that make decisions in healthcare, finance, HR, or insurance are classified as high-risk under the EU AI Act and must comply from <strong>December 2, 2027</strong> (Annex I systems: August 2, 2028), under Regulation (EU) 2026/1744.</li>
                 <li>Auditors will check three things: agent identity continuity, behavioral reproducibility, and decision transparency.</li>
-                <li>Standard application logs do not satisfy Article 12. You need tamper-evident, HMAC-chained audit trails.</li>
+                <li>Article 12 requires automatic logging of relevant events, not a specific format. Tamper-evident, HMAC-chained audit trails go beyond it, and are what make the logs hold up when someone disputes them.</li>
                 <li>You can scan your Python AI project today with <code>pip install air-blackbox && air-blackbox comply --scan . -v</code> to find gaps across all seven articles.</li>
             </ul>
         </div>
@@ -557,7 +558,7 @@
             <p>Yes. The EU AI Act applies to any AI system deployed in the EU or affecting EU citizens, regardless of where the developer is based. Agentic AI systems that operate in Annex III domains are classified as high-risk and face the strictest requirements. This includes agents that screen job applicants, assess creditworthiness, triage medical symptoms, calculate insurance premiums, or make any decision that materially affects a person's rights or opportunities.</p>
 
             <div class="deadline-box">
-                <p><strong>Deadline: August 2, 2026.</strong> After this date, deploying a high-risk AI system without compliant audit trails, risk management processes, and transparency documentation carries fines up to 35 million euros or 7% of global annual turnover.</p>
+                <p><strong>Dates: December 2, 2027 for Annex III systems, August 2, 2028 for Annex I systems (Regulation (EU) 2026/1744).</strong> After those dates, deploying a high-risk AI system without compliant audit trails, risk management processes, and transparency documentation carries fines up to 35 million euros or 7% of global annual turnover.</p>
             </div>
 
             <p>The regulation does not use the word "agent" explicitly. It uses "AI system" broadly, defined as a machine-based system that generates outputs such as predictions, recommendations, decisions, or content. An autonomous agent that calls APIs, writes to databases, and makes sequential decisions easily meets this definition.</p>
@@ -591,7 +592,7 @@
                     <tr>
                         <td>Article 12</td>
                         <td>Record-keeping</td>
-                        <td>Every decision in the agent loop must be recorded in tamper-evident logs for the system's lifetime.</td>
+                        <td>Relevant events in the agent loop must be automatically logged over the system's lifetime. Tamper-evidence is not specified by the article.</td>
                     </tr>
                     <tr>
                         <td>Article 13</td>
@@ -686,16 +687,16 @@
         <section>
             <h2>Why Do Standard Logs Fail EU AI Act Compliance?</h2>
 
-            <p>Standard application logs (Datadog, Splunk, CloudWatch) do not satisfy Article 12 because they lack three properties the regulation requires: tamper-evidence, completeness, and structured auditability.</p>
+            <p>Standard application logs (Datadog, Splunk, CloudWatch) technically meet Article 12's wording if they record the relevant events. What they lack is what makes those records useful in a dispute: tamper-evidence, completeness, and structured auditability. None of the three is named in Article 12; they are our recommendation, not the regulation's requirement.</p>
 
-            <p><strong>Tamper-evidence:</strong> Anyone with write access to a log store can alter a record. Article 12 requires logs that are resistant to modification. HMAC-SHA256 chains solve this: each record's hash includes the previous record's hash, so altering one record breaks every record after it.</p>
+            <p><strong>Tamper-evidence:</strong> Anyone with write access to a log store can alter a record. Article 12 does not require logs to be resistant to modification, but a regulator or opposing counsel will ask whether yours are. HMAC-SHA256 chains answer that: each record's hash includes the previous record's hash, so altering one record breaks every record after it.</p>
 
             <p><strong>Completeness:</strong> Most logging captures responses but misses the full prompt context, tool calls, intermediate reasoning, and memory state. An auditor reconstructing an incident needs the complete episode, not a status code.</p>
 
             <p><strong>Structured auditability:</strong> Raw log lines in JSON do not map to regulatory articles. An auditor needs to know which log entries satisfy which requirement. Evidence bundles that map findings to specific article clauses do this automatically.</p>
 
             <div class="highlight">
-                <p><strong>What Article 12 actually requires:</strong> "High-risk AI systems shall technically allow for the automatic recording of events (logs) over the lifetime of the system." The logs must be tamper-resistant, time-stamped, and structured enough for a conformity assessment body to verify compliance.</p>
+                <p><strong>What Article 12 actually requires:</strong> "High-risk AI systems shall technically allow for the automatic recording of events (logs) over the lifetime of the system." That is the requirement: automatic recording of relevant events. Article 12 does not specify cryptographic signatures, an independent verifier, or a receipt format. Time-stamped, tamper-resistant, structured logs are how we recommend meeting it, not what the text demands.</p>
             </div>
         </section>
 
@@ -799,7 +800,7 @@ air-blackbox comply --scan . -v</code></pre>
                     <span class="faq-toggle">+</span>
                 </div>
                 <div class="faq-answer">
-                    <p>Agentic AI compliance means ensuring that autonomous AI agents meet regulatory requirements for record-keeping, transparency, human oversight, and risk management. Under the EU AI Act, agentic AI systems in high-risk domains must maintain tamper-evident audit trails, provide human override mechanisms, and document their capabilities and limitations.</p>
+                    <p>Agentic AI compliance means ensuring that autonomous AI agents meet regulatory requirements for record-keeping, transparency, human oversight, and risk management. Under the EU AI Act, agentic AI systems in high-risk domains must automatically log relevant events, provide human override mechanisms, and document their capabilities and limitations.</p>
                 </div>
             </div>
 
@@ -819,7 +820,7 @@ air-blackbox comply --scan . -v</code></pre>
                     <span class="faq-toggle">+</span>
                 </div>
                 <div class="faq-answer">
-                    <p>The enforcement deadline for high-risk AI systems is August 2, 2026. After this date, organizations face fines up to 35 million euros or 7% of global annual turnover for non-compliance.</p>
+                    <p>The high-risk obligations apply from December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems (Regulation (EU) 2026/1744). After those dates, organizations face fines up to 35 million euros or 7% of global annual turnover for non-compliance.</p>
                 </div>
             </div>
 

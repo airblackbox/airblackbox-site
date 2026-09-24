@@ -28,7 +28,7 @@
   "author": {"@type": "Person", "name": "Jason Shotwell"},
   "publisher": {"@type": "Organization", "name": "AIR Blackbox", "url": "https://airblackbox.ai"},
   "datePublished": "2026-03-30",
-  "dateModified": "2026-03-30",
+  "dateModified": "2026-09-24",
   "mainEntityOfPage": "https://airblackbox.ai/blog/eu-ai-act-compliance-tools-compared",
   "keywords": ["EU AI Act", "compliance scanner", "open source", "Python", "AI governance", "LangChain", "CrewAI", "OpenAI"]
 }
@@ -78,7 +78,7 @@
       "name": "When is the EU AI Act compliance deadline for high-risk AI systems?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "The EU AI Act high-risk AI system requirements take effect on August 2, 2026. Organizations deploying high-risk AI systems in the EU must demonstrate compliance with Articles 9 through 15 covering risk management, data governance, technical documentation, record-keeping, human oversight, and robustness by this date. Penalties reach up to 35 million euros or 7% of global annual turnover."
+        "text": "The EU AI Act high-risk AI system requirements take effect on December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems (Regulation (EU) 2026/1744). Organizations deploying high-risk AI systems in the EU must demonstrate compliance with Articles 9 through 15 covering risk management, data governance, technical documentation, record-keeping, human oversight, and robustness by those dates. Penalties reach up to 35 million euros or 7% of global annual turnover."
       }
     }
   ]
@@ -137,9 +137,10 @@
 <div class="container">
 
 <h1>EU AI Act Compliance Tools Compared: Open-Source Scanners for Python Developers (2026)</h1>
+<div class="correction-note" style="margin:1.5rem 0 2rem;padding:1rem 1.25rem;border-left:4px solid #ec3013;background:rgba(236,48,19,0.06);font-size:0.95rem;line-height:1.6;text-align:left"><p style="margin:0 0 0.6rem"><strong>Correction, 24 September 2026.</strong> This post was written around a 2 August 2026 date for the high-risk obligations. That date is no longer current: <a href="https://eur-lex.europa.eu/eli/reg/2026/1744/oj">Regulation (EU) 2026/1744</a> moved the Chapter III, Sections 1 to 3 high-risk obligations to <strong>2 December 2027</strong> for Annex III systems and <strong>2 August 2028</strong> for Annex I systems, subject to the regulation's transition rules (see the Commission's <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/faq/when-does-enforcement-start">enforcement FAQ</a>). Countdowns and month-by-month timelines below are left as originally published.</p></div>
 <p class="meta">March 30, 2026 &middot; Jason Shotwell &middot; 15 min read</p>
 
-<p>The EU AI Act high-risk deadline lands on August 2, 2026. If you deploy AI systems in the European Union, your code needs to prove compliance with Articles 9 through 15 covering risk management, data governance, technical documentation, record-keeping, human oversight, and robustness. Penalties for non-compliance reach up to 35 million euros or 7 percent of global annual turnover, whichever is higher.</p>
+<p>The EU AI Act high-risk obligations apply from December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems (Regulation (EU) 2026/1744). If you deploy AI systems in the European Union, your code needs to prove compliance with Articles 9 through 15 covering risk management, data governance, technical documentation, record-keeping, human oversight, and robustness. Penalties for non-compliance reach up to 35 million euros or 7 percent of global annual turnover, whichever is higher.</p>
 
 <p>Enterprise governance platforms from Credo AI, Holistic AI, and Vanta solve this for large organizations willing to spend $50,000 or more per year. But most development teams building with Python AI frameworks need something they can install today, run locally, and integrate into their existing CI/CD pipelines without sending proprietary code to a third-party cloud.</p>
 
@@ -394,7 +395,7 @@ pip install air-blackbox</code></pre>
 
 <p>For CI/CD integration, add the scanner to your GitHub Actions workflow so every pull request gets a compliance check before merge. For framework-specific compliance, install the trust layer package for your framework and it hooks in automatically.</p>
 
-<p>The August 2, 2026 deadline is less than five months away. The time to start scanning is now.</p>
+<p>The high-risk dates are December 2, 2027 and August 2, 2028, and the work does not get smaller by waiting. The time to start scanning is now.</p>
 
 <div class="cta-box">
 <h3>Resources</h3>
