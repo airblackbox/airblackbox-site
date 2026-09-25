@@ -10,7 +10,7 @@
 
     <!-- Open Graph Tags -->
     <meta property="og:title" content="EU AI Act High-Risk Deadline: What Developers Actually Need to Do">
-    <meta property="og:description" content="Complete guide to EU AI Act enforcement date. Learn the timeline, technical requirements, and 5-month action plan for compliance.">
+    <meta property="og:description" content="Complete guide to EU AI Act enforcement date. Learn the timeline, technical requirements, and an action plan for compliance.">
     <meta property="og:image" content="https://airblackbox.ai/og-image.svg">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://airblackbox.ai/blog/eu-ai-act-august-2026-deadline">
@@ -18,7 +18,7 @@
     <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="EU AI Act High-Risk Deadline: What Developers Actually Need to Do">
-    <meta name="twitter:description" content="Complete guide to EU AI Act enforcement date. Learn the timeline, technical requirements, and 5-month action plan for compliance.">
+    <meta name="twitter:description" content="Complete guide to EU AI Act enforcement date. Learn the timeline, technical requirements, and an action plan for compliance.">
     <meta name="twitter:image" content="https://airblackbox.ai/og-image.svg">
 
     <!-- Structured Data -->
@@ -512,8 +512,8 @@
     <header>
         <div class="container">
             <h1>EU AI Act High-Risk Deadline: What Developers Actually Need to Do</h1>
-<div class="correction-note" style="margin:1.5rem 0 2rem;padding:1rem 1.25rem;border-left:4px solid #ec3013;background:rgba(236,48,19,0.06);font-size:0.95rem;line-height:1.6;text-align:left"><p style="margin:0 0 0.6rem"><strong>Correction, 24 September 2026.</strong> This post was written around a 2 August 2026 date for the high-risk obligations. That date is no longer current: <a href="https://eur-lex.europa.eu/eli/reg/2026/1744/oj">Regulation (EU) 2026/1744</a> moved the Chapter III, Sections 1 to 3 high-risk obligations to <strong>2 December 2027</strong> for Annex III systems and <strong>2 August 2028</strong> for Annex I systems, subject to the regulation's transition rules (see the Commission's <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/faq/when-does-enforcement-start">enforcement FAQ</a>). Countdowns and month-by-month timelines below are left as originally published.</p></div>
-            <p class="subtitle">A practical guide to enforcement date, timeline, technical requirements, and your 5-month action plan</p>
+<div class="correction-note" style="margin:1.5rem 0 2rem;padding:1rem 1.25rem;border-left:4px solid #ec3013;background:rgba(236,48,19,0.06);font-size:0.95rem;line-height:1.6;text-align:left"><p style="margin:0 0 0.6rem"><strong>Correction, 24 September 2026.</strong> This post was written around a 2 August 2026 date for the high-risk obligations. That date is no longer current: <a href="https://eur-lex.europa.eu/eli/reg/2026/1744/oj">Regulation (EU) 2026/1744</a> moved the Chapter III, Sections 1 to 3 high-risk obligations to <strong>2 December 2027</strong> for Annex III systems and <strong>2 August 2028</strong> for Annex I systems, subject to the regulation's transition rules (see the Commission's <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/faq/when-does-enforcement-start">enforcement FAQ</a>). Countdowns and month-by-month plans below were written for the original date.</p></div>
+            <p class="subtitle">A practical guide to enforcement date, timeline, technical requirements, and your action plan</p>
             <div class="meta">
                 <span>Published: March 28, 2026</span>
                 <span>Reading time: 12 minutes</span>
@@ -528,11 +528,11 @@
             <section id="introduction">
                 <h2>Introduction: When It Gets Real</h2>
 
-                <p>This post was written for August 2, 2026. Regulation (EU) 2026/1744 has since moved the high-risk obligations to December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems, subject to the regulation's transition rules. Those are the dates when the AI Act's enforcement mechanism activates for high-risk AI systems. From then, competent authorities across EU member states will have the power to conduct market surveillance, issue enforcement orders, and impose fines of up to 35 million EUR or 7% of annual global revenue, whichever is higher.</p>
+                <p>This post was written for August 2, 2026. Regulation (EU) 2026/1744 has since moved the high-risk obligations to December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems, subject to the regulation's transition rules. Those are the dates when the AI Act's enforcement mechanism activates for high-risk AI systems. From then, competent authorities across EU member states will have the power to conduct market surveillance, issue enforcement orders, and impose fines of up to 15 million EUR or 3% of annual global revenue for high-risk obligations, whichever is higher (Article 99(4); the 35 million EUR / 7% tier is for prohibited practices).</p>
 
-                <p>For engineering teams that deploy AI systems in Europe or have European users, this is the moment when compliance stops being optional. If your AI system falls into the high-risk category under Articles 6 and Annex III of the regulation, you must have implemented technical controls, documentation, risk management processes, and audit trails by this date.</p>
+                <p>For engineering teams that deploy AI systems in Europe or have European users, this is the moment when compliance stops being optional. If your AI system falls into the high-risk category under Articles 6 and Annex III of the regulation, you must have implemented technical controls, documentation, risk management processes, and audit trails by the date that applies to you.</p>
 
-                <p>This guide is written for developers and technical teams who have read enough regulatory summaries and need to understand what enforcement actually means. We break down the timeline, explain the technical requirements in terms that map to code and infrastructure, and give you a realistic action plan for the next five months.</p>
+                <p>This guide is written for developers and technical teams who have read enough regulatory summaries and need to understand what enforcement actually means. We break down the timeline, explain the technical requirements in terms that map to code and infrastructure, and give you a realistic action plan (written for the original five-month window; the sequence still holds).</p>
 
                 <div class="important-box">
                     <strong>Why the high-risk date matters:</strong> December 2, 2027 (Annex III) and August 2, 2028 (Annex I) are when Articles 9 through 15 of the EU AI Act become enforceable. These articles define the concrete technical, organizational, and governance requirements for high-risk AI systems. Non-compliance exposes you to regulatory action, not just reputational risk.
@@ -563,10 +563,18 @@
                     </div>
 
                     <div class="timeline-item">
+                        <div class="timeline-date">August 2, 2026</div>
+                        <div class="timeline-content">
+                            <strong>General Application and Article 50 Transparency Obligations</strong>
+                            <p style="margin-top: 5px;">Most of the Act applies from this date, including the Article 50 transparency duties (telling people they are interacting with an AI system, labelling AI-generated content). This was also the original date for the high-risk obligations before Regulation (EU) 2026/1744 moved them.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
                         <div class="timeline-date">December 2, 2027</div>
                         <div class="timeline-content">
                             <strong>Annex III High-Risk AI System Requirements Become Enforceable (Articles 9-15)</strong>
-                            <p style="margin-top: 5px;">This is the enforcement date covered in this guide (originally August 2, 2026; moved by Regulation (EU) 2026/1744). Annex III high-risk AI systems must comply with technical and organizational requirements: risk assessment, logging, human oversight, transparency, testing, documentation, and continuous monitoring. Market surveillance authorities gain full enforcement power. Competent national authorities can fine non-compliant providers up to 35 million EUR or 7% of global revenue.</p>
+                            <p style="margin-top: 5px;">This is the enforcement date covered in this guide (originally August 2, 2026; moved by Regulation (EU) 2026/1744). Annex III high-risk AI systems must comply with technical and organizational requirements: risk assessment, logging, human oversight, transparency, testing, documentation, and continuous monitoring. Market surveillance authorities gain full enforcement power. Competent national authorities can fine non-compliant providers up to 15 million EUR or 3% of global revenue (Article 99(4)).</p>
                         </div>
                     </div>
 
@@ -604,14 +612,14 @@
 
                 <h3>Financial Penalties</h3>
 
-                <p>The EU AI Act provides two tiers of fines for high-risk AI system violations:</p>
+                <p>Article 99 sets three tiers of fines. High-risk AI system violations fall in the middle one:</p>
 
                 <div class="highlight-box">
-                    <strong>Tier 1 (Articles 6-15):</strong> Up to 35 million EUR or up to 7% of annual global revenue for the preceding fiscal year, whichever is higher. This applies to violations of the core technical and organizational requirements.<br><br>
-                    <strong>Tier 2 (Other articles, including documentation and transparency):</strong> Up to 15 million EUR or up to 3% of annual global revenue, whichever is higher.
+                    <strong>Article 99(3), prohibited practices (Article 5):</strong> Up to 35 million EUR or up to 7% of annual global revenue for the preceding fiscal year, whichever is higher.<br><br>
+                    <strong>Article 99(4), high-risk and other operator obligations (including Articles 9-15):</strong> Up to 15 million EUR or up to 3% of annual global revenue, whichever is higher. Supplying incorrect or misleading information to authorities (Article 99(5)) is up to 7.5 million EUR or 1%.
                 </div>
 
-                <p>For context, 7% of global revenue is significant. A company with 1 billion EUR in annual revenue faces fines up to 70 million EUR for high-risk AI compliance violations. Authorities will pursue multiple violations simultaneously (missing documentation, inadequate testing, no logging, absent human oversight), compounding the financial exposure.</p>
+                <p>For context, 3% of global revenue is significant. A company with 1 billion EUR in annual revenue faces fines up to 30 million EUR for high-risk AI compliance violations. Authorities will pursue multiple violations simultaneously (missing documentation, inadequate testing, no logging, absent human oversight), compounding the financial exposure.</p>
 
                 <h3>Practical Enforcement Mechanisms</h3>
 

@@ -70,4 +70,4 @@ Apache 2.0
 
 ## EU AI Act Deadline
 
-EU AI Act high-risk obligations (Annex III, including hiring AI) were deferred to December 2, 2027 under the Digital Omnibus agreement. Transparency obligations remain on the August 2, 2026 schedule.
+EU AI Act high-risk obligations (Annex III, including hiring AI) apply from December 2, 2027, and Annex I systems from August 2, 2028, under Regulation (EU) 2026/1744 (the Digital Omnibus). Transparency obligations remain on the August 2, 2026 schedule.

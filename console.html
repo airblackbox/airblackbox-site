@@ -220,7 +220,7 @@
 <!-- Hero -->
 <section class="hero">
     <div class="container">
-        <div class="deadline">102 DAYS UNTIL EU AI ACT DEADLINE</div>
+        <div class="deadline">EU AI ACT HIGH-RISK DEADLINE: DECEMBER 2, 2027</div>
         <h1>See what your AI<br>is <span class="highlight">actually doing</span></h1>
         <p class="subtitle">Connect your codebase. Get a compliance score in 60 seconds. Every finding explained in plain English. No terminal required.</p>
         <div class="hero-actions">
@@ -648,12 +648,13 @@ if (preview) observer.observe(preview);
 
 // Dynamic deadline countdown
 (function() {
-    const deadline = new Date('2026-08-02T00:00:00Z');
+    // Annex III high-risk obligations, per Regulation (EU) 2026/1744
+    const deadline = new Date('2027-12-02T00:00:00Z');
     const now = new Date();
     const days = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24));
     const el = document.querySelector('.deadline');
     if (el && days > 0) {
-        el.textContent = days + ' DAYS UNTIL EU AI ACT DEADLINE';
+        el.textContent = days + ' DAYS UNTIL EU AI ACT HIGH-RISK DEADLINE';
     }
 })();
 </script>

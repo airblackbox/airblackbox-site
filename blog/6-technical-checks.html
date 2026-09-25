@@ -94,7 +94,7 @@
 <div class="container">
 
 <h1>The 6 Technical Checks Your AI System Needs Before the EU AI Act High-Risk Deadline</h1>
-<div class="correction-note" style="margin:1.5rem 0 2rem;padding:1rem 1.25rem;border-left:4px solid #ec3013;background:rgba(236,48,19,0.06);font-size:0.95rem;line-height:1.6;text-align:left"><p style="margin:0 0 0.6rem"><strong>Correction, 24 September 2026.</strong> This post was written around a 2 August 2026 date for the high-risk obligations. That date is no longer current: <a href="https://eur-lex.europa.eu/eli/reg/2026/1744/oj">Regulation (EU) 2026/1744</a> moved the Chapter III, Sections 1 to 3 high-risk obligations to <strong>2 December 2027</strong> for Annex III systems and <strong>2 August 2028</strong> for Annex I systems, subject to the regulation's transition rules (see the Commission's <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/faq/when-does-enforcement-start">enforcement FAQ</a>). Countdowns and month-by-month timelines below are left as originally published.</p></div>
+<div class="correction-note" style="margin:1.5rem 0 2rem;padding:1rem 1.25rem;border-left:4px solid #ec3013;background:rgba(236,48,19,0.06);font-size:0.95rem;line-height:1.6;text-align:left"><p style="margin:0 0 0.6rem"><strong>Correction, 24 September 2026.</strong> This post was written around a 2 August 2026 date for the high-risk obligations. That date is no longer current: <a href="https://eur-lex.europa.eu/eli/reg/2026/1744/oj">Regulation (EU) 2026/1744</a> moved the Chapter III, Sections 1 to 3 high-risk obligations to <strong>2 December 2027</strong> for Annex III systems and <strong>2 August 2028</strong> for Annex I systems, subject to the regulation's transition rules (see the Commission's <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/faq/when-does-enforcement-start">enforcement FAQ</a>). Countdowns and month-by-month plans below were written for the original date.</p><p style="margin:0">Where this post said Article 12 requires tamper-evident or cryptographically verifiable logs, that overstated the text. <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-12">Article 12</a> requires automatic logging of relevant events in high-risk AI systems. It does not specify cryptographic signatures, an independent verifier, or a receipt format. Signed, tamper-evident records are a design choice that goes beyond the article; they matter when evidence must survive a dispute with someone who does not trust the operator.</p></div>
 <p class="meta">March 26, 2026 · Jason Shotwell · 8 min read</p>
 
 <p>The EU AI Act high-risk obligations apply from December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems (Regulation (EU) 2026/1744). If you're shipping Python AI agents - using LangChain, CrewAI, AutoGen, OpenAI, or any RAG pipeline - your code needs to pass 6 specific technical checks mapped to Articles 9, 10, 11, 12, 14, and 15 of the regulation.</p>
@@ -163,7 +163,7 @@ trust = AIRTrustLayer(audit_ledger=True)
 
 <p><strong>What the regulation says:</strong> Your AI system must automatically record events ("logs") with enough detail for regulatory verification. This is the article with the sharpest teeth.</p>
 
-<p><strong>What that means in code:</strong> You need tamper-evident logging. A regulator needs to be able to verify that your logs haven't been altered after the fact. Regular log files don't cut it - they're trivially editable.</p>
+<p><strong>What that means in code:</strong> You need automatic, structured logging of relevant events. Article 12 does not require tamper-evidence, but a regulator will ask whether your logs could have been altered after the fact, and regular log files give you no way to answer - they're trivially editable. That is why we recommend tamper-evident logging on top.</p>
 
 <p><strong>What we found:</strong> This was flagged as <span class="severity-critical">CRITICAL</span> severity across all 5 frameworks. No automatic record-keeping. Agent decisions and tool invocations are not recorded in any auditable format.</p>
 
@@ -245,7 +245,7 @@ pip install air-anthropic-trust    # Anthropic Claude SDK</code></pre>
 <p>Everything runs locally. Your code never leaves your machine. Apache 2.0 open source.</p>
 
 <div class="cta">
-  <p><strong>129 days until the EU AI Act deadline.</strong></p>
+  <p><strong>The EU AI Act high-risk obligations apply from December 2, 2027.</strong></p>
   <p>The scan takes 10 seconds. The fines start at &euro;15M or 3% of global annual turnover.</p>
   <p><code>pip install air-compliance</code></p>
   <p><a href="https://github.com/airblackbox/airblackbox">GitHub</a> · <a href="https://airblackbox.ai/demo">Demo</a> · <a href="https://pypi.org/project/air-compliance">PyPI</a></p>

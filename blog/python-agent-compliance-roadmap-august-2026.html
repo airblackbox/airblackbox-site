@@ -74,7 +74,7 @@
       "name": "What are the penalties for missing the deadline?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Administrative fines up to 6% of global annual revenue or €30 million (whichever is higher) for high-risk violations. Market access suspension in EU. Lost enterprise sales. Regulatory investigation. Mandatory system audit. The fine is severe enough that even a 20-person startup could face €1M+ exposure."
+        "text": "Administrative fines up to €15 million or 3% of global annual revenue (whichever is higher) for high-risk violations under Article 99(4); the €35 million / 7% tier is for prohibited practices. Market access suspension in EU. Lost enterprise sales. Regulatory investigation. Mandatory system audit. The fine is severe enough that even a 20-person startup could face €1M+ exposure."
       }
     },
     {
@@ -133,7 +133,7 @@
 <div class="container">
 
 <h1>Python AI Agent Compliance Roadmap: August 2026</h1>
-<div class="correction-note" style="margin:1.5rem 0 2rem;padding:1rem 1.25rem;border-left:4px solid #ec3013;background:rgba(236,48,19,0.06);font-size:0.95rem;line-height:1.6;text-align:left"><p style="margin:0 0 0.6rem"><strong>Correction, 24 September 2026.</strong> This post was written around a 2 August 2026 date for the high-risk obligations. That date is no longer current: <a href="https://eur-lex.europa.eu/eli/reg/2026/1744/oj">Regulation (EU) 2026/1744</a> moved the Chapter III, Sections 1 to 3 high-risk obligations to <strong>2 December 2027</strong> for Annex III systems and <strong>2 August 2028</strong> for Annex I systems, subject to the regulation's transition rules (see the Commission's <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/faq/when-does-enforcement-start">enforcement FAQ</a>). Countdowns and month-by-month timelines below are left as originally published.</p><p style="margin:0">Where this post said Article 12 requires tamper-evident or cryptographically verifiable logs, that overstated the text. <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-12">Article 12</a> requires automatic logging of relevant events in high-risk AI systems. It does not specify cryptographic signatures, an independent verifier, or a receipt format. Signed, tamper-evident records are a design choice that goes beyond the article; they matter when evidence must survive a dispute with someone who does not trust the operator.</p></div>
+<div class="correction-note" style="margin:1.5rem 0 2rem;padding:1rem 1.25rem;border-left:4px solid #ec3013;background:rgba(236,48,19,0.06);font-size:0.95rem;line-height:1.6;text-align:left"><p style="margin:0 0 0.6rem"><strong>Correction, 24 September 2026.</strong> This post was written around a 2 August 2026 date for the high-risk obligations. That date is no longer current: <a href="https://eur-lex.europa.eu/eli/reg/2026/1744/oj">Regulation (EU) 2026/1744</a> moved the Chapter III, Sections 1 to 3 high-risk obligations to <strong>2 December 2027</strong> for Annex III systems and <strong>2 August 2028</strong> for Annex I systems, subject to the regulation's transition rules (see the Commission's <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/faq/when-does-enforcement-start">enforcement FAQ</a>). Countdowns and month-by-month plans below were written for the original date.</p><p style="margin:0">Where this post said Article 12 requires tamper-evident or cryptographically verifiable logs, that overstated the text. <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-12">Article 12</a> requires automatic logging of relevant events in high-risk AI systems. It does not specify cryptographic signatures, an independent verifier, or a receipt format. Signed, tamper-evident records are a design choice that goes beyond the article; they matter when evidence must survive a dispute with someone who does not trust the operator.</p></div>
 <p class="meta">April 8, 2026 &middot; Jason Shotwell &middot; 14 min read</p>
 
 <p>This roadmap was written when the EU AI Act high-risk date was August 2, 2026, 116 days out. Regulation (EU) 2026/1744 has since moved that to December 2, 2027 (Annex III) and August 2, 2028 (Annex I), so the calendar below is a template, not the current countdown. It breaks down exactly what Python teams need to implement, month by month, to reach <a href="/blog/eu-ai-act-august-2026-deadline">compliance before the deadline</a>. If your team runs autonomous agents (LangChain, CrewAI, AutoGen, or custom), this is your playbook.</p>
@@ -549,14 +549,14 @@ crew = air_trust.trust(crew)
 <p>The high-risk obligations apply from December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems (Regulation (EU) 2026/1744). After those dates, high-risk systems deployed without compliance documentation face:</p>
 
 <ul>
-  <li><strong>Administrative fines:</strong> Up to 6% of global annual revenue or €30 million, whichever is higher. For a €500M company, that's €30M. For a €10M startup, that's €600k.</li>
+  <li><strong>Administrative fines:</strong> Up to €15 million or 3% of global annual revenue, whichever is higher (Article 99(4); the €35 million / 7% tier is for prohibited practices). For a €500M company, that's €15M. For a €10M startup, Article 99(6) caps it at the lower of the two, so €300k.</li>
   <li><strong>Market access suspension:</strong> EU regulators can require you to stop operating the system in the EU. No customer access. No revenue.</li>
   <li><strong>Mandatory audit:</strong> You pay for an independent third-party audit of your system. €50k-€200k typical. Non-negotiable.</li>
   <li><strong>Corrective actions:</strong> Regulators can impose changes to your system: remove certain data sources, add additional oversight, retest with different benchmarks.</li>
   <li><strong>Compliance notice:</strong> Public record of violation. Future customers see this. Enterprise deals die.</li>
 </ul>
 
-<p>The fine is real. The EU has fined Meta €400M+ for GDPR violations. The precedent is set. For AI systems post-August 2, they will fine at the scale they've threatened.</p>
+<p>The fine is real. The EU has fined Meta €400M+ for GDPR violations. The precedent is set. Once the high-risk obligations apply, they will fine at the scale they've threatened.</p>
 
 <p>If you're in the EU market (customer data is in EU or customers use your system in EU), you must comply. If you're only in US/APAC, you can skip this. But if you want EU revenue, do it.</p>
 
@@ -572,7 +572,7 @@ crew = air_trust.trust(crew)
 <p>4-6 months for a typical team starting from zero. The roadmap breaks it into four one-month chunks: April (assessment), May (risk + data), June (docs + transparency), July (oversight + testing). The critical path is documentation and human oversight workflows, not code. Most LangChain/CrewAI teams spend 70% of effort on paperwork, 30% on code changes.</p>
 
 <h3>What are the penalties for missing the deadline?</h3>
-<p>Administrative fines of 6% of global annual revenue or €30 million (whichever is higher). Market access suspension. Mandatory third-party audit at your expense. Corrective action orders from regulators. The EU has already established precedent fining tech companies at this scale for other regulations (GDPR, Digital Markets Act).</p>
+<p>Administrative fines of up to €15 million or 3% of global annual revenue (whichever is higher) under Article 99(4). Market access suspension. Mandatory third-party audit at your expense. Corrective action orders from regulators. The EU has already established precedent fining tech companies at this scale for other regulations (GDPR, Digital Markets Act).</p>
 
 <h3>Can I use LangChain, CrewAI, or AutoGen off-the-shelf?</h3>
 <p>Not without modification. Most frameworks score 1/6 on baseline compliance. They lack audit trails, human oversight, technical documentation, and risk management infrastructure. You must add air-trust for audit logging, build approval workflows, and generate all six documentation packages. This is 60% of your total compliance effort.</p>
