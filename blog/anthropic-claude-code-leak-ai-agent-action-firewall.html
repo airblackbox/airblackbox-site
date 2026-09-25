@@ -23,7 +23,7 @@
   "description": "Anthropic's Claude Code source code leaked via NPM because no action firewall sat between the AI agent and a public registry. Here's how action gating prevents AI agent leaks.",
   "url": "https://airblackbox.ai/blog/anthropic-claude-code-leak-ai-agent-action-firewall",
   "datePublished": "2026-04-03",
-  "dateModified": "2026-04-03",
+  "dateModified": "2026-09-24",
   "author": {"@type": "Person", "name": "Jason Shotwell", "url": "https://airblackbox.ai"},
   "publisher": {"@type": "Organization", "name": "AIR Blackbox", "url": "https://airblackbox.ai"},
   "mainEntityOfPage": {"@type": "WebPage", "@id": "https://airblackbox.ai/blog/anthropic-claude-code-leak-ai-agent-action-firewall"},
@@ -99,7 +99,7 @@
       "name": "How does action gating relate to the EU AI Act?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "The EU AI Act requires human oversight (Article 14) and record-keeping (Article 12) for high-risk AI systems. Action gating directly addresses both: Article 14 compliance requires that high-risk AI actions are reviewed by a human before execution, and Article 12 compliance requires tamper-evident logging of all AI system decisions. AIR Gate's policy engine routes high-risk actions to humans (Art. 14) and its HMAC-SHA256 audit chain creates cryptographic proof of every decision (Art. 12). The EU AI Act deadline for high-risk systems is August 2, 2026."
+        "text": "The EU AI Act requires human oversight (Article 14) and record-keeping (Article 12) for high-risk AI systems. Action gating directly addresses both: Article 14 compliance requires that high-risk AI actions are reviewed by a human before execution, and Article 12 requires automatic logging of relevant events. AIR Gate's policy engine routes high-risk actions to humans (Art. 14) and its HMAC-SHA256 audit chain records every decision (Art. 12); the tamper-evidence goes beyond what Article 12 specifies. The high-risk obligations apply from December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems (Regulation (EU) 2026/1744)."
       }
     },
     {
@@ -313,11 +313,11 @@ policies:
 
 <p>This isn't just a security best practice. For teams operating in the EU, it's becoming law.</p>
 
-<p>The EU AI Act (enforcement deadline: <strong>August 2, 2026</strong>) requires two things that action firewalls directly address:</p>
+<p>The EU AI Act (high-risk obligations apply from <strong>December 2, 2027</strong> for Annex III systems and <strong>August 2, 2028</strong> for Annex I systems, under Regulation (EU) 2026/1744) requires two things that action firewalls directly address:</p>
 
 <p><strong>Article 14 - Human Oversight:</strong> High-risk AI systems must include mechanisms for human review of AI-assisted decisions. An action firewall's <code>require_approval</code> policy is a direct implementation: high-risk actions route to a human before execution.</p>
 
-<p><strong>Article 12 - Record-Keeping:</strong> AI systems must maintain tamper-evident logs of all decisions. AIR Gate's HMAC-SHA256 audit chain creates cryptographic proof of every action - what was attempted, what the policy decided, whether a human approved it, and when.</p>
+<p><strong>Article 12 - Record-Keeping:</strong> High-risk AI systems must automatically log relevant events. Article 12 does not require cryptographic signatures or an independent verifier; AIR Gate goes further, and its HMAC-SHA256 audit chain creates tamper-evident proof of every action - what was attempted, what the policy decided, whether a human approved it, and when.</p>
 
 <p>The Anthropic leak happened in the US, where there's no equivalent mandate. But the architectural pattern is the same regardless of jurisdiction: if AI agents are taking actions, those actions need gates.</p>
 
@@ -367,7 +367,7 @@ policies:
 <p>They happened concurrently but are separate incidents. The source leak was Anthropic's packaging error. The Axios trojan was a supply chain attack on a third-party library. Users who installed Claude Code via NPM on March 31 between 00:21-03:29 UTC may have been affected by both.</p>
 
 <h3>Does the EU AI Act require action firewalls?</h3>
-<p>Not by name, but Article 14 (Human Oversight) and Article 12 (Record-Keeping) effectively require the same pattern: human review of high-risk AI actions and tamper-evident logging of all AI decisions. The enforcement deadline for high-risk systems is August 2, 2026.</p>
+<p>Not by name, but Article 14 (Human Oversight) and Article 12 (Record-Keeping) point at the same pattern: human review of high-risk AI actions and automatic logging of AI decisions. Tamper-evidence is not required by Article 12; it is how you make those logs hold up when someone disputes them. The high-risk obligations apply from December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems (Regulation (EU) 2026/1744).</p>
 
 <footer>
   <p><a href="/blog/">← Back to Blog</a></p>
