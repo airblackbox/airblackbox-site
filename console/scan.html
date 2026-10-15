@@ -233,7 +233,7 @@
         <!-- Input Panel -->
         <div class="input-panel" id="panel-input">
             <h2>Scan Your AI Code</h2>
-            <p>Paste Python code, upload a file, or connect a GitHub repo. The scanner checks 51+ EU AI Act requirements across 6 articles.</p>
+            <p>Paste code in Python, TypeScript, JavaScript, Java or Kotlin (or a Jupyter notebook), upload a file, or connect a GitHub repo. The scanner runs the same checks as the <code>air-blackbox</code> CLI: EU AI Act articles 9&ndash;15, GDPR and US state AI laws.</p>
 
             <div class="input-tabs">
                 <div class="input-tab active" data-tab="paste">Paste Code</div>
@@ -243,10 +243,21 @@
 
             <!-- Paste -->
             <div class="tab-content active" id="tab-paste">
-                <textarea class="code-input" id="code-textarea" placeholder="# Paste your Python AI agent code here...
+                <label for="code-language" style="display:block;margin:0 0 8px;font-size:13px;color:#8a8785;">Language
+                    <select id="code-language" style="margin-left:8px;padding:4px 8px;background:#1c1b1a;color:#e8e6e3;border:1px solid #3a3836;border-radius:6px;font:inherit;">
+                        <option value="">Auto-detect</option>
+                        <option value="python">Python</option>
+                        <option value="notebook">Jupyter notebook (.ipynb JSON)</option>
+                        <option value="typescript">TypeScript</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="java">Java</option>
+                        <option value="kotlin">Kotlin</option>
+                    </select>
+                </label>
+                <textarea class="code-input" id="code-textarea" placeholder="# Paste your AI agent code here (Python, TypeScript, JavaScript, Java or Kotlin)...
 # Example: LangChain agent, OpenAI API calls, CrewAI setup, etc.
 #
-# Try pasting any Python code that uses an LLM.
+# Try pasting any code that calls an LLM.
 # The scanner will check for EU AI Act compliance gaps.
 
 from langchain.agents import create_openai_tools_agent
@@ -403,7 +414,7 @@ function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 async function startScan() {
     const code = document.getElementById('code-textarea').value;
     if (!code.trim()) {
-        alert('Paste some Python code first.');
+        alert('Paste some code first.');
         return;
     }
     if (code.length > 500000) {
@@ -435,7 +446,8 @@ async function startScan() {
     const apiPromise = fetch('/api/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: code })
+        body: JSON.stringify(Object.assign({ code: code },
+            document.getElementById('code-language').value ? { language: document.getElementById('code-language').value } : {}))
     }).then(r => r.json());
 
     // Animate check items while waiting
