@@ -99,3 +99,23 @@ def test_explanations_still_attach_to_renamed_checks(server):
     _, data = post(url, {"code": PY})
     logging = next(f for f in data["findings"] if f["name"] == "Application logging")
     assert logging["meaning"] and logging["meaning"] != logging["evidence"]
+
+
+def test_get_reports_engine_and_languages(server):
+    """The health response a deployment is verified by."""
+    url, mod = server
+    with urllib.request.urlopen(url + "/api/scan", timeout=30) as r:
+        data = json.loads(r.read())
+    assert r.status == 200
+    assert data["engine"] == "air-blackbox" and data["scanner_version"] == mod.SDK_VERSION
+    assert "kotlin" in data["languages"] and "notebook" in data["languages"]
+
+
+def test_pyproject_and_requirements_agree_on_the_sdk():
+    """Vercel installs from pyproject.toml, not requirements.txt."""
+    import re
+    py = open(os.path.join(ROOT, "pyproject.toml")).read()
+    req = open(os.path.join(ROOT, "requirements.txt")).read()
+    pin_py = re.search(r'"(air-blackbox[^"]*)"', py).group(1)
+    pin_req = re.search(r"^(air-blackbox.*)$", req, re.M).group(1).strip()
+    assert pin_py == pin_req, (pin_py, pin_req)

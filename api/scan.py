@@ -612,6 +612,21 @@ class handler(BaseHTTPRequestHandler):
         except Exception as e:
             self._error(500, f"Scan failed: {str(e)[:200]}")
 
+    def do_GET(self):
+        """Health: which scanner this deployment runs, and what it reads.
+
+        Exists so a deployment can be verified by fetching it, instead of
+        trusting a green build. A preview once reported "Deployment has
+        completed" while every scan returned FUNCTION_INVOCATION_FAILED,
+        because the SDK had not been installed.
+        """
+        self._json_response(200, {
+            "engine": "air-blackbox",
+            "scanner_version": SDK_VERSION,
+            "languages": SUPPORTED_LANGUAGES,
+            "usage": "POST JSON {\"code\": \"...\", \"language\": \"optional\", \"filename\": \"optional\"}",
+        })
+
     def do_OPTIONS(self):
         """Handle CORS preflight."""
         self.send_response(200)
@@ -630,6 +645,6 @@ class handler(BaseHTTPRequestHandler):
 
     def _cors_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
         self.send_header("Access-Control-Max-Age", "86400")
