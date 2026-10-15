@@ -51,57 +51,7 @@
         }
       },
       "mainEntityOfPage": "https://airblackbox.ai/blog/compliance-scanner-typescript-java-kotlin",
-      "keywords": ["multi-agent ai handoff", "ed25519 signatures", "cross-agent identity", "audit chain", "hmac sha256", "eu ai act article 12", "air-trust"]
-    }
-    </script>
-
-    <!-- Structured Data: FAQPage -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Why can't HMAC prove which AI agent sent a handoff?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "HMAC uses a shared secret, so any party with the key can create a valid signature. In multi-agent systems, HMAC proves a record was not modified after it was written, but it cannot prove which specific agent wrote it. Ed25519 asymmetric signatures solve this because only the agent with the private key can sign, and anyone with the public key can verify who signed it."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What are the three handoff record types in air-trust v0.6.0?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The three record types are: handoff_request (Agent A signs to declare it is sending a task to Agent B), handoff_ack (Agent B signs to confirm it received the task and the payload hash matches), and handoff_result (Agent B signs to publish its output). Together, they form a complete cryptographic proof of the handoff lifecycle."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How does payload_hash prevent handoff tampering in multi-agent AI?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The handoff_request includes SHA-256(task_data). The handoff_ack includes the same hash. If the task is modified between request and acknowledgment, the hashes will not match, and verification fails. This proves the payload was not swapped in transit and that both agents agreed on what was being handed off."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can signed handoffs detect key compromise or agent collusion?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. If a private key is stolen, an attacker can forge valid signatures that are indistinguishable from legitimate ones. If two agents collude, they can forge a fake handoff exchange. Signed handoffs prove identity only if keys remain secure and agents are not collaborating. The SPEC.md v1.2 threat model documents these limits explicitly."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is air-trust v0.6.0 backward compatible with earlier audit chains?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. Handoff records are optional and only appear when agents use the handoff API. The HMAC chain is unchanged, v0.5.0 records still verify, session completeness checks still work, and mixed chains with integrity, completeness, and signed handoffs all verify together. There are no breaking changes to the Event model."
-          }
-        }
-      ]
+      "keywords": ["eu ai act compliance scanner", "typescript", "javascript", "java", "kotlin", "jupyter notebooks", "air-blackbox 1.17.0", "cross-language parity"]
     }
     </script>
 
@@ -113,55 +63,8 @@
       "itemListElement": [
         {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://airblackbox.ai"},
         {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://airblackbox.ai/blog/"},
-        {"@type": "ListItem", "position": 3, "name": "How Do You Prove Which AI Agent Sent a Handoff?", "item": "https://airblackbox.ai/blog/compliance-scanner-typescript-java-kotlin"}
+        {"@type": "ListItem", "position": 3, "name": "The Compliance Scanner Now Reads TypeScript, JavaScript, Java and Kotlin", "item": "https://airblackbox.ai/blog/compliance-scanner-typescript-java-kotlin"}
       ]
-    }
-    </script>
-
-    <!-- Structured Data: HowTo -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "HowTo",
-      "name": "How to add signed handoffs to a multi-agent AI audit chain",
-      "description": "Step-by-step guide to implementing Ed25519 signed handoffs between AI agents using air-trust v0.6.0.",
-      "step": [
-        {
-          "@type": "HowToStep",
-          "name": "Install air-trust with handoff support",
-          "text": "Run pip install air-trust[handoffs]==0.6.0 to install the trust layer with Ed25519 support."
-        },
-        {
-          "@type": "HowToStep",
-          "name": "Generate keypairs for each agent",
-          "text": "Call generate_keypair() for each agent identity. This creates Ed25519 private and public keys stored in ~/.air-trust/keys/."
-        },
-        {
-          "@type": "HowToStep",
-          "name": "Send a handoff_request from Agent A",
-          "text": "Agent A calls handoff_request() with the interaction_id, counterparty fingerprint, and SHA-256 hash of the payload being handed off."
-        },
-        {
-          "@type": "HowToStep",
-          "name": "Acknowledge with handoff_ack from Agent B",
-          "text": "Agent B verifies the payload hash matches what it received, then calls handoff_ack() to confirm receipt."
-        },
-        {
-          "@type": "HowToStep",
-          "name": "Publish handoff_result from Agent B",
-          "text": "After processing, Agent B calls handoff_result() with the SHA-256 hash of its output. All three records link via interaction_id."
-        },
-        {
-          "@type": "HowToStep",
-          "name": "Verify the chain",
-          "text": "Run python3 -m air_trust verify --json to check integrity, completeness, and handoff identity across the entire audit chain."
-        }
-      ],
-      "tool": {
-        "@type": "SoftwareApplication",
-        "name": "air-trust",
-        "url": "https://pypi.org/project/air-trust/"
-      }
     }
     </script>
 
@@ -604,15 +507,5 @@ air-blackbox comply --scan . -v</code></pre>
             </div>
         </div>
     </footer>
-
-    <!-- FAQ Interactivity -->
-    <script>
-        document.querySelectorAll('.faq-item').forEach(item => {
-            const question = item.querySelector('.faq-question');
-            question.addEventListener('click', () => {
-                item.classList.toggle('open');
-            });
-        });
-    </script>
 </body>
 </html>
