@@ -16,6 +16,13 @@ async function readZip(buf){
     if (dv.getUint32(i, true) === 0x06054b50){ eocd = i; break; }
   }
   if (eocd < 0) throw new Error("not a ZIP file");
+  /* Exactly one archive, start to end. Bytes appended after it, or a document
+     prepended so another program opens the file as something else, mean it
+     was extended after it was written. */
+  const extra = u8.length - (eocd + 22 + dv.getUint16(eocd + 20, true));
+  if (extra !== 0) throw new Error(extra > 0 ? extra + " bytes follow the end of the archive"
+                                             : "the archive's end record is damaged");
+  if (dv.getUint32(0, true) !== 0x04034b50) throw new Error("the file does not begin with the archive (bytes were added before it)");
   const count = dv.getUint16(eocd + 10, true);
   let off = dv.getUint32(eocd + 16, true);
   const entries = [];
@@ -32,6 +39,8 @@ async function readZip(buf){
     entries.push({name, method, compSize, rawSize, localOff});
     off += 46 + nameLen + extraLen + cmtLen;
   }
+  if (entries.length && Math.min(...entries.map(e => e.localOff)) !== 0)
+    throw new Error("the file does not begin with the archive (bytes were added before it)");
   // Resolve data offsets from the local headers.
   for (const e of entries){
     if (dv.getUint32(e.localOff, true) !== 0x04034b50) throw new Error("bad local header for " + e.name);
@@ -55,6 +64,35 @@ const hex = b => Array.from(b).map(x => x.toString(16).padStart(2,"0")).join("")
 const unhex = s => new Uint8Array(s.match(/.{2}/g).map(h => parseInt(h,16)));
 async function sha256(bytes){ return new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)); }
 const text = b => new TextDecoder().decode(b);
+
+/* JSON.parse, refusing a key repeated within one object. Repeated keys are
+   legal JSON with no defined meaning: this page and Python keep the last
+   value, other readers the first. The manifest is signed as parsed, so a
+   forged first value beside a genuine last one would check out here while
+   another tool showed the forgery. */
+function strictJSON(src, what){
+  const value = JSON.parse(src);
+  const stack = [];
+  for (let i = 0; i < src.length; i++){
+    const c = src[i];
+    if (c === '"'){
+      let j = i + 1;
+      while (src[j] !== '"'){ if (src[j] === "\\") j++; j++; }
+      const top = stack[stack.length - 1];
+      if (top && top.keys && top.expectKey){
+        const key = JSON.parse(src.slice(i, j + 1));
+        if (top.keys.has(key)) throw new Error(what + " repeats the key \"" + key + "\"");
+        top.keys.add(key);
+        top.expectKey = false;
+      }
+      i = j;
+    } else if (c === "{") stack.push({keys: new Set(), expectKey: true});
+    else if (c === "[") stack.push({keys: null});
+    else if (c === "}" || c === "]") stack.pop();
+    else if (c === ","){ const top = stack[stack.length - 1]; if (top && top.keys) top.expectKey = true; }
+  }
+  return value;
+}
 
 /* Byte-for-byte match for Python's
    json.dumps(obj, sort_keys=True, separators=(",",":"))  [ensure_ascii=True].
@@ -129,8 +167,10 @@ async function verify(buf, expectKey){
   const read = async n => readMember(buf, byName[n]);
 
   let manifest;
-  try { manifest = JSON.parse(text(await read("manifest.json"))); }
-  catch(e){ return fail("The summary sheet is unreadable", String(e)); }
+  try { manifest = strictJSON(text(await read("manifest.json")), "manifest.json"); }
+  catch(e){ return fail(/repeats the key/.test(e.message) ? "Tampered: the summary sheet is ambiguous"
+                                                          : "The summary sheet is unreadable",
+    e.message + ". Different programs could show different contents for the same file."); }
 
   // 2. signature over the canonical manifest digest
   const sig = manifest.signature || {};
@@ -180,9 +220,30 @@ async function verify(buf, expectKey){
     "was added.");
 
   // 3-5. records, receipts, counts
-  const lines = text(await read("records/actions.jsonl")).trim().split("\n").filter(Boolean);
-  const records = lines.map(l => JSON.parse(l));
+  let records, chainDoc;
+  try {
+    const lines = text(await read("records/actions.jsonl")).trim().split("\n").filter(Boolean);
+    records = lines.map((l, i) => strictJSON(l, "record " + (i + 1)));
+    chainDoc = strictJSON(text(await read("verification/chain.json")), "verification/chain.json");
+    strictJSON(text(await read("verification/receipts.json")), "verification/receipts.json");
+  } catch(e){
+    return fail("The records are unreadable or ambiguous", e.message + ".");
+  }
   R.facts.records = records.length;
+
+  /* The exporter checks the chain when it writes the bundle and signs the
+     result. A bundle whose own export found records missing, unreadable or
+     altered says so here; it must not be read as a clean history. */
+  const atExport = (chainDoc && chainDoc.verification_at_export) || {};
+  if (atExport.intact === false)
+    return fail("The history was already broken when this file was made",
+      "The exporter's own check found the chain not intact (first break at record " +
+      (atExport.first_break_at ?? "?") + ")" +
+      (Array.isArray(atExport.problems) && atExport.problems.length ? ": " + atExport.problems.join("; ") : "") +
+      ". Records were missing, unreadable or changed before export.");
+  if (Array.isArray(chainDoc.records) && chainDoc.records.length !== records.length)
+    return fail("The records do not match the chain listing",
+      "The chain lists " + chainDoc.records.length + " records but the file holds " + records.length + ".");
 
   /* Actually verify each receipt, rather than counting that one is present.
      "carries a signature" and "carries a VALID signature" are different
@@ -258,9 +319,11 @@ async function verify(buf, expectKey){
       ". Full cryptographic checking of the timestamp requires air-evidence verify.");
     R.facts.witness = "Yes";
   } else {
+    const why = anchor.reason || anchor.error;
     add("warn", "No independent timestamp",
       "Nothing outside the sender's control witnessed this history, so if they rewrote their own " +
-      "records before signing, this check would not reveal it. Ask them for an anchored export.");
+      "records before signing, this check would not reveal it. Ask them for an anchored export." +
+      (why ? " Recorded reason: " + why + "." : ""));
     R.facts.witness = "No";
   }
 
