@@ -1,8 +1,9 @@
 """Malformed bundles the browser verifier must refuse, matching air-evidence.
 
-Built from genuine bundles: demo/sample.air-evidence, and two fixtures written
-by the TypeScript package with fictional data (tests/fixtures/). Each case was
-accepted, or read as authentic, before the check that now catches it.
+Built from genuine bundles: demo/sample.air-evidence, and fixtures written by
+the TypeScript package with fictional data (tests/fixtures/). Each malformed
+case was accepted, or read as authentic, before the check that now catches it;
+the genuine ones must still pass.
 Run it with:
     pip install playwright && playwright install chromium
     python tests/test_verify_malformed.py
@@ -70,6 +71,10 @@ def cases(tmp):
                                    True, "already broken"),
         "unanchored, reason recorded": (open(os.path.join(FIXTURES, "unanchored.air-evidence"), "rb").read(),
                                         False, "Recorded reason: anchoring disabled"),
+        # Written by the streaming export: manifest.json last, sizes in data
+        # descriptors after each member, members deflated in 64 KB pieces.
+        "streamed export": (open(os.path.join(FIXTURES, "streamed.air-evidence"), "rb").read(),
+                            False, "ed25519:4efd9b2ddbb9fe18"),
     }
     paths = {}
     for name, (data, bad, text) in variants.items():
