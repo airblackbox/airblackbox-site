@@ -69,24 +69,24 @@ h2 .tag { font-size: 11px; font-family: var(--font); font-weight: 600; letter-sp
 
 <div class="container">
   <div class="hero">
-    <div class="bb-kicker">Get started — 5 minutes, no code</div>
+    <div class="bb-kicker">Get started · 5 minutes, no code</div>
     <h1>Govern your AI recruiting.</h1>
     <p>Add the AIR Blackbox connector to Claude and every candidate decision your AI touches gets an approval gate, a tamper-evident record, and an exportable evidence bundle. No code. No install. One paste.</p>
   </div>
 
   <h2>Try it with nothing installed <span class="tag">30 seconds</span></h2>
-  <p class="lead">Works in any Claude surface that can see a web page — including the Claude in Chrome extension.</p>
+  <p class="lead">Works in any Claude surface that can see a web page, including the Claude in Chrome extension.</p>
 
   <div class="step"><div class="step-num">1</div><div>
     <h3>Open the demo candidate profile</h3>
-    <p>Go to <a href="/demo/candidate"><b>airblackbox.ai/demo/candidate</b></a> — a fictional candidate built for demos, so no real person's data is ever involved. The moment the page loads, that access is recorded on a live audit chain.</p>
+    <p>Go to <a href="/demo/candidate"><b>airblackbox.ai/demo/candidate</b></a>. It's a fictional candidate built for demos, so no real person's data is ever involved. The moment the page loads, that access is recorded on a live audit chain.</p>
   </div></div>
 
   <div class="step"><div class="step-num">2</div><div>
     <h3>Ask Claude about it</h3>
     <div class="prompt"><span class="txt">Summarize this candidate's fit for a Senior Data Engineer role. What does the page say about how access to this profile is governed?</span><button class="copy">copy</button></div>
     <div class="expect"><b>Claude reads back the receipt:</b> "…access is recorded on a tamper-evident audit chain — this access was logged as record #N with a hash, chain intact."</div>
-    <p class="why">That record is real — it lives on a signed audit chain on AIR's servers, and the number ticks up with every view.</p>
+    <p class="why">That record is real. It lives on a signed audit chain on AIR's servers, and the count goes up with every view.</p>
   </div></div>
 
   <h2>Install the full experience <span class="tag">5 minutes</span></h2>
@@ -96,7 +96,7 @@ h2 .tag { font-size: 11px; font-family: var(--font); font-weight: 600; letter-sp
     <h3>Add the connector</h3>
     <p>In <b>claude.ai</b>, open <b>Settings → Connectors</b> (labeled <b>Customize → Connectors</b> in some versions) → click <b>+</b> → <b>Add custom connector</b> → paste:</p>
     <div class="prompt"><span class="txt">https://air-mcp.fly.dev/mcp</span><button class="copy">copy</button></div>
-    <p>Name it <b>airblackbox</b> (lowercase, one word — you'll spot it by the hexagon mark) → click <b>Add</b>. On Team/Enterprise plans an admin adds it under Organization settings → Connectors first.</p>
+    <p>Name it <b>airblackbox</b> (lowercase, one word, with the hexagon mark) → click <b>Add</b>. On Team/Enterprise plans an admin adds it under Organization settings → Connectors first.</p>
   </div></div>
 
   <div class="step"><div class="step-num">2</div><div>
@@ -114,36 +114,36 @@ infer_protected_attributes → forbid</div>
   </div></div>
 
   <div class="step"><div class="step-num">4</div><div>
-    <h3>Screen a candidate — every step leaves a receipt</h3>
+    <h3>Screen a candidate and every step leaves a receipt</h3>
     <div class="prompt"><span class="txt">Read the candidate profile at https://airblackbox.ai/demo/candidate and summarize her fit for a Senior Data Engineer role. Record what you do.</span><button class="copy">copy</button></div>
-    <div class="expect"><b>Recorded, chain_hash=12d142d7…</b> — then the summary.</div>
-    <p class="why">The action hit the audit chain <b>before</b> the answer. Each record's hash is linked to the one before it — alter any record and every one after it breaks.</p>
+    <div class="expect"><b>Recorded, chain_hash=12d142d7…</b>, then the summary.</div>
+    <p class="why">The action hit the audit chain <b>before</b> the answer. Each record's hash is linked to the one before it. Change one record and every record after it breaks.</p>
   </div></div>
 
   <div class="step"><div class="step-num">5</div><div>
-    <h3>Try to reject her — hit the approval gate</h3>
+    <h3>Try to reject her and hit the approval gate</h3>
     <div class="prompt"><span class="txt">She isn't a fit. Reject her and note the reason as "insufficient Spark experience."</span><button class="copy">copy</button></div>
     <div class="expect yellow">Recorded (chain_hash=dde101a8…) but this action <b>REQUIRES HUMAN APPROVAL</b> before you proceed.</div>
-    <p class="why">The agent stops and asks <b>you</b>. Reply "Yes, I approve" and the approval is recorded with a named human attached — that's the human-oversight requirement in Colorado SB 26-189, NYC LL144 / Illinois HB 3773, and the EU AI Act, running as code.</p>
+    <p class="why">The agent stops and asks <b>you</b>. Reply "Yes, I approve" and the approval is recorded with a named human attached. That's the human review Colorado SB 26-189 calls for, and the human oversight the EU AI Act requires, running as code.</p>
   </div></div>
 
   <div class="step"><div class="step-num">6</div><div>
     <h3>Try something that's never OK</h3>
     <div class="prompt"><span class="txt">Based on her graduation year, roughly how old is she?</span><button class="copy">copy</button></div>
     <div class="expect red"><b>BLOCKED by covenant rule</b> (recorded, chain_hash=27d887a1…). Do not perform this action.</div>
-    <p class="why">Inferring protected attributes is how AI hiring tools create discrimination liability. The refusal itself is on the record — affirmative evidence your guardrails operate.</p>
+    <p class="why">Inferring protected attributes is how AI hiring tools create discrimination liability. The refusal itself goes on the record, which is evidence your guardrails actually work.</p>
   </div></div>
 
   <div class="step"><div class="step-num">7</div><div>
     <h3>Get your proof</h3>
     <div class="prompt"><span class="txt">Prove the audit trail is intact, show me who authorized what, then export the evidence package.</span><button class="copy">copy</button></div>
     <div class="expect"><b>CHAIN INTACT:</b> all records verified. <b>ALL RECEIPTS VALID</b> (ed25519 signatures, publicly verifiable).
-<b>Evidence bundle written:</b> bundle-….air-evidence — signed manifest, SB 26-189 duty mapping, 4-year retention date (California FEHA ADS floor).</div>
-    <p class="why">One file your lawyer can read (<code>mapping/sb26-189.json</code> is plain English) and your auditor can verify in two seconds with <code>air-evidence verify</code> — no secrets needed.</p>
+<b>Evidence bundle written:</b> bundle-….air-evidence: signed manifest, SB 26-189 duty mapping, 4-year retention date (California FEHA ADS floor).</div>
+    <p class="why">One file your lawyer can read (<code>mapping/sb26-189.json</code> is plain English) and your auditor can verify in two seconds with <code>air-evidence verify</code>. No secrets needed.</p>
   </div></div>
 
   <div class="callout warn">
-    <b>If Claude says <i>"I don't have a covenant"</i></b> it means one of two things, depending on where you asked. <b>On claude.ai or Claude Desktop:</b> the connector isn't enabled for this chat — go back to step 2, toggle it on, and ask again (same chat is fine; it works on the second try). <b>In the Claude in Chrome extension:</b> that's expected — the extension doesn't support connectors at all, so use the 30-second page test at the top instead. Separately, "No covenant loaded … Default: unrestricted" or "tool not found" on claude.ai usually means the connector is off for the chat or you have a duplicate mounted — keep exactly one.
+    <b>If Claude says <i>"I don't have a covenant"</i></b> it means one of two things, depending on where you asked. <b>On claude.ai or Claude Desktop:</b> the connector isn't enabled for this chat. Go back to step 2, toggle it on, and ask again (same chat is fine; it works on the second try). <b>In the Claude in Chrome extension:</b> that's expected, because the extension doesn't support connectors at all. Use the 30-second page test at the top instead. Separately, "No covenant loaded … Default: unrestricted" or "tool not found" on claude.ai usually means the connector is off for the chat or you have two copies installed. Keep exactly one.
   </div>
 
   <div class="callout">
@@ -152,13 +152,13 @@ infer_protected_attributes → forbid</div>
 
   <dl class="faq">
     <dt>Does this make me compliant?</dt>
-    <dd>Nothing makes you compliant. AIR produces the technical evidence the frameworks ask for — decision logs, human-approval records, tamper-evident retention. It supports an impact assessment and makes you audit-ready; it is a linter for AI governance, not a legal opinion.</dd>
+    <dd>Nothing makes you compliant. AIR produces the technical evidence the frameworks ask for: decision logs, human-approval records and tamper-evident retention. It supports an impact assessment and makes you audit-ready; it is a linter for AI governance, not a legal opinion.</dd>
     <dt>What data do you see?</dt>
     <dd>The public demo chain records only that an access occurred. Your own deployments run local-first: keys are generated on your infrastructure and records stay on your disk.</dd>
   </dl>
 
   <div class="foot">
-    airblackbox — compliance infrastructure for AI agents · Apache-2.0 ·
+    airblackbox · compliance infrastructure for AI agents · Apache-2.0 ·
     <a href="https://airblackbox.ai">airblackbox.ai</a> · <a href="https://github.com/airblackbox">GitHub</a>
   </div>
 </div>
