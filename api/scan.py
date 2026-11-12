@@ -1,12 +1,14 @@
 """
 AIR Blackbox Console - Scan API
 
-Vercel serverless function that accepts Python code and returns
-EU AI Act compliance findings. Uses the code scanner from the
-air-blackbox package (stdlib only, no external deps needed).
+Vercel serverless function that accepts a piece of code and returns
+compliance findings from the air-blackbox SDK: EU AI Act articles 9-15,
+GDPR, US state AI laws and (for hiring code) the US hiring checks.
 
 POST /api/scan
-Body: { "code": "...python code..." }
+Body: { "code": "...", "language": "kotlin" (optional), "filename": "Agent.kt" (optional) }
+  language: python, notebook, typescript, javascript, java or kotlin;
+  detected from the filename or the code when omitted.
 Returns: { "score": 68, "articles": [...], "findings": [...], "meta": {...} }
 """
 
@@ -14,7 +16,6 @@ import json
 import os
 import re
 import hashlib
-import signal
 import tempfile
 import time
 from dataclasses import dataclass, field
@@ -153,14 +154,30 @@ def _track_usage(key_hash):
 
 
 # ============================================================
-# Code Scanner (extracted from air_blackbox.compliance.code_scanner)
-# All stdlib - zero external dependencies
+# Code Scanner: the air-blackbox SDK, not a copy of it
 # ============================================================
+# This file used to carry an "extracted" copy of the SDK's checks. It
+# drifted: fewer checks, its own context rules, Python only, and a bug the
+# SDK fixed (any chat app counted as a hiring system). The pasted code now
+# goes through air_blackbox.compliance.snippet, the same path the CLI and the
+# SDK's parity corpus use, so a paste gets the verdict the repository would.
+
+from air_blackbox import __version__ as SDK_VERSION
+from air_blackbox.compliance.snippet import LANGUAGE_ALIASES, scan_snippet
+
+SUPPORTED_LANGUAGES = sorted(set(LANGUAGE_ALIASES.values()))
+
+#: Group keys for findings outside EU AI Act articles 9-15. 16 is the
+#: console's long-standing key for the US hiring checks.
+ARTICLE_US_HIRING = 16
+ARTICLE_GDPR = "GDPR"
+ARTICLE_US_STATE = "US"
+
 
 @dataclass
 class CodeFinding:
-    """A single compliance finding from code analysis."""
-    article: int
+    """A single compliance finding, as the console renders it."""
+    article: object  # 9-15, 16 (US hiring), "GDPR" or "US"
     name: str
     status: str  # "pass", "warn", "fail"
     evidence: str
@@ -182,578 +199,51 @@ class CodeFinding:
         }
 
 
-# --- Pattern detection functions ---
-
-# LLM call patterns
-LLM_CALL_PATTERNS = [
-    r"\.chat\.completions\.create\(",
-    r"\.completions\.create\(",
-    r"\.generate\(",
-    r"ChatOpenAI\(",
-    r"OpenAI\(",
-    r"Anthropic\(",
-    r"client\.messages\.create\(",
-    r"llm\.invoke\(",
-    r"chain\.invoke\(",
-    r"agent\.invoke\(",
-    r"crew\.kickoff\(",
-    r"agent\.run\(",
-]
-
-FRAMEWORK_PATTERNS = {
-    "langchain": [r"from langchain", r"import langchain", r"ChatOpenAI\(", r"LLMChain\("],
-    "crewai": [r"from crewai", r"import crewai", r"Agent\(", r"Crew\("],
-    "openai": [r"from openai", r"import openai", r"OpenAI\("],
-    "anthropic": [r"from anthropic", r"import anthropic", r"Anthropic\("],
-    "autogen": [r"from autogen", r"import autogen"],
-    "haystack": [r"from haystack", r"import haystack"],
-    "google_adk": [r"from google.adk", r"from google_adk", r"from vertexai"],
-}
-
-ERROR_HANDLING_PATTERNS = [
-    r"try:\s*\n\s*.*(?:chat|completions|generate|invoke|create|run|kickoff)",
-    r"except\s+(?:Exception|openai\.\w+Error|anthropic\.\w+Error|requests\.exceptions)",
-]
-
-LOGGING_PATTERNS = [
-    r"logging\.getLogger",
-    r"logging\.basicConfig",
-    r"logger\s*=\s*logging\.getLogger",
-    r"structlog",
-    r"logging\.(?:debug|info|warning|error|critical)\(",
-]
-
-TRACING_PATTERNS = [
-    r"from opentelemetry",
-    r"trace\.get_tracer",
-    r"tracer\.start_span",
-    r"from langsmith",
-    r"LangSmithCallbackHandler",
-    r"from llama_index\.core\.instrumentation",
-    r"dispatcher\.add_event_handler",
-]
-
-HITL_PATTERNS = [
-    r"human_in_the_loop",
-    r"require_approval",
-    r"approval_required",
-    r"human_review",
-    r"confirmation_strategy",
-    r"interrupt_before",
-    r"air_gate",
-    r"GateClient",
-]
-
-INPUT_VALIDATION_PATTERNS = [
-    r"field_validator",
-    r"json_schema",
-    r"jsonschema\.validate",
-]
-
-# These patterns only count as input validation if LLM calls
-# are also present in the code. A Pydantic BaseModel for a
-# database schema is NOT AI input validation.
-INPUT_VALIDATION_LLM_CONTEXT_PATTERNS = [
-    r"pydantic",
-    r"BaseModel",
-    r"Field\(",
-    r"validator\(",
-]
-
-OUTPUT_VALIDATION_PATTERNS = [
-    r"output_pydantic",
-    r"expected_output",
-    r"OutputParser",
-    r"PydanticOutputParser",
-    r"JsonOutputParser",
-    r"response_model",
-]
-
-PII_PATTERNS = [
-    r"pii_detect",
-    r"redact.*(?:pii|ssn|email|phone|name|address|personal)",
-    r"anonymize.*(?:data|user|pii|record)",
-    r"mask_pii",
-    r"detect_pii",
-    r"scrub_pii",
-    r"presidio",
-    r"from air_blackbox\.injection",
-    r"(?:pii|personal).*(?:redact|filter|remove|strip|mask)",
-]
-
-INJECTION_DEFENSE_PATTERNS = [
-    r"guardrail",
-    r"hallucination_guardrail",
-    r"content_filter",
-    r"prompt_guard",
-    r"NeMoGuardrails",
-    r"from nemoguardrails",
-    r"sanitize.*prompt",
-    r"sanitize.*llm",
-    r"prompt.*injection",
-    r"prompt.*sanitiz",
-    r"input.*filter.*(?:llm|prompt|model|agent)",
-]
-
-RETRY_PATTERNS = [
-    r"@retry",
-    r"tenacity",
-    r"backoff",
-    r"max_retries",
-    r"retry_on_exception",
-    r"Retry\(",
-]
-
-RATE_LIMIT_PATTERNS = [
-    r"rate_limit",
-    r"throttle",
-    r"RateLimiter",
-    r"max_requests_per",
-    r"token_bucket",
-]
-
-AUDIT_TRAIL_PATTERNS = [
-    r"audit_log\s*[\.\(=]",
-    r"audit_trail\s*[\.\(=]",
-    r"event_log\s*[\.\(=]",
-    r"emit_event\s*\(",
-    r"agent_events",
-    r"crew_events",
-    r"from air_blackbox",
-    r"air_blackbox\.\w+\(",
-    r"\.air\.json",
-    r"GateClient\(",
-]
-
-DOC_PATTERNS = {
-    "risk_assessment": ["RISK_ASSESSMENT.md", "risk_assessment.md", "RISK_MANAGEMENT.md"],
-    "data_governance": ["DATA_GOVERNANCE.md", "data_governance.md"],
-    "model_card": ["MODEL_CARD.md", "model_card.md", "SYSTEM_CARD.md"],
-    "readme": ["README.md", "readme.md"],
-    "operator_guide": ["OPERATOR_GUIDE.md", "RUNBOOK.md"],
-    "redteam": ["REDTEAM.md", "ADVERSARIAL_TESTING.md"],
-}
-
-
-_REGEX_TIMEOUT_SECONDS = 2
-
-
-class _RegexTimeout(Exception):
-    pass
-
-
-def _regex_timeout_handler(signum, frame):
-    raise _RegexTimeout("Regex timed out")
-
-
-def _safe_re_search(pattern, text, flags=0, timeout=_REGEX_TIMEOUT_SECONDS):
-    """Run re.search with a timeout guard against ReDoS.
-
-    On platforms without SIGALRM (Windows, some serverless), falls back
-    to running without a timeout -- still safe because Vercel has its
-    own 10s function timeout.
-    """
-    has_alarm = hasattr(signal, "SIGALRM")
-    if has_alarm:
-        old_handler = signal.signal(signal.SIGALRM, _regex_timeout_handler)
-        signal.alarm(timeout)
-    try:
-        return re.search(pattern, text, flags)
-    except _RegexTimeout:
-        return None
-    finally:
-        if has_alarm:
-            signal.alarm(0)
-            signal.signal(signal.SIGALRM, old_handler)
-
-
-def _detect_patterns(code: str, patterns: list) -> list:
-    """Return list of patterns that match anywhere in the code."""
-    found = []
-    for p in patterns:
-        if _safe_re_search(p, code, re.MULTILINE | re.IGNORECASE):
-            found.append(p)
-    return found
-
-
-# ============================================================
-# Context-aware pattern matching
-# Prevents false positives by checking surrounding code context
-# before flagging a match. A pattern only counts if it appears
-# in a relevant context, not just anywhere in the file.
-# ============================================================
-
-# Lines within this window of a match are checked for context.
-# 15 lines covers most function/class bodies where a pattern
-# might appear far from its framework constructor.
-_CONTEXT_WINDOW = 15
-
-# Patterns that look like compliance features but are often
-# something else entirely. Each entry maps a trigger pattern
-# to a list of nearby-context patterns that CANCEL the match
-# (i.e., if the context pattern is found near the trigger,
-# the trigger is a false positive and should be skipped).
-CONTEXT_EXCLUSIONS = {
-    # allow_delegation=True in CrewAI is agent-to-agent delegation,
-    # NOT human oversight. Only count it if there is NO CrewAI
-    # Agent/Task constructor nearby.
-    r"allow_delegation\s*=\s*True": [
-        r"Agent\(",
-        r"Task\(",
-        r"from crewai",
-        r"import crewai",
-    ],
-    # max_age in config is almost always cache TTL, not token
-    # revocation. Skip if near cache/config/TTL context.
-    r"max_age": [
-        r"cache",
-        r"ttl",
-        r"Cache-Control",
-        r"max_age\s*=\s*\d+",
-        r"config",
-        r"session",
-    ],
-    # user_id in telemetry/logging/analytics is not OAuth
-    # delegation. Skip if near analytics/telemetry context.
-    r"user_id": [
-        r"telemetry",
-        r"analytics",
-        r"log",
-        r"metric",
-        r"event_track",
-        r"stats",
-    ],
-}
-
-
-def _get_line_context(code: str, match_pos: int, window: int = _CONTEXT_WINDOW) -> str:
-    """Get surrounding lines around a match position for context checking."""
-    lines = code.split("\n")
-    char_count = 0
-    match_line = 0
-    for i, line in enumerate(lines):
-        char_count += len(line) + 1  # +1 for newline
-        if char_count > match_pos:
-            match_line = i
-            break
-    start = max(0, match_line - window)
-    end = min(len(lines), match_line + window + 1)
-    return "\n".join(lines[start:end])
-
-
-def _detect_with_context(code: str, pattern: str) -> bool:
-    """
-    Check if a pattern matches in the code, but filter out false
-    positives by checking surrounding context. Returns True only
-    if the match appears in a relevant (non-excluded) context.
-    """
-    if pattern not in CONTEXT_EXCLUSIONS:
-        # No exclusion rules for this pattern, use simple match
-        return bool(re.search(pattern, code, re.MULTILINE | re.IGNORECASE))
-
-    exclusion_patterns = CONTEXT_EXCLUSIONS[pattern]
-    matches = list(re.finditer(pattern, code, re.MULTILINE | re.IGNORECASE))
-    if not matches:
-        return False
-
-    # Check each match location -- if ANY match is in a valid
-    # (non-excluded) context, the pattern counts as found
-    for m in matches:
-        context = _get_line_context(code, m.start())
-        excluded = False
-        for exc in exclusion_patterns:
-            if re.search(exc, context, re.IGNORECASE):
-                excluded = True
-                break
-        if not excluded:
-            # Found a match that is NOT in an excluded context
-            return True
-
-    # All matches were in excluded contexts -- false positive
-    return False
-
-
-def _detect_frameworks(code: str) -> list:
-    """Detect which AI frameworks are used in the code."""
-    detected = []
-    for fw, patterns in FRAMEWORK_PATTERNS.items():
-        for p in patterns:
-            if re.search(p, code):
-                detected.append(fw)
-                break
-    return detected
-
-
-def _has_llm_calls(code: str) -> bool:
-    """Check if the code contains any LLM API calls."""
-    for p in LLM_CALL_PATTERNS:
-        if re.search(p, code):
-            return True
-    return False
-
-
-# ============================================================
-# Hiring AI Compliance (US jurisdictions)
-# These checks only fire when hiring/employment AI context is
-# detected in the code. No false positives on general-purpose code.
-# ============================================================
-
-HIRING_CONTEXT_PATTERNS = [
-    r"candidate", r"applicant", r"hiring", r"screening",
-    r"resume", r"interview", r"recruitment", r"job_posting",
-    r"job_application", r"talent_acquisition", r"ats\b",
-    r"applicant_tracking", r"shortlist", r"reject.*candidate",
-    r"rank.*candidate", r"score.*candidate", r"evaluate.*candidate",
-]
-
-# Illinois HB 3773: ZIP code used as proxy for protected characteristics
-ZIP_PROXY_PATTERNS = [
-    r"zip_code", r"zipcode", r"zip_prefix", r"postal_code",
-    r"zip\s*[\[=]",  # zip used as variable/key, not the built-in function
-]
-
-ZIP_SCORING_CONTEXT = [
-    r"score", r"rank", r"weight", r"predict", r"feature",
-    r"model\.", r"classifier", r"decision", r"filter",
-]
-
-# NYC Local Law 144: Bias audit requirement for AEDT
-BIAS_AUDIT_PATTERNS = [
-    r"bias_audit", r"disparate_impact", r"adverse_impact",
-    r"four_fifths_rule", r"selection_rate", r"demographic_parity",
-    r"impact_ratio", r"fairness_metric", r"protected_class",
-    r"equal_opportunity", r"statistical_parity",
-    r"aequitas", r"fairlearn", r"ai_fairness_360",
-]
-
-# California FEHA: 4-year data retention for hiring AI decisions
-RETENTION_PATTERNS = [
-    r"retention_period", r"retention_policy", r"data_retention",
-    r"record_retention", r"archive.*(?:year|day|month)",
-    r"retention.*(?:year|day|month)", r"keep.*record.*(?:year|day)",
-    r"(?:1460|1461)\s*day", r"4\s*year.*retain", r"retain.*4\s*year",
-    r"purge_after", r"ttl.*(?:year|day)",
-]
-
-
-def _has_hiring_context(code: str) -> bool:
-    """Check if code is related to hiring/employment AI."""
-    matches = 0
-    for p in HIRING_CONTEXT_PATTERNS:
-        if re.search(p, code, re.IGNORECASE):
-            matches += 1
-            if matches >= 2:  # require at least 2 hiring signals
-                return True
-    return False
-
-
-def scan_code_string(code: str) -> List[CodeFinding]:
-    """
-    Scan a code string for EU AI Act compliance patterns.
-    Returns a list of findings grouped by article.
-    """
-    findings = []
-    has_llm = _has_llm_calls(code)
-    frameworks = _detect_frameworks(code)
-
-    # --- Article 9: Risk Management ---
-    # Check for error handling around LLM calls
-    eh = _detect_patterns(code, ERROR_HANDLING_PATTERNS)
-    if has_llm:
-        if eh:
-            findings.append(CodeFinding(
-                article=9, name="LLM call error handling", status="pass",
-                evidence=f"Error handling found around LLM calls",
-                fix_hint=""))
-        else:
-            findings.append(CodeFinding(
-                article=9, name="LLM call error handling", status="fail",
-                evidence="LLM calls detected without try/except error handling",
-                fix_hint="Wrap LLM calls in try/except blocks to handle API errors, timeouts, and rate limits gracefully"))
-
-    # Retry logic
-    retries = _detect_patterns(code, RETRY_PATTERNS)
-    if has_llm:
-        findings.append(CodeFinding(
-            article=9, name="Retry and fallback logic", status="pass" if retries else "warn",
-            evidence="Retry/fallback patterns detected" if retries else "No retry logic found for LLM calls",
-            fix_hint="" if retries else "Add retry logic with exponential backoff (e.g., tenacity or backoff library)"))
-
-    # Rate limiting
-    rl = _detect_patterns(code, RATE_LIMIT_PATTERNS)
-    findings.append(CodeFinding(
-        article=9, name="Rate limiting", status="pass" if rl else "warn",
-        evidence="Rate limiting patterns detected" if rl else "No rate limiting found",
-        fix_hint="" if rl else "Add rate limiting to prevent abuse and control costs"))
-
-    # --- Article 10: Data Governance ---
-    # PII handling
-    pii = _detect_patterns(code, PII_PATTERNS)
-    findings.append(CodeFinding(
-        article=10, name="PII handling in code", status="pass" if pii else "fail",
-        evidence="PII detection/redaction patterns found" if pii else "No PII handling detected in code",
-        fix_hint="" if pii else "Add PII detection and redaction before sending data to LLMs (e.g., presidio, or AIR Gateway PII scanner)"))
-
-    # Input validation
-    # Strong patterns (jsonschema, field_validator) always count.
-    # Weak patterns (BaseModel, Field) only count if LLM calls
-    # are also present -- a BaseModel for a database schema is
-    # NOT AI input validation.
-    iv = _detect_patterns(code, INPUT_VALIDATION_PATTERNS)
-    if not iv and has_llm:
-        iv = _detect_patterns(code, INPUT_VALIDATION_LLM_CONTEXT_PATTERNS)
-    findings.append(CodeFinding(
-        article=10, name="Input validation", status="pass" if iv else "warn",
-        evidence="Input validation patterns detected (pydantic/schema)" if iv else "No structured input validation found",
-        fix_hint="" if iv else "Use pydantic or jsonschema to validate inputs before processing"))
-
-    # --- Article 11: Technical Documentation ---
-    # Docstrings
-    docstring_count = len(re.findall(r'"""[\s\S]*?"""', code))
-    total_functions = len(re.findall(r'def\s+\w+', code))
-    if total_functions > 0:
-        ratio = docstring_count / total_functions
-        findings.append(CodeFinding(
-            article=11, name="Code documentation (docstrings)",
-            status="pass" if ratio > 0.5 else "warn" if ratio > 0.2 else "fail",
-            evidence=f"{docstring_count}/{total_functions} functions have docstrings ({ratio*100:.0f}%)",
-            fix_hint="" if ratio > 0.5 else "Add docstrings to functions, especially those handling AI logic"))
-
-    # Type hints
-    typed_funcs = len(re.findall(r'def\s+\w+\([^)]*:\s*\w+', code))
-    if total_functions > 0:
-        type_ratio = typed_funcs / total_functions
-        findings.append(CodeFinding(
-            article=11, name="Type annotations",
-            status="pass" if type_ratio > 0.5 else "warn" if type_ratio > 0.2 else "fail",
-            evidence=f"{typed_funcs}/{total_functions} functions have type hints ({type_ratio*100:.0f}%)",
-            fix_hint="" if type_ratio > 0.5 else "Add type hints to function signatures for better documentation and safety"))
-
-    # --- Article 12: Record-Keeping ---
-    # Logging
-    logs = _detect_patterns(code, LOGGING_PATTERNS)
-    findings.append(CodeFinding(
-        article=12, name="Logging implementation", status="pass" if logs else "fail",
-        evidence="Logging framework detected" if logs else "No logging detected in code",
-        fix_hint="" if logs else "Add Python logging to record AI system events (import logging)"))
-
-    # Tracing / observability
-    tracing = _detect_patterns(code, TRACING_PATTERNS)
-    findings.append(CodeFinding(
-        article=12, name="Tracing / observability", status="pass" if tracing else "fail",
-        evidence="Tracing/observability patterns detected" if tracing else "No tracing or observability framework found",
-        fix_hint="" if tracing else "Add OpenTelemetry or LangSmith for distributed tracing of AI calls"))
-
-    # Audit trail
-    audit = _detect_patterns(code, AUDIT_TRAIL_PATTERNS)
-    findings.append(CodeFinding(
-        article=12, name="Audit trail for AI actions", status="pass" if audit else "fail",
-        evidence="Audit trail patterns detected" if audit else "No tamper-evident audit trail for AI actions",
-        fix_hint="" if audit else "Route calls through AIR Gateway or add air-blackbox trust layer for signed audit records"))
-
-    # --- Article 14: Human Oversight ---
-    hitl = _detect_patterns(code, HITL_PATTERNS)
-    # Context-aware check: allow_delegation=True only counts as
-    # human oversight if it's NOT inside a CrewAI Agent/Task
-    # constructor (where it means agent-to-agent delegation)
-    if not hitl and _detect_with_context(code, r"allow_delegation\s*=\s*True"):
-        hitl = [r"allow_delegation\s*=\s*True"]
-    findings.append(CodeFinding(
-        article=14, name="Human-in-the-loop mechanism", status="pass" if hitl else "fail",
-        evidence="Human oversight patterns detected" if hitl else "No human-in-the-loop mechanism found",
-        fix_hint="" if hitl else "Add human approval gates for high-risk actions (e.g., air-gate for Slack-based approvals)"))
-
-    # --- Article 15: Robustness ---
-    # Injection defense
-    inj = _detect_patterns(code, INJECTION_DEFENSE_PATTERNS)
-    findings.append(CodeFinding(
-        article=15, name="Prompt injection defense", status="pass" if inj else "fail",
-        evidence="Injection defense patterns detected" if inj else "No prompt injection defense found",
-        fix_hint="" if inj else "Add input sanitization or guardrails to prevent prompt injection attacks"))
-
-    # Output validation
-    ov = _detect_patterns(code, OUTPUT_VALIDATION_PATTERNS)
-    findings.append(CodeFinding(
-        article=15, name="Output validation", status="pass" if ov else "warn",
-        evidence="Output validation patterns detected" if ov else "No structured output validation found",
-        fix_hint="" if ov else "Validate LLM outputs with pydantic models or output parsers before acting on them"))
-
-    # --- Article 16: Hiring AI Compliance (US) ---
-    # These checks only fire when the code looks like a hiring/employment AI system.
-    # No false positives on general-purpose code.
-    is_hiring = _has_hiring_context(code)
-    if is_hiring:
-        # Illinois HB 3773: ZIP code as proxy for protected characteristics
-        zip_found = _detect_patterns(code, ZIP_PROXY_PATTERNS)
-        zip_in_scoring = False
-        if zip_found:
-            # Only flag if ZIP is used in a scoring/ranking/prediction context
-            zip_in_scoring = bool(_detect_patterns(code, ZIP_SCORING_CONTEXT))
-        if zip_found and zip_in_scoring:
-            findings.append(CodeFinding(
-                article=16, name="Illinois HB 3773: ZIP code as proxy",
-                status="fail",
-                evidence="ZIP/postal code used as a feature in candidate scoring or ranking. Illinois HB 3773 prohibits using ZIP code as a proxy for protected characteristics in AI hiring decisions.",
-                fix_hint="Remove ZIP code from scoring features or add a documented disparity analysis showing ZIP is not proxying for race, ethnicity, or other protected classes"))
-        elif zip_found:
-            findings.append(CodeFinding(
-                article=16, name="Illinois HB 3773: ZIP code as proxy",
-                status="warn",
-                evidence="ZIP/postal code referenced in hiring context. Verify it is not used as a scoring feature.",
-                fix_hint="Audit whether ZIP code influences candidate ranking. If it does, remove it or document a disparity analysis"))
-        else:
-            findings.append(CodeFinding(
-                article=16, name="Illinois HB 3773: ZIP code as proxy",
-                status="pass",
-                evidence="No ZIP/postal code usage detected in hiring scoring context"))
-
-        # NYC Local Law 144: Bias audit for automated employment decision tools
-        bias_audit = _detect_patterns(code, BIAS_AUDIT_PATTERNS)
-        if bias_audit:
-            findings.append(CodeFinding(
-                article=16, name="NYC LL144: Bias audit framework",
-                status="pass",
-                evidence="Bias audit or fairness metrics detected in hiring AI code",
-                fix_hint=""))
-        else:
-            findings.append(CodeFinding(
-                article=16, name="NYC LL144: Bias audit framework",
-                status="fail",
-                evidence="No bias audit framework detected. NYC Local Law 144 requires an annual bias audit by an independent auditor for any automated employment decision tool (AEDT) used in NYC.",
-                fix_hint="Add bias auditing with disparate impact analysis (e.g., fairlearn, aequitas, or AI Fairness 360). Must calculate selection rates and impact ratios across race/ethnicity and sex categories"))
-
-        # California FEHA: 4-year data retention for hiring AI decisions
-        retention = _detect_patterns(code, RETENTION_PATTERNS)
-        if retention:
-            findings.append(CodeFinding(
-                article=16, name="California FEHA: Data retention",
-                status="pass",
-                evidence="Data retention policy detected in hiring AI code",
-                fix_hint=""))
-        else:
-            findings.append(CodeFinding(
-                article=16, name="California FEHA: Data retention",
-                status="fail",
-                evidence="No data retention policy detected. California FEHA amendments require AI hiring vendors to retain application and decision data for a minimum of 4 years.",
-                fix_hint="Add a retention_policy config with a minimum 4-year (1460-day) retention period for all candidate evaluation data and AI-generated recommendations"))
-
-    # Assign severity
+def _severity(f: CodeFinding) -> str:
+    """Same rule the console has always used; GDPR and US state-law groups
+    take the medium/low branches."""
+    if f.status == "fail":
+        return "high" if f.article in (9, 12, 14, 15, 16) else "medium"
+    if f.status == "warn":
+        return "medium" if f.article in (9, 12, 16) else "low"
+    return "low"
+
+
+def findings_from_sdk(result: dict) -> List[CodeFinding]:
+    """Flatten a scan_snippet result into console findings."""
+    out = []
+    for f in result["findings"]:
+        if f["name"] == "Source files":
+            continue  # only fires on an empty project; a snippet is one file
+        article = ARTICLE_US_HIRING if f.get("framework") == "us_hiring" else f["article"]
+        out.append(CodeFinding(article=article, name=f["name"], status=f["status"],
+                               evidence=f["evidence"], detection=f.get("detection", "auto"),
+                               fix_hint=f.get("fix_hint", "")))
+    for f in result["gdpr"]:
+        out.append(CodeFinding(article=ARTICLE_GDPR, name=f["name"], status=f["status"],
+                               evidence=f["evidence"], fix_hint=f.get("fix_hint", "")))
+    for f in result["us"]:
+        out.append(CodeFinding(article=ARTICLE_US_STATE, name=f["name"], status=f["status"],
+                               evidence=f["evidence"], fix_hint=f.get("fix_hint", "")))
+    for f in out:
+        f.severity = _severity(f)
+    return out
+
+
+def has_llm_calls(findings: List[CodeFinding]) -> bool:
+    """The SDK says so in the error-handling check's evidence."""
     for f in findings:
-        if f.status == "fail":
-            if f.article in (12, 14):  # Record-keeping and oversight are high
-                f.severity = "high"
-            elif f.article in (9, 15):  # Risk and robustness are high if fail
-                f.severity = "high"
-            elif f.article == 16:  # Hiring compliance violations are high
-                f.severity = "high"
-            else:
-                f.severity = "medium"
-        elif f.status == "warn":
-            f.severity = "medium" if f.article in (9, 12, 16) else "low"
-        else:
-            f.severity = "low"
+        if f.name == "LLM call error handling":
+            return not f.evidence.startswith("No direct LLM API calls")
+    return False
 
-    return findings
+
+def scan_code_string(code: str, language=None, filename=None) -> dict:
+    """Scan pasted code with the SDK. Returns the SDK result plus console
+    findings under "console_findings"."""
+    result = scan_snippet(code, language=language, filename=filename)
+    result["console_findings"] = findings_from_sdk(result)
+    return result
 
 
 # ============================================================
@@ -870,9 +360,23 @@ EXPLANATIONS = {
 }
 
 
+
+#: The SDK renamed some checks after these explanations were written.
+LEGACY_EXPLANATION_NAMES = {
+    "Input validation / schema enforcement": "Input validation",
+    "Application logging": "Logging implementation",
+    "LLM output validation": "Output validation",
+    "Retry / backoff logic": "Retry and fallback logic",
+    "Fallback/recovery patterns": "Retry and fallback logic",
+    "Agent action audit trail": "Audit trail for AI actions",
+    "Human-in-the-loop patterns": "Human-in-the-loop mechanism",
+}
+
+
 def _get_explanation(finding: CodeFinding) -> dict:
     """Get plain-English explanation for a finding."""
-    name_map = EXPLANATIONS.get(finding.name, {})
+    key = LEGACY_EXPLANATION_NAMES.get(finding.name, finding.name)
+    name_map = EXPLANATIONS.get(key, {})
     status_map = name_map.get(finding.status, {})
     return {
         "meaning": status_map.get("meaning", finding.evidence),
@@ -893,9 +397,18 @@ ARTICLE_NAMES = {
     14: "Human Oversight",
     15: "Accuracy, Robustness & Cybersecurity",
     16: "Hiring AI Compliance (US)",
+    ARTICLE_GDPR: "GDPR Data Protection",
+    ARTICLE_US_STATE: "US State AI Laws (CO, IL, CA, TX)",
 }
 
-ARTICLE_WEIGHTS = {9: 1.0, 10: 1.0, 11: 0.8, 12: 1.2, 14: 1.2, 15: 1.0, 16: 1.0}
+ARTICLE_WEIGHTS = {9: 1.0, 10: 1.0, 11: 0.8, 12: 1.2, 14: 1.2, 15: 1.0, 16: 1.0,
+                   ARTICLE_GDPR: 0.8, ARTICLE_US_STATE: 0.8}
+
+_ARTICLE_ORDER = [9, 10, 11, 12, 14, 15, 16, ARTICLE_GDPR, ARTICLE_US_STATE]
+
+
+def article_order(key) -> int:
+    return _ARTICLE_ORDER.index(key) if key in _ARTICLE_ORDER else len(_ARTICLE_ORDER)
 
 
 def calculate_score(findings: List[CodeFinding]) -> dict:
@@ -964,11 +477,17 @@ class handler(BaseHTTPRequestHandler):
             try:
                 data = json.loads(body)
             except json.JSONDecodeError:
-                return self._error(400, "Invalid JSON. Send: {\"code\": \"...your python code...\"}")
+                return self._error(400, "Invalid JSON. Send: {\"code\": \"...your code...\"}")
 
             code = data.get("code", "")
             if not code or not code.strip():
-                return self._error(400, "No code provided. Send JSON with a 'code' field containing Python code.")
+                return self._error(400, "No code provided. Send JSON with a 'code' field containing your code.")
+            language = data.get("language") or None
+            filename = data.get("filename") or None
+            if language and str(language).strip().lower() not in LANGUAGE_ALIASES:
+                return self._error(400, "Unknown language. Use one of: " + ", ".join(SUPPORTED_LANGUAGES))
+            if filename is not None and not isinstance(filename, str):
+                return self._error(400, "filename must be a string")
 
             if len(code) > MAX_CODE_SIZE:
                 return self._error(413, f"Code too large. Maximum size is {MAX_CODE_SIZE // 1024}KB.")
@@ -1009,7 +528,8 @@ class handler(BaseHTTPRequestHandler):
 
             # Run scan BEFORE deducting credits -- if scan errors, no charge
             start = time.time()
-            findings = scan_code_string(code)
+            result = scan_code_string(code, language=language, filename=filename)
+            findings = result["console_findings"]
             scores = calculate_score(findings)
 
             # Scan succeeded -- NOW deduct credit / increment free tier
@@ -1024,8 +544,8 @@ class handler(BaseHTTPRequestHandler):
             duration_ms = int((time.time() - start) * 1000)
 
             # Build response
-            frameworks = _detect_frameworks(code)
-            has_llm = _has_llm_calls(code)
+            frameworks = result["frameworks"]
+            has_llm = has_llm_calls(findings)
 
             # Group findings by article for the frontend
             articles_out = []
@@ -1033,7 +553,7 @@ class handler(BaseHTTPRequestHandler):
             for f in findings:
                 by_article.setdefault(f.article, []).append(f)
 
-            for art_num in sorted(by_article.keys()):
+            for art_num in sorted(by_article.keys(), key=article_order):
                 art_data = scores["articles"].get(art_num, {})
                 articles_out.append({
                     "number": art_num,
@@ -1079,8 +599,10 @@ class handler(BaseHTTPRequestHandler):
                     "high_severity": sum(1 for f in findings if f.severity == "high"),
                     "medium_severity": sum(1 for f in findings if f.severity == "medium"),
                     "low_severity": sum(1 for f in findings if f.severity == "low"),
-                    "scanner_version": "1.0.0",
-                    "engine": "air-blackbox-console",
+                    "language": result["language"],
+                    "language_source": result["language_source"],
+                    "scanner_version": SDK_VERSION,
+                    "engine": "air-blackbox",
                 },
                 "auth": auth_info,
             }
@@ -1089,6 +611,21 @@ class handler(BaseHTTPRequestHandler):
 
         except Exception as e:
             self._error(500, f"Scan failed: {str(e)[:200]}")
+
+    def do_GET(self):
+        """Health: which scanner this deployment runs, and what it reads.
+
+        Exists so a deployment can be verified by fetching it, instead of
+        trusting a green build. A preview once reported "Deployment has
+        completed" while every scan returned FUNCTION_INVOCATION_FAILED,
+        because the SDK had not been installed.
+        """
+        self._json_response(200, {
+            "engine": "air-blackbox",
+            "scanner_version": SDK_VERSION,
+            "languages": SUPPORTED_LANGUAGES,
+            "usage": "POST JSON {\"code\": \"...\", \"language\": \"optional\", \"filename\": \"optional\"}",
+        })
 
     def do_OPTIONS(self):
         """Handle CORS preflight."""
@@ -1108,6 +645,6 @@ class handler(BaseHTTPRequestHandler):
 
     def _cors_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
         self.send_header("Access-Control-Max-Age", "86400")

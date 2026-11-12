@@ -376,14 +376,14 @@ curl -X POST https://airblackbox.ai/api/policy \
 
                 <div class="api-card">
                     <h3>API 3: Compliance Scan <span style="font-size:0.7rem;color:var(--green);font-weight:600;margin-left:0.5rem;">LIVE</span></h3>
-                    <p>Scan Python AI code for EU AI Act compliance. Checks Articles 9, 10, 11, 12, 14, 15 plus US hiring laws.</p>
-                    <div class="code-block"><span class="comment"># Scan Python code for EU AI Act compliance</span>
+                    <p>Scan AI code in Python, TypeScript, JavaScript, Java or Kotlin (or a Jupyter notebook) for EU AI Act compliance. Checks Articles 9, 10, 11, 12, 14, 15 plus GDPR, US state AI laws and the US hiring laws. The language is detected, or pass <code>"language"</code>.</p>
+                    <div class="code-block"><span class="comment"># Scan code for EU AI Act compliance (language auto-detected; or add "language": "kotlin")</span>
 curl -X POST https://airblackbox.ai/api/scan \
   -H <span class="string">"Content-Type: application/json"</span> \
   -H <span class="string">"Authorization: Bearer airbb_sk_your_key_here"</span> \
   -d <span class="string">'{"code": "from openai import OpenAI\nclient = OpenAI()..."}'</span>
 
-<span class="comment"># Returns: score (0-100), articles, findings with fix hints</span>
+<span class="comment"># Returns: score (0-100), articles, findings with fix hints, meta.language</span>
 <span class="comment"># Checks: error handling, PII, logging, tracing, audit trails,</span>
 <span class="comment"># human oversight, injection defense, output validation</span>
 <span class="comment"># Also: Illinois HB 3773, NYC LL144, California FEHA (hiring AI)</span></div>

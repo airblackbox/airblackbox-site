@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AIR Blackbox, ArkForge, Systima Comply and Asqav run on the same 144 hand-labelled programs in six languages. In Python, TypeScript and JavaScript the tools are close; the gaps are Java, Kotlin, notebooks and breadth. Method, caveats and every verdict are public.">
+    <meta name="keywords" content="eu ai act scanner benchmark, eu ai act compliance scanner comparison, open source ai compliance tools, arkforge eu ai act scanner, systima comply, asqav, air-blackbox">
+    <meta name="author" content="Jason Shotwell">
+    <link rel="canonical" href="https://airblackbox.ai/blog/eu-ai-act-scanner-benchmark">
+
+    <!-- OG Tags -->
+    <meta property="og:title" content="We Ran Four Open-Source EU AI Act Scanners on the Same Code and Published Every Verdict">
+    <meta property="og:description" content="AIR Blackbox, ArkForge, Systima Comply and Asqav run on the same 144 hand-labelled programs in six languages. In Python, TypeScript and JavaScript the tools are close; the gaps are Java, Kotlin, notebooks and breadth. Method, caveats and every verdict are public.">
+    <meta property="og:url" content="https://airblackbox.ai/blog/eu-ai-act-scanner-benchmark">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://airblackbox.ai/og-image.svg">
+    <meta property="article:published_time" content="2026-10-15">
+    <meta property="article:modified_time" content="2026-10-15">
+    <meta property="article:author" content="Jason Shotwell">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Four EU AI Act scanners, one test, every verdict">
+    <meta name="twitter:description" content="AIR Blackbox, ArkForge, Systima Comply and Asqav run on the same 144 hand-labelled programs in six languages. In Python, TypeScript and JavaScript the tools are close; the gaps are Java, Kotlin, notebooks and breadth. Method, caveats and every verdict are public.">
+    <meta name="twitter:image" content="https://airblackbox.ai/og-image.svg">
+
+    <!-- Structured Data: Article -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "We Ran Four Open-Source EU AI Act Scanners on the Same Code and Published Every Verdict",
+  "description": "AIR Blackbox, ArkForge, Systima Comply and Asqav run on the same 144 hand-labelled programs in six languages. In Python, TypeScript and JavaScript the tools are close; the gaps are Java, Kotlin, notebooks and breadth. Method, caveats and every verdict are public.",
+  "image": "https://airblackbox.ai/og-image.svg",
+  "datePublished": "2026-10-15",
+  "dateModified": "2026-10-15",
+  "author": {
+    "@type": "Person",
+    "name": "Jason Shotwell",
+    "url": "https://github.com/jshotwell",
+    "jobTitle": "Creator of AIR Blackbox"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AIR Blackbox",
+    "url": "https://airblackbox.ai",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://airblackbox.ai/logo.png"
+    }
+  },
+  "mainEntityOfPage": "https://airblackbox.ai/blog/eu-ai-act-scanner-benchmark",
+  "keywords": [
+    "eu ai act scanner benchmark",
+    "eu ai act compliance scanner comparison",
+    "open source ai compliance tools",
+    "arkforge",
+    "systima comply",
+    "asqav",
+    "air-blackbox"
+  ]
+}
+    </script>
+
+    <!-- Structured Data: BreadcrumbList -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://airblackbox.ai"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://airblackbox.ai/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "EU AI Act scanner benchmark",
+      "item": "https://airblackbox.ai/blog/eu-ai-act-scanner-benchmark"
+    }
+  ]
+}
+    </script>
+
+    <title>We Ran Four Open-Source EU AI Act Scanners on the Same Code and Published Every Verdict | AIR Blackbox</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #f3f2f2;
+            --bg-secondary: #eae9e9;
+            --bg-tertiary: #eae9e9;
+            --text-primary: #201e1d;
+            --text-secondary: #6b6866;
+            --accent: #ec3013;
+            --accent-muted: rgba(236, 48, 19, 0.1);
+            --border: rgba(32,30,29,0.35);
+            --green: #1a7f37;
+            --yellow: #b45309;
+            --red: #ec3013;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Archivo', system-ui, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            padding: 4rem 0 2rem;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--accent-muted);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        code {
+            font-family: "JetBrains Mono", "Courier New", monospace;
+            background-color: var(--bg-tertiary);
+            padding: 0.2em 0.4em;
+            border-radius: 0;
+            font-size: 0.9em;
+            color: var(--accent);
+        }
+
+        pre {
+            background-color: #201e1d;
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            font-family: "JetBrains Mono", "Courier New", monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #d7d3d3;
+        }
+
+        .highlight {
+            background-color: var(--accent-muted);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0;
+        }
+
+        .highlight strong {
+            color: var(--accent);
+        }
+
+        .deadline-box {
+            background-color: rgba(236, 48, 19, 0.08);
+            border-left: 4px solid var(--red);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0;
+        }
+
+        .deadline-box strong {
+            color: var(--red);
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            background-color: var(--accent-muted);
+            border-radius: 0 4px 4px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background-color: var(--bg-tertiary);
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: var(--bg-secondary);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .key-takeaways {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .key-takeaways h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+
+        .key-takeaways li {
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-item {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .faq-toggle {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .faq-item.open .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            display: none;
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+
+        .author-box {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .author-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        .author-info .author-title {
+            color: var(--accent);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .author-info p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        .cta-box {
+            background: #eae9e9;
+            border: 1px solid var(--accent);
+            border-radius: 0;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .cta-box h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+
+        .cta-box pre {
+            text-align: left;
+            max-width: 500px;
+            margin: 1rem auto;
+        }
+
+        footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 6rem;
+            padding: 3rem 0;
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 2rem 0;
+        }
+
+        .table-wrap table {
+            margin: 0;
+        }
+
+        p code, li code {
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 768px) {
+            nav > div { flex-wrap: wrap; gap: 8px; }
+            nav span { flex-wrap: wrap; gap: 12px !important; }
+            th, td { padding: 0.6rem; font-size: 0.85rem; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            .container { padding: 0 1rem; }
+            .author-box { flex-direction: column; }
+            .article-meta { gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav style="background:#f3f2f2;border-bottom:1px solid rgba(32,30,29,0.35);padding:16px 0;">
+      <div style="max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+        <a href="/" style="color:#201e1d;font-weight:700;font-size:18px;text-decoration:none;">AIR <span style="color:#ec3013;">Blackbox</span></a>
+        <span style="display:flex;gap:20px;">
+          <a href="/" style="color:#6b6866;text-decoration:none;">Home</a>
+          <a href="/compliance-mapping" style="color:#6b6866;text-decoration:none;">Docs</a>
+          <a href="/blog/" style="color:#ec3013;text-decoration:none;">Blog</a>
+          <a href="https://github.com/airblackbox/airblackbox" style="color:#6b6866;text-decoration:none;">GitHub</a>
+          <a href="https://pypi.org/project/air-trust/" style="color:#6b6866;text-decoration:none;">PyPI</a>
+        </span>
+      </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="article-meta">
+                <span>Published October 15, 2026</span>
+                <span>8 min read</span>
+                <span>By <a href="https://github.com/jshotwell">Jason Shotwell</a></span>
+            </div>
+            <h1>We Ran Four Open-Source EU AI Act Scanners on the Same Code and Published Every Verdict</h1>
+            <p class="subtitle">Open-source EU AI Act scanners publish lists of what they check. None of the three we compared here publishes how often those checks are right. We already measure our own scanner, so we ran AIR Blackbox, ArkForge, Systima Comply and Asqav on the same 144 hand-labelled programs and put every single verdict in the repository, including the results that do not flatter us.</p>
+        </header>
+
+        <div class="key-takeaways">
+            <h3>Key Takeaways</h3>
+            <ul>
+                <li>In Python, TypeScript and JavaScript the tools are close. On the three checks it shares with the corpus, Systima matched AIR on every sample in the languages it reads.</li>
+                <li>The real gap is reach. Of 145 Java and Kotlin programs that call an AI SDK, AIR recognised all 145 as AI code. The best of the other three recognised 7.</li>
+                <li>The second gap is breadth. AIR checks 38 code practices in this corpus. The others have three, three and five code-level checks that map onto it.</li>
+                <li>The others check things AIR does not, such as prohibited-practice indicators and whether compliance documents exist. Those are listed, and nobody is scored on them.</li>
+                <li>We wrote the test, and AIR was developed against it, so AIR's numbers are an upper bound. The method, the mapping and every verdict are public so anyone can check them.</li>
+            </ul>
+        </div>
+
+        <h2>Why accuracy, and why publish it</h2>
+        <p>A compliance scanner makes a claim about your code: this practice is there, that one is missing. If the claim is wrong, you either fix something that was fine or ship something that was not. A list of check names tells you nothing about which of those will happen.</p>
+        <p>We already measure our own scanner against a labelled corpus. The obvious next question is how the other open-source tools do on the same programs. The answer turned out to be more interesting than a leaderboard, because the tools are not really trying to do the same job.</p>
+
+        <h2>How the test works</h2>
+        <p><strong>The programs.</strong> The <a href="https://github.com/airblackbox/airblackbox/blob/main/eval/scanner/parity_corpus.json">parity corpus</a> holds 144 small programs covering 38 practices, such as error handling around model calls, logging, human approval before risky actions, and GDPR consent. Each program either has the practice or deliberately lacks it, and each is written in Python, TypeScript, JavaScript, Java and Kotlin. Each Python program is also run as a Jupyter notebook.</p>
+        <p><strong>The tools.</strong> AIR Blackbox 1.17.0, <a href="https://github.com/ark-forge/mcp-eu-ai-act">ArkForge eu-ai-act-scanner</a> 2.0.39, <a href="https://github.com/systima-ai/comply">Systima Comply</a> 0.3.1 and the <a href="https://github.com/jagmarques/asqav-compliance">Asqav compliance scanner</a> 1.0.1. Each was installed from its own registry or repository and run through its own CLI or exported functions.</p>
+        <p><strong>Fair scoring.</strong> Each competitor is scored only on the practices it says it checks, and AIR is scored on exactly the same samples. We read each tool's source and documentation to map its checks to the corpus; the mapping is <a href="https://github.com/airblackbox/airblackbox/blob/main/eval/competitors/README.md">published with its sources</a>. Only programs that import an AI SDK are scored, because some Python cases are short fragments and a tool scoped to AI code is right to skip them. A scored program where a tool gives no verdict counts as a miss, because a user running that tool on that program learns nothing.</p>
+
+        <h2>Results</h2>
+        <h3>Practice detection</h3>
+        <p>On every scored program, across all six languages and forms:</p>
+        <div class="table-wrap"><table>
+            <thead>
+                <tr><th>Tool</th><th>Practices</th><th>Programs</th><th>Tool correct</th><th>AIR correct</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>ArkForge</td><td>3</td><td>24</td><td>17 (71%)</td><td>24 (100%)</td></tr>
+                <tr><td>Systima Comply</td><td>3</td><td>26</td><td>19 (73%)</td><td>26 (100%)</td></tr>
+                <tr><td>Asqav</td><td>5</td><td>71</td><td>7 (10%)</td><td>71 (100%)</td></tr>
+            </tbody>
+        </table></div>
+        <p>That table mostly measures which languages each tool reads. Here is the same comparison restricted to the languages each tool says it supports:</p>
+        <div class="table-wrap"><table>
+            <thead>
+                <tr><th>Tool</th><th>Languages it reads</th><th>Programs</th><th>Tool correct</th><th>AIR correct</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>ArkForge</td><td>Python, TypeScript, JavaScript, Java</td><td>16</td><td>13 (81%)</td><td>16 (100%)</td></tr>
+                <tr><td>Systima Comply</td><td>Python, TypeScript, JavaScript</td><td>12</td><td>12 (100%)</td><td>12 (100%)</td></tr>
+                <tr><td>Asqav</td><td>Python</td><td>12</td><td>7 (58%)</td><td>12 (100%)</td></tr>
+            </tbody>
+        </table></div>
+        <p>Inside its own languages, Systima ties AIR. ArkForge's misses there all come from its content-marking check, which reads only <code>.py</code> files. Two of Asqav's misses come from one pattern: it needs a space or a dot after <code>langchain</code>, so <code>from langchain_openai import ChatOpenAI</code>, the usual LangChain import, is skipped.</p>
+
+        <h3>Does the tool notice the AI code at all?</h3>
+        <p>Before any check can run, a scanner has to recognise that a program calls an AI model. Ground truth here is nothing but the program's import lines.</p>
+        <div class="table-wrap"><table>
+            <thead>
+                <tr><th>Tool</th><th>Python</th><th>Notebook</th><th>TypeScript</th><th>JavaScript</th><th>Java</th><th>Kotlin</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>AIR Blackbox</td><td>52/53</td><td>52/53</td><td>53/54</td><td>52/53</td><td>78/78</td><td>67/67</td></tr>
+                <tr><td>ArkForge</td><td>49/53</td><td>34/53</td><td>53/54</td><td>52/53</td><td>7/78</td><td>0/67</td></tr>
+                <tr><td>Systima Comply</td><td>52/53</td><td>52/53</td><td>52/54</td><td>51/53</td><td>0/78</td><td>0/67</td></tr>
+                <tr><td>Asqav</td><td>48/53</td><td>0/53</td><td>0/54</td><td>0/53</td><td>0/78</td><td>0/67</td></tr>
+            </tbody>
+        </table></div>
+        <p>AIR's three misses are real gaps in its framework list: a Python program using only LangGraph, and the TypeScript and JavaScript versions of a program using <code>@openai/guardrails</code>. Both are small additions to that list. The published numbers stay pinned to 1.17.0, misses included.</p>
+
+        <h2>What the other tools do that AIR does not</h2>
+        <p>This benchmark only sees checks that read code. Each of the other tools also does something AIR does not, and none of it is scored here, for or against anyone:</p>
+        <ul>
+            <li><strong>ArkForge</strong> checks whether compliance documents such as <code>HUMAN_OVERSIGHT.md</code> and <code>RISK_MANAGEMENT.md</code> exist and scores how complete they are. That is its main EU AI Act check.</li>
+            <li><strong>Systima Comply</strong> looks for Article 5 prohibited-practice indicators, validates a declared risk classification, and checks declared documentation files. It also posts findings on pull requests.</li>
+            <li><strong>Asqav</strong> checks for revocation and kill-switch patterns.</li>
+        </ul>
+        <p>If those are what you need, the code-level numbers above are not the whole story.</p>
+
+        <h2>What the numbers do not show</h2>
+        <ul>
+            <li><strong>We wrote the corpus.</strong> The translations were written without access to the scanner's rules, but AIR was improved against these cases before release. Its scores here are an upper bound. Across the whole corpus it gets 96% right, and its six misses are <a href="https://github.com/airblackbox/airblackbox/blob/main/SCANNER_EVAL.md">listed in the eval report</a>. The labels were written before this comparison and were not changed for it.</li>
+            <li><strong>The overlap is small.</strong> Between 24 and 71 scored programs per competitor. Treat the percentages as indicative, not precise.</li>
+            <li><strong>The mapping is a judgement.</strong> If one of the other tools' checks means something different from what we mapped it to, the fix is one line, and we will rerun.</li>
+            <li><strong>Dependency files are synthesised.</strong> Python and JavaScript samples get a <code>requirements.txt</code> or <code>package.json</code> built from their imports, as a real project would have. Some of the other tools rely on those files. Java and Kotlin samples get none.</li>
+        </ul>
+
+        <h2>Where the signing keys live</h2>
+        <p>Scanning is half of AIR. The other half is a signed, tamper-evident record of what an agent did, and among these tools the closest alternative is Asqav's SDK, which also offers post-quantum ML-DSA-65 signatures. The difference is where the signing happens.</p>
+        <p>Asqav's <a href="https://github.com/jagmarques/asqav-sdk">README</a> says "Cryptography runs server-side", and that its receipts use "ML-DSA-65 for cloud-issued receipts, Ed25519/ES256 for locally signed ones". Its client SDK is source-available under the Elastic License 2.0, which is not an OSI open-source license, and its signing service is commercial. To its credit, its verifier is Apache-2.0 and anyone can verify a receipt without an account.</p>
+        <p>AIR signs on your machine. The keys are generated in your own process and never leave it: ML-DSA-65 when the <code>pqc</code> extra is installed, Ed25519 otherwise. There is no account, no API key and no hosted signing service, and the whole project is Apache-2.0. Scanning never sends your code anywhere. The CLI does send an anonymous usage count for some commands, never code or file names, and <code>AIR_BLACKBOX_TELEMETRY=off</code> turns it off.</p>
+
+        <h2>Check it yourself</h2>
+        <p>The harness, the mapping, the caveats and every verdict from every tool are in <a href="https://github.com/airblackbox/airblackbox/tree/main/eval/competitors">eval/competitors</a>. The run takes about three minutes:</p>
+        <pre><code>git clone https://github.com/airblackbox/airblackbox
+cd airblackbox
+cat eval/competitors/README.md   # installs all four tools, then runs:
+python3 eval/competitors/run_h2h.py --json results.json</code></pre>
+        <p>If we got one of the other tools wrong, open an issue or a pull request. That goes double for the tools' own maintainers. A benchmark you cannot argue with is not worth much.</p>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://github.com/airblackbox/airblackbox">GitHub</a>
+                <a href="https://pypi.org/project/air-trust/">PyPI</a>
+                <a href="https://airblackbox.ai/terms">Terms of Service</a>
+                <a href="https://airblackbox.ai/privacy">Privacy Policy</a>
+            </div>
+            <div class="footer-copyright">
+                Copyright 2026 AIR Blackbox. All rights reserved.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

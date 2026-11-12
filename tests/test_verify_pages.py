@@ -102,6 +102,8 @@ def main():
         page.goto(f"{base}/verify.html")
         page.set_input_files("#file", os.path.join(ROOT, 'demo/sample.air-evidence'))
         page.wait_for_selector(".verdict h2", timeout=20000)
+        # The page shows "Checking…" in the same heading first; wait for the verdict.
+        page.wait_for_function("() => !document.querySelector('.verdict h2').innerText.includes('Checking')", timeout=20000)
         vh = page.inner_text(".verdict h2").strip()
         print(f"\n[verify.html] genuine bundle -> {vh}")
         if "Do not rely" in vh:
@@ -115,6 +117,8 @@ def main():
             page.goto(f"{base}/verify.html")
             page.set_input_files("#file", os.path.join(ROOT, fn))
             page.wait_for_selector(".verdict h2", timeout=20000)
+            # The page shows "Checking…" in the same heading first; wait for the verdict.
+            page.wait_for_function("() => !document.querySelector('.verdict h2').innerText.includes('Checking')", timeout=20000)
             got = page.inner_text(".verdict h2").strip()
             print(f"[verify.html] {label:22} -> {got}")
             if expect not in got:

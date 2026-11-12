@@ -1,2 +1,3 @@
 redis>=5.0.0
 fpdf2>=2.8.0
+air-blackbox>=1.17.0,<2

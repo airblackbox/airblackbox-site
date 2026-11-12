@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AIR Blackbox 1.17.0 scans TypeScript, JavaScript, Java, Kotlin and Jupyter notebooks for EU AI Act, GDPR and US state-law gaps, and equivalent code gets the same verdict as Python. How that was proven, what it reads, and what it still cannot do.">
+    <meta name="keywords" content="eu ai act compliance scanner typescript, ai compliance scanner java, kotlin ai agent compliance, javascript llm compliance scan, jupyter notebook compliance scan, air-blackbox 1.17.0, langchain4j compliance, vercel ai sdk compliance">
+    <meta name="author" content="Jason Shotwell">
+    <link rel="canonical" href="https://airblackbox.ai/blog/compliance-scanner-typescript-java-kotlin">
+
+    <!-- OG Tags -->
+    <meta property="og:title" content="The Compliance Scanner Now Reads TypeScript, JavaScript, Java and Kotlin, With the Same Verdict as Python">
+    <meta property="og:description" content="AIR Blackbox 1.17.0 scans TypeScript, JavaScript, Java, Kotlin and Jupyter notebooks for EU AI Act, GDPR and US state-law gaps, and equivalent code gets the same verdict as Python. How that was proven, what it reads, and what it still cannot do.">
+    <meta property="og:url" content="https://airblackbox.ai/blog/compliance-scanner-typescript-java-kotlin">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://airblackbox.ai/og-image.svg">
+    <meta property="article:published_time" content="2026-10-15">
+    <meta property="article:modified_time" content="2026-10-15">
+    <meta property="article:author" content="Jason Shotwell">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AIR Blackbox 1.17.0: six languages, one verdict">
+    <meta name="twitter:description" content="AIR Blackbox 1.17.0 scans TypeScript, JavaScript, Java, Kotlin and Jupyter notebooks for EU AI Act, GDPR and US state-law gaps, and equivalent code gets the same verdict as Python. How that was proven, what it reads, and what it still cannot do.">
+    <meta name="twitter:image" content="https://airblackbox.ai/og-image.svg">
+
+    <!-- Structured Data: Article -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "The Compliance Scanner Now Reads TypeScript, JavaScript, Java and Kotlin, With the Same Verdict as Python",
+      "description": "AIR Blackbox 1.17.0 scans TypeScript, JavaScript, Java, Kotlin and Jupyter notebooks for EU AI Act, GDPR and US state-law gaps, and equivalent code gets the same verdict as Python. How that was proven, what it reads, and what it still cannot do.",
+      "image": "https://airblackbox.ai/og-image.svg",
+      "datePublished": "2026-10-15",
+      "dateModified": "2026-10-15",
+      "author": {
+        "@type": "Person",
+        "name": "Jason Shotwell",
+        "url": "https://github.com/jshotwell",
+        "jobTitle": "Creator of AIR Blackbox",
+        "description": "Builder of open-source AI governance tooling. Creator of AIR Blackbox and air-trust, the cryptographic audit chain for AI agents."
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "AIR Blackbox",
+        "url": "https://airblackbox.ai",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://airblackbox.ai/logo.png"
+        }
+      },
+      "mainEntityOfPage": "https://airblackbox.ai/blog/compliance-scanner-typescript-java-kotlin",
+      "keywords": ["eu ai act compliance scanner", "typescript", "javascript", "java", "kotlin", "jupyter notebooks", "air-blackbox 1.17.0", "cross-language parity"]
+    }
+    </script>
+
+    <!-- Structured Data: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://airblackbox.ai"},
+        {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://airblackbox.ai/blog/"},
+        {"@type": "ListItem", "position": 3, "name": "The Compliance Scanner Now Reads TypeScript, JavaScript, Java and Kotlin", "item": "https://airblackbox.ai/blog/compliance-scanner-typescript-java-kotlin"}
+      ]
+    }
+    </script>
+
+    <title>The Compliance Scanner Now Reads TypeScript, JavaScript, Java and Kotlin, With the Same Verdict as Python | AIR Blackbox</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #f3f2f2;
+            --bg-secondary: #eae9e9;
+            --bg-tertiary: #eae9e9;
+            --text-primary: #201e1d;
+            --text-secondary: #6b6866;
+            --accent: #ec3013;
+            --accent-muted: rgba(236, 48, 19, 0.1);
+            --border: rgba(32,30,29,0.35);
+            --green: #1a7f37;
+            --yellow: #b45309;
+            --red: #ec3013;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Archivo', system-ui, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            padding: 4rem 0 2rem;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--accent-muted);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        code {
+            font-family: "JetBrains Mono", "Courier New", monospace;
+            background-color: var(--bg-tertiary);
+            padding: 0.2em 0.4em;
+            border-radius: 0;
+            font-size: 0.9em;
+            color: var(--accent);
+        }
+
+        pre {
+            background-color: #201e1d;
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            font-family: "JetBrains Mono", "Courier New", monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #d7d3d3;
+        }
+
+        .highlight {
+            background-color: var(--accent-muted);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0;
+        }
+
+        .highlight strong {
+            color: var(--accent);
+        }
+
+        .deadline-box {
+            background-color: rgba(236, 48, 19, 0.08);
+            border-left: 4px solid var(--red);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0;
+        }
+
+        .deadline-box strong {
+            color: var(--red);
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            background-color: var(--accent-muted);
+            border-radius: 0 4px 4px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background-color: var(--bg-tertiary);
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: var(--bg-secondary);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .key-takeaways {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .key-takeaways h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+
+        .key-takeaways li {
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-item {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .faq-toggle {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .faq-item.open .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            display: none;
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+
+        .author-box {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .author-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        .author-info .author-title {
+            color: var(--accent);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .author-info p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        .cta-box {
+            background: #eae9e9;
+            border: 1px solid var(--accent);
+            border-radius: 0;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .cta-box h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+
+        .cta-box pre {
+            text-align: left;
+            max-width: 500px;
+            margin: 1rem auto;
+        }
+
+        footer {
+            background-color: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 6rem;
+            padding: 3rem 0;
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            .container { padding: 0 1rem; }
+            .author-box { flex-direction: column; }
+            .article-meta { gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav style="background:#f3f2f2;border-bottom:1px solid rgba(32,30,29,0.35);padding:16px 0;">
+      <div style="max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+        <a href="/" style="color:#201e1d;font-weight:700;font-size:18px;text-decoration:none;">AIR <span style="color:#ec3013;">Blackbox</span></a>
+        <span style="display:flex;gap:20px;">
+          <a href="/" style="color:#6b6866;text-decoration:none;">Home</a>
+          <a href="/compliance-mapping" style="color:#6b6866;text-decoration:none;">Docs</a>
+          <a href="/blog/" style="color:#ec3013;text-decoration:none;">Blog</a>
+          <a href="https://github.com/airblackbox/airblackbox" style="color:#6b6866;text-decoration:none;">GitHub</a>
+          <a href="https://pypi.org/project/air-trust/" style="color:#6b6866;text-decoration:none;">PyPI</a>
+        </span>
+      </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="article-meta">
+                <span>Published October 15, 2026</span>
+                <span>7 min read</span>
+                <span>By <a href="https://github.com/jshotwell">Jason Shotwell</a></span>
+            </div>
+            <h1>The Compliance Scanner Now Reads TypeScript, JavaScript, Java and Kotlin, With the Same Verdict as Python</h1>
+            <p class="subtitle">Until 1.17.0, <code>air-blackbox comply</code> read <code>.py</code> files and nothing else. A TypeScript team could install it, scan a repository full of AI calls, and get a report that said there was nothing to look at. This release fixes that, and this post is about the part that matters more than the language list: how we know the new languages get the <em>same</em> answers.</p>
+        </header>
+
+        <div class="key-takeaways">
+            <h3>Key Takeaways</h3>
+            <ul>
+                <li>The scanner now reads Python, Jupyter notebooks, TypeScript, JavaScript, Java and Kotlin. Every check runs on all of them: EU AI Act Articles 9&ndash;15, GDPR, US state AI laws, and the US hiring checks.</li>
+                <li>"Same verdict" is measured, not claimed: 144 labelled programs were each written in all five languages (and each Python one also as a notebook) by people with no access to the scanner's rules. All 144 get the same status in every form, and the test suite fails if any check disagrees.</li>
+                <li>Python results are byte-for-byte what 1.16.0 produced on every target we snapshot. Existing users see no change except two bug fixes, both deliberate.</li>
+                <li>The web console and the MCP server now run the same engine as the CLI instead of their own copies, which had drifted and were Python-only.</li>
+                <li>Not covered: the optional local AI-model pass still reads Python only, and patterns are line-scoped in every language.</li>
+            </ul>
+        </div>
+
+        <h2>What changed</h2>
+        <p>Most compliance checks are about naming and structure: is there a <code>require_approval</code> gate before the dangerous tool, is the model call wrapped in error handling, does the code log what the agent did. The practices are the same in every language; the spelling is not. A TypeScript developer writes <code>requireApproval</code>, wraps calls in <code>try/catch</code> and documents with JSDoc. A Kotlin developer writes <code>runCatching</code> and KDoc and validates with <code>@field:NotBlank</code>.</p>
+        <p>1.17.0 handles both halves. Names are matched across naming styles, so <code>requireApproval</code> counts as <code>require_approval</code> without anyone maintaining two lists. Idioms with no Python spelling get their own adapters: <code>try/catch</code> and <code>.catch()</code>, JSDoc, Javadoc and KDoc, TypeScript and JSDoc types, npm and JVM loggers (with <code>console.log</code> and <code>println</code> excluded, as <code>print</code> is), Zod, Ajv and Bean Validation, the Vercel AI SDK, LangChain4j, Spring AI, Koog, and prompt interpolation in template literals and string templates.</p>
+        <p>The scanner also knows what not to read: declaration files, minified bundles, tool configs, Gradle build scripts, <code>node_modules</code> and build output, and each ecosystem's test-file conventions, so a <code>*.test.ts</code> file does not count against your documentation coverage any more than <code>test_*.py</code> does.</p>
+        <p>Jupyter notebooks are read as Python: code cells in order, IPython magics commented out, non-Python kernels skipped. A notebook gets exactly the result its code gets in a <code>.py</code> file. If your AI work lives in notebooks, it was invisible to the scanner before; it is not now.</p>
+
+        <h2>How "same verdict" was proven</h2>
+        <p>A scanner that reads six languages is only useful if it reads them equally. A check that passes a Python repository and warns on the identical TypeScript repository is not a compliance tool, it is a source of arguments.</p>
+        <p>So the claim is tested the way a claim should be. The scanner's existing evaluation corpus holds 72 labelled Python programs: each one either has a practice or deliberately lacks it. We added 72 more for the checks the corpus did not cover (documentation, unsafe input, OAuth and delegation, the hiring checks, GDPR, the US state laws), then had all 144 translated into idiomatic TypeScript, JavaScript, Java and Kotlin by people who were not allowed to see the scanner. The translations use the real libraries a developer in each language would reach for, not Python spellings in another syntax.</p>
+        <p>Every one of the 144 gets the same status in every language it can be written in. Three cases cannot be written in Java or Kotlin at all, because those languages cannot express untyped parameters; the corpus says so rather than pretending. The parity run is part of the test suite, so a future change that makes one language drift fails the build. The numbers are in <a href="https://github.com/airblackbox/airblackbox/blob/main/SCANNER_EVAL.md">SCANNER_EVAL.md</a>, and the corpus is <a href="https://github.com/airblackbox/airblackbox/blob/main/eval/scanner/parity_corpus.json">in the repository</a> for anyone who wants to argue with a specific case.</p>
+        <p>The corpus earned its keep before release. It caught that LangChain4j's <code>model.chat()</code> was not recognised as a model call, that the JavaScript rate-limiter and guardrail packages were unknown to the scanner, and that Google Cloud DLP was not counted as PII detection. Each is a gap a real team would have hit.</p>
+
+        <h2>What existing Python users see</h2>
+        <p>Nothing, by design, except two fixes. Python output was snapshotted on 76 targets before the work started and compared byte for byte at every step; the language work changed none of it. The two deliberate changes:</p>
+        <ul>
+            <li><code>air-blackbox comply --scan file.py</code> crashed on a single file, and the Bias and Fairness section never ran on directories. Both fixed.</li>
+            <li>Ordinary chat applications were being treated as hiring systems, because the hiring detector matched <code>ats</code> inside "chats" and "resume" meaning resume-a-stream, and then failed them against NYC Local Law 144. Hiring context now needs a hiring-specific signal. Real hiring code is still detected, and the parity corpus includes hiring cases to prove it.</li>
+        </ul>
+
+        <h2>One engine everywhere</h2>
+        <p>The <a href="/console/scan">web console</a> and the <a href="https://github.com/airblackbox/air-blackbox-mcp">MCP server</a> each carried their own copy of the checks. Copies drift: the console had fewer checks and the hiring bug the CLI had already fixed, and both were Python-only, so the same code could get a different verdict from Claude than from the terminal. Both now call the SDK's scanner. Paste Kotlin into the console, or ask Claude to scan a TypeScript file through the MCP server with <code>air-blackbox-mcp[full]</code>, and you get the verdict the CLI gives.</p>
+
+        <h2>What it still does not do</h2>
+        <ul>
+            <li>The optional local AI-model pass, which runs when an Ollama model is installed, reads Python only. The model has not been validated on other languages, and we would rather say so than guess.</li>
+            <li>Patterns are line-scoped in every language. A prompt template that spans several lines is not inspected as a whole, in Python or in JavaScript.</li>
+            <li>Six of the 144 corpus cases are missed identically in every language. Those are gaps in specific checks, not in language support, and they are listed in the eval report rather than hidden.</li>
+            <li>Go, C# and Ruby are not read yet. Each will get the same treatment: its own adapters and its own translated corpus, or it does not ship.</li>
+        </ul>
+
+        <h2>Try it</h2>
+        <pre><code>pip install -U air-blackbox
+air-blackbox comply --scan . -v</code></pre>
+        <p>Point it at a TypeScript, Java or Kotlin repository and compare the report with what you expected. If a check disagrees with your reading of the code, the corpus format makes it easy to send a minimal case: the same program in two languages with different verdicts is a bug, and we will treat it as one.</p>
+        <p>Full notes are in the <a href="https://github.com/airblackbox/airblackbox/blob/main/CHANGELOG.md">changelog</a>.</p>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://github.com/airblackbox/airblackbox">GitHub</a>
+                <a href="https://pypi.org/project/air-trust/">PyPI</a>
+                <a href="https://airblackbox.ai/terms">Terms of Service</a>
+                <a href="https://airblackbox.ai/privacy">Privacy Policy</a>
+            </div>
+            <div class="footer-copyright">
+                Copyright 2026 AIR Blackbox. All rights reserved.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
