@@ -23,7 +23,7 @@
   "description": "How to build tamper-evident audit trails for AI agents using HMAC-SHA256 in Python. Step-by-step implementation covering EU AI Act Article 12 record-keeping requirements.",
   "url": "https://airblackbox.ai/blog/audit-trails-ai-agents-python",
   "datePublished": "2026-04-08",
-  "dateModified": "2026-04-08",
+  "dateModified": "2026-09-24",
   "author": {"@type": "Person", "name": "Jason Shotwell", "url": "https://airblackbox.ai"},
   "publisher": {"@type": "Organization", "name": "AIR Blackbox", "url": "https://airblackbox.ai"},
   "mainEntityOfPage": {"@type": "WebPage", "@id": "https://airblackbox.ai/blog/audit-trails-ai-agents-python"}
@@ -420,7 +420,7 @@ jobs:
 <p>An audit trail for AI agents is a tamper-evident log of every action an autonomous AI agent takes. It uses cryptographic signatures (HMAC-SHA256) to chain records together so that any modification to historical entries is mathematically detectable. This satisfies the EU AI Act Article 12 requirement for automatic recording of events that enables traceability.</p>
 
 <h3>Does the EU AI Act require audit trails?</h3>
-<p>Yes. <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Article 12</a> requires high-risk AI systems to have automatic recording of events (logging) that enables traceability of the system's functioning. The <a href="/blog/eu-ai-act-august-2026-deadline">enforcement deadline is August 2, 2026</a>. Standard application logs do not meet this requirement because they lack tamper-evidence.</p>
+<p>Yes. <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">Article 12</a> requires high-risk AI systems to have automatic recording of events (logging) that enables traceability of the system's functioning. The <a href="/blog/eu-ai-act-august-2026-deadline">high-risk obligations apply from December 2, 2027 (Annex III) and August 2, 2028 (Annex I)</a>. Article 12 does not require tamper-evidence, cryptographic signatures, or an independent verifier; standard application logs can meet its wording. Tamper-evidence is what makes those logs hold up when someone disputes them.</p>
 
 <h3>How do I add audit trails to LangChain or CrewAI agents?</h3>
 <p>Install air-trust (<code>pip install air-trust</code>) and wrap your client or agent with <code>air_trust.trust()</code>. This adds HMAC-SHA256 audit logging automatically. It works with <a href="/blog/langchain-eu-ai-act-compliance">LangChain</a>, CrewAI, AutoGen, OpenAI SDK, and Haystack with zero code changes to your existing agent logic.</p>
@@ -445,11 +445,11 @@ jobs:
 <footer>
   <p><strong>Related articles:</strong></p>
   <p style="margin-top: 8px;">
-    <a href="/blog/6-technical-checks">The 6 Technical Checks Your AI System Needs Before August 2026</a><br>
+    <a href="/blog/6-technical-checks">The 6 Technical Checks Your AI System Needs Before the EU AI Act High-Risk Deadline</a><br>
     <a href="/blog/eu-ai-act-articles-9-15-technical-requirements">EU AI Act Articles 9-15: Technical Requirements Explained</a><br>
     <a href="/blog/eu-ai-act-compliance-checklist">EU AI Act Compliance Checklist for Python Developers</a><br>
     <a href="/blog/langchain-eu-ai-act-compliance">LangChain EU AI Act Compliance Guide</a><br>
-    <a href="/blog/eu-ai-act-august-2026-deadline">EU AI Act August 2026 Deadline: What Developers Need to Do</a>
+    <a href="/blog/eu-ai-act-august-2026-deadline">EU AI Act High-Risk Deadline: What Developers Need to Do</a>
   </p>
   <p style="margin-top: 20px;">&copy; 2026 AIR Blackbox &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>
 </footer>

@@ -33,7 +33,7 @@
       "description": "Article-by-article breakdown of EU AI Act Articles 9 through 15 technical requirements with Python code examples, compliance checks, and crosswalk to ISO 42001 and NIST AI RMF.",
       "image": "https://airblackbox.ai/og-image.svg",
       "datePublished": "2026-03-28",
-      "dateModified": "2026-04-17",
+      "dateModified": "2026-09-24",
       "author": {
         "@type": "Person",
         "name": "Jason Shotwell",
@@ -66,7 +66,7 @@
           "name": "What do EU AI Act Articles 9 through 15 require?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Articles 9-15 define the technical obligations for high-risk AI systems: Article 9 requires risk management, Article 10 requires data governance, Article 11 requires technical documentation, Article 12 requires tamper-evident record-keeping, Article 13 requires transparency, Article 14 requires human oversight, and Article 15 requires accuracy, robustness, and cybersecurity. Together they form a complete governance framework enforced from August 2, 2026."
+            "text": "Articles 9-15 define the technical obligations for high-risk AI systems: Article 9 requires risk management, Article 10 requires data governance, Article 11 requires technical documentation, Article 12 requires automatic record-keeping, Article 13 requires transparency, Article 14 requires human oversight, and Article 15 requires accuracy, robustness, and cybersecurity. Together they form a complete governance framework that applies from December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems (Regulation (EU) 2026/1744)."
           }
         },
         {
@@ -74,7 +74,7 @@
           "name": "What is Article 12 record-keeping for AI systems?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Article 12 requires that high-risk AI systems automatically keep tamper-proof records of their operation, sufficient to demonstrate compliance and enable auditing. Records must be retained for at least three years. HMAC-SHA256 audit chains satisfy this requirement by creating cryptographic links between records so that any modification becomes immediately detectable."
+            "text": "Article 12 requires that high-risk AI systems automatically record relevant events over their lifetime, with traceability appropriate to the system's purpose. It does not specify cryptographic signatures, an independent verifier, or a receipt format; Article 19 sets a minimum six-month retention. HMAC-SHA256 audit chains go beyond the text by creating cryptographic links between records so that any modification becomes immediately detectable."
           }
         },
         {
@@ -328,6 +328,7 @@
                 <span>By <a href="https://github.com/jshotwell">Jason Shotwell</a></span>
             </div>
             <h1>What Do EU AI Act Articles 9 Through 15 Require in Your Code? The Definitive Technical Reference</h1>
+<div class="correction-note" style="margin:1.5rem 0 2rem;padding:1rem 1.25rem;border-left:4px solid #ec3013;background:rgba(236,48,19,0.06);font-size:0.95rem;line-height:1.6;text-align:left"><p style="margin:0 0 0.6rem"><strong>Correction, 24 September 2026.</strong> This post was written around a 2 August 2026 date for the high-risk obligations. That date is no longer current: <a href="https://eur-lex.europa.eu/eli/reg/2026/1744/oj">Regulation (EU) 2026/1744</a> moved the Chapter III, Sections 1 to 3 high-risk obligations to <strong>2 December 2027</strong> for Annex III systems and <strong>2 August 2028</strong> for Annex I systems, subject to the regulation's transition rules (see the Commission's <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/faq/when-does-enforcement-start">enforcement FAQ</a>). Countdowns and month-by-month plans below were written for the original date.</p><p style="margin:0">Where this post said Article 12 requires tamper-evident or cryptographically verifiable logs, that overstated the text. <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-12">Article 12</a> requires automatic logging of relevant events in high-risk AI systems. It does not specify cryptographic signatures, an independent verifier, or a receipt format. Signed, tamper-evident records are a design choice that goes beyond the article; they matter when evidence must survive a dispute with someone who does not trust the operator.</p></div>
             <p class="subtitle">Articles 9 through 15 are the technical backbone of the EU AI Act. They define what high-risk AI systems must do for risk management, data governance, documentation, record-keeping, transparency, human oversight, and robustness. This guide breaks each article into engineering terms with code examples, compliance checks, and a standards crosswalk to ISO 42001 and NIST AI RMF.</p>
         </header>
 
@@ -335,8 +336,8 @@
         <div class="key-takeaways">
             <h3>Key Takeaways</h3>
             <ul>
-                <li>Articles 9-15 form a complete governance framework: risk management (9), data governance (10), documentation (11), tamper-evident logging (12), transparency (13), human oversight (14), and accuracy/robustness (15).</li>
-                <li>Enforcement begins <strong>August 2, 2026</strong>. Penalties up to 35 million euros or 7% of global turnover.</li>
+                <li>Articles 9-15 form a complete governance framework: risk management (9), data governance (10), documentation (11), automatic logging (12), transparency (13), human oversight (14), and accuracy/robustness (15).</li>
+                <li>The high-risk obligations apply from <strong>December 2, 2027</strong> for Annex III systems and <strong>August 2, 2028</strong> for Annex I systems (Regulation (EU) 2026/1744). Penalties for high-risk obligations up to 15 million euros or 3% of global turnover (Article 99(4)); the 35 million / 7% tier is for prohibited practices.</li>
                 <li>These articles are not independent - Article 9 risk analysis feeds Article 11 documentation, which feeds Article 12 logging, which supports Article 14 human oversight.</li>
                 <li>Implementing Articles 9-15 gets you most of the way to ISO 42001 and NIST AI RMF compliance simultaneously.</li>
                 <li>Scan your codebase today with <code>pip install air-blackbox && air-blackbox comply --scan . -v</code> to find gaps across all seven articles.</li>
@@ -518,9 +519,9 @@ with open("technical_documentation.json", "w") as f:
         <section id="article-12">
             <h2>What Does Article 12 Require for Record-Keeping?</h2>
 
-            <p>Article 12 requires that high-risk AI systems automatically keep tamper-proof records of their operation, sufficient to demonstrate compliance and enable auditing. Records must be retained for at least three years. Critically, these records must be tamper-evident: if a regulator requests logs, they must have confidence the logs are genuine and unchanged. This is where HMAC-SHA256 cryptographic chains enter the picture.</p>
+            <p>Article 12 requires that high-risk AI systems automatically record relevant events over their lifetime, with traceability appropriate to the system's purpose. It does not specify cryptographic signatures, an independent verifier, or a receipt format, and Article 19 sets a minimum six-month retention. In practice, though, a regulator who requests logs wants confidence they are genuine and unchanged, and the text gives you no way to demonstrate that. This is where HMAC-SHA256 cryptographic chains enter the picture.</p>
 
-            <p>Three technical capabilities are required: comprehensive logging (every input, prediction, override, and error with metadata), tamper-evidence (HMAC-SHA256 chains where each record signs the previous one, making modification detectable), and long-term retention (immutable storage for at least three years).</p>
+            <p>The text requires the logging. We recommend three capabilities to make it defensible: comprehensive logging (every input, prediction, override, and error with metadata), tamper-evidence (HMAC-SHA256 chains where each record signs the previous one, making modification detectable), and retention beyond the six-month Article 19 minimum.</p>
 
             <h3>Code example: HMAC-SHA256 tamper-proof audit chain</h3>
 
@@ -594,7 +595,7 @@ is_valid, message = logger.verify_chain_integrity()
 print(f"Audit log valid: {is_valid} - {message}")</code></pre>
 
             <div class="highlight">
-                <p><strong>Why standard logs fail Article 12:</strong> Datadog, Splunk, and CloudWatch lack tamper-evidence, completeness detection, and structured auditability. Anyone with write access can alter records. HMAC chains make modification detectable. See our deep dive: <a href="/blog/integrity-is-not-completeness">Integrity Is Not Completeness</a>.</p>
+                <p><strong>Why standard logs are weak evidence:</strong> Datadog, Splunk, and CloudWatch can meet Article 12's wording, but they lack tamper-evidence, completeness detection, and structured auditability. Anyone with write access can alter records. HMAC chains make modification detectable. See our deep dive: <a href="/blog/integrity-is-not-completeness">Integrity Is Not Completeness</a>.</p>
             </div>
         </section>
 
@@ -752,7 +753,7 @@ test.test_edge_cases()</code></pre>
         <section id="integration">
             <h2>How Do Articles 9 Through 15 Work Together?</h2>
 
-            <p>Articles 9-15 are not independent requirements - they form a connected governance framework where each article feeds the next. Article 9 risk analysis identifies what can go wrong. Articles 10 and 11 ensure the system is built safely with trusted data and thorough documentation. Article 12 adds accountability with tamper-evident logging. Article 14 puts humans in control. Article 15 ensures quality and security. When a regulator audits your system, they walk through all six in sequence.</p>
+            <p>Articles 9-15 are not independent requirements - they form a connected governance framework where each article feeds the next. Article 9 risk analysis identifies what can go wrong. Articles 10 and 11 ensure the system is built safely with trusted data and thorough documentation. Article 12 adds accountability with automatic logging. Article 14 puts humans in control. Article 15 ensures quality and security. When a regulator audits your system, they walk through all six in sequence.</p>
 
             <table>
                 <thead>
@@ -762,7 +763,7 @@ test.test_edge_cases()</code></pre>
                     <tr><td>Article 9</td><td>Identify and manage risks</td><td>Risk register with mitigation strategies</td></tr>
                     <tr><td>Article 10</td><td>Ensure training data is trustworthy</td><td>Data sheet with bias testing and representativeness</td></tr>
                     <tr><td>Article 11</td><td>Document the system comprehensively</td><td>Technical documentation and model card</td></tr>
-                    <tr><td>Article 12</td><td>Keep tamper-proof records</td><td>HMAC-SHA256 audit trail, 3-year retention</td></tr>
+                    <tr><td>Article 12</td><td>Automatically log relevant events</td><td>HMAC-SHA256 audit trail (goes beyond the text), retention past the 6-month Article 19 minimum</td></tr>
                     <tr><td>Article 14</td><td>Enable human oversight</td><td>Review gates, override mechanisms, monitoring</td></tr>
                     <tr><td>Article 15</td><td>Ensure accuracy, robustness, security</td><td>Performance metrics, adversarial testing, injection defense</td></tr>
                 </tbody>
@@ -834,7 +835,7 @@ air-blackbox comply --scan . -v</code></pre>
                     <span class="faq-toggle">+</span>
                 </div>
                 <div class="faq-answer">
-                    <p>Articles 9-15 define the technical obligations for high-risk AI systems: risk management (9), data governance (10), technical documentation (11), tamper-evident record-keeping (12), transparency (13), human oversight (14), and accuracy, robustness, and cybersecurity (15). Together they form a complete governance framework enforced from August 2, 2026.</p>
+                    <p>Articles 9-15 define the technical obligations for high-risk AI systems: risk management (9), data governance (10), technical documentation (11), automatic record-keeping (12), transparency (13), human oversight (14), and accuracy, robustness, and cybersecurity (15). Together they form a complete governance framework that applies from December 2, 2027 for Annex III systems and August 2, 2028 for Annex I systems (Regulation (EU) 2026/1744).</p>
                 </div>
             </div>
 
@@ -844,7 +845,7 @@ air-blackbox comply --scan . -v</code></pre>
                     <span class="faq-toggle">+</span>
                 </div>
                 <div class="faq-answer">
-                    <p>Article 12 requires that high-risk AI systems automatically keep tamper-proof records of their operation for at least three years. HMAC-SHA256 audit chains satisfy this by creating cryptographic links between records so that any modification becomes immediately detectable.</p>
+                    <p>Article 12 requires that high-risk AI systems automatically record relevant events over their lifetime; Article 19 sets a minimum six-month retention. Neither specifies cryptographic signatures. HMAC-SHA256 audit chains go beyond the text by creating cryptographic links between records so that any modification becomes immediately detectable.</p>
                 </div>
             </div>
 

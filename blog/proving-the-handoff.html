@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Multi-agent AI workflows can't prove which agent sent a handoff using HMAC alone. Learn how Ed25519 asymmetric signatures add cross-agent identity proof to tamper-evident audit chains for EU AI Act Article 12 compliance.">
+    <meta name="description" content="Multi-agent AI workflows can't prove which agent sent a handoff using HMAC alone. Learn how Ed25519 asymmetric signatures add cross-agent identity proof to tamper-evident audit chains that go beyond EU AI Act Article 12 logging.">
     <meta name="keywords" content="multi-agent ai handoff, ed25519 ai agent signatures, cross-agent identity proof, audit chain ai agents, hmac sha256 audit trail, ai agent handoff protocol, eu ai act article 12, air-trust, signed handoffs, agent identity verification, tamper-evident audit chain">
     <meta name="author" content="Jason Shotwell">
     <link rel="canonical" href="https://airblackbox.ai/blog/proving-the-handoff">
@@ -33,7 +33,7 @@
       "description": "Multi-agent AI workflows can't prove which agent sent a handoff using HMAC alone. Ed25519 asymmetric signatures add cross-agent identity proof to tamper-evident audit chains.",
       "image": "https://airblackbox.ai/og-image.svg",
       "datePublished": "2026-04-10",
-      "dateModified": "2026-04-17",
+      "dateModified": "2026-09-24",
       "author": {
         "@type": "Person",
         "name": "Jason Shotwell",
@@ -550,7 +550,7 @@
                 <li>HMAC-SHA256 proves integrity (records were not modified) but cannot prove identity (which agent wrote a record), because any party with the shared secret can sign.</li>
                 <li><strong>Ed25519 asymmetric signatures</strong> solve the identity problem: only the agent with the private key can sign, and anyone with the public key can verify.</li>
                 <li>Three record types form a complete handoff proof: <code>handoff_request</code> (Agent A signs), <code>handoff_ack</code> (Agent B signs), and <code>handoff_result</code> (Agent B signs).</li>
-                <li>EU AI Act Article 12 requires knowing which agent was responsible for each decision in multi-agent systems. Signed handoffs provide that attribution.</li>
+                <li>EU AI Act Article 12 requires automatic logging of relevant events; it does not specify signatures or per-agent attribution. Signed handoffs add that attribution on top, for when a log has to survive a dispute.</li>
                 <li>Install with <code>pip install air-trust[handoffs]==0.6.0</code>. Fully backward compatible with v0.5.0 chains.</li>
             </ul>
         </div>
