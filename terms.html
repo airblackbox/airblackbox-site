@@ -77,7 +77,7 @@
 
     <div class="content"><div class="container">
         <h1>Terms of Service</h1>
-        <p class="updated">Last updated: March 24, 2026</p>
+        <p class="updated">Last updated: November 15, 2026</p>
 
         <div class="disclaimer-box">
             <h2>Important: AIR Blackbox Does Not Certify Compliance</h2>
@@ -88,10 +88,10 @@
         <p>By accessing or using AIR Blackbox software, services, or website ("Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the Service. These Terms apply to all users, including users of the free open-source CLI tool, Pro subscribers, and Enterprise customers.</p>
 
         <h2>2. Description of Service</h2>
-        <p>AIR Blackbox is an open-source gap analysis scanner for Python AI agent code. The Service includes:</p>
+        <p>AIR Blackbox is an open-source gap analysis scanner for AI agent code (Python, TypeScript, JavaScript, Java, Kotlin and Jupyter notebooks). The Service includes:</p>
         <ul>
             <li><strong>Free Tier:</strong> Open-source CLI scanner (Apache 2.0 license), trust layer integrations, and related PyPI packages that run locally on your machine.</li>
-            <li><strong>Pro Tier:</strong> A managed Virtual Private Server (VPS) hosting the AIR gateway, fine-tuned compliance model, Jaeger trace dashboard, and benchmarking tools. Billed monthly via Stripe.</li>
+            <li><strong>Pro Tier:</strong> A dedicated Virtual Private Server (VPS), set up and maintained by us, running the AIR gateway, the fine-tuned compliance model and the Jaeger trace dashboard, with HTTPS access for your team. Billed monthly via Stripe.</li>
             <li><strong>Enterprise Tier:</strong> Custom air-gapped deployment on your infrastructure with dedicated support. Pricing and terms negotiated per engagement.</li>
         </ul>
         <p>The Service scans source code, configuration files, and runtime telemetry to identify potential gaps against EU AI Act Articles 9, 10, 11, 12, 14, and 15. Scan results are informational and do not constitute legal advice, regulatory certification, or a guarantee of compliance.</p>
@@ -127,8 +127,8 @@
         <p>Enterprise deployments are governed by a separate Master Service Agreement (MSA) negotiated between the parties. These Terms apply to Enterprise customers except where the MSA explicitly overrides them.</p>
 
         <h2>7. Data Handling</h2>
-        <p><strong>Free Tier:</strong> The CLI scanner runs entirely on your local machine. Your source code is never transmitted to our servers. Anonymized scan metadata (check pass/fail counts, framework detection, no code content) may be transmitted to improve the compliance model unless you opt out via the <code>--no-telemetry</code> flag.</p>
-        <p><strong>Pro Tier:</strong> Your scan data is processed on a dedicated VPS. Telemetry is private to your instance. We do not access your VPS data except for maintenance purposes with your prior consent.</p>
+        <p><strong>Free Tier:</strong> The CLI scanner runs entirely on your local machine. Your source code is never transmitted to our servers. The CLI sends an anonymous usage ping for each command: a random installation ID, the command name, file and check counts, Python and operating system versions, and the air-blackbox version. It never sends code, file paths or project names, and is not sent in CI. Set <code>AIR_BLACKBOX_TELEMETRY=off</code> to turn it off.</p>
+        <p><strong>Pro Tier:</strong> Your scan data is processed on a dedicated VPS. Records, traces and stored prompts stay on that server. We do not access your VPS data except for maintenance purposes with your prior consent.</p>
         <p><strong>Enterprise Tier:</strong> Air-gapped deployments operate entirely within your infrastructure. Zero data is transmitted externally. We have no access to your systems unless you explicitly grant it for support purposes.</p>
 
         <h2>8. Open Source License</h2>

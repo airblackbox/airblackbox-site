@@ -203,26 +203,10 @@
         </div>
         <hr class="sidebar-divider">
         <div class="sidebar-section">
-            <div class="sidebar-label">History</div>
-            <div class="sidebar-item" style="opacity:0.6; cursor:pointer;" onclick="window.location.href='/api/checkout'">
-                <span class="icon">&#128338;</span> Past Scans
-                <span style="margin-left:auto; font-size:0.6rem; background:var(--accent); color:var(--bg-deep); padding:0.1rem 0.4rem; border-radius: 0; font-weight:700;">PRO</span>
-            </div>
-        </div>
-        <hr class="sidebar-divider">
-        <div class="sidebar-section">
-            <div class="sidebar-label">Repos</div>
-            <div class="sidebar-item" style="opacity:0.6; cursor:pointer;" onclick="window.location.href='/api/checkout'">
-                <span class="icon">&#128279;</span> GitHub Connect
-                <span style="margin-left:auto; font-size:0.6rem; background:var(--accent); color:var(--bg-deep); padding:0.1rem 0.4rem; border-radius: 0; font-weight:700;">PRO</span>
-            </div>
-        </div>
-        <hr class="sidebar-divider">
-        <div class="sidebar-section">
             <div class="sidebar-label">Export</div>
-            <div class="sidebar-item" style="opacity:0.6; cursor:pointer;" onclick="window.location.href='/api/checkout'">
+            <div class="sidebar-item" style="opacity:0.6; cursor:pointer;" onclick="window.location.href='/quickstart'" title="PDF reports come from the CLI: air-blackbox export --format pdf">
                 <span class="icon">&#128196;</span> PDF Report
-                <span style="margin-left:auto; font-size:0.6rem; background:var(--accent); color:var(--bg-deep); padding:0.1rem 0.4rem; border-radius: 0; font-weight:700;">PRO</span>
+                <span style="margin-left:auto; font-size:0.6rem; background:var(--accent); color:var(--bg-deep); padding:0.1rem 0.4rem; border-radius: 0; font-weight:700;">CLI</span>
             </div>
         </div>
     </div>
@@ -233,12 +217,11 @@
         <!-- Input Panel -->
         <div class="input-panel" id="panel-input">
             <h2>Scan Your AI Code</h2>
-            <p>Paste code in Python, TypeScript, JavaScript, Java or Kotlin (or a Jupyter notebook), upload a file, or connect a GitHub repo. The scanner runs the same checks as the <code>air-blackbox</code> CLI: EU AI Act articles 9&ndash;15, GDPR and US state AI laws.</p>
+            <p>Paste code in Python, TypeScript, JavaScript, Java or Kotlin (or a Jupyter notebook), or upload a file. The scanner runs the same checks as the <code>air-blackbox</code> CLI: EU AI Act articles 9&ndash;15, GDPR and US state AI laws.</p>
 
             <div class="input-tabs">
                 <div class="input-tab active" data-tab="paste">Paste Code</div>
                 <div class="input-tab" data-tab="upload">Upload File</div>
-                <div class="input-tab" data-tab="github">GitHub Repo</div>
             </div>
 
             <!-- Paste -->
@@ -286,18 +269,6 @@ print(result)"></textarea>
                 </div>
             </div>
 
-            <!-- GitHub -->
-            <div class="tab-content" id="tab-github">
-                <div class="github-connect">
-                    <div class="gh-icon">&#128025;</div>
-                    <h3>Connect Your GitHub Repos</h3>
-                    <p>Link a repository for continuous compliance scanning. Available on Pro and Team plans.</p>
-                    <button class="gh-btn" onclick="window.location.href='/api/checkout'">
-                        &#128279; Upgrade to Pro to Connect GitHub
-                    </button>
-                    <p class="gh-lock">&#128274; Read-only access. Code scanned in memory, never stored.</p>
-                </div>
-            </div>
         </div>
 
         <!-- Results Panel -->
@@ -550,8 +521,7 @@ function renderResults(data) {
                 '<div class="results-actions">' +
                     '<button onclick="showPanel(\'input\')">&#9654; New Scan</button>' +
                     '<button onclick="exportEvidenceBundle()" id="export-btn">&#128196; Export Evidence Bundle</button>' +
-                    '<button onclick="window.location.href=\'/api/checkout\'">&#128338; Save to History (Pro)</button>' +
-                '</div>' +
+                                    '</div>' +
             '</div>' +
         '</div>' +
         '<div class="article-bars">' + articleBarsHtml + '</div>' +
