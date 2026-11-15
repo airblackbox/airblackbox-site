@@ -185,7 +185,7 @@ header.hero p { color: var(--dim); font-size: 15px; max-width: 640px; margin: 10
     <div class="arch-row">
       <div class="node" id="n-col">OTEL COLLECTOR :4317<small>normalize · vault · redact</small></div>
       <div class="node" id="n-jae">JAEGER :16686<small>traces</small></div>
-      <div class="node" id="n-min">MINIO :9000<small>prompt vault</small></div>
+      <div class="node" id="n-min">VAULT :9000<small>prompt vault</small></div>
       <div class="node" id="n-runs">./runs<small>.air.json chain</small></div>
     </div>
   </div>
@@ -378,7 +378,7 @@ async function run(btn, next, body) {
 function scenario1() { return run('s1', 's2', async () => {
   await tcmd('make up');
   const svcs = [
-    ['n-min',  'minio',     ':9000  — encrypted prompt vault'],
+    ['n-min',  'vault',     ':9000  — prompt vault (S3-compatible)'],
     ['n-jae',  'jaeger',    ':16686 — trace UI'],
     ['n-col',  'collector', ':4317  — normalize · vault · redact · metrics'],
     ['n-gw',   'gateway',   ':8080  — signed image ghcr.io/airblackbox/airblackbox'],

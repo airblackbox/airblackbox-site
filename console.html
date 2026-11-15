@@ -6,7 +6,7 @@
     <title>AIR Blackbox Console - See What Your AI Is Actually Doing</title>
     <meta name="description" content="Connect your AI codebase. Get a compliance score in 60 seconds. Every finding explained in plain English. Free to start. No terminal required.">
     <meta property="og:title" content="AIR Blackbox Console - AI Compliance Without the Terminal">
-    <meta property="og:description" content="Connect your GitHub repo or paste code. See your EU AI Act compliance score with plain-English explanations. From $0/month.">
+    <meta property="og:description" content="Paste or upload your code. See your EU AI Act compliance score with plain-English explanations. Free.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://airblackbox.ai/console">
     <meta name="twitter:card" content="summary_large_image">
@@ -234,7 +234,7 @@
 <div class="social-proof container">
     <p>Trusted by teams preparing for the EU AI Act</p>
     <div class="proof-items">
-        <div class="proof-item"><span>51+</span> compliance checks</div>
+        <div class="proof-item"><span>50+</span> compliance checks</div>
         <div class="proof-item"><span>7</span> framework integrations</div>
         <div class="proof-item"><span>4</span> regulatory frameworks</div>
         <div class="proof-item"><span>Apache 2.0</span> open source core</div>
@@ -368,13 +368,13 @@
                 <div class="step-num">01</div>
                 <div class="step-icon">&#128279;</div>
                 <h3>Connect Your Code</h3>
-                <p>Link a GitHub repo (Pro/Team) or paste a code snippet (Free). We only need read access. Your code is scanned in memory and never stored.</p>
+                <p>Paste a code snippet or upload a file. Your code is scanned in memory and never stored.</p>
             </div>
             <div class="step">
                 <div class="step-num">02</div>
                 <div class="step-icon">&#128269;</div>
                 <h3>Get Your Score</h3>
-                <p>51+ checks run across 6 EU AI Act articles, plus ISO 42001, NIST AI RMF, and Colorado SB 26-189 crosswalks. Results in under 60 seconds.</p>
+                <p>50+ checks across 6 EU AI Act articles, GDPR and US state laws, plus ISO 42001, NIST AI RMF, and Colorado SB 26-189 crosswalks. Results in under 60 seconds.</p>
             </div>
             <div class="step">
                 <div class="step-num">03</div>
@@ -429,63 +429,50 @@
     <div class="container">
         <div class="section-center">
             <div class="section-label">Pricing</div>
-            <h2 class="section-title">Start free. Scale when ready.</h2>
-            <p class="section-desc">The open-source CLI is always free. Console adds the UI, GitHub integration, and plain-English explanations that make compliance accessible to your whole team.</p>
+            <h2 class="section-title">The console is free.</h2>
+            <p class="section-desc">Paste or upload code and get a score with plain-English findings. The open-source CLI does the rest on your own machine: whole-repository scans, PDF reports and signed evidence bundles.</p>
         </div>
         <div class="pricing-grid">
-            <!-- Free -->
+            <!-- Console -->
             <div class="price-card">
-                <div class="price-tier">Free</div>
+                <div class="price-tier">Console</div>
                 <div class="price-amount"><span class="currency">$</span>0<span class="period">/month</span></div>
-                <p class="price-desc">Try the scanner. Paste code or upload a file. See what it finds.</p>
+                <p class="price-desc">Try the scanner in your browser. See what it finds.</p>
                 <ul class="price-features">
-                    <li class="included">1 scan per month</li>
+                    <li class="included">25 scans per month</li>
                     <li class="included">Paste or upload code</li>
                     <li class="included">Compliance score + top findings</li>
                     <li class="included">Plain-English explanations</li>
-                    <li class="excluded">GitHub repo connect</li>
-                    <li class="excluded">Scan history</li>
-                    <li class="excluded">PDF report export</li>
-                    <li class="excluded">Team dashboard</li>
                 </ul>
-                <a href="/console/scan" class="price-btn price-btn-secondary">Start Free Scan</a>
+                <a href="/console/scan" class="price-btn price-btn-primary">Start Free Scan</a>
+            </div>
+            <!-- CLI -->
+            <div class="price-card">
+                <div class="price-tier">CLI</div>
+                <div class="price-amount"><span class="currency">$</span>0<span class="period">, open source</span></div>
+                <p class="price-desc">The same scanner on your machine, for whole repositories.</p>
+                <ul class="price-features">
+                    <li class="included">Scan a whole repository</li>
+                    <li class="included">PDF gap analysis reports</li>
+                    <li class="included">Signed evidence bundles</li>
+                    <li class="included">Deep scan with a local Ollama model</li>
+                </ul>
+                <a href="/quickstart" class="price-btn price-btn-secondary">pip install air-blackbox</a>
             </div>
             <!-- Pro -->
-            <div class="price-card featured">
-                <div class="price-tier">Pro</div>
-                <div class="price-amount"><span class="currency">$</span>49<span class="period">/month</span></div>
-                <p class="price-desc">Full scanning power. Connect repos. Track progress. Export reports.</p>
-                <ul class="price-features">
-                    <li class="included">Unlimited scans</li>
-                    <li class="included">GitHub repo connect</li>
-                    <li class="included">Full scan history</li>
-                    <li class="included">Plain-English explanations</li>
-                    <li class="included">PDF report export</li>
-                    <li class="included">Compliance score tracking over time</li>
-                    <li class="included">Email support</li>
-                    <li class="excluded">Team dashboard (up to 5 seats)</li>
-                </ul>
-                <a href="/api/checkout" class="price-btn price-btn-primary">Subscribe to Pro - $49/mo</a>
-            </div>
-            <!-- Team -->
             <div class="price-card">
-                <div class="price-tier">Team</div>
-                <div class="price-amount" style="font-size:1.8rem;">Custom</div>
-                <p class="price-desc">Tailored to your team size, repo count, and compliance needs.</p>
+                <div class="price-tier">Pro</div>
+                <div class="price-amount"><span class="currency">$</span>299<span class="period">/month</span></div>
+                <p class="price-desc">A dedicated server for your team, set up and run by us.</p>
                 <ul class="price-features">
-                    <li class="included">Everything in Pro</li>
-                    <li class="included">Up to 5 team seats</li>
-                    <li class="included">Team compliance dashboard</li>
-                    <li class="included">Multi-repo scanning</li>
-                    <li class="included">Priority email support</li>
-                    <li class="included">Custom compliance policies</li>
-                    <li class="included">Quarterly compliance review call</li>
-                    <li class="included">Invoice billing</li>
+                    <li class="included">Fine-tuned model on your server</li>
+                    <li class="included">Gateway records and Jaeger traces</li>
+                    <li class="included">HTTPS access for your team, behind a key</li>
+                    <li class="included">We apply updates</li>
                 </ul>
-                <a href="mailto:jason.j.shotwell@gmail.com?subject=AIR%20Blackbox%20Team%20Plan" class="price-btn price-btn-secondary">Contact Us</a>
+                <a href="/#pricing" class="price-btn price-btn-secondary">See Pro and Enterprise</a>
             </div>
         </div>
-        <p class="annual-note">Annual plans: 2 months free. Pro $490/yr.</p>
     </div>
 </section>
 
@@ -559,11 +546,7 @@
         <div class="faq-list">
             <div class="faq-item">
                 <div class="faq-q">Do you store my code?</div>
-                <div class="faq-a">No. Code is scanned in memory and discarded immediately. We store the scan results (scores and findings) so you can track progress, but never the source code itself. For paste/upload scans, the code is processed and deleted within seconds.</div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-q">What GitHub permissions do you need?</div>
-                <div class="faq-a">Read-only access to repository contents. We use GitHub OAuth with the minimum required scope. You can revoke access anytime from your GitHub settings.</div>
+                <div class="faq-a">No. Code is scanned in memory and discarded when the scan finishes, and the results are not kept either. We keep monthly scan counts only: per IP address for the free limit, and per API key for paid credits.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-q">Is the open-source CLI going away?</div>
@@ -577,25 +560,18 @@
                 <div class="faq-q">What languages and frameworks do you support?</div>
                 <div class="faq-a">The scanner reads Python, Jupyter notebooks, TypeScript, JavaScript, Java and Kotlin, and equivalent code gets the same verdict in each (a 144-program parity corpus enforces that in the test suite). It recognises LangChain, CrewAI, OpenAI, Anthropic, Claude Agent SDK, Google ADK, AutoGen and Haystack in Python; LangChain.js, the OpenAI and Anthropic SDKs, Vercel AI SDK, Mastra, LlamaIndex.TS and the MCP SDK in TypeScript/JavaScript; and LangChain4j, Spring AI, Koog and the OpenAI/Anthropic Java SDKs on the JVM. It also detects common patterns in any AI code regardless of framework.</div>
             </div>
-            <div class="faq-item">
-                <div class="faq-q">Can I scan private repos?</div>
-                <div class="faq-a">Yes. Pro and Team plans support private GitHub repos. After connecting via OAuth, you select which repos to scan. We only access repos you explicitly authorize.</div>
-            </div>
         </div>
     </div>
 </section>
 
-<!-- Waitlist CTA -->
-<section class="cta-section" id="waitlist">
+<!-- Contact CTA -->
+<section class="cta-section" id="contact">
     <div class="container">
-        <h2>Console launches <span style="color:var(--accent);">June 2026</span></h2>
-        <p>Get early access. First 100 signups get Pro free for 3 months.</p>
-        <div style="max-width:440px; margin:0 auto;">
-            <form id="waitlist-form" style="display:flex; gap:0.5rem;">
-                <input type="email" id="waitlist-email" placeholder="you@company.com" required style="flex:1; padding:0.85rem 1rem; border-radius: 0; border:1px solid var(--border); background:var(--bg-card); color:var(--text-primary); font-family:var(--sans); font-size:0.9rem; outline:none;">
-                <button type="submit" class="btn btn-primary" style="white-space:nowrap;">Get Early Access</button>
-            </form>
-            <p id="waitlist-success" style="display:none; color:var(--green); font-size:0.85rem; margin-top:0.8rem; text-align:center;">You're on the list. We'll reach out before launch.</p>
+        <h2>Want this for your whole team?</h2>
+        <p>Pro sets up a dedicated server with the fine-tuned model, and your team points the CLI at it.</p>
+        <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+            <a href="/#pricing" class="btn btn-primary">See pricing</a>
+            <a href="mailto:jason@airblackbox.ai?subject=AIR%20Blackbox%20Pro" class="btn btn-secondary">Email us</a>
         </div>
     </div>
 </section>
@@ -620,16 +596,6 @@ document.querySelectorAll('.finding-row').forEach(row => {
     row.addEventListener('click', () => {
         row.classList.toggle('open');
     });
-});
-
-// Waitlist form
-document.getElementById('waitlist-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const email = document.getElementById('waitlist-email').value;
-    // Store in localStorage for now, replace with real backend later
-    console.log('Waitlist signup:', email);
-    this.style.display = 'none';
-    document.getElementById('waitlist-success').style.display = 'block';
 });
 
 // Animate bars on scroll

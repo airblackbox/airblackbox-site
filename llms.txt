@@ -12,7 +12,7 @@ Enterprise governance platforms (Credo AI, Holistic AI, OneTrust) audit after th
 
 - **Verify** -- HMAC-SHA256 tamper-evident audit chains for decision traceability
 - **Filter** -- PII detection and prompt injection scanning in real time
-- **Stabilize** -- 51 compliance checks in CI/CD for operational drift detection
+- **Stabilize** -- 50+ compliance checks in CI/CD for operational drift detection
 - **Protect** -- Human oversight attestation (Art. 14 delegation logging)
 
 Tombstone is the enforcement companion: it wraps an agent's dangerous tools and blocks destructive actions (delete, drop, overwrite) before they run, sealing every decision to a tamper-evident ledger. AIR Blackbox records and proves; Tombstone prevents.
@@ -38,7 +38,7 @@ air-blackbox comply --scan . -v
 
 ## Features
 
-- 51+ EU AI Act compliance checks across Articles 9, 10, 11, 12, 13, 14, 15
+- 50+ compliance checks: about 40 across EU AI Act Articles 9, 10, 11, 12, 14 and 15, plus GDPR and US state AI laws
 - Article 12 Compliance Layer -- static + runtime analysis for tamper-evident logging
 - Receipt signing for independent verification: Ed25519 by default; ML-DSA-65 (FIPS 204) post-quantum option in the gateway
 - HMAC-SHA256 tamper-evident audit chains (open standard)
